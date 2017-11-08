@@ -75,7 +75,12 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>C:\Users\juanm\OneDrive\Documentos\Crossy_Roads\libs\Simple OpenGL Image Library\src;C:\Users\juanm\OneDrive\Documentos\Crossy_Roads\libs\glm;C:\Users\juanm\OneDrive\Documentos\Crossy_Roads\libs\glew-1.13.0\include;C:\Users\juanm\OneDrive\Documentos\Crossy_Roads\libs\freetype-2.3.5-1-bin\include;C:\Users\juanm\OneDrive\Documentos\Crossy_Roads\libs\freeglut\include</AdditionalIncludeDirectories>
     </ClCompile>
+    <Link>
+      <AdditionalLibraryDirectories>C:\Users\juanm\OneDrive\Documentos\Crossy_Roads\libs\Simple OpenGL Image Library\projects\VC9\Debugg;C:\Users\juanm\OneDrive\Documentos\Crossy_Roads\libs\glew-1.13.0\lib\Release\Win32;C:\Users\juanm\OneDrive\Documentos\Crossy_Roads\libs\freetype-2.3.5-1-bin\lib;C:\Users\juanm\OneDrive\Documentos\Crossy_Roads\libs\freeglut\lib</AdditionalLibraryDirectories>
+      <AdditionalDependencies>freeglut.lib;SOIL.lib;glew32.lib;freetype.lib</AdditionalDependencies>
+    </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -111,6 +116,21 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Game.cpp" />
+    <ClCompile Include="Level.cpp" />
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="Scene.cpp" />
+    <ClCompile Include="Shader.cpp" />
+    <ClCompile Include="ShaderProgram.cpp" />
+    <ClCompile Include="Texture.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Game.h" />
+    <ClInclude Include="Level.h" />
+    <ClInclude Include="Scene.h" />
+    <ClInclude Include="Shader.h" />
+    <ClInclude Include="ShaderProgram.h" />
+    <ClInclude Include="Texture.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
