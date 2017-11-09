@@ -74,6 +74,3 @@ void Scene::initShaders()
 	vShader.free();
 	fShader.free();
 }
-
-
-
