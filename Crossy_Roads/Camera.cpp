@@ -18,25 +18,29 @@ void Camera::init() {
 
 void Camera::update(int deltaTime) {
 	if (Game::instance().getSpecialKey(GLUT_KEY_LEFT)) {
-		cam.psi += 0.1;
+		cam.psi += 0.1f;
 		cam.updateVM();
 	}
 	else if (Game::instance().getSpecialKey(GLUT_KEY_RIGHT)) {
-		cam.psi -= 0.1;
+		cam.psi -= 0.1f;
 		cam.updateVM();
 	}
 	else if (Game::instance().getSpecialKey(GLUT_KEY_UP)) {
-		cam.d -= 0.1;
+		cam.d -= 0.1f;
 		cam.updateVM();
 	}
 	else if (Game::instance().getSpecialKey(GLUT_KEY_DOWN)) {
-		cam.d += 0.1;
+		cam.d += 0.1f;
 		cam.updateVM();
 	}
-}
-
-void Camera::render()
-{
+	else if (Game::instance().getKey('w')) {
+		cam.theta += 0.1f;
+		cam.updateVM();
+	}
+	else if (Game::instance().getKey('s')) {
+		cam.theta -= 0.1f;
+		cam.updateVM();
+	}
 }
 
 const glm::mat4 * Camera::getProjectionMatrix() const

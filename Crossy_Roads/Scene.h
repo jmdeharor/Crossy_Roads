@@ -6,6 +6,8 @@
 #include "ShaderProgram.h"
 #include "Level.h"
 #include "Camera.h"
+#include "Sphere.h"
+#include "GameObject.h"
 
 #define CAMERA_WIDTH 640
 #define CAMERA_HEIGHT 480
@@ -31,7 +33,8 @@ private:
 private:
 	Camera camera;
 	Level *level;
-	ShaderProgram texProgram;
+	Sphere mesh;
+	ShaderProgram texProgram, simpleProgram;
 	float currentTime;
 };
 

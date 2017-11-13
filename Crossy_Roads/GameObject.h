@@ -1,11 +1,12 @@
 #pragma once
-class GameObject {
+#include "RenderizableObject.h"
+#include "UpdatableObject.h"
+
+class GameObject : public RenderizableObject, public UpdatableObject {
 	void firstInit();
 	bool initiated;
 public:
 	GameObject();
-	~GameObject();
+	virtual ~GameObject();
 	void init();
-	virtual void update(int deltaTime) = 0;
-	virtual void render() = 0;
 };

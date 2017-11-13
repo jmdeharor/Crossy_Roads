@@ -143,33 +143,3 @@ void Level::prepareArrays(ShaderProgram &program)
 	posLocation[1] = program.bindVertexAttribute("position", 3, 5*sizeof(float), 0);
 	texCoordLocation[1] = program.bindVertexAttribute("texCoord", 2, 5*sizeof(float), (void *)(3*sizeof(float)));
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
