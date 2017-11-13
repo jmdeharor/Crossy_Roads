@@ -9,7 +9,7 @@ class Mesh : public RenderizableObject {
 protected:
 	GLuint VAO;
 	GLuint VBOvert, VBOind, VBOnorm, VBOcols;
-	GLint posLocation, colorLocation;
+	GLint posLocation, colorLocation, normalLocation;
 public:
 	void initTest(ShaderProgram& program);
 	void render();

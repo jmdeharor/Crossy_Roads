@@ -39,6 +39,7 @@ void Scene::render() {
 	texProgram.setUniformMatrix4f("modelview", *camera.getViewMatrix());
 	level->render();
 	simpleProgram.use();
+	simpleProgram.setUniformMatrix3f("normalMatrix", inverse(transpose(mat3(*camera.getViewMatrix()))));
 	simpleProgram.setUniformMatrix4f("projection", *camera.getProjectionMatrix());
 	simpleProgram.setUniformMatrix4f("modelview", *camera.getViewMatrix());
 	mesh.render();
