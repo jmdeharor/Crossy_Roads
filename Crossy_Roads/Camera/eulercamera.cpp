@@ -1,6 +1,10 @@
 #include "eulercamera.h"
 using namespace glm;
 
+EulerCamera::EulerCamera()
+{
+}
+
 EulerCamera::EulerCamera(float phi, float theta, float psi, float d) {
     this->phi = phi;
     this->theta = theta;

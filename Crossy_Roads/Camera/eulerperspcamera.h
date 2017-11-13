@@ -5,6 +5,7 @@
 
 class EulerPerspCamera : public EulerCamera, public PerspCamera {
 public:
+	EulerPerspCamera();
     EulerPerspCamera(glm::vec3 VRP, float d, float phi, float theta, float psi, float FOV, float ra, float zNear, float zFar);
     ~EulerPerspCamera();
 };

@@ -6,6 +6,7 @@ class OBSCamera : public virtual BaseCamera {
 public:
     glm::vec3 OBS, UP;
 
+	OBSCamera();
     OBSCamera(glm::vec3 OBS, glm::vec3 UP);
     virtual ~OBSCamera();
     void updateVM();

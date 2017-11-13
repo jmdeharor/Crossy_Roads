@@ -42,9 +42,6 @@
     <ClCompile Include="Texture.cpp">
       <Filter>Archivos de código fuente</Filter>
     </ClCompile>
-    <ClCompile Include="Camera\perspcamera.cpp">
-      <Filter>Archivos de código fuente</Filter>
-    </ClCompile>
     <ClCompile Include="Camera\basecamera.cpp">
       <Filter>Archivos de código fuente\Camera</Filter>
     </ClCompile>
@@ -58,6 +55,21 @@
       <Filter>Archivos de código fuente\Camera</Filter>
     </ClCompile>
     <ClCompile Include="Camera\obsperspcamera.cpp">
+      <Filter>Archivos de código fuente\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="Camera.cpp">
+      <Filter>Archivos de código fuente\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject.cpp">
+      <Filter>Archivos de código fuente</Filter>
+    </ClCompile>
+    <ClCompile Include="Camera\perspcamera.cpp">
+      <Filter>Archivos de código fuente\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="Camera\orthocamera.cpp">
+      <Filter>Archivos de código fuente\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="Camera\eulerorthocamera.cpp">
       <Filter>Archivos de código fuente\Camera</Filter>
     </ClCompile>
   </ItemGroup>
@@ -80,9 +92,6 @@
     <ClInclude Include="Texture.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
-    <ClInclude Include="Camera\perspcamera.h">
-      <Filter>Archivos de encabezado</Filter>
-    </ClInclude>
     <ClInclude Include="Camera\eulerperspcamera.h">
       <Filter>Archivos de encabezado\Camera</Filter>
     </ClInclude>
@@ -96,6 +105,21 @@
       <Filter>Archivos de encabezado\Camera</Filter>
     </ClInclude>
     <ClInclude Include="Camera\obsperspcamera.h">
+      <Filter>Archivos de encabezado\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="Camera.h">
+      <Filter>Archivos de encabezado\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="Camera\perspcamera.h">
+      <Filter>Archivos de encabezado\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="Camera\orthocamera.h">
+      <Filter>Archivos de encabezado\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="Camera\eulerorthocamera.h">
       <Filter>Archivos de encabezado\Camera</Filter>
     </ClInclude>
   </ItemGroup>

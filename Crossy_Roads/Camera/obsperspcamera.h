@@ -5,6 +5,7 @@
 
 class OBSPerspCamera : public OBSCamera, public PerspCamera {
 public:
+	OBSPerspCamera();
     OBSPerspCamera(glm::vec3 VRP, glm::vec3 OBS, glm::vec3 UP, float FOV, float ra, float zNear, float zFar);
 };
 

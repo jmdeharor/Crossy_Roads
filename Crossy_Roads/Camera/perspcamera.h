@@ -7,6 +7,7 @@ class PerspCamera : public virtual BaseCamera {
 public:
     float ra;
 
+	PerspCamera();
     PerspCamera(float FOV, float ra);
     virtual ~PerspCamera();
     void updatePM();

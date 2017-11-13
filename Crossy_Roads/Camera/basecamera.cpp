@@ -25,3 +25,7 @@ const float* BaseCamera::getProjectionMatrix() const {
 const mat4* BaseCamera::getFullViewMatrix() const {
     return &VM;
 }
+
+const mat4 * BaseCamera::getFullProjectionMatrix() const {
+	return &PM;
+}

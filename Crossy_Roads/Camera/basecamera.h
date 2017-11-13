@@ -1,5 +1,6 @@
 #ifndef BASECAMERA_H
 #define BASECAMERA_H
+#pragma warning( disable : 4250 ) 
 #define GLM_FORCE_RADIANS
 #include "glm/glm.hpp"
 #include "glm/gtc/matrix_transform.hpp"
@@ -21,6 +22,7 @@ public:
     const float *getViewMatrix() const;
     const float *getProjectionMatrix() const;
     const glm::mat4* getFullViewMatrix() const;
+	const glm::mat4* getFullProjectionMatrix() const;
 };
 
 #endif // BASECAMERA_H

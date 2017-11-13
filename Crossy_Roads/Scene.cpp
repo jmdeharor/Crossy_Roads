@@ -3,7 +3,7 @@
 #define GLM_FORCE_RADIANS
 #include <glm/gtc/matrix_transform.hpp>
 #include "Scene.h"
-
+using namespace glm;
 
 #define PI 3.14159f
 
@@ -19,29 +19,23 @@ Scene::~Scene()
 		delete level;
 }
 
-
-void Scene::init()
-{
+void Scene::init() {
 	initShaders();
 	level = Level::createLevel(glm::vec3(16, 4, 32), texProgram, "images/floor.png", "images/wall.png");
-	projection = glm::perspective(45.f / 180.f * PI, float(CAMERA_WIDTH) / float(CAMERA_HEIGHT), 0.1f, 100.f);
 	currentTime = 0.0f;
+	camera.init();
 }
 
-void Scene::update(int deltaTime)
-{
+void Scene::update(int deltaTime) {
 	currentTime += deltaTime;
+	camera.update(deltaTime);
 }
 
-void Scene::render()
-{
-	glm::mat4 modelview;
-
+void Scene::render() {
 	texProgram.use();
-	texProgram.setUniformMatrix4f("projection", projection);
+	texProgram.setUniformMatrix4f("projection", *camera.getProjectionMatrix());
 	texProgram.setUniform4f("color", 1.0f, 1.0f, 1.0f, 1.0f);
-	modelview = glm::mat4(1.0f);
-	texProgram.setUniformMatrix4f("modelview", modelview);
+	texProgram.setUniformMatrix4f("modelview", *camera.getViewMatrix());
 	level->render();
 }
 

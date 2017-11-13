@@ -32,7 +32,7 @@ public:
 	void setUniform2f(const string &uniformName, float v0, float v1);
 	void setUniform3f(const string &uniformName, float v0, float v1, float v2);
 	void setUniform4f(const string &uniformName, float v0, float v1, float v2, float v3);
-	void setUniformMatrix4f(const string &uniformName, glm::mat4 &mat);
+	void setUniformMatrix4f(const string &uniformName, const glm::mat4 &mat);
 
 	bool isLinked();
 	const string &log() const;

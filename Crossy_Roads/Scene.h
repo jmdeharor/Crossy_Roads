@@ -5,7 +5,7 @@
 #include <glm/glm.hpp>
 #include "ShaderProgram.h"
 #include "Level.h"
-
+#include "Camera.h"
 
 #define CAMERA_WIDTH 640
 #define CAMERA_HEIGHT 480
@@ -15,8 +15,7 @@
 // It is responsible for updating and render them.
 
 
-class Scene
-{
+class Scene: public GameObject {
 
 public:
 	Scene();
@@ -30,11 +29,10 @@ private:
 	void initShaders();
 
 private:
+	Camera camera;
 	Level *level;
 	ShaderProgram texProgram;
 	float currentTime;
-	glm::mat4 projection;
-
 };
 
 

@@ -116,13 +116,17 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Camera\basecamera.cpp" />
     <ClCompile Include="Camera\eulercamera.cpp" />
+    <ClCompile Include="Camera\eulerorthocamera.cpp" />
     <ClCompile Include="Camera\eulerperspcamera.cpp" />
     <ClCompile Include="Camera\obscamera.cpp" />
     <ClCompile Include="Camera\obsperspcamera.cpp" />
+    <ClCompile Include="Camera\orthocamera.cpp" />
     <ClCompile Include="Camera\perspcamera.cpp" />
     <ClCompile Include="Game.cpp" />
+    <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="Level.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Scene.cpp" />
@@ -131,13 +135,17 @@
     <ClCompile Include="Texture.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Camera.h" />
     <ClInclude Include="Camera\basecamera.h" />
     <ClInclude Include="Camera\eulercamera.h" />
+    <ClInclude Include="Camera\eulerorthocamera.h" />
     <ClInclude Include="Camera\eulerperspcamera.h" />
     <ClInclude Include="Camera\obscamera.h" />
     <ClInclude Include="Camera\obsperspcamera.h" />
+    <ClInclude Include="Camera\orthocamera.h" />
     <ClInclude Include="Camera\perspcamera.h" />
     <ClInclude Include="Game.h" />
+    <ClInclude Include="GameObject.h" />
     <ClInclude Include="Level.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="Shader.h" />

@@ -1,6 +1,10 @@
 #include "perspcamera.h"
 using namespace glm;
 
+PerspCamera::PerspCamera()
+{
+}
+
 PerspCamera::PerspCamera(float FOV, float ra) {
     this->FOV = realFOV = FOV;
     this->ra = ra;
