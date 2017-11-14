@@ -24,11 +24,16 @@ void Scene::init() {
 	level = Level::createLevel(vec3(16, 4, 32), texProgram, "images/floor.png", "images/wall.png");
 	currentTime = 0.0f;
 	camera.init();
-	mesh.init(101, 100, 2, simpleProgram);
+	sphereMesh.initMore(50, 50, 2, simpleProgram);
+	sphere1.setMesh(&sphereMesh);
+	sphere2.setMesh(&sphereMesh);
+	sphere1.setPos(vec3(0));
+	sphere2.setPos(vec3(0, 0, -3));
+	sphere1.updateModel();
+	sphere2.updateModel();
 }
 
 void Scene::update(int deltaTime) {
-	currentTime += deltaTime;
 	camera.update(deltaTime);
 }
 
@@ -41,8 +46,14 @@ void Scene::render() {
 	simpleProgram.use();
 	simpleProgram.setUniformMatrix3f("normalMatrix", inverse(transpose(mat3(*camera.getViewMatrix()))));
 	simpleProgram.setUniformMatrix4f("projection", *camera.getProjectionMatrix());
-	simpleProgram.setUniformMatrix4f("modelview", *camera.getViewMatrix());
-	mesh.render();
+
+	mat4 modelView = (*camera.getViewMatrix())*(*sphere1.getModel());
+	simpleProgram.setUniformMatrix4f("modelview", modelView);
+	sphere1.render();
+
+	modelView = (*camera.getViewMatrix())*(*sphere2.getModel());
+	simpleProgram.setUniformMatrix4f("modelview", modelView);
+	sphere2.render();
 }
 
 void Scene::initShaders()

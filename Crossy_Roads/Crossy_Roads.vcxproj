@@ -22,7 +22,7 @@
     <VCProjectVersion>15.0</VCProjectVersion>
     <ProjectGuid>{78294ABA-F261-4A16-A4F2-029D223470AF}</ProjectGuid>
     <RootNamespace>Crossy_Roads</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.15063.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -130,6 +130,7 @@
     <ClCompile Include="Level.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Mesh.cpp" />
+    <ClCompile Include="Object.cpp" />
     <ClCompile Include="RenderizableObject.cpp" />
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="Shader.cpp" />
@@ -152,6 +153,7 @@
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="Level.h" />
     <ClInclude Include="Mesh.h" />
+    <ClInclude Include="Object.h" />
     <ClInclude Include="RenderizableObject.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="Shader.h" />

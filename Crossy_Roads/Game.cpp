@@ -2,17 +2,14 @@
 #include <GL/glut.h>
 #include "Game.h"
 
-
-void Game::init()
-{
+void Game::init() {
 	bPlay = true;
 	glClearColor(0.f, 0.f, 0.f, 1.0f);
 	glEnable(GL_DEPTH_TEST);
 	scene.init();
 }
 
-bool Game::update(int deltaTime)
-{
+bool Game::update(int deltaTime) {
 	scene.update(deltaTime);
 	
 	return bPlay;
