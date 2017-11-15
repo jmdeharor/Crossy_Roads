@@ -55,6 +55,11 @@ void Game::mouseRelease(int button)
 {
 }
 
+void Game::windowResize(int w, int h) {
+	glViewport(0, 0, w, h);
+	scene.resize(w, h);
+}
+
 bool Game::getKey(int key) const
 {
 	return keys[key];

@@ -16,6 +16,11 @@ void Camera::init() {
 	cam.updateVM();
 }
 
+void Camera::resize(int w, int h) {
+	cam.resize(h, w);
+	cam.updatePM();
+}
+
 void Camera::update(int deltaTime) {
 	if (Game::instance().getSpecialKey(GLUT_KEY_LEFT)) {
 		cam.psi += 0.1f;
@@ -40,6 +45,12 @@ void Camera::update(int deltaTime) {
 	else if (Game::instance().getKey('s')) {
 		cam.theta -= 0.1f;
 		cam.updateVM();
+	}
+	else if (Game::instance().getKey('q')) {
+		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	}
+	else if (Game::instance().getKey('e')) {
+		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	}
 }
 

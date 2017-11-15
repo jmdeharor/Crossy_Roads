@@ -27,15 +27,21 @@ public:
 	void init();
 	void update(int deltaTime);
 	void render();
+	void resize(int w, int h);
 
 private:
 	void initShaders();
 
 private:
+	uint projectionLoc;
+	glm::vec4 lightPos;
+	glm::vec4 lightAmbient;
+	glm::vec4 lightDiffuse;
 	Camera camera;
 	Level *level;
-	Object sphere1, sphere2;
-	Sphere sphereMesh;
+	Object sphere1, sphere2, lightSphere;
+	Mesh pirateMesh;
+	Object pirate;
 	ShaderProgram texProgram, simpleProgram;
 	float currentTime;
 };

@@ -8,6 +8,7 @@ class Camera : public UpdatableObject {
 	EulerOrthoCamera uiCam;
 public:
 	void init();
+	void resize(int w, int h);
 	void update(int deltaTime);
 	const glm::mat4* getProjectionMatrix() const;
 	const glm::mat4* getViewMatrix() const;

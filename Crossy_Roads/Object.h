@@ -13,6 +13,7 @@ protected:
 public:
 	void update(int deltaTime);
 	void setPos(glm::vec3 pos);
+	void setScale(glm::vec3 scale);
 	const glm::mat4* getModel() const;
 	void updateModel();
 	void render();

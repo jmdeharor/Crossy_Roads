@@ -4,7 +4,7 @@ using namespace glm;
 #define PI 3.14159f
 
 void Sphere::init(int numCircles, int pointsPerCircle, float diameter, ShaderProgram& program) {
-	if (numCircles % 2 == 0)
+	/*if (numCircles % 2 == 0)
 		return;
 	vector<float> vertices;
 	vector<float> colors;
@@ -75,7 +75,7 @@ void Sphere::init(int numCircles, int pointsPerCircle, float diameter, ShaderPro
 			indices.push_back((j + 1) % pointsPerCircle + startPoint);
 		}
 	}
-	for (int i = 0; i < indices.size(); i += 3) {
+	for (unsigned int i = 0; i < indices.size(); i += 3) {
 		vec3 point1 = vec3(vertices[indices[i] * 3], vertices[indices[i] * 3 + 1], vertices[indices[i] * 3 + 2]);
 		vec3 point2 = vec3(vertices[indices[i+1] * 3], vertices[indices[i + 1] * 3 + 1], vertices[indices[i + 1] * 3 + 2]);
 		vec3 point3 = vec3(vertices[indices[i+2] * 3], vertices[indices[i + 2] * 3 + 1], vertices[indices[i + 2] * 3 + 2]);
@@ -88,7 +88,7 @@ void Sphere::init(int numCircles, int pointsPerCircle, float diameter, ShaderPro
 		norms[indices[i+2]] += norm;
 		occurrences[indices[i+2]] += 1;
 	}
-	for (int i = 0; i < norms.size(); ++i) {
+	for (unsigned int i = 0; i < norms.size(); ++i) {
 		vec3 finalNorm = normalize(norms[i] / (float)occurrences[i]);
 		normals[i * 3] = finalNorm.x;
 		normals[i * 3 + 1] = finalNorm.y;
@@ -111,11 +111,11 @@ void Sphere::init(int numCircles, int pointsPerCircle, float diameter, ShaderPro
 	normalLocation = program.bindVertexAttribute("normal", 3, 0, 0);
 	glGenBuffers(1, &VBOind);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, VBOind);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned int), &indices[0], GL_STATIC_DRAW);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned int), &indices[0], GL_STATIC_DRAW);*/
 }
 
 void Sphere::initMore(int numDivisions, int pointsPerCircle, float diameter, ShaderProgram & program) {
-	if (numDivisions % 2 == 1)
+	/*if (numDivisions % 2 == 1)
 		return;
 	int numCircles = numDivisions + 1;
 	int halfDivisions = numDivisions / 2;
@@ -164,12 +164,12 @@ void Sphere::initMore(int numDivisions, int pointsPerCircle, float diameter, Sha
 			indices.push_back((j + 1) % pointsPerCircle + startPoint);
 		}
 	}
-	for (int i = 0; i < indices.size(); i += 3) {
+	for (unsigned int i = 0; i < indices.size(); i += 3) {
 		vec3 point1 = vec3(vertices[indices[i] * 3], vertices[indices[i] * 3 + 1], vertices[indices[i] * 3 + 2]);
 		vec3 point2 = vec3(vertices[indices[i + 1] * 3], vertices[indices[i + 1] * 3 + 1], vertices[indices[i + 1] * 3 + 2]);
 		vec3 point3 = vec3(vertices[indices[i + 2] * 3], vertices[indices[i + 2] * 3 + 1], vertices[indices[i + 2] * 3 + 2]);
 
-		vec3 norm = cross(point3 - point1, point2 - point1);
+		vec3 norm = cross(point1 - point3, point3 - point2);
 		norms[indices[i]] += norm;
 		occurrences[indices[i]] += 1;
 		norms[indices[i + 1]] += norm;
@@ -177,7 +177,7 @@ void Sphere::initMore(int numDivisions, int pointsPerCircle, float diameter, Sha
 		norms[indices[i + 2]] += norm;
 		occurrences[indices[i + 2]] += 1;
 	}
-	for (int i = 0; i < norms.size(); ++i) {
+	for (unsigned int i = 0; i < norms.size(); ++i) {
 		vec3 finalNorm = normalize(norms[i] / (float)occurrences[i]);
 		normals[i * 3] = finalNorm.x;
 		normals[i * 3 + 1] = finalNorm.y;
@@ -200,13 +200,13 @@ void Sphere::initMore(int numDivisions, int pointsPerCircle, float diameter, Sha
 	normalLocation = program.bindVertexAttribute("normal", 3, 0, 0);
 	glGenBuffers(1, &VBOind);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, VBOind);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned int), &indices[0], GL_STATIC_DRAW);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned int), &indices[0], GL_STATIC_DRAW);*/
 }
 
 void Sphere::render() {
 	glBindVertexArray(VAO);
 	glEnableVertexAttribArray(posLocation);
-	glEnableVertexAttribArray(colorLocation);
+	glEnableVertexAttribArray(texCoordLocation);
 	glEnableVertexAttribArray(normalLocation);
 	glDrawElements(GL_TRIANGLES, size, GL_UNSIGNED_INT, 0);
 }

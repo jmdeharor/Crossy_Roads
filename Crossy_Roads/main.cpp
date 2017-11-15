@@ -65,6 +65,10 @@ static void drawCallback()
 	glutSwapBuffers();
 }
 
+static void windowReshapeFunc(int newWidth, int newHeight) {
+	Game::instance().windowResize(newWidth, newHeight);
+}
+
 static void idleCallback()
 {
 	int currentTime = glutGet(GLUT_ELAPSED_TIME);
@@ -98,6 +102,7 @@ int main(int argc, char **argv)
 	glutSpecialUpFunc(specialUpCallback);
 	glutMouseFunc(mouseCallback);
 	glutMotionFunc(motionCallback);
+	glutReshapeFunc(windowReshapeFunc);
 
 	// GLEW will take care of OpenGL extension functions
 	glewExperimental = GL_TRUE;

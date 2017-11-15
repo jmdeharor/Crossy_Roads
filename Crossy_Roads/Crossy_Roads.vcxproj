@@ -75,11 +75,11 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>../libs\Simple OpenGL Image Library\src;../libs\glm;../libs\glew-1.13.0\include;../libs\freeglut\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\libs\assimp\include;../libs\Simple OpenGL Image Library\src;../libs\glm;../libs\glew-1.13.0\include;../libs\freeglut\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
-      <AdditionalLibraryDirectories>../libs\Simple OpenGL Image Library\projects\VC9\Debugg;../libs\glew-1.13.0\lib\Release\Win32;../libs\freeglut\lib</AdditionalLibraryDirectories>
-      <AdditionalDependencies>freeglut.lib;SOIL.lib;glew32.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\libs\assimp\lib;../libs\Simple OpenGL Image Library\projects\VC9\Debugg;../libs\glew-1.13.0\lib\Release\Win32;../libs\freeglut\lib</AdditionalLibraryDirectories>
+      <AdditionalDependencies>freeglut.lib;SOIL.lib;glew32.lib;assimp-vc120-mt.lib</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">

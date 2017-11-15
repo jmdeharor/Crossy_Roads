@@ -10,6 +10,10 @@ void Object::setPos(vec3 pos) {
 	this->pos = pos;
 }
 
+void Object::setScale(glm::vec3 scale) {
+	this->scale = scale;
+}
+
 const mat4 * Object::getModel() const {
 	return &model;
 }
@@ -27,13 +31,15 @@ void Object::render() {
 	mesh->render();
 }
 
-Object::Object() : scale(vec3(1)) {
+Object::Object() : 
+	pos(vec3(0)), rot(vec3(0)), scale(vec3(1)),
+	center(vec3(0)), model(mat4(1)), mesh(NULL) {
 }
 
 void Object::setMesh(Mesh * mesh) {
 	this->mesh = mesh;
+	center = mesh->getbbCenter();
 }
-
 
 Object::~Object()
 {
