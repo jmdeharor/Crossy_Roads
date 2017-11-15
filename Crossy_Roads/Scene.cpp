@@ -32,7 +32,7 @@ void Scene::init() {
 	sphere2.updateModel();*/
 	lightAmbient = vec4(0.3f);
 	lightDiffuse = vec4(0.8f);
-	lightPos = vec4(0, 5, 0, 1);
+	lightPos = vec4(0, 0, 0, 1);
 
 	/*lightSphere.setPos(vec3(lightPos));
 	lightSphere.setScale(vec3(0.1f));

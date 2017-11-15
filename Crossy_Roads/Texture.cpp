@@ -42,7 +42,7 @@ bool Texture::loadFromFile(const string &filename, PixelFormat format)
 		break;
 	}
 	glGenerateMipmap(GL_TEXTURE_2D);
-	
+	SOIL_free_image_data(image);
 	return true;
 }
 
