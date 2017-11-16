@@ -10,7 +10,25 @@ void Object::setPos(vec3 pos) {
 	this->pos = pos;
 }
 
-void Object::setScale(glm::vec3 scale) {
+void Object::move(float x, float y, float z) {
+	pos.x += x;
+	pos.y += y;
+	pos.z += z;
+}
+
+void Object::rotateX(float angle) {
+	rot.x += angle;
+}
+
+void Object::rotateY(float angle) {
+	rot.y += angle;
+}
+
+void Object::rotateZ(float angle) {
+	rot.z += angle;
+}
+
+void Object::setScale(vec3 scale) {
 	this->scale = scale;
 }
 
@@ -28,6 +46,8 @@ void Object::updateModel() {
 }
 
 void Object::render() {
+	program->setUniformMatrix4f((uint)Location::model, model);
+	program->setUniformMatrix3f((uint)Location::normalMatrix, mat3(model));
 	mesh->render();
 }
 
@@ -36,11 +56,23 @@ Object::Object() :
 	center(vec3(0)), model(mat4(1)), mesh(NULL) {
 }
 
-void Object::setMesh(Mesh * mesh) {
+void Object::setMesh(const Mesh * mesh) {
 	this->mesh = mesh;
 	center = mesh->getbbCenter();
 }
 
+void Object::setShader(ShaderProgram * program) {
+	this->program = program;
+}
+
 Object::~Object()
 {
+}
+
+glm::vec3 Object::getPos() const {
+	return pos;
+}
+
+float Object::getHeight() const {
+	return mesh->getHeight()*scale.y;
 }

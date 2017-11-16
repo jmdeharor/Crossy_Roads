@@ -3,10 +3,11 @@
 #include "UpdatableObject.h"
 
 class GameObject : public RenderizableObject, public UpdatableObject {
-	void firstInit();
+protected:
+	virtual void firstInit();
 	bool initiated;
 public:
 	GameObject();
 	virtual ~GameObject();
-	void init();
+	virtual void init();
 };

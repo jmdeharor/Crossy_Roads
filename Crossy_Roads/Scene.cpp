@@ -3,6 +3,7 @@
 #define GLM_FORCE_RADIANS
 #include <glm/gtc/matrix_transform.hpp>
 #include "Scene.h"
+#include "Game.h"
 using namespace glm;
 
 #define PI 3.14159f
@@ -16,39 +17,79 @@ Scene::~Scene() {
 		delete level;
 }
 
-void Scene::init() {
+void Scene::firstInit() {
 	initShaders();
+	pirateMesh.loadFromFile("models/pirate.obj", lambertProgram);
+}
+
+const uint rows = 5;
+const uint cols = 5;
+
+void Scene::init() {
+	GameObject::init();
 	level = Level::createLevel(vec3(16, 4, 32), texProgram, "images/floor.png", "images/wall.png");
 	currentTime = 0.0f;
 	camera.init();
-	/*sphereMesh.initMore(50, 50, 2, simpleProgram);
-	sphere1.setMesh(&sphereMesh);
-	sphere2.setMesh(&sphereMesh);
-	lightSphere.setMesh(&sphereMesh);
 
-	sphere1.setPos(vec3(0));
-	sphere2.setPos(vec3(0, 0, -3));
-	sphere1.updateModel();
-	sphere2.updateModel();*/
 	lightAmbient = vec4(0.3f);
 	lightDiffuse = vec4(0.8f);
-	lightPos = vec4(0, 0, 0, 1);
+	lightPos = vec4(0, 1, 1, 1);
+	pirates.resize(rows*cols);
+	vec3 offset = vec3(-6, -2, -6);
+	for (uint i = 0; i < rows; ++i) {
+		for (uint j = 0; j < cols; ++j) {
+			ShadowedObject& pirate = pirates[i*cols + j];
+			pirate.setMesh(&pirateMesh);
+			pirate.setShader(&lambertProgram);
+			pirate.setShadowShader(&shadowProgram);
 
-	/*lightSphere.setPos(vec3(lightPos));
-	lightSphere.setScale(vec3(0.1f));
-	lightSphere.updateModel();*/
-
-	projectionLoc = simpleProgram.addUniform("projection");
-
-	//boxModel.loadFromFile("models/room.obj", simpleProgram);
-	pirateMesh.loadFromFile("models/pirate.obj", simpleProgram);
-	pirate.setMesh(&pirateMesh);
-	pirate.setScale(vec3(0.1));
-	pirate.updateModel();
+			pirate.setScale(vec3(0.1f));
+			pirate.setPos(vec3(offset.x + i*3, offset.y + pirate.getHeight() / 2, offset.z + j*3));
+			pirate.setPlane(vec4(0, 1, 0, -offset.y), vec3(1, 1, 0));
+			pirate.updateModel();
+		}
+	}
+	camera.setPos(vec3(0));
+	camera.updateVM();
 }
 
 void Scene::update(int deltaTime) {
 	camera.update(deltaTime);
+	bool modified = false;
+	/*if (Game::instance().getKey('a')) {
+		pirate.move(-0.1f, 0, 0);
+		modified = true;
+	}
+	if (Game::instance().getKey('d')) {
+		pirate.move(0.1f, 0, 0);
+		modified = true;
+	}
+	if (Game::instance().getKey('w')) {
+		pirate.move(0, 0, 0.1f);
+		modified = true;
+	}
+	if (Game::instance().getKey('s')) {
+		pirate.move(0, 0, -0.1f);
+		modified = true;
+	}*/
+	if (Game::instance().getKey('q')) {
+		for (uint i = 0; i < pirates.size(); ++i) {
+			pirates[i].rotateY(0.1f);
+		}
+		modified = true;
+	}
+	if (Game::instance().getKey('e')) {
+		for (uint i = 0; i < pirates.size(); ++i) {
+			pirates[i].rotateY(-0.1f);
+		}
+		modified = true;
+	}
+	if (modified) {
+		for (uint i = 0; i < pirates.size(); ++i) {
+			pirates[i].updateModel();
+		}
+		camera.updateVM();
+	}
 }
 
 void Scene::render() {
@@ -57,91 +98,67 @@ void Scene::render() {
 	texProgram.setUniform4f("color", 1.0f, 1.0f, 1.0f, 1.0f);
 	texProgram.setUniformMatrix4f("modelview", *camera.getViewMatrix());
 	level->render();
-	simpleProgram.use();
-	simpleProgram.setUniformMatrix4f(projectionLoc, *camera.getProjectionMatrix());
-	simpleProgram.setUniformMatrix4f("modelview", (*camera.getViewMatrix())*(*pirate.getModel()));
-	//vec4 realLightPos = (*camera.getViewMatrix())*lightPos;
-	vec4 realLightPos = lightPos;
-	simpleProgram.setUniformMatrix3f("normalMatrix", mat3(*camera.getViewMatrix()));
-	simpleProgram.setUniform4f("lightAmbient", lightAmbient);
-	simpleProgram.setUniform4f("lightDiffuse", lightDiffuse);
-	simpleProgram.setUniform4f("lightPosition", realLightPos);
-	simpleProgram.setUniform4f("matDiffuse", 1, 1, 1, 1);
-	simpleProgram.setUniform4f("matAmbient", 1, 1, 1, 1);
-	pirate.render();
 
-	/*mat4 modelView = (*camera.getViewMatrix())*(*sphere1.getModel());
-	simpleProgram.setUniformMatrix3f("normalMatrix", mat3(modelView));
-	simpleProgram.setUniformMatrix4f("modelview", modelView);
-	sphere1.render();
+	lambertProgram.use();
+	lambertProgram.setUniformMatrix4f((uint)Location::projection, *camera.getProjectionMatrix());
+	lambertProgram.setUniformMatrix4f((uint)Location::view, *camera.getViewMatrix());
+	vec4 realLightPos = (*camera.getViewMatrix())*lightPos;
+	lambertProgram.setUniform4f("lightAmbient", lightAmbient);
+	lambertProgram.setUniform4f("lightDiffuse", lightDiffuse);
+	lambertProgram.setUniform4f("lightPosition", realLightPos);
+	lambertProgram.setUniform4f("matDiffuse", 1, 1, 1, 1);
+	lambertProgram.setUniform4f("matAmbient", 1, 1, 1, 1);
+	for (uint i = 0; i < pirates.size(); ++i) {
+		pirates[i].render();
+	}
 
-	modelView = (*camera.getViewMatrix())*(*sphere2.getModel());
-	simpleProgram.setUniformMatrix3f("normalMatrix", mat3(modelView));
-	simpleProgram.setUniformMatrix4f("modelview", modelView);
-	sphere2.render();
-
-	modelView = (*camera.getViewMatrix())*(*lightSphere.getModel());
-	simpleProgram.setUniformMatrix3f("normalMatrix", mat3(modelView));
-	simpleProgram.setUniformMatrix4f("modelview", modelView);
-	lightSphere.render();*/
+	shadowProgram.use();
+	shadowProgram.setUniformMatrix4f((uint)Location::projection, *camera.getProjectionMatrix());
+	shadowProgram.setUniformMatrix4f((uint)Location::view, *camera.getViewMatrix());
+	glEnable(GL_POLYGON_OFFSET_FILL);
+	glPolygonOffset(-1, -1);
+	for (uint i = 0; i < pirates.size(); ++i) {
+		pirates[i].renderShadow();
+	}
+	glDisable(GL_POLYGON_OFFSET_FILL);
 }
 
 void Scene::resize(int w, int h) {
 	camera.resize(w, h);
 }
 
-void Scene::initShaders()
-{
+inline void compileShader(ShaderProgram& program, const string& fileName) {
 	Shader vShader, fShader;
-
-	vShader.initFromFile(VERTEX_SHADER, "shaders/texture.vert");
-	if(!vShader.isCompiled())
-	{
+	string path = "shaders/" + fileName;
+	vShader.initFromFile(VERTEX_SHADER, path + ".vert");
+	if (!vShader.isCompiled()) {
 		cout << "Vertex Shader Error" << endl;
 		cout << "" << vShader.log() << endl << endl;
 	}
-	fShader.initFromFile(FRAGMENT_SHADER, "shaders/texture.frag");
-	if(!fShader.isCompiled())
-	{
+	fShader.initFromFile(FRAGMENT_SHADER, path + ".frag");
+	if (!fShader.isCompiled()) {
 		cout << "Fragment Shader Error" << endl;
 		cout << "" << fShader.log() << endl << endl;
 	}
-	texProgram.init();
-	texProgram.addShader(vShader);
-	texProgram.addShader(fShader);
-	texProgram.link();
-	if(!texProgram.isLinked())
-	{
+	program.init();
+	program.addShader(vShader);
+	program.addShader(fShader);
+	program.link();
+	if (!program.isLinked()) {
 		cout << "Shader Linking Error" << endl;
-		cout << "" << texProgram.log() << endl << endl;
+		cout << "" << program.log() << endl << endl;
 	}
-	texProgram.bindFragmentOutput("outColor");
+	program.bindFragmentOutput("outColor");
 	vShader.free();
 	fShader.free();
 
+	for (uint i = 0; i < sizeof(uniformOrder) / sizeof(string); ++i) {
+		program.addUniform(uniformOrder[i]);
+	}
+}
 
-	vShader.initFromFile(VERTEX_SHADER, "shaders/lambert.vert");
-	if (!vShader.isCompiled())
-	{
-		cout << "Vertex Shader Error" << endl;
-		cout << "" << vShader.log() << endl << endl;
-	}
-	fShader.initFromFile(FRAGMENT_SHADER, "shaders/lambert.frag");
-	if (!fShader.isCompiled())
-	{
-		cout << "Fragment Shader Error" << endl;
-		cout << "" << fShader.log() << endl << endl;
-	}
-	simpleProgram.init();
-	simpleProgram.addShader(vShader);
-	simpleProgram.addShader(fShader);
-	simpleProgram.link();
-	if (!simpleProgram.isLinked())
-	{
-		cout << "Shader Linking Error" << endl;
-		cout << "" << simpleProgram.log() << endl << endl;
-	}
-	simpleProgram.bindFragmentOutput("outColor");
-	vShader.free();
-	fShader.free();
+void Scene::initShaders() {
+	compileShader(texProgram, "texture");
+	compileShader(lambertProgram, "lambert");
+	compileShader(shadowProgram, "shadow");
 }

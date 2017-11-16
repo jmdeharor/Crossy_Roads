@@ -2,12 +2,11 @@
 #include <vector>
 #include <glm\glm.hpp>
 #include <GL\glew.h>
-#include "RenderizableObject.h"
 #include "ShaderProgram.h"
 #include <assimp/scene.h>
 #include "Texture.h"
 
-class Mesh : public RenderizableObject {
+class Mesh {
 protected:
 	unsigned int nTriangles;
 	Texture texture;
@@ -25,9 +24,11 @@ protected:
 	void initMesh(const aiMesh *paiMesh);
 	bool initMaterials(const aiScene *pScene, const string &filename);
 public:
-	glm::vec3 getbbCenter();
+	glm::vec3 getbbCenter() const;
+	float getHeight() const;
 	bool loadFromFile(const string &filename, ShaderProgram &program);
-	void render();
+	void render() const;
+	void clear();
 	Mesh();
 	~Mesh();
 };

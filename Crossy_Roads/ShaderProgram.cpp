@@ -2,8 +2,8 @@
 #include "ShaderProgram.h"
 using namespace glm;
 
-ShaderProgram::ShaderProgram()
-{
+ShaderProgram::ShaderProgram() {
+	uniforms.reserve(sizeof(uniformOrder) / sizeof(string));
 	programId = 0;
 	linked = false;
 }

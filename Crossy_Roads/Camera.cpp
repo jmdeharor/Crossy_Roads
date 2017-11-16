@@ -38,20 +38,24 @@ void Camera::update(int deltaTime) {
 		cam.d += 0.1f;
 		cam.updateVM();
 	}
-	else if (Game::instance().getKey('w')) {
+	else if (Game::instance().getKey('r')) {
 		cam.theta += 0.1f;
 		cam.updateVM();
 	}
-	else if (Game::instance().getKey('s')) {
+	else if (Game::instance().getKey('f')) {
 		cam.theta -= 0.1f;
 		cam.updateVM();
 	}
-	else if (Game::instance().getKey('q')) {
+	else if (Game::instance().getKey('m')) {
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	}
-	else if (Game::instance().getKey('e')) {
+	else if (Game::instance().getKey('k')) {
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	}
+}
+
+void Camera::updateVM() {
+	cam.updateVM();
 }
 
 const glm::mat4 * Camera::getProjectionMatrix() const
@@ -62,6 +66,10 @@ const glm::mat4 * Camera::getProjectionMatrix() const
 const glm::mat4 * Camera::getViewMatrix() const
 {
 	return cam.getFullViewMatrix();
+}
+
+void Camera::setPos(glm::vec3 pos) {
+	cam.VRP = pos;
 }
 
 Camera::Camera()

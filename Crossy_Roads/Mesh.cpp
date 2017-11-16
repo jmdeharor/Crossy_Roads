@@ -5,8 +5,12 @@
 using namespace std;
 using namespace glm;
 
-glm::vec3 Mesh::getbbCenter() {
+glm::vec3 Mesh::getbbCenter() const {
 	return center;
+}
+
+float Mesh::getHeight() const {
+	return height;
 }
 
 bool Mesh::loadFromFile(const string &filename, ShaderProgram &program) {
@@ -157,7 +161,7 @@ void Mesh::prepareArrays(ShaderProgram &program) {
 	nTriangles = triangles.size();
 }
 
-void Mesh::render() {
+void Mesh::render() const {
 	glEnable(GL_TEXTURE_2D);
 	texture.use();
 	glBindVertexArray(VAO);
@@ -168,10 +172,17 @@ void Mesh::render() {
 	glDisable(GL_TEXTURE_2D);
 }
 
+void Mesh::clear() {
+	glDeleteBuffers(1, &VBOvert);
+	glDeleteBuffers(1, &VBOnorm);
+	glDeleteBuffers(1, &VBOtex);
+	glDeleteVertexArrays(1, &VAO);
+}
+
 Mesh::Mesh()
 {
 }
 
-
 Mesh::~Mesh() {
+	clear();
 }

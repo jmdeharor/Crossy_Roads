@@ -7,7 +7,7 @@
 #include "Level.h"
 #include "Camera.h"
 #include "Sphere.h"
-#include "Object.h"
+#include "ShadowedObject.h"
 #include "GameObject.h"
 
 #define CAMERA_WIDTH 640
@@ -31,18 +31,17 @@ public:
 
 private:
 	void initShaders();
+	void firstInit();
 
 private:
-	uint projectionLoc;
 	glm::vec4 lightPos;
 	glm::vec4 lightAmbient;
 	glm::vec4 lightDiffuse;
 	Camera camera;
 	Level *level;
-	Object sphere1, sphere2, lightSphere;
 	Mesh pirateMesh;
-	Object pirate;
-	ShaderProgram texProgram, simpleProgram;
+	std::vector<ShadowedObject> pirates;
+	ShaderProgram texProgram, lambertProgram, shadowProgram;
 	float currentTime;
 };
 

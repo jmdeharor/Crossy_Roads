@@ -14,6 +14,14 @@ typedef unsigned int uint;
 // together, bind input attributes to their corresponding vertex shader names, 
 // and bind the fragment output to a name from the fragment shader
 
+enum class Location {
+	model,
+	view,
+	projection,
+	normalMatrix
+};
+
+const std::string uniformOrder[] = { "model", "view", "projection", "normalMatrix" };
 
 class ShaderProgram
 {
