@@ -20,6 +20,9 @@ Scene::~Scene() {
 void Scene::firstInit() {
 	initShaders();
 	pirateMesh.loadFromFile("models/pirate.obj", lambertProgram);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glStencilFunc(GL_EQUAL, 0, 1);
+	glStencilOp(GL_KEEP, GL_KEEP, GL_INCR);
 }
 
 const uint rows = 5;
@@ -94,7 +97,7 @@ void Scene::update(int deltaTime) {
 
 void Scene::render() {
 	texProgram.use();
-	texProgram.setUniformMatrix4f("projection", *camera.getProjectionMatrix());
+	texProgram.setUniformMatrix4f((uint)Location::projection, *camera.getProjectionMatrix());
 	texProgram.setUniform4f("color", 1.0f, 1.0f, 1.0f, 1.0f);
 	texProgram.setUniformMatrix4f("modelview", *camera.getViewMatrix());
 	level->render();
@@ -116,10 +119,15 @@ void Scene::render() {
 	shadowProgram.setUniformMatrix4f((uint)Location::projection, *camera.getProjectionMatrix());
 	shadowProgram.setUniformMatrix4f((uint)Location::view, *camera.getViewMatrix());
 	glEnable(GL_POLYGON_OFFSET_FILL);
+	glEnable(GL_BLEND);
+	glEnable(GL_STENCIL_TEST);
+
 	glPolygonOffset(-1, -1);
 	for (uint i = 0; i < pirates.size(); ++i) {
 		pirates[i].renderShadow();
 	}
+	glDisable(GL_STENCIL_TEST);
+	glDisable(GL_BLEND);
 	glDisable(GL_POLYGON_OFFSET_FILL);
 }
 

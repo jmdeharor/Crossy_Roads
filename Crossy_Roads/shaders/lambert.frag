@@ -17,8 +17,8 @@ out vec4 outColor;
 void main() {
 	vec3 n = normalize(N);
     vec3 L = normalize(lightPosition.xyz - pos);
-	vec4 texColor = texture(tex, fragTexCoord);
-    outColor = texColor*(matAmbient*lightAmbient
-		+ matDiffuse*lightDiffuse*max(0.0, dot(n, L)));
+	vec3 texColor = texture(tex, fragTexCoord).xyz;
+    outColor = vec4(texColor*(matAmbient*lightAmbient
+		+ matDiffuse*lightDiffuse*max(0.0, dot(n, L))).xyz, 1);
 }
 

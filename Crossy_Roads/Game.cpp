@@ -6,6 +6,7 @@ void Game::init() {
 	bPlay = true;
 	glClearColor(0.f, 0.f, 0.f, 1.0f);
 	glEnable(GL_DEPTH_TEST);
+	glClearStencil(0);
 	scene.init();
 }
 
@@ -15,9 +16,8 @@ bool Game::update(int deltaTime) {
 	return bPlay;
 }
 
-void Game::render()
-{
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+void Game::render() {
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 	scene.render();
 }
 
