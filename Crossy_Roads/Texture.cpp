@@ -101,9 +101,7 @@ void Texture::setMagFilter(GLint value)
 	magFilter = value;
 }
 
-void Texture::use() const
-{
-	glEnable(GL_TEXTURE_2D);
+void Texture::use() const {
 	glBindTexture(GL_TEXTURE_2D, texId);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, wrapS);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, wrapT);

@@ -34,7 +34,7 @@ private:
 	void firstInit();
 
 private:
-	glm::vec4 lightPos;
+	glm::vec3 lightDir;
 	glm::vec4 lightAmbient;
 	glm::vec4 lightDiffuse;
 	Camera camera;

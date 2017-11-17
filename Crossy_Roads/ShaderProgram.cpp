@@ -34,6 +34,10 @@ GLint ShaderProgram::bindVertexAttribute(const string &attribName, GLint size, G
 	return attribPos;
 }
 
+void ShaderProgram::bindVertexAttribute(uint location, GLint size, GLsizei stride, GLvoid * firstPointer) {
+	glVertexAttribPointer(location, size, GL_FLOAT, GL_FALSE, stride, firstPointer);
+}
+
 void ShaderProgram::link()
 {
 	GLint status;

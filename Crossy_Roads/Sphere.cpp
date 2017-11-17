@@ -204,11 +204,11 @@ void Sphere::initMore(int numDivisions, int pointsPerCircle, float diameter, Sha
 }
 
 void Sphere::render() {
-	glBindVertexArray(VAO);
+	/*glBindVertexArray(VAO);
 	glEnableVertexAttribArray(posLocation);
 	glEnableVertexAttribArray(texCoordLocation);
 	glEnableVertexAttribArray(normalLocation);
-	glDrawElements(GL_TRIANGLES, size, GL_UNSIGNED_INT, 0);
+	glDrawElements(GL_TRIANGLES, size, GL_UNSIGNED_INT, 0);*/
 }
 
 Sphere::Sphere()

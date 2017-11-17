@@ -14,11 +14,17 @@ typedef unsigned int uint;
 // together, bind input attributes to their corresponding vertex shader names, 
 // and bind the fragment output to a name from the fragment shader
 
-enum class Location {
-	model,
-	view,
-	projection,
-	normalMatrix
+enum UniformLocation {
+	modelLoc,
+	viewLoc,
+	projectionLoc,
+	normalMatrixLoc
+};
+
+enum VertexAtribLocation {
+	positionLoc,
+	normalLoc,
+	texCoordLoc
 };
 
 const std::string uniformOrder[] = { "model", "view", "projection", "normalMatrix" };
@@ -33,6 +39,7 @@ public:
 	void addShader(const Shader &shader);
 	void bindFragmentOutput(const string &outputName);
 	GLint bindVertexAttribute(const string &attribName, GLint size, GLsizei stride, GLvoid *firstPointer);
+	void bindVertexAttribute(uint location, GLint size, GLsizei stride, GLvoid *firstPointer);
 	void link();
 	void free();
 

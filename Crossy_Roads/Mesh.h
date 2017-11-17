@@ -17,17 +17,16 @@ protected:
 	glm::vec3 center, bbox[2];
 	GLuint VAO;
 	GLuint VBOvert, VBOnorm, VBOtex;
-	GLint posLocation, texCoordLocation, normalLocation;
 
-	void prepareArrays(ShaderProgram &program);
+	void prepareArrays();
 	void computeBoundingBox();
 	void initMesh(const aiMesh *paiMesh);
 	bool initMaterials(const aiScene *pScene, const string &filename);
 public:
 	glm::vec3 getbbCenter() const;
 	float getHeight() const;
-	bool loadFromFile(const string &filename, ShaderProgram &program);
-	void render() const;
+	bool loadFromFile(const string &filename);
+	void render(ShaderProgram& program) const;
 	void clear();
 	Mesh();
 	~Mesh();

@@ -2,8 +2,8 @@
 using namespace glm;
 
 void ShadowedObject::renderShadow() {
-	shadowProgram->setUniformMatrix4f((uint)Location::model, shadowProjection*model);
-	mesh->render();
+	shadowProgram->setUniformMatrix4f("model", shadowProjection*model);
+	mesh->render(*shadowProgram);
 }
 
 void ShadowedObject::setShadowShader(ShaderProgram * program) {

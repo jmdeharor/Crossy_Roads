@@ -13,7 +13,7 @@ float Mesh::getHeight() const {
 	return height;
 }
 
-bool Mesh::loadFromFile(const string &filename, ShaderProgram &program) {
+bool Mesh::loadFromFile(const string &filename) {
 	bool retCode = false;
 	Assimp::Importer Importer;
 	const aiScene *pScene;
@@ -31,7 +31,7 @@ bool Mesh::loadFromFile(const string &filename, ShaderProgram &program) {
 		return false;
 
 	computeBoundingBox();
-	prepareArrays(program);
+	prepareArrays();
 
 	vertices.clear();
 	normals.clear();
@@ -121,7 +121,7 @@ void Mesh::initMesh(const aiMesh *paiMesh) {
 	}
 }
 
-void Mesh::prepareArrays(ShaderProgram &program) {
+void Mesh::prepareArrays() {
 	unsigned int index;
 	vec3 vertex, normal;
 	vec2 texCoord;
@@ -146,30 +146,35 @@ void Mesh::prepareArrays(ShaderProgram &program) {
 	glGenBuffers(1, &VBOvert);
 	glBindBuffer(GL_ARRAY_BUFFER, VBOvert);
 	glBufferData(GL_ARRAY_BUFFER, vboVertices.size() * sizeof(float), &vboVertices[0], GL_STATIC_DRAW);
-	posLocation = program.bindVertexAttribute("position", 3, 0, 0);
 
 	glGenBuffers(1, &VBOnorm);
 	glBindBuffer(GL_ARRAY_BUFFER, VBOnorm);
 	glBufferData(GL_ARRAY_BUFFER, vboNormals.size() * sizeof(float), &vboNormals[0], GL_STATIC_DRAW);
-	normalLocation = program.bindVertexAttribute("normal", 3, 0, 0);
 
 	glGenBuffers(1, &VBOtex);
 	glBindBuffer(GL_ARRAY_BUFFER, VBOtex);
 	glBufferData(GL_ARRAY_BUFFER, vboTex.size() * sizeof(float), &vboTex[0], GL_STATIC_DRAW);
-	texCoordLocation = program.bindVertexAttribute("texCoord", 2, 0, 0);
 
 	nTriangles = triangles.size();
 }
 
-void Mesh::render() const {
-	glEnable(GL_TEXTURE_2D);
+void Mesh::render(ShaderProgram& program) const {
 	texture.use();
 	glBindVertexArray(VAO);
-	glEnableVertexAttribArray(posLocation);
-	glEnableVertexAttribArray(normalLocation);
-	glEnableVertexAttribArray(texCoordLocation);
+	glEnableVertexAttribArray(positionLoc);
+	glEnableVertexAttribArray(normalLoc);
+	glEnableVertexAttribArray(texCoordLoc);
+
+	glBindBuffer(GL_ARRAY_BUFFER, VBOvert);
+	program.bindVertexAttribute(positionLoc, 3, 0, 0);
+
+	glBindBuffer(GL_ARRAY_BUFFER, VBOnorm);
+	program.bindVertexAttribute(normalLoc, 3, 0, 0);
+	
+	glBindBuffer(GL_ARRAY_BUFFER, VBOtex);
+	program.bindVertexAttribute(texCoordLoc, 2, 0, 0);
+	
 	glDrawArrays(GL_TRIANGLES, 0, nTriangles);
-	glDisable(GL_TEXTURE_2D);
 }
 
 void Mesh::clear() {

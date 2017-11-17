@@ -46,9 +46,9 @@ void Object::updateModel() {
 }
 
 void Object::render() {
-	program->setUniformMatrix4f((uint)Location::model, model);
-	program->setUniformMatrix3f((uint)Location::normalMatrix, mat3(model));
-	mesh->render();
+	program->setUniformMatrix4f((uint)UniformLocation::modelLoc, model);
+	program->setUniformMatrix3f((uint)UniformLocation::normalMatrixLoc, mat3(model));
+	mesh->render(*program);
 }
 
 Object::Object() : 

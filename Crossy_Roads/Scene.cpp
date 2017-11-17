@@ -19,7 +19,7 @@ Scene::~Scene() {
 
 void Scene::firstInit() {
 	initShaders();
-	pirateMesh.loadFromFile("models/pirate.obj", lambertProgram);
+	pirateMesh.loadFromFile("models/pirate.obj");
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glStencilFunc(GL_EQUAL, 0, 1);
 	glStencilOp(GL_KEEP, GL_KEEP, GL_INCR);
@@ -34,9 +34,9 @@ void Scene::init() {
 	currentTime = 0.0f;
 	camera.init();
 
-	lightAmbient = vec4(0.3f);
-	lightDiffuse = vec4(0.8f);
-	lightPos = vec4(0, 1, 1, 1);
+	lightAmbient = vec4(0.15f);
+	lightDiffuse = vec4(0.85f);
+	lightDir = normalize(vec3(1, 1, 0));
 	pirates.resize(rows*cols);
 	vec3 offset = vec3(-6, -2, -6);
 	for (uint i = 0; i < rows; ++i) {
@@ -48,7 +48,7 @@ void Scene::init() {
 
 			pirate.setScale(vec3(0.1f));
 			pirate.setPos(vec3(offset.x + i*3, offset.y + pirate.getHeight() / 2, offset.z + j*3));
-			pirate.setPlane(vec4(0, 1, 0, -offset.y), vec3(1, 1, 0));
+			pirate.setPlane(vec4(0, 1, 0, -offset.y), lightDir);
 			pirate.updateModel();
 		}
 	}
@@ -97,35 +97,39 @@ void Scene::update(int deltaTime) {
 
 void Scene::render() {
 	texProgram.use();
-	texProgram.setUniformMatrix4f((uint)Location::projection, *camera.getProjectionMatrix());
+	texProgram.setUniformMatrix4f((uint)UniformLocation::projectionLoc, *camera.getProjectionMatrix());
 	texProgram.setUniform4f("color", 1.0f, 1.0f, 1.0f, 1.0f);
 	texProgram.setUniformMatrix4f("modelview", *camera.getViewMatrix());
 	level->render();
 
 	lambertProgram.use();
-	lambertProgram.setUniformMatrix4f((uint)Location::projection, *camera.getProjectionMatrix());
-	lambertProgram.setUniformMatrix4f((uint)Location::view, *camera.getViewMatrix());
-	vec4 realLightPos = (*camera.getViewMatrix())*lightPos;
+	lambertProgram.setUniformMatrix4f(projectionLoc, *camera.getProjectionMatrix());
+	lambertProgram.setUniformMatrix4f(viewLoc, *camera.getViewMatrix());
+	//vec4 realLightPos = (*camera.getViewMatrix())*lightPos;
+	vec3 lightD = mat3(*camera.getViewMatrix())*lightDir;
 	lambertProgram.setUniform4f("lightAmbient", lightAmbient);
 	lambertProgram.setUniform4f("lightDiffuse", lightDiffuse);
-	lambertProgram.setUniform4f("lightPosition", realLightPos);
+	lambertProgram.setUniform3f("lightDirection", lightD.x, lightD.y, lightD.z);
 	lambertProgram.setUniform4f("matDiffuse", 1, 1, 1, 1);
 	lambertProgram.setUniform4f("matAmbient", 1, 1, 1, 1);
+	glEnable(GL_TEXTURE_2D);
 	for (uint i = 0; i < pirates.size(); ++i) {
 		pirates[i].render();
 	}
+	glDisable(GL_TEXTURE_2D);
 
 	shadowProgram.use();
-	shadowProgram.setUniformMatrix4f((uint)Location::projection, *camera.getProjectionMatrix());
-	shadowProgram.setUniformMatrix4f((uint)Location::view, *camera.getViewMatrix());
+	shadowProgram.setUniformMatrix4f("projection", *camera.getProjectionMatrix());
+	shadowProgram.setUniformMatrix4f("view", *camera.getViewMatrix());
 	glEnable(GL_POLYGON_OFFSET_FILL);
 	glEnable(GL_BLEND);
 	glEnable(GL_STENCIL_TEST);
-
 	glPolygonOffset(-1, -1);
+
 	for (uint i = 0; i < pirates.size(); ++i) {
 		pirates[i].renderShadow();
 	}
+
 	glDisable(GL_STENCIL_TEST);
 	glDisable(GL_BLEND);
 	glDisable(GL_POLYGON_OFFSET_FILL);
@@ -167,6 +171,6 @@ inline void compileShader(ShaderProgram& program, const string& fileName) {
 
 void Scene::initShaders() {
 	compileShader(texProgram, "texture");
-	compileShader(lambertProgram, "lambert");
+	compileShader(lambertProgram, "directionalLight");
 	compileShader(shadowProgram, "shadow");
 }
