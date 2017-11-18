@@ -8,10 +8,15 @@ using namespace std;
 
 Texture::Texture()
 {
+	texId = 0;
 	wrapS = GL_REPEAT;
 	wrapT = GL_REPEAT;
 	minFilter = GL_LINEAR_MIPMAP_LINEAR;
 	magFilter = GL_LINEAR;
+}
+
+Texture::~Texture() {
+	glDeleteTextures(1, &texId);
 }
 
 
@@ -30,7 +35,8 @@ bool Texture::loadFromFile(const string &filename, PixelFormat format)
 	}
 	if(image == NULL)
 		return false;
-	glGenTextures(1, &texId);
+	if (texId == 0)
+		glGenTextures(1, &texId);
 	glBindTexture(GL_TEXTURE_2D, texId);
 	switch(format)
 	{

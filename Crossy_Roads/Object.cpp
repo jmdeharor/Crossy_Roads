@@ -51,6 +51,12 @@ void Object::render() {
 	mesh->render(*program);
 }
 
+void Object::render(ShaderProgram & program) {
+	program.setUniformMatrix4f((uint)UniformLocation::modelLoc, model);
+	program.setUniformMatrix3f((uint)UniformLocation::normalMatrixLoc, mat3(model));
+	mesh->render(program);
+}
+
 Object::Object() : 
 	pos(vec3(0)), rot(vec3(0)), scale(vec3(1)),
 	center(vec3(0)), model(mat4(1)), mesh(NULL) {

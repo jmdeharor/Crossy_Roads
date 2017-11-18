@@ -4,9 +4,10 @@
 
 void Game::init() {
 	bPlay = true;
-	glClearColor(0.f, 0.f, 0.f, 1.0f);
+	glClearColor(0.f, 1.f, 1.f, 1.0f);
 	glEnable(GL_DEPTH_TEST);
 	glClearStencil(0);
+	glViewport(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 	scene.init();
 }
 

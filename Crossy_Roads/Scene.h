@@ -4,11 +4,12 @@
 
 #include <glm/glm.hpp>
 #include "ShaderProgram.h"
-#include "Level.h"
 #include "Camera.h"
 #include "Sphere.h"
+#include "QuadMesh.h"
 #include "ShadowedObject.h"
 #include "GameObject.h"
+#include "Floor.h"
 
 #define CAMERA_WIDTH 640
 #define CAMERA_HEIGHT 480
@@ -34,14 +35,18 @@ private:
 	void firstInit();
 
 private:
+	std::vector<ShadowedObject> pirateEnemies;
+	Floor floor;
+	Mesh pirateMesh;
+	GLuint framebufferName, depthTexture, boxVao, boxVBO;
 	glm::vec3 lightDir;
 	glm::vec4 lightAmbient;
 	glm::vec4 lightDiffuse;
 	Camera camera;
-	Level *level;
-	Mesh pirateMesh;
-	std::vector<ShadowedObject> pirates;
+	ShadowedObject pirate;
+	bool pressed;
 	ShaderProgram texProgram, lambertProgram, shadowProgram;
+	ShaderProgram shadowMapProgram, drawShadowProgram, drawImageProgram;
 	float currentTime;
 };
 

@@ -9,6 +9,10 @@ glm::vec3 Mesh::getbbCenter() const {
 	return center;
 }
 
+glm::vec3 Mesh::getbbSize() const {
+	return bbox[1]-bbox[0];
+}
+
 float Mesh::getHeight() const {
 	return height;
 }

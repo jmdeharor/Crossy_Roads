@@ -4,10 +4,10 @@
 #define PI 3.141592654f
 
 void Camera::init() {
-	cam.d = 1;
+	cam.d = 20;
 	cam.phi = 0;
-	cam.psi = 0;
-	cam.theta = 0;
+	cam.psi = 10;
+	cam.theta = -5.5f;
 	cam.ra = float(CAMERA_WIDTH) / float(CAMERA_HEIGHT);
 	cam.setFOV(45.f / 180.f * PI);
 	cam.zNear = 0.1f;
@@ -45,12 +45,6 @@ void Camera::update(int deltaTime) {
 	else if (Game::instance().getKey('f')) {
 		cam.theta -= 0.1f;
 		cam.updateVM();
-	}
-	else if (Game::instance().getKey('m')) {
-		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-	}
-	else if (Game::instance().getKey('k')) {
-		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	}
 }
 

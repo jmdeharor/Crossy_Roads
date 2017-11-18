@@ -24,11 +24,12 @@ protected:
 	bool initMaterials(const aiScene *pScene, const string &filename);
 public:
 	glm::vec3 getbbCenter() const;
+	glm::vec3 getbbSize() const;
 	float getHeight() const;
 	bool loadFromFile(const string &filename);
-	void render(ShaderProgram& program) const;
+	virtual void render(ShaderProgram& program) const;
 	void clear();
 	Mesh();
-	~Mesh();
+	virtual ~Mesh();
 };
 

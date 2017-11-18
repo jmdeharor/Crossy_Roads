@@ -22,6 +22,7 @@ public:
 	const glm::mat4* getModel() const;
 	void updateModel();
 	void render();
+	void render(ShaderProgram& program);
 	Object();
 	void setMesh(const Mesh* mesh);
 	void setShader(ShaderProgram* program);
