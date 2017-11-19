@@ -15,6 +15,7 @@ class Floor : GameObject {
 	QuadMesh floorPlane;
 	std::vector<Object> planeTiles;
 	std::vector<ShadowedObject> enemies;
+	std::vector<float> velocities;
 	Texture floorTex;
 	glm::vec2 tileSize;
 public:

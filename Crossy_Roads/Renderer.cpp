@@ -99,6 +99,7 @@ void Renderer::render() {
 	glEnable(GL_BLEND);
 	glEnable(GL_STENCIL_TEST);
 	glPolygonOffset(-1, -1);
+
 	applyShadowShader(shadowProgram, shadowedObjects);
 
 	glDisable(GL_STENCIL_TEST);

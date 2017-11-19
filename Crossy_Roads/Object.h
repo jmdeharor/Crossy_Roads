@@ -10,8 +10,11 @@ protected:
 	glm::vec3 pos;
 	glm::vec3 rot;
 	glm::vec3 scale;
+	bool modified;
+
 public:
 	string name;
+	void updateModel();
 	void update(int deltaTime);
 	void setPos(glm::vec3 pos);
 	void move(float x, float y, float z);
@@ -19,8 +22,7 @@ public:
 	void rotateY(float angle);
 	void rotateZ(float angle);
 	void setScale(glm::vec3 scale);
-	const glm::mat4* getModel() const;
-	void updateModel();
+	const glm::mat4* getModel();
 	void render(ShaderProgram& program);
 	Object();
 	void setMesh(const Mesh* mesh);

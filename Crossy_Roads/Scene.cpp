@@ -77,7 +77,6 @@ void Scene::init() {
 	pirate.setScale(vec3(0.1f));
 	pirate.setPos(vec3(0, pirate.getHeight() / 2, 0)+offset);
 	pirate.setPlane(vec4(0, 1, 0, -offset.y), lightDir);
-	pirate.updateModel();
 
 	camera.setPos(pirate.getPos());
 	camera.updateVM();
@@ -117,7 +116,6 @@ void Scene::update(int deltaTime) {
 	}
 	if (modified) {
 		camera.setPos(pirate.getPos());
-		pirate.updateModel();
 		camera.updateVM();
 	}
 }

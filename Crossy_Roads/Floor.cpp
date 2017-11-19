@@ -12,14 +12,21 @@ uint Floor::getNumRows() {
 	return rows;
 }
 
+float generateSpeed() {
+	const static float maxSpeed = 0.3f;
+	const static float minSpeed = 0.05f;
+	return (float)rand() / RAND_MAX*(maxSpeed-minSpeed) + minSpeed;
+}
+
 void Floor::addLevel() {
 	firstPos += tileSize.y;
 	for (uint i = 0; i < cols; ++i) {
 		Object& tile = planeTiles[lastRow*cols + i];
 		vec3 tilePos = tile.getPos();
 		tile.setPos(vec3(tilePos.x, 0, firstPos));
-		tile.updateModel();
 	}
+	velocities[lastRow] = generateSpeed();
+	enemies[lastRow].setPos(vec3(-30 + ((float)rand() / RAND_MAX) * 60, enemies[lastRow].getHeight() / 2, firstPos));
 	if (lastRow == rows-1) {
 		lastRow = 0;
 	}
@@ -35,6 +42,7 @@ void Floor::firstInit() {
 	cols = 5;
 	planeTiles.resize(rows*cols);
 	enemies.resize(rows);
+	velocities.resize(enemies.size());
 	floorPlane.setQuadTexture("images/toon road texture_img.png");
 	tileSize = vec2(60, 2);
 }
@@ -62,7 +70,7 @@ void Floor::init() {
 		enemy.setScale(vec3(0.1f));
 		enemy.setPos(vec3(-30 + ((float)rand() / RAND_MAX) * 60, enemy.getHeight() / 2, offsetZ + i*tileSize.y));
 		enemy.setPlane(vec4(0, 1, 0, 0), lightDir);
-		enemy.updateModel();
+		velocities[i] = generateSpeed();
 	}
 
 	for (uint i = 0; i < rows; ++i) {
@@ -72,7 +80,6 @@ void Floor::init() {
 			tile.setMesh(&floorPlane);
 			tile.setScale(vec3(realTileSize/2, 1, tileSize.y / 2));
 			tile.setPos(vec3(offsetX + j*realTileSize, 0, offsetZ + i*tileSize.y));
-			tile.updateModel();
 		}
 	}
 	lastRow = 0;
@@ -87,11 +94,11 @@ void Floor::addObjects(Renderer & renderer) {
 void Floor::update(int deltaTime) {
 	for (uint i = 0; i < enemies.size(); ++i) {
 		Object& object = enemies[i];
-		object.move(0.1f, 0, 0);
+		object.move(velocities[i], 0, 0);
 		if (object.getPos().x > 30) {
+			velocities[i] = generateSpeed();
 			object.setPos(vec3(-30, object.getPos().y, object.getPos().z));
 		}
-		object.updateModel();
 	}
 }
 
