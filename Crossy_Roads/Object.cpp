@@ -45,12 +45,6 @@ void Object::updateModel() {
 	model = translate(model, -center);
 }
 
-void Object::render() {
-	program->setUniformMatrix4f((uint)UniformLocation::modelLoc, model);
-	program->setUniformMatrix3f((uint)UniformLocation::normalMatrixLoc, mat3(model));
-	mesh->render(*program);
-}
-
 void Object::render(ShaderProgram & program) {
 	program.setUniformMatrix4f((uint)UniformLocation::modelLoc, model);
 	program.setUniformMatrix3f((uint)UniformLocation::normalMatrixLoc, mat3(model));
@@ -65,10 +59,6 @@ Object::Object() :
 void Object::setMesh(const Mesh * mesh) {
 	this->mesh = mesh;
 	center = mesh->getbbCenter();
-}
-
-void Object::setShader(ShaderProgram * program) {
-	this->program = program;
 }
 
 Object::~Object()

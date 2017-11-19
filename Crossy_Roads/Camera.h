@@ -1,9 +1,8 @@
 #pragma once
 #include "Camera\eulerperspcamera.h"
 #include "Camera\eulerorthocamera.h"
-#include "UpdatableObject.h"
 
-class Camera : public UpdatableObject {
+class Camera {
 	EulerPerspCamera cam;
 	EulerOrthoCamera uiCam;
 public:

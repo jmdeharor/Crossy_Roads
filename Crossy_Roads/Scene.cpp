@@ -15,11 +15,7 @@ Scene::~Scene() {
 }
 
 void Scene::firstInit() {
-	initShaders();
 	pirateMesh.loadFromFile("models/pirate.obj");
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	glStencilFunc(GL_EQUAL, 0, 1);
-	glStencilOp(GL_KEEP, GL_KEEP, GL_INCR);
 
 	// The framebuffer, which regroups 0, 1, or more textures, and 0 or 1 depth buffer.
 	glGenFramebuffers(1, &framebufferName);
@@ -66,53 +62,37 @@ const uint cols = 5;
 void Scene::init() {
 	GameObject::init();
 	currentTime = 0.0f;
+	renderer.init();
 	camera.init();
-	floor.setShaderProgram(&texProgram);
+	lightDir = vec3(1,1,0);
+	floor.setLight(lightDir);
 	floor.init();
 	lightAmbient = vec4(0.15f);
 	lightDiffuse = vec4(0.85f);
-	lightDir = normalize(vec3(1, 1, 0));
 	vec2 tileSize = floor.getTileSize();
 	vec3 offset = vec3(0, 0, 0);
 	pirate.setMesh(&pirateMesh);
-	pirate.setShader(&lambertProgram);
-	pirate.setShadowShader(&shadowProgram);
+	pirate.name = "player";
 
 	pirate.setScale(vec3(0.1f));
 	pirate.setPos(vec3(0, pirate.getHeight() / 2, 0)+offset);
 	pirate.setPlane(vec4(0, 1, 0, -offset.y), lightDir);
 	pirate.updateModel();
-	vec2 enemyOffset = floor.getOffsets();
-	pirateEnemies.resize(floor.getNumRows());
-	for (uint i = 0; i < pirateEnemies.size(); ++i) {
-		ShadowedObject& object = pirateEnemies[i];
-
-		object.setMesh(&pirateMesh);
-		object.setShader(&lambertProgram);
-		object.setShadowShader(&shadowProgram);
-
-		object.rotateY(PI);
-		object.setScale(vec3(0.1f));
-		object.setPos(vec3(-30 + ((float)rand() / RAND_MAX) * 60, pirate.getHeight() / 2, enemyOffset.y + i*tileSize.y));
-		object.setPlane(vec4(0, 1, 0, -offset.y), lightDir);
-		object.updateModel();
-	}
 
 	camera.setPos(pirate.getPos());
 	camera.updateVM();
 	pressed = false;
+
+	floor.addObjects(renderer);
+	renderer.addGroup(&pirate, 1, sizeof(pirate));
+	renderer.setCamera(&camera);
+	renderer.setLightParameters(lightDir, lightAmbient, lightDiffuse);
 }
 
 void Scene::update(int deltaTime) {
 	camera.update(deltaTime);
-	for (uint i = 0; i < pirateEnemies.size(); ++i) {
-		Object& object = pirateEnemies[i];
-		object.move(0.1f, 0, 0);
-		if (object.getPos().x > 30) {
-			object.setPos(vec3(-30, object.getPos().y, object.getPos().z));
-		}
-		object.updateModel();
-	}
+	renderer.update(deltaTime);
+	floor.update(deltaTime);
 	bool modified = false;
 	if (Game::instance().getKey('w')) {
 		if (!pressed) {
@@ -135,60 +115,15 @@ void Scene::update(int deltaTime) {
 	if (Game::instance().getKey('p')) {
 		int a = 3;
 	}
-
 	if (modified) {
 		camera.setPos(pirate.getPos());
 		pirate.updateModel();
 		camera.updateVM();
 	}
-	if (Game::instance().getKey('m')) {
-		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-	}
-	else if (Game::instance().getKey('k')) {
-		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-	}
 }
 
 void Scene::render() {
-	glEnable(GL_TEXTURE_2D);
-	texProgram.use();
-	texProgram.setUniformMatrix4f(projectionLoc, *camera.getProjectionMatrix());
-	texProgram.setUniformMatrix4f(viewLoc, *camera.getViewMatrix());
-	texProgram.setUniform4f("color", vec4(1));
-	floor.render();
-
-	lambertProgram.use();
-	lambertProgram.setUniformMatrix4f(projectionLoc, *camera.getProjectionMatrix());
-	lambertProgram.setUniformMatrix4f(viewLoc, *camera.getViewMatrix());
-	//vec4 realLightPos = (*camera.getViewMatrix())*lightPos;
-	vec3 lightD = mat3(*camera.getViewMatrix())*lightDir;
-	lambertProgram.setUniform4f("lightAmbient", lightAmbient);
-	lambertProgram.setUniform4f("lightDiffuse", lightDiffuse);
-	lambertProgram.setUniform3f("lightDirection", lightD.x, lightD.y, lightD.z);
-	lambertProgram.setUniform4f("matDiffuse", 1, 1, 1, 1);
-	lambertProgram.setUniform4f("matAmbient", 1, 1, 1, 1);
-	for (uint i = 0; i < pirateEnemies.size(); ++i) {
-		pirateEnemies[i].render();
-	}
-	pirate.render();
-
-	glDisable(GL_TEXTURE_2D);
-
-	shadowProgram.use();
-	shadowProgram.setUniformMatrix4f(projectionLoc, *camera.getProjectionMatrix());
-	shadowProgram.setUniformMatrix4f(viewLoc, *camera.getViewMatrix());
-	glEnable(GL_POLYGON_OFFSET_FILL);
-	glEnable(GL_BLEND);
-	glEnable(GL_STENCIL_TEST);
-	glPolygonOffset(-1, -1);
-	for (uint i = 0; i < pirateEnemies.size(); ++i) {
-		pirateEnemies[i].renderShadow();
-	}
-	pirate.renderShadow();
-
-	glDisable(GL_STENCIL_TEST);
-	glDisable(GL_BLEND);
-	glDisable(GL_POLYGON_OFFSET_FILL);
+	renderer.render();
 
 	/*glm::mat4 depthProjectionMatrix = glm::ortho<float>(-10, 10, -10, 10, -10, 20);
 	glm::mat4 depthViewMatrix = glm::lookAt(vec3(0, 5, 0), glm::vec3(0, 0, 0), glm::vec3(1, 0, 0));
@@ -234,47 +169,4 @@ void Scene::render() {
 
 void Scene::resize(int w, int h) {
 	camera.resize(w, h);
-}
-
-inline void compileShader(ShaderProgram& program, const string& fileName) {
-	Shader vShader, fShader;
-	string path = "shaders/" + fileName;
-	vShader.initFromFile(VERTEX_SHADER, path + ".vert");
-	if (!vShader.isCompiled()) {
-		cout << "Vertex Shader Error" << endl;
-		cout << "" << vShader.log() << endl << endl;
-	}
-	fShader.initFromFile(FRAGMENT_SHADER, path + ".frag");
-	if (!fShader.isCompiled()) {
-		cout << "Fragment Shader Error" << endl;
-		cout << "" << fShader.log() << endl << endl;
-	}
-	program.init();
-	program.addShader(vShader);
-	program.addShader(fShader);
-	program.link();
-	if (!program.isLinked()) {
-		cout << "Shader Linking Error" << endl;
-		cout << "" << program.log() << endl << endl;
-	}
-	vShader.free();
-	fShader.free();
-	for (uint i = 0; i < sizeof(uniformOrder) / sizeof(string); ++i) {
-		program.addUniform(uniformOrder[i]);
-	}
-}
-
-void Scene::initShaders() {
-	compileShader(texProgram, "texture");
-	texProgram.bindFragmentOutput("outColor");
-	compileShader(lambertProgram, "directionalLight");
-	lambertProgram.bindFragmentOutput("outColor");
-	compileShader(shadowProgram, "shadow");
-	shadowProgram.bindFragmentOutput("outColor");
-	compileShader(shadowMapProgram, "shadowMap");
-	shadowMapProgram.bindFragmentOutput("fragmentdepth");
-	compileShader(drawShadowProgram, "drawShadow");
-	drawShadowProgram.bindFragmentOutput("outColor");
-	compileShader(drawImageProgram, "drawImage");
-	drawImageProgram.bindFragmentOutput("outColor");
 }

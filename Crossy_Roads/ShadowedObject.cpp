@@ -1,13 +1,9 @@
 #include "ShadowedObject.h"
 using namespace glm;
 
-void ShadowedObject::renderShadow() {
-	shadowProgram->setUniformMatrix4f("model", shadowProjection*model);
-	mesh->render(*shadowProgram);
-}
-
-void ShadowedObject::setShadowShader(ShaderProgram * program) {
-	shadowProgram = program;
+void ShadowedObject::renderShadow(ShaderProgram & program) {
+	program.setUniformMatrix4f("model", shadowProjection*model);
+	mesh->render(program);
 }
 
 void ShadowedObject::setPlane(vec4 plane, vec3 direction) {

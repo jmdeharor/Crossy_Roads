@@ -1,8 +1,6 @@
 #pragma once
-#include "RenderizableObject.h"
-#include "UpdatableObject.h"
 
-class GameObject : public RenderizableObject, public UpdatableObject {
+class GameObject {
 protected:
 	virtual void firstInit();
 	bool initiated;

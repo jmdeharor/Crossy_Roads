@@ -10,6 +10,7 @@
 #include "ShadowedObject.h"
 #include "GameObject.h"
 #include "Floor.h"
+#include "Renderer.h"
 
 #define CAMERA_WIDTH 640
 #define CAMERA_HEIGHT 480
@@ -31,11 +32,12 @@ public:
 	void resize(int w, int h);
 
 private:
-	void initShaders();
 	void firstInit();
 
 private:
-	std::vector<ShadowedObject> pirateEnemies;
+	Renderer renderer;
+	ShadowedObject* enemies;
+	ShadowedObject pirate;
 	Floor floor;
 	Mesh pirateMesh;
 	GLuint framebufferName, depthTexture, boxVao, boxVBO;
@@ -43,10 +45,7 @@ private:
 	glm::vec4 lightAmbient;
 	glm::vec4 lightDiffuse;
 	Camera camera;
-	ShadowedObject pirate;
 	bool pressed;
-	ShaderProgram texProgram, lambertProgram, shadowProgram;
-	ShaderProgram shadowMapProgram, drawShadowProgram, drawImageProgram;
 	float currentTime;
 };
 

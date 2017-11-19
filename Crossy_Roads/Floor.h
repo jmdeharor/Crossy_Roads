@@ -1,26 +1,31 @@
 #pragma once
 #include "QuadMesh.h"
 #include <vector>
-#include "Object.h"
+#include "ShadowedObject.h"
+#include "Renderer.h"
+
+#define PI 3.14159f
 
 class Floor : GameObject {
+	Mesh enemyMesh;
 	uint rows, cols;
 	uint lastRow;
 	float firstPos;
+	glm::vec3 lightDir;
 	QuadMesh floorPlane;
 	std::vector<Object> planeTiles;
-	ShaderProgram* program;
+	std::vector<ShadowedObject> enemies;
 	Texture floorTex;
 	glm::vec2 tileSize;
 public:
 	glm::vec2 getOffsets();
 	uint getNumRows();
 	void addLevel();
-	void setShaderProgram(ShaderProgram* shaderProgram);
 	void firstInit();
 	glm::vec2 getTileSize();
+	void setLight(glm::vec3 lightDir);
 	void init();
-	void render();
+	void addObjects(Renderer& renderer);
 	void update(int deltaTime);
 	Floor();
 	~Floor();

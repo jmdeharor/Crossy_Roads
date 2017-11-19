@@ -46,6 +46,7 @@ void QuadMesh::init() {
 }
 
 void QuadMesh::render(ShaderProgram& program) const {
+	texture.use();
 	glBindVertexArray(VAO);
 	glEnableVertexAttribArray(positionLoc);
 	glEnableVertexAttribArray(normalLoc);
@@ -61,6 +62,10 @@ void QuadMesh::render(ShaderProgram& program) const {
 	program.bindVertexAttribute(texCoordLoc, 2, 0, 0);
 
 	glDrawArrays(GL_TRIANGLE_STRIP, 0, nTriangles);
+}
+
+void QuadMesh::setQuadTexture(const string & fileName) {
+	texture.loadFromFile(fileName, TEXTURE_PIXEL_FORMAT_RGB);
 }
 
 QuadMesh::QuadMesh()
