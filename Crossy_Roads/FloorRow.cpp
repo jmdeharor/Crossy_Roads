@@ -51,8 +51,6 @@ void FloorRow::setPos(glm::vec2 position) {
 bool applyConstraints(uint prevMeshIndex, uint meshIndex, uint numAdjacents, vector<uint>& adjacentRow, uint position) {
 	if (prevMeshIndex == meshIndex)
 		return false;
-	/*if (position > 0 && adjacentRow[position] != adjacentRow[position - 1] && meshIndex == adjacentRow[position])
-		return false;*/
 	if (position + numAdjacents < adjacentRow.size() && adjacentRow[position + numAdjacents - 1] != adjacentRow[position + numAdjacents])
 		return false;
 	if (meshIndex == adjacentRow[position])
