@@ -3,9 +3,9 @@
 using namespace glm;
 
 void Floor::firstInit() {
-	tileSize = vec2(60, 3);
+	tileSize = vec2(60, 2);
 	rows = 40;
-	cols = (uint)tileSize.x/3;
+	cols = (uint)tileSize.x/2;
 	floorRows.resize(rows);
 	FloorRow::setParameters(tileSize, cols, lightDir);
 	FloorRow::initMeshes();
@@ -16,10 +16,10 @@ void Floor::init() {
 	float realTileSize = tileSize.x / cols;
 
 	float offsetZ = -tileSize.y*(rows/2);
-
+	vector<uint> meshIndex(cols, 999);
 	for (uint i = 0; i < rows; ++i) {
 		floorRows[i].setPos(vec2(0, offsetZ + i*tileSize.y));
-		floorRows[i].init();
+		floorRows[i].init(meshIndex);
 	}
 
 	lastRow = 0;

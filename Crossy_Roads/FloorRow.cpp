@@ -2,10 +2,15 @@
 #include "Pi.h"
 using namespace glm;
 
+const string models[] = { "models/floor_2.obj","models/floor_3.obj","models/floor_4.obj" };
+const uint nModels = sizeof(models) / sizeof(string);
+
 void FloorRow::initMeshes() {
 	pirateMesh.loadFromFile("models/pirate.obj");
 	mastMesh.loadFromFile("models/palo.obj");
-	floorMesh.loadFromFile("models/floor_1.obj");
+	for (uint i = 0; i < nModels; ++i) {
+		floorMesh[i].loadFromFile(models[i]);
+	}
 }
 
 void FloorRow::setParameters(vec2 tileSize, uint cols, vec3 lightDir) {
@@ -34,7 +39,7 @@ void FloorRow::moveToPosition(glm::vec2 position) {
 	}
 	for (uint i = 0; i < enemies.size(); ++i) {
 		enemies[i].setPos(vec3(-30 + ((float)rand() / RAND_MAX) * 60, enemies[i].getHeight() / 2, position.y));
-		velocities[i] = generateSpeed();
+		speeds[i] = generateSpeed();
 	}
 	pos = position;
 }
@@ -43,9 +48,25 @@ void FloorRow::setPos(glm::vec2 position) {
 	pos = position;
 }
 
-void FloorRow::init() {
+bool applyConstraints(uint prevMeshIndex, uint meshIndex, uint numAdjacents, vector<uint>& adjacentRow, uint position) {
+	if (prevMeshIndex == meshIndex)
+		return false;
+	/*if (position > 0 && adjacentRow[position] != adjacentRow[position - 1] && meshIndex == adjacentRow[position])
+		return false;*/
+	if (position + numAdjacents < adjacentRow.size() && adjacentRow[position + numAdjacents - 1] != adjacentRow[position + numAdjacents])
+		return false;
+	/*if (meshIndex == adjacentRow[position])
+		return false;*/
+	return true;
+}
+
+uint minim(uint a, uint b) {
+	return a < b ? a : b;
+}
+
+void FloorRow::init(vector<uint>& adjacentRow) {
 	enemies.resize(1);
-	velocities.resize(enemies.size());
+	speeds.resize(enemies.size());
 	floorTiles.resize(cols);
 
 	static float realTileSize = tileSize.x / cols;
@@ -59,26 +80,54 @@ void FloorRow::init() {
 		enemy.setScale(vec3(0.1f));
 		enemy.setPos(vec3(-tileSize.x / 2 + ((float)rand() / RAND_MAX) * tileSize.x, enemy.getHeight() / 2, pos.y));
 		enemy.setPlane(vec4(0, 1, 0, 0), lightDir);
-		velocities[i] = generateSpeed();
+		speeds[i] = generateSpeed();
 	}
-	static vec3 boundingBox = floorMesh.getbbSize();
+	static vec3 boundingBox = floorMesh[0].getbbSize();
 	static vec3 floorTileSize = vec3(realTileSize, 0.1f, tileSize.y) / boundingBox;
+	uint meshIndex = nModels;
+	Mesh* mesh = NULL;
+	uint numAdjacentTiles = rand()%6 + 5;
+	uint counter = numAdjacentTiles;
 	for (uint i = 0; i < floorTiles.size(); ++i) {
 		Object& tile = floorTiles[i];
 		tile.name = "floor tile " + to_string(i);
-		tile.setMesh(&floorMesh);
+		if (counter == numAdjacentTiles) {
+			uint prevMeshIndex = meshIndex;
+			meshIndex = rand() % nModels;
+			numAdjacentTiles = minim(rand() % 5 + 5, floorTiles.size()-i);
+			while (!applyConstraints(prevMeshIndex, meshIndex, numAdjacentTiles, adjacentRow, i)) {
+				meshIndex = rand() % nModels;
+				numAdjacentTiles = rand() % 5 + 5;
+			}
+			mesh = &floorMesh[meshIndex];
+			counter = 0;
+		}
+		adjacentRow[i] = meshIndex;
+		tile.setMesh(mesh);
 		tile.setScale(floorTileSize);
 		tile.rotateY(PI / 2);
 		tile.setPos(vec3(offsetX + i*realTileSize, -boundingBox.y*0.1f / 2, pos.y));
+		++counter;
+	}
+	static float mastHeight = mastMesh.getHeight()*0.5f;
+	if (false && rand() % 8 == 0) {
+		hasMast = true;
+		mast.setMesh(&mastMesh);
+		mast.setScale(vec3(0.1f,0.5f,0.1f));
+		mast.setPos(vec3(20 -tileSize.x / 2 + ((float)rand() / RAND_MAX) * (tileSize.x-40), mastHeight/2, pos.y));
+		mast.setPlane(vec4(0, 1, 0, 0), lightDir);
+	}
+	else {
+		hasMast = false;
 	}
 }
 
 void FloorRow::update(int deltaTime) {
 	for (uint i = 0; i < enemies.size(); ++i) {
 		Object& object = enemies[i];
-		object.move(velocities[i], 0, 0);
+		object.move(speeds[i], 0, 0);
 		if (object.getPos().x > tileSize.x / 2) {
-			velocities[i] = generateSpeed();
+			speeds[i] = generateSpeed();
 			object.setPos(vec3(-tileSize.x / 2, object.getPos().y, object.getPos().z));
 		}
 	}
@@ -94,12 +143,16 @@ void FloorRow::renderLightObjects(ShaderProgram & program) {
 	for (Object& object : enemies) {
 		object.render(program);
 	}
+	if (hasMast)
+		mast.render(program);
 }
 
 void FloorRow::renderShadows(ShaderProgram & program) {
 	for (ShadowedObject& object : enemies) {
 		object.renderShadow(program);
 	}
+	if (hasMast)
+		mast.renderShadow(program);
 }
 
 FloorRow::FloorRow()
@@ -111,9 +164,9 @@ FloorRow::~FloorRow()
 {
 }
 
-glm::vec2 FloorRow::tileSize;
+vec2 FloorRow::tileSize;
 uint FloorRow::cols;
-glm::vec3 FloorRow::lightDir;
+vec3 FloorRow::lightDir;
 Mesh FloorRow::pirateMesh;
 Mesh FloorRow::mastMesh;
-Mesh FloorRow::floorMesh;
+vector<Mesh> FloorRow::floorMesh(nModels);
