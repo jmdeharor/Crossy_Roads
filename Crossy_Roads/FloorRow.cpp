@@ -55,8 +55,8 @@ bool applyConstraints(uint prevMeshIndex, uint meshIndex, uint numAdjacents, vec
 		return false;*/
 	if (position + numAdjacents < adjacentRow.size() && adjacentRow[position + numAdjacents - 1] != adjacentRow[position + numAdjacents])
 		return false;
-	/*if (meshIndex == adjacentRow[position])
-		return false;*/
+	if (meshIndex == adjacentRow[position])
+		return false;
 	return true;
 }
 
