@@ -43,7 +43,8 @@ void Floor::firstInit() {
 	planeTiles.resize(rows*cols);
 	enemies.resize(rows);
 	velocities.resize(enemies.size());
-	floorPlane.setQuadTexture("images/toon road texture_img.png");
+	floorTex.loadFromFile("images/toon road texture_img.png", TEXTURE_PIXEL_FORMAT_RGB);
+	//floorPlane.setQuadTexture("images/toon road texture_img.png");
 	tileSize = vec2(60, 2);
 }
 
@@ -78,6 +79,7 @@ void Floor::init() {
 			Object& tile = planeTiles[i*cols + j];
 			tile.name = "floor tile " + to_string(i);
 			tile.setMesh(&floorPlane);
+			tile.rotateX(PI/2);
 			tile.setScale(vec3(realTileSize/2, 1, tileSize.y / 2));
 			tile.setPos(vec3(offsetX + j*realTileSize, 0, offsetZ + i*tileSize.y));
 		}
@@ -87,8 +89,8 @@ void Floor::init() {
 }
 
 void Floor::addObjects(Renderer & renderer) {
-	renderer.addGroup(&enemies[0], enemies.size(), sizeof(enemies[0]));
-	renderer.addSimpleGroup(&planeTiles[0], planeTiles.size(), sizeof(planeTiles[0]));
+	renderer.addGroup(&enemies[0], enemies.size());
+	renderer.addSimpleGroup(&planeTiles[0], planeTiles.size());
 }
 
 void Floor::update(int deltaTime) {
@@ -99,6 +101,25 @@ void Floor::update(int deltaTime) {
 			velocities[i] = generateSpeed();
 			object.setPos(vec3(-30, object.getPos().y, object.getPos().z));
 		}
+	}
+}
+
+void Floor::renderFloor(ShaderProgram & program) {
+	floorTex.use();
+	for (Object& object : planeTiles) {
+		object.render(program);
+	}
+}
+
+void Floor::renderEnemies(ShaderProgram & program) {
+	for (Object& object : enemies) {
+		object.render(program);
+	}
+}
+
+void Floor::renderEnemyShadows(ShaderProgram & program) {
+	for (ShadowedObject& object : enemies) {
+		object.renderShadow(program);
 	}
 }
 

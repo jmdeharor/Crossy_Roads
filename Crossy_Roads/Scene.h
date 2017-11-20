@@ -33,20 +33,23 @@ public:
 
 private:
 	void firstInit();
+	void initShaders();
 
 private:
-	Renderer renderer;
 	ShadowedObject* enemies;
 	ShadowedObject pirate;
 	Floor floor;
 	Mesh pirateMesh;
-	GLuint framebufferName, depthTexture, boxVao, boxVBO;
+	QuadMesh quad;
+	GLuint framebufferName, depthTexture;
 	glm::vec3 lightDir;
 	glm::vec4 lightAmbient;
 	glm::vec4 lightDiffuse;
 	Camera camera;
 	bool pressed;
 	float currentTime;
+	ShaderProgram texProgram, lambertProgram, shadowProgram;
+	ShaderProgram shadowMapProgram, drawShadowProgram, drawImageProgram;
 };
 
 

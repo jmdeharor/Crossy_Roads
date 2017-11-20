@@ -28,6 +28,9 @@ public:
 	void init();
 	void addObjects(Renderer& renderer);
 	void update(int deltaTime);
+	void renderFloor(ShaderProgram& program);
+	void renderEnemies(ShaderProgram& program);
+	void renderEnemyShadows(ShaderProgram& program);
 	Floor();
 	~Floor();
 };

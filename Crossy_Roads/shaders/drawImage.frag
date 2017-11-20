@@ -3,10 +3,10 @@
 // Ouput data
 out vec4 outColor;
 
-uniform sampler2D texture;
+uniform sampler2D tex;
 
 in vec2 UV;
 
 void main(){
-	outColor = texture(texture, UV);
+	outColor = vec4(texture(tex, UV).z);
 }

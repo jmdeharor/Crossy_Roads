@@ -26,48 +26,37 @@ void Renderer::setCamera(Camera * camera) {
 	this->camera = camera;
 }
 
-void Renderer::addGroup(Object * objectArray, uint size, uint stride) {
-	ObjectVector objectVector;
-	objectVector.vector = (byte*)objectArray;
-	objectVector.size = size;
-	objectVector.stride = stride;
-	objects.push_back(objectVector);
-
+void Renderer::addGroup(Object * objectArray, uint size) {
 	ShadowedObject* cast = dynamic_cast<ShadowedObject*>(objectArray);
+	objects.reserve(objects.size() + size);
 	if (cast) {
-		shadowedObjects.push_back(objectVector);
+		shadowedObjects.reserve(shadowedObjects.size() + size);
+		for (uint i = 0; i < size; ++i) {
+			objects.push_back(&objectArray[i]);
+			if (cast) {
+				shadowedObjects.push_back((ShadowedObject*)&objectArray[i]);
+			}
+		}
+	}
+	
+}
+
+void Renderer::addSimpleGroup(Object * objects, uint size) {
+	simpleObjects.reserve(simpleObjects.size() + size);
+	for (uint i = 0; i < size; ++i) {
+		simpleObjects.push_back(&objects[i]);
 	}
 }
 
-void Renderer::addSimpleGroup(Object * objects, uint size, uint stride) {
-	ObjectVector objectVector;
-	objectVector.vector = (byte*)objects;
-	objectVector.size = size;
-	objectVector.stride = stride;
-	simpleObjects.push_back(objectVector);
-}
-
-inline void applyShader(ShaderProgram& program, std::vector<ObjectVector>& objects) {
-	for (uint i = 0; i < objects.size(); ++i) {
-		byte* objectGroup = objects[i].vector;
-		uint size = objects[i].size;
-		uint stride = objects[i].stride;
-		for (uint j = 0; j < size; ++j) {
-			Object* object = (Object*)&objectGroup[j*stride];
-			object->render(program);
-		}
+inline void applyShader(ShaderProgram& program, std::vector<Object*>& objects) {
+	for (Object* object : objects) {
+		object->render(program);
 	}
 }
 
-inline void applyShadowShader(ShaderProgram& program, std::vector<ObjectVector>& objects) {
-	for (uint i = 0; i < objects.size(); ++i) {
-		byte* objectGroup = objects[i].vector;
-		uint size = objects[i].size;
-		uint stride = objects[i].stride;
-		for (uint j = 0; j < size; ++j) {
-			ShadowedObject* object = (ShadowedObject*)&objectGroup[j*stride];
-			object->renderShadow(program);
-		}
+inline void applyShadowShader(ShaderProgram& program, std::vector<ShadowedObject*>& objects) {
+	for (ShadowedObject* object : objects) {
+		object->renderShadow(program);
 	}
 }
 
@@ -116,36 +105,8 @@ void Renderer::update(int deltaTime) {
 	}
 }
 
-inline void compileShader(ShaderProgram& program, const string& fileName) {
-	Shader vShader, fShader;
-	string path = "shaders/" + fileName;
-	vShader.initFromFile(VERTEX_SHADER, path + ".vert");
-	if (!vShader.isCompiled()) {
-		cout << "Vertex Shader Error" << endl;
-		cout << "" << vShader.log() << endl << endl;
-	}
-	fShader.initFromFile(FRAGMENT_SHADER, path + ".frag");
-	if (!fShader.isCompiled()) {
-		cout << "Fragment Shader Error" << endl;
-		cout << "" << fShader.log() << endl << endl;
-	}
-	program.init();
-	program.addShader(vShader);
-	program.addShader(fShader);
-	program.link();
-	if (!program.isLinked()) {
-		cout << "Shader Linking Error" << endl;
-		cout << "" << program.log() << endl << endl;
-	}
-	vShader.free();
-	fShader.free();
-	for (uint i = 0; i < sizeof(uniformOrder) / sizeof(string); ++i) {
-		program.addUniform(uniformOrder[i]);
-	}
-}
-
 void Renderer::initShaders() {
-	compileShader(texProgram, "texture");
+	/*compileShader(texProgram, "texture");
 	texProgram.bindFragmentOutput("outColor");
 	compileShader(lambertProgram, "directionalLight");
 	lambertProgram.bindFragmentOutput("outColor");
@@ -156,7 +117,7 @@ void Renderer::initShaders() {
 	compileShader(drawShadowProgram, "drawShadow");
 	drawShadowProgram.bindFragmentOutput("outColor");
 	compileShader(drawImageProgram, "drawImage");
-	drawImageProgram.bindFragmentOutput("outColor");
+	drawImageProgram.bindFragmentOutput("outColor");*/
 }
 
 void Renderer::firstInit() {

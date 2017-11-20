@@ -5,10 +5,10 @@ using namespace std;
 
 void QuadMesh::init() {
 	static const float vertices[] = {
-		-1.0f, 0, -1.0f,
-		 1.0f, 0, -1.0f,
-		-1.0f, 0,  1.0f,
-		 1.0f, 0,  1.0f,
+		-1.0f, -1.0f, 0,
+		1.0f, -1.0f, 0,
+		-1.0f, 1.0f,  0,
+		1.0f, 1.0f, 0,
 	};
 	static const float normals[] = {
 		0,1,0,
@@ -46,7 +46,7 @@ void QuadMesh::init() {
 }
 
 void QuadMesh::render(ShaderProgram& program) const {
-	texture.use();
+	//texture.use();
 	glBindVertexArray(VAO);
 	glEnableVertexAttribArray(positionLoc);
 	glEnableVertexAttribArray(normalLoc);
