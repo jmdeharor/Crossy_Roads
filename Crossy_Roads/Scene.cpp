@@ -98,7 +98,6 @@ void Scene::init() {
 	floor.init();
 	lightAmbient = vec4(0.15f);
 	lightDiffuse = vec4(0.85f);
-	vec2 tileSize = floor.getTileSize();
 	vec3 offset = vec3(0, 0, 0);
 	pirate.setMesh(&pirateMesh);
 	pirate.name = "player";
@@ -141,6 +140,12 @@ void Scene::update(int deltaTime) {
 		camera.setPos(pirate.getPos());
 		camera.updateVM();
 	}
+	if (Game::instance().getKey('m')) {
+		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	}
+	else if (Game::instance().getKey('k')) {
+		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	}
 }
 
 void Scene::render() {
@@ -149,7 +154,7 @@ void Scene::render() {
 	texProgram.setUniformMatrix4f(projectionLoc, *camera.getProjectionMatrix());
 	texProgram.setUniformMatrix4f(viewLoc, *camera.getViewMatrix());
 	texProgram.setUniform4f("color", vec4(1));
-	floor.renderFloor(texProgram);
+	floor.renderSimpleObjects(texProgram);
 
 	lambertProgram.use();
 	lambertProgram.setUniformMatrix4f(projectionLoc, *camera.getProjectionMatrix());
@@ -161,7 +166,7 @@ void Scene::render() {
 	lambertProgram.setUniform4f("matDiffuse", 1, 1, 1, 1);
 	lambertProgram.setUniform4f("matAmbient", 1, 1, 1, 1);
 	pirate.render(lambertProgram);
-	floor.renderEnemies(lambertProgram);
+	floor.renderLightObjects(lambertProgram);
 
 	glDisable(GL_TEXTURE_2D);
 
@@ -174,7 +179,7 @@ void Scene::render() {
 	glPolygonOffset(-1, -1);
 
 	pirate.renderShadow(shadowProgram);
-	floor.renderEnemyShadows(shadowProgram);
+	floor.renderShadows(shadowProgram);
 
 	glDisable(GL_STENCIL_TEST);
 	glDisable(GL_BLEND);

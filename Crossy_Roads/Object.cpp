@@ -47,10 +47,10 @@ const mat4 * Object::getModel() {
 void Object::updateModel() {
 	modified = false;
 	model = translate(mat4(1), pos);
+	model = glm::scale(model, scale);
 	model = rotate(model, rot.x, vec3(1, 0, 0));
 	model = rotate(model, rot.y, vec3(0, 1, 0));
 	model = rotate(model, rot.z, vec3(0, 0, 1));
-	model = glm::scale(model, scale);
 	model = translate(model, -center);
 }
 
