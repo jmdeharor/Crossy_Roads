@@ -10,6 +10,7 @@
 #include "ShadowedObject.h"
 #include "GameObject.h"
 #include "Floor.h"
+#include "Player.h"
 #include "Renderer.h"
 
 #define CAMERA_WIDTH 640
@@ -36,6 +37,7 @@ private:
 	void initShaders();
 
 private:
+	Player player;
 	ShadowedObject* enemies;
 	ShadowedObject pirate;
 	Floor floor;

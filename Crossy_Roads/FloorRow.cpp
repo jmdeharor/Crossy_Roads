@@ -2,7 +2,9 @@
 #include "Pi.h"
 using namespace glm;
 
-const string models[] = { "models/floor_2.obj","models/floor_3.obj","models/floor_4.obj" };
+const string models[] = { "models/floor_2.obj","models/floor_3.obj","models/floor_4.obj",
+"models/floor_5.obj"};
+
 const uint nModels = sizeof(models) / sizeof(string);
 
 void FloorRow::initMeshes() {
@@ -55,6 +57,10 @@ bool applyConstraints(uint prevMeshIndex, uint meshIndex, uint numAdjacents, vec
 		return false;
 	if (meshIndex == adjacentRow[position])
 		return false;
+	for (uint i = 0; i < numAdjacents; ++i) {
+		if (meshIndex == adjacentRow[position + i])
+			return false;
+	}
 	return true;
 }
 
@@ -84,7 +90,7 @@ void FloorRow::init(vector<uint>& adjacentRow) {
 	static vec3 floorTileSize = vec3(realTileSize, 0.1f, tileSize.y) / boundingBox;
 	uint meshIndex = nModels;
 	Mesh* mesh = NULL;
-	uint numAdjacentTiles = rand()%6 + 5;
+	uint numAdjacentTiles = minim(rand() % 6 + 5, floorTiles.size());
 	uint counter = numAdjacentTiles;
 	for (uint i = 0; i < floorTiles.size(); ++i) {
 		Object& tile = floorTiles[i];
@@ -92,10 +98,10 @@ void FloorRow::init(vector<uint>& adjacentRow) {
 		if (counter == numAdjacentTiles) {
 			uint prevMeshIndex = meshIndex;
 			meshIndex = rand() % nModels;
-			numAdjacentTiles = minim(rand() % 5 + 5, floorTiles.size()-i);
+			numAdjacentTiles = minim(rand() % 6 + 5, floorTiles.size() - i);
 			while (!applyConstraints(prevMeshIndex, meshIndex, numAdjacentTiles, adjacentRow, i)) {
 				meshIndex = rand() % nModels;
-				numAdjacentTiles = rand() % 5 + 5;
+				numAdjacentTiles = minim(rand() % 6 + 5, floorTiles.size() - i);
 			}
 			mesh = &floorMesh[meshIndex];
 			counter = 0;
