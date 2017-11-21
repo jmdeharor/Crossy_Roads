@@ -26,7 +26,6 @@ void Player::renderShadow(ShaderProgram & program) {
 Player::Player(){
 }
 
-
 Player::~Player()
 {
 }

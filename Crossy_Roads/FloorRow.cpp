@@ -3,7 +3,7 @@
 using namespace glm;
 
 const string models[] = { "models/floor_2.obj","models/floor_3.obj","models/floor_4.obj",
-"models/floor_5.obj"};
+	"models/floor_5.obj" };
 
 const uint nModels = sizeof(models) / sizeof(string);
 
@@ -55,8 +55,6 @@ bool applyConstraints(uint prevMeshIndex, uint meshIndex, uint numAdjacents, vec
 		return false;
 	if (position + numAdjacents < adjacentRow.size() && adjacentRow[position + numAdjacents - 1] != adjacentRow[position + numAdjacents])
 		return false;
-	if (meshIndex == adjacentRow[position])
-		return false;
 	for (uint i = 0; i < numAdjacents; ++i) {
 		if (meshIndex == adjacentRow[position + i])
 			return false;
@@ -86,11 +84,9 @@ void FloorRow::init(vector<uint>& adjacentRow) {
 		enemy.setPlane(vec4(0, 1, 0, 0), lightDir);
 		speeds[i] = generateSpeed();
 	}
-	static vec3 boundingBox = floorMesh[0].getbbSize();
-	static vec3 floorTileSize = vec3(realTileSize, 0.1f, tileSize.y) / boundingBox;
 	uint meshIndex = nModels;
 	Mesh* mesh = NULL;
-	uint numAdjacentTiles = minim(rand() % 6 + 5, floorTiles.size());
+	uint numAdjacentTiles = 0;
 	uint counter = numAdjacentTiles;
 	for (uint i = 0; i < floorTiles.size(); ++i) {
 		Object& tile = floorTiles[i];
@@ -106,6 +102,8 @@ void FloorRow::init(vector<uint>& adjacentRow) {
 			mesh = &floorMesh[meshIndex];
 			counter = 0;
 		}
+		vec3 boundingBox = mesh->getbbSize();
+		vec3 floorTileSize = vec3(realTileSize, 0.1f, tileSize.y) / boundingBox;
 		adjacentRow[i] = meshIndex;
 		tile.setMesh(mesh);
 		tile.setScale(floorTileSize);

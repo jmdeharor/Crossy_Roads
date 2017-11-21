@@ -167,7 +167,7 @@ void Scene::render() {
 	lambertProgram.setUniform4f("matAmbient", 1, 1, 1, 1);
 	pirate.render(lambertProgram);
 	floor.renderLightObjects(lambertProgram);
-	player.render(lambertProgram);
+	//player.render(lambertProgram);
 
 	glDisable(GL_TEXTURE_2D);
 
@@ -181,7 +181,7 @@ void Scene::render() {
 
 	pirate.renderShadow(shadowProgram);
 	floor.renderShadows(shadowProgram);
-	player.renderShadow(shadowProgram);
+	//player.renderShadow(shadowProgram);
 
 	glDisable(GL_STENCIL_TEST);
 	glDisable(GL_BLEND);
