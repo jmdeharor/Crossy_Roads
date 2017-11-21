@@ -3,16 +3,35 @@
 #include "Mesh.h"
 #include "ShadowedObject.h"
 
+enum Orientation {
+	FRONT,
+	LEFT,
+	BACK,
+	RIGHT
+};
+
 class Player : public GameObject {
 	Mesh playerMesh;
 	ShadowedObject playerObject;
 	void firstInit();
+private:
+	bool frontPressed;
+	bool leftPressed;
+	bool backPressed;
+	bool rightPressed;
+	float jumpDistance;
+	glm::vec3 directionVector;
+	Orientation currentOrientation;
+
+	void setDirectionVector();
+
 public:
 	void jump();
-	void init();
-	void update(int deltaTime);
+	void init(glm::vec3 lightDir, glm::vec3 offset, float jumpDistance);
+	bool update(int deltaTime);
 	void render(ShaderProgram& program);
 	void renderShadow(ShaderProgram& program);
+	glm::vec3 getPos();
 	Player();
 	~Player();
 };

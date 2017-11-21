@@ -99,14 +99,9 @@ void Scene::init() {
 	lightAmbient = vec4(0.15f);
 	lightDiffuse = vec4(0.85f);
 	vec3 offset = vec3(0, 0, 0);
-	pirate.setMesh(&pirateMesh);
-	pirate.name = "player";
 
-	pirate.setScale(vec3(0.1f));
-	pirate.setPos(vec3(0, pirate.getHeight() / 2, 0)+offset);
-	pirate.setPlane(vec4(0, 1, 0, -offset.y), lightDir);
-
-	camera.setPos(pirate.getPos());
+	player.init(lightDir, offset, floor.getTileSize().y);
+	camera.setPos(player.getPos());
 	camera.updateVM();
 	pressed = false;
 }
@@ -115,7 +110,8 @@ void Scene::update(int deltaTime) {
 	camera.update(deltaTime);
 	floor.update(deltaTime);
 	bool modified = false;
-	if (Game::instance().getKey('w')) {
+	modified = player.update(deltaTime);
+	/*if (Game::instance().getKey('w')) {
 		if (!pressed) {
 			pressed = true;
 			pirate.move(0, 0, floor.getTileSize().y);
@@ -135,9 +131,9 @@ void Scene::update(int deltaTime) {
 	}
 	if (Game::instance().getKey('p')) {
 		int a = 3;
-	}
+	}*/
 	if (modified) {
-		camera.setPos(pirate.getPos());
+		camera.setPos(player.getPos());
 		camera.updateVM();
 	}
 	if (Game::instance().getKey('m')) {
@@ -165,7 +161,7 @@ void Scene::render() {
 	lambertProgram.setUniform3f("lightDirection", lightD.x, lightD.y, lightD.z);
 	lambertProgram.setUniform4f("matDiffuse", 1, 1, 1, 1);
 	lambertProgram.setUniform4f("matAmbient", 1, 1, 1, 1);
-	pirate.render(lambertProgram);
+	//pirate.render(lambertProgram);
 	floor.renderLightObjects(lambertProgram);
 	//player.render(lambertProgram);
 
@@ -179,7 +175,7 @@ void Scene::render() {
 	glEnable(GL_STENCIL_TEST);
 	glPolygonOffset(-1, -1);
 
-	pirate.renderShadow(shadowProgram);
+	//pirate.renderShadow(shadowProgram);
 	floor.renderShadows(shadowProgram);
 	//player.renderShadow(shadowProgram);
 

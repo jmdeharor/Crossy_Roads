@@ -18,6 +18,13 @@ void Object::move(float x, float y, float z) {
 	pos.z += z;
 }
 
+void Object::move(vec3 movement) {
+	modified = true;
+	pos.x += movement.x;
+	pos.y += movement.y;
+	pos.z += movement.z;
+}
+
 void Object::rotateX(float angle) {
 	modified = true;
 	rot.x += angle;
