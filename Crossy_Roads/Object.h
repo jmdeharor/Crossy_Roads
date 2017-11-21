@@ -18,6 +18,7 @@ public:
 	void update(int deltaTime);
 	void setPos(glm::vec3 pos);
 	void move(float x, float y, float z);
+	void move(glm::vec3 movement);
 	void rotateX(float angle);
 	void rotateY(float angle);
 	void rotateZ(float angle);
