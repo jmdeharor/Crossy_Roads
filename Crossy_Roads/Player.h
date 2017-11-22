@@ -19,11 +19,20 @@ private:
 	bool leftPressed;
 	bool backPressed;
 	bool rightPressed;
+	bool wPressed, aPressed, sPressed, dPressed;
+	bool inMovement;
+	float speed, verticalSpeed, gravity;
+	float currentVerticalSpeed;
 	float jumpDistance;
+	float testJump;
+	uint currentFrame;
 	glm::vec3 directionVector;
 	Orientation currentOrientation;
 
 	void setDirectionVector();
+	bool keepMoving();
+	float getJumpingSpeed(uint frames);
+	void performRotation(Orientation currentOrientation, char key);
 
 public:
 	void jump();
