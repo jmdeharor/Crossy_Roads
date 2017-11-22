@@ -21,6 +21,7 @@ void Player::init(vec3 lightDir, vec3 offset, float jumpDistance) {
 	playerObject.setScale(vec3(0.1f));
 	playerObject.setPos(vec3(0, 0, 0) + offset);
 	playerObject.setPlane(vec4(0, 1, 0, 0), vec3(1, 1, 0));
+	playerObject.setCenterToBaseCenter();
 	frontPressed = backPressed = leftPressed = rightPressed = false;
 	wPressed = aPressed = sPressed = dPressed = false;
 	currentOrientation = FRONT;
