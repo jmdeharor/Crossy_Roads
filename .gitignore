@@ -285,5 +285,3 @@ __pycache__/
 *.btm.cs
 *.odx.cs
 *.xsd.cs
-
-!libs/glew-1.13.0/bin
