@@ -78,7 +78,7 @@
       <AdditionalIncludeDirectories>..\libs\assimp\include;../libs\Simple OpenGL Image Library\src;../libs\glm;../libs\glew-1.13.0\include;../libs\freeglut\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
-      <AdditionalLibraryDirectories>..\libs\assimp\lib;../libs\Simple OpenGL Image Library\projects\VC9\Debugg;../libs\glew-1.13.0\lib\Release\Win32;../libs\freeglut\lib</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>..\libs\assimp\lib;../libs\Simple OpenGL Image Library\projects\VC9\Debugg;../libs\glew-1.13.0\lib\;../libs\freeglut\lib</AdditionalLibraryDirectories>
       <AdditionalDependencies>freeglut.lib;SOIL.lib;glew32.lib;assimp-vc120-mt.lib</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>

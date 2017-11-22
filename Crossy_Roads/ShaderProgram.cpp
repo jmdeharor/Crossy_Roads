@@ -70,6 +70,10 @@ const string &ShaderProgram::log() const
 	return errorLog;
 }
 
+GLuint ShaderProgram::getProgramId() const {
+	return programId;
+}
+
 void ShaderProgram::setUniform2f(const string &uniformName, float v0, float v1)
 {
 	GLint location = glGetUniformLocation(programId, uniformName.c_str());

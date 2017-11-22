@@ -69,6 +69,8 @@ public:
 	bool isLinked();
 	const string &log() const;
 
+	GLuint getProgramId() const;
+
 private:
 	GLuint programId;
 	bool linked;

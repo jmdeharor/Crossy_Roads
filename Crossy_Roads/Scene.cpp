@@ -7,6 +7,8 @@
 using namespace glm;
 
 #define PI 3.14159f
+#define SHADOW_MAP_W 1024
+#define SHADOW_MAP_H 1024
 
 Scene::Scene() {
 }
@@ -17,6 +19,7 @@ Scene::~Scene() {
 void Scene::firstInit() {
 	initShaders();
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glDepthFunc(GL_LEQUAL);
 	glStencilFunc(GL_EQUAL, 0, 1);
 	glStencilOp(GL_KEEP, GL_KEEP, GL_INCR);
 	pirateMesh.loadFromFile("models/pirate.obj");
@@ -26,7 +29,7 @@ void Scene::firstInit() {
 	glEnable(GL_DEPTH_TEST);
 	glGenTextures(1, &depthTexture);
 	glBindTexture(GL_TEXTURE_2D, depthTexture);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, 1024, 1024, 0, GL_DEPTH_COMPONENT, GL_FLOAT, 0);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, SHADOW_MAP_W, SHADOW_MAP_H, 0, GL_DEPTH_COMPONENT, GL_FLOAT, 0);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
@@ -127,14 +130,48 @@ void Scene::update(int deltaTime) {
 }
 
 void Scene::render() {
+	mat4 depthProjectionMatrix = ortho<float>(-40, 40, -30, 30, -10, 20);
+	mat4 depthViewMatrix = lookAt(lightDir, vec3(0, 0, 0), vec3(1, 0, 0));
+	mat4 depthMVP = depthProjectionMatrix * depthViewMatrix;
+
+	glEnable(GL_TEXTURE_2D);
+	glViewport(0, 0, SHADOW_MAP_W, SHADOW_MAP_H);
+	shadowMapProgram.use();
+	glBindFramebuffer(GL_FRAMEBUFFER, framebufferName);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	shadowMapProgram.setUniformMatrix4f("depthVP", depthMVP);
+
+	floor.renderSimpleObjects(shadowMapProgram);
+	floor.renderLightObjects(shadowMapProgram);
+	player.render(shadowMapProgram);
+
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+	glViewport(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+	glActiveTexture(GL_TEXTURE1);
+	glBindTexture(GL_TEXTURE_2D, depthTexture);
+	glActiveTexture(GL_TEXTURE0);
+
 	glEnable(GL_TEXTURE_2D);
 	texProgram.use();
+
 	texProgram.setUniformMatrix4f(projectionLoc, *camera.getProjectionMatrix());
 	texProgram.setUniformMatrix4f(viewLoc, *camera.getViewMatrix());
 	texProgram.setUniform4f("color", vec4(1));
 	floor.renderSimpleObjects(texProgram);
 
 	lambertProgram.use();
+	GLint loc = glGetUniformLocation(lambertProgram.getProgramId(), "shadowMap");
+	glUniform1i(loc, 1); // set it manually
+	loc = glGetUniformLocation(lambertProgram.getProgramId(), "tex");
+	glUniform1i(loc, 0); // set it manually
+	mat4 biasMatrix(
+		0.5, 0.0, 0.0, 0.0,
+		0.0, 0.5, 0.0, 0.0,
+		0.0, 0.0, 0.5, 0.0,
+		0.5, 0.5, 0.5, 1.0
+	);
+	lambertProgram.setUniformMatrix4f("depthVP", biasMatrix*depthMVP);
 	lambertProgram.setUniformMatrix4f(projectionLoc, *camera.getProjectionMatrix());
 	lambertProgram.setUniformMatrix4f(viewLoc, *camera.getViewMatrix());
 	vec3 lightD = mat3(*camera.getViewMatrix())*lightDir;
@@ -163,43 +200,41 @@ void Scene::render() {
 	glDisable(GL_BLEND);
 	glDisable(GL_POLYGON_OFFSET_FILL);*/
 
-	mat4 depthProjectionMatrix = ortho<float>(-10, 10, -10, 10, -10, 20);
-	mat4 depthViewMatrix = lookAt(lightDir, vec3(0, 0, 0), vec3(1, 0, 0));
-	mat4 depthMVP = depthProjectionMatrix * depthViewMatrix;
-
-	glEnable(GL_TEXTURE_2D);
-	glViewport(0, 0, 1024, 1024);
-	shadowMapProgram.use();
-	glBindFramebuffer(GL_FRAMEBUFFER, framebufferName);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	shadowMapProgram.setUniformMatrix4f("depthVP", depthMVP);
-
-	floor.renderSimpleObjects(shadowMapProgram);
-	floor.renderLightObjects(shadowMapProgram);
-	player.render(shadowMapProgram);
 	
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
-	glViewport(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+	/*glViewport(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 	drawShadowProgram.use();
+	glActiveTexture(GL_TEXTURE1);
 	glBindTexture(GL_TEXTURE_2D, depthTexture);
+	glActiveTexture(GL_TEXTURE0);
 	mat4 biasMatrix(
 		0.5, 0.0, 0.0, 0.0,
 		0.0, 0.5, 0.0, 0.0,
 		0.0, 0.0, 0.5, 0.0,
 		0.5, 0.5, 0.5, 1.0
 	);
+	GLint loc = glGetUniformLocation(drawShadowProgram.getProgramId(), "shadowMap");
+	glUniform1i(loc, 1); // set it manually
 	drawShadowProgram.setUniformMatrix4f("VP", (*camera.getProjectionMatrix())*(*camera.getViewMatrix()));
 	drawShadowProgram.setUniformMatrix4f("depthVP", biasMatrix*depthMVP);
+	glEnable(GL_POLYGON_OFFSET_FILL);
+	glEnable(GL_BLEND);
+	glEnable(GL_STENCIL_TEST);
+	glPolygonOffset(-1, -1);
 
 	floor.renderSimpleObjects(shadowMapProgram);
 	floor.renderLightObjects(shadowMapProgram);
 	player.render(shadowMapProgram);
-	
-	glViewport(0, 0, 200, 200);
+
+
+	glDisable(GL_STENCIL_TEST);
+	glDisable(GL_BLEND);
+	glDisable(GL_POLYGON_OFFSET_FILL);*/
+
+	/*glViewport(0, 0, 200, 200);
 	drawImageProgram.use();
 	glBindTexture(GL_TEXTURE_2D, depthTexture);
-	quad.render(drawImageProgram);
+	quad.render(drawImageProgram);*/
 }
 
 void Scene::resize(int w, int h) {
