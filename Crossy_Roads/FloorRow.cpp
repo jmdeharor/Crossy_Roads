@@ -2,16 +2,22 @@
 #include "Pi.h"
 using namespace glm;
 
-const string models[] = { "models/floor_2.obj","models/floor_3.obj","models/floor_4.obj",
-	"models/floor_5.obj" };
+//const string models[] = { "models/floor_2.obj","models/floor_3.obj","models/floor_4.obj",
+//	"models/floor_5.obj"};
+
+const string models[] = { "images/wood_1.png", "images/wood_2.png", "images/road.png",
+	"images/white.png" };
 
 const uint nModels = sizeof(models) / sizeof(string);
 
 void FloorRow::initMeshes() {
 	pirateMesh.loadFromFile("models/pirate.obj");
 	mastMesh.loadFromFile("models/palo.obj");
+	floorMesh.init();
 	for (uint i = 0; i < nModels; ++i) {
-		floorMesh[i].loadFromFile(models[i]);
+		floorTextures[i].loadFromFile(models[i], TEXTURE_PIXEL_FORMAT_RGB);
+		floorTextures[i].setMagFilter(GL_NEAREST);
+		floorTextures[i].setMinFilter(GL_NEAREST);
 	}
 }
 
@@ -21,7 +27,7 @@ void FloorRow::setParameters(vec2 tileSize, uint cols, vec3 lightDir) {
 	FloorRow::lightDir = lightDir;
 }
 
-glm::vec2 FloorRow::getPos() const {
+vec2 FloorRow::getPos() const {
 	return pos;
 }
 
@@ -31,7 +37,7 @@ float generateSpeed() {
 	return ((float)rand() / RAND_MAX)*(maxSpeed - minSpeed) + minSpeed;
 }
 
-void FloorRow::moveToPosition(glm::vec2 position) {
+void FloorRow::moveToPosition(vec2 position) {
 	static float realTileSize = tileSize.x / cols;
 	float offsetX = pos.x - (realTileSize*(cols / 2) - (1 - cols % 2)*realTileSize / 2);
 	for (uint i = 0; i < floorTiles.size(); ++i) {
@@ -46,7 +52,7 @@ void FloorRow::moveToPosition(glm::vec2 position) {
 	pos = position;
 }
 
-void FloorRow::setPos(glm::vec2 position) {
+void FloorRow::setPos(vec2 position) {
 	pos = position;
 }
 
@@ -85,11 +91,11 @@ void FloorRow::init(vector<uint>& adjacentRow) {
 		speeds[i] = generateSpeed();
 	}
 	uint meshIndex = nModels;
-	Mesh* mesh = NULL;
+	Texture* texture = NULL;
 	uint numAdjacentTiles = 0;
 	uint counter = numAdjacentTiles;
 	for (uint i = 0; i < floorTiles.size(); ++i) {
-		Object& tile = floorTiles[i];
+		TexturedObject& tile = floorTiles[i];
 		tile.name = "floor tile " + to_string(i);
 		if (counter == numAdjacentTiles) {
 			uint prevMeshIndex = meshIndex;
@@ -99,13 +105,14 @@ void FloorRow::init(vector<uint>& adjacentRow) {
 				meshIndex = rand() % nModels;
 				numAdjacentTiles = minim(rand() % 6 + 5, floorTiles.size() - i);
 			}
-			mesh = &floorMesh[meshIndex];
+			texture = &floorTextures[meshIndex];
 			counter = 0;
 		}
-		vec3 boundingBox = mesh->getbbSize();
-		vec3 floorTileSize = vec3(realTileSize, 0.1f, tileSize.y) / boundingBox;
+		static vec3 boundingBox = floorMesh.getbbSize();
+		static vec3 floorTileSize = vec3(realTileSize, 0.1f, tileSize.y) / boundingBox;
 		adjacentRow[i] = meshIndex;
-		tile.setMesh(mesh);
+		tile.setTexture(texture);
+		tile.setMesh(&floorMesh);
 		tile.setScale(floorTileSize);
 		tile.rotateY(PI / 2);
 		tile.setPos(vec3(offsetX + i*realTileSize, -boundingBox.y*0.1f / 2, pos.y));
@@ -169,6 +176,7 @@ FloorRow::~FloorRow()
 vec2 FloorRow::tileSize;
 uint FloorRow::cols;
 vec3 FloorRow::lightDir;
-Mesh FloorRow::pirateMesh;
-Mesh FloorRow::mastMesh;
-vector<Mesh> FloorRow::floorMesh(nModels);
+ImportedMesh FloorRow::pirateMesh;
+ImportedMesh FloorRow::mastMesh;
+CubeMesh FloorRow::floorMesh;
+vector<Texture> FloorRow::floorTextures(nModels);

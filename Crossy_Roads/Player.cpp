@@ -7,7 +7,6 @@ using namespace glm;
 
 void Player::firstInit() {
 	playerMesh.loadFromFile("models/pirate.obj");
-	
 }
 
 void Player::jump() {

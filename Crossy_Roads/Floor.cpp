@@ -2,6 +2,14 @@
 #include <glm\glm.hpp>
 using namespace glm;
 
+Floor::Floor()
+{
+}
+
+Floor::~Floor()
+{
+}
+
 void Floor::firstInit() {
 	tileSize = vec2(60, 2);
 	rows = 40;
@@ -69,12 +77,4 @@ void Floor::renderShadows(ShaderProgram & program) {
 glm::vec2 Floor::getTileSize()
 {
 	return tileSize;
-}
-
-Floor::Floor()
-{
-}
-
-Floor::~Floor()
-{
 }

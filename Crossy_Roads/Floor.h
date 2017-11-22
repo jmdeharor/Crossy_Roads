@@ -2,6 +2,7 @@
 #include "QuadMesh.h"
 #include <vector>
 #include "ShadowedObject.h"
+#include "ImportedMesh.h"
 #include "Renderer.h"
 #include "FloorRow.h"
 
@@ -10,7 +11,7 @@ class Floor : GameObject {
 	uint lastRow;
 	float firstPos;
 	glm::vec3 lightDir;
-	Mesh floorMesh;
+	ImportedMesh floorMesh;
 	std::vector<FloorRow> floorRows;
 	glm::vec2 tileSize;
 public:

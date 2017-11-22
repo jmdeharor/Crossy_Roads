@@ -1,8 +1,7 @@
 #pragma once
-#include "GameObject.h"
 #include "Mesh.h"
 
-class Object : public GameObject {
+class Object {
 protected:
 	const Mesh* mesh;
 	glm::vec3 center;
@@ -24,7 +23,7 @@ public:
 	void rotateZ(float angle);
 	void setScale(glm::vec3 scale);
 	const glm::mat4* getModel();
-	void render(ShaderProgram& program);
+	virtual void render(ShaderProgram& program);
 	Object();
 	void setMesh(const Mesh* mesh);
 	virtual ~Object();

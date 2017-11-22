@@ -125,10 +125,12 @@
     <ClCompile Include="Camera\obsperspcamera.cpp" />
     <ClCompile Include="Camera\orthocamera.cpp" />
     <ClCompile Include="Camera\perspcamera.cpp" />
+    <ClCompile Include="CubeMesh.cpp" />
     <ClCompile Include="Floor.cpp" />
     <ClCompile Include="FloorRow.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameObject.cpp" />
+    <ClCompile Include="ImportedMesh.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Mesh.cpp" />
     <ClCompile Include="Object.cpp" />
@@ -141,6 +143,7 @@
     <ClCompile Include="ShadowedObject.cpp" />
     <ClCompile Include="Sphere.cpp" />
     <ClCompile Include="Texture.cpp" />
+    <ClCompile Include="TexturedObject.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h" />
@@ -152,10 +155,12 @@
     <ClInclude Include="Camera\obsperspcamera.h" />
     <ClInclude Include="Camera\orthocamera.h" />
     <ClInclude Include="Camera\perspcamera.h" />
+    <ClInclude Include="CubeMesh.h" />
     <ClInclude Include="Floor.h" />
     <ClInclude Include="FloorRow.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameObject.h" />
+    <ClInclude Include="ImportedMesh.h" />
     <ClInclude Include="Pi.h" />
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="Object.h" />
@@ -168,6 +173,7 @@
     <ClInclude Include="ShadowedObject.h" />
     <ClInclude Include="Sphere.h" />
     <ClInclude Include="Texture.h" />
+    <ClInclude Include="TexturedObject.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

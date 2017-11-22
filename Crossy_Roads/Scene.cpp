@@ -111,27 +111,9 @@ void Scene::update(int deltaTime) {
 	floor.update(deltaTime);
 	bool modified = false;
 	modified = player.update(deltaTime);
-	/*if (Game::instance().getKey('w')) {
-		if (!pressed) {
-			pressed = true;
-			pirate.move(0, 0, floor.getTileSize().y);
-			floor.addLevel();
-			modified = true;
-		}
-	}
-	else
-		pressed = false;
-	if (Game::instance().getKey('q')) {
-		pirate.rotateY(0.1f);
-		modified = true;
-	}
-	if (Game::instance().getKey('e')) {
-		pirate.rotateY(-0.1f);
-		modified = true;
-	}
 	if (Game::instance().getKey('p')) {
 		int a = 3;
-	}*/
+	}
 	if (modified) {
 		camera.setPos(player.getPos());
 		camera.updateVM();
@@ -161,11 +143,10 @@ void Scene::render() {
 	lambertProgram.setUniform3f("lightDirection", lightD.x, lightD.y, lightD.z);
 	lambertProgram.setUniform4f("matDiffuse", 1, 1, 1, 1);
 	lambertProgram.setUniform4f("matAmbient", 1, 1, 1, 1);
-	//pirate.render(lambertProgram);
 	floor.renderLightObjects(lambertProgram);
-	//player.render(lambertProgram);
+	player.render(lambertProgram);
 
-	glDisable(GL_TEXTURE_2D);
+	/*glDisable(GL_TEXTURE_2D);
 
 	shadowProgram.use();
 	shadowProgram.setUniformMatrix4f(projectionLoc, *camera.getProjectionMatrix());
@@ -175,15 +156,14 @@ void Scene::render() {
 	glEnable(GL_STENCIL_TEST);
 	glPolygonOffset(-1, -1);
 
-	//pirate.renderShadow(shadowProgram);
 	floor.renderShadows(shadowProgram);
-	//player.renderShadow(shadowProgram);
+	player.renderShadow(shadowProgram);
 
 	glDisable(GL_STENCIL_TEST);
 	glDisable(GL_BLEND);
-	glDisable(GL_POLYGON_OFFSET_FILL);
+	glDisable(GL_POLYGON_OFFSET_FILL);*/
 
-	/*mat4 depthProjectionMatrix = ortho<float>(-10, 10, -10, 10, -10, 20);
+	mat4 depthProjectionMatrix = ortho<float>(-10, 10, -10, 10, -10, 20);
 	mat4 depthViewMatrix = lookAt(lightDir, vec3(0, 0, 0), vec3(1, 0, 0));
 	mat4 depthMVP = depthProjectionMatrix * depthViewMatrix;
 
@@ -193,9 +173,11 @@ void Scene::render() {
 	glBindFramebuffer(GL_FRAMEBUFFER, framebufferName);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	shadowMapProgram.setUniformMatrix4f("depthVP", depthMVP);
-	floor.renderEnemies(shadowMapProgram);
-	floor.renderFloor(shadowMapProgram);
-	pirate.render(shadowMapProgram);
+
+	floor.renderSimpleObjects(shadowMapProgram);
+	floor.renderLightObjects(shadowMapProgram);
+	player.render(shadowMapProgram);
+	
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
 	glViewport(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
@@ -210,14 +192,14 @@ void Scene::render() {
 	drawShadowProgram.setUniformMatrix4f("VP", (*camera.getProjectionMatrix())*(*camera.getViewMatrix()));
 	drawShadowProgram.setUniformMatrix4f("depthVP", biasMatrix*depthMVP);
 
-	floor.renderEnemies(drawShadowProgram);
-	floor.renderFloor(drawShadowProgram);
-	pirate.render(drawShadowProgram);
+	floor.renderSimpleObjects(shadowMapProgram);
+	floor.renderLightObjects(shadowMapProgram);
+	player.render(shadowMapProgram);
 	
 	glViewport(0, 0, 200, 200);
 	drawImageProgram.use();
 	glBindTexture(GL_TEXTURE_2D, depthTexture);
-	quad.render(drawImageProgram);*/
+	quad.render(drawImageProgram);
 }
 
 void Scene::resize(int w, int h) {

@@ -1,7 +1,7 @@
 #pragma once
 #include "GameObject.h"
-#include "Mesh.h"
 #include "ShadowedObject.h"
+#include "ImportedMesh.h"
 
 enum Orientation {
 	FRONT,
@@ -11,7 +11,7 @@ enum Orientation {
 };
 
 class Player : public GameObject {
-	Mesh playerMesh;
+	ImportedMesh playerMesh;
 	ShadowedObject playerObject;
 	void firstInit();
 private:

@@ -12,6 +12,7 @@
 #include "Floor.h"
 #include "Player.h"
 #include "Renderer.h"
+#include "ImportedMesh.h"
 
 #define CAMERA_WIDTH 640
 #define CAMERA_HEIGHT 480
@@ -39,9 +40,8 @@ private:
 private:
 	Player player;
 	ShadowedObject* enemies;
-	ShadowedObject pirate;
 	Floor floor;
-	Mesh pirateMesh;
+	ImportedMesh pirateMesh;
 	QuadMesh quad;
 	GLuint framebufferName, depthTexture;
 	glm::vec3 lightDir;

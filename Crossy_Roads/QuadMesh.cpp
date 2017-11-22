@@ -4,11 +4,13 @@ using namespace glm;
 using namespace std;
 
 void QuadMesh::init() {
+	renderMode = GL_TRIANGLE_STRIP;
+
 	static const float vertices[] = {
 		-1.0f, -1.0f, 0,
-		1.0f, -1.0f, 0,
-		-1.0f, 1.0f,  0,
-		1.0f, 1.0f, 0,
+		 1.0f, -1.0f, 0,
+		-1.0f,  1.0f, 0,
+		 1.0f,  1.0f, 0,
 	};
 	static const float normals[] = {
 		0,1,0,
@@ -42,30 +44,7 @@ void QuadMesh::init() {
 	glBindBuffer(GL_ARRAY_BUFFER, VBOtex);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(texCoords), texCoords, GL_STATIC_DRAW);
 
-	nTriangles = 4;
-}
-
-void QuadMesh::render(ShaderProgram& program) const {
-	//texture.use();
-	glBindVertexArray(VAO);
-	glEnableVertexAttribArray(positionLoc);
-	glEnableVertexAttribArray(normalLoc);
-	glEnableVertexAttribArray(texCoordLoc);
-
-	glBindBuffer(GL_ARRAY_BUFFER, VBOvert);
-	program.bindVertexAttribute(positionLoc, 3, 0, 0);
-
-	glBindBuffer(GL_ARRAY_BUFFER, VBOnorm);
-	program.bindVertexAttribute(normalLoc, 3, 0, 0);
-
-	glBindBuffer(GL_ARRAY_BUFFER, VBOtex);
-	program.bindVertexAttribute(texCoordLoc, 2, 0, 0);
-
-	glDrawArrays(GL_TRIANGLE_STRIP, 0, nTriangles);
-}
-
-void QuadMesh::setQuadTexture(const string & fileName) {
-	texture.loadFromFile(fileName, TEXTURE_PIXEL_FORMAT_RGB);
+	nVertices = 4;
 }
 
 QuadMesh::QuadMesh()
