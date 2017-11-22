@@ -60,6 +60,18 @@ void ShaderProgram::use()
 	glUseProgram(programId);
 }
 
+void ShaderProgram::setUniformi(const string & uniformName, int v0) {
+	GLint location = glGetUniformLocation(programId, uniformName.c_str());
+
+	if (location != -1)
+		glUniform1i(location, v0);
+}
+
+void ShaderProgram::setUniformi(glm::uint location, int v0) {
+	if (uniforms[location] != -1)
+		glUniform1i(uniforms[location], v0);
+}
+
 bool ShaderProgram::isLinked()
 {
 	return linked;
@@ -83,11 +95,11 @@ void ShaderProgram::setUniform2f(const string &uniformName, float v0, float v1)
 }
 
 void ShaderProgram::setUniform2f(uint location, float v0, float v1) {
-	glUniform2f(uniforms[location], v0, v1);
+	if (uniforms[location] != -1)
+		glUniform2f(uniforms[location], v0, v1);
 }
 
-void ShaderProgram::setUniform3f(const string &uniformName, float v0, float v1, float v2)
-{
+void ShaderProgram::setUniform3f(const string &uniformName, float v0, float v1, float v2) {
 	GLint location = glGetUniformLocation(programId, uniformName.c_str());
 
 	if(location != -1)
@@ -95,7 +107,8 @@ void ShaderProgram::setUniform3f(const string &uniformName, float v0, float v1, 
 }
 
 void ShaderProgram::setUniform3f(uint location, float v0, float v1, float v2) {
-	glUniform3f(uniforms[location], v0, v1, v2);
+	if (uniforms[location] != -1)
+		glUniform3f(uniforms[location], v0, v1, v2);
 }
 
 void ShaderProgram::setUniform4f(const string &uniformName, float v0, float v1, float v2, float v3)
@@ -107,7 +120,8 @@ void ShaderProgram::setUniform4f(const string &uniformName, float v0, float v1, 
 }
 
 void ShaderProgram::setUniform4f(uint location, float v0, float v1, float v2, float v3) {
-	glUniform4f(uniforms[location], v0, v1, v2, v3);
+	if (uniforms[location] != -1)
+		glUniform4f(uniforms[location], v0, v1, v2, v3);
 }
 
 void ShaderProgram::setUniform4f(const string & uniformName, vec4 & vec) {
@@ -118,7 +132,8 @@ void ShaderProgram::setUniform4f(const string & uniformName, vec4 & vec) {
 }
 
 void ShaderProgram::setUniform4f(uint location, vec4 & vec) {
-	glUniform4f(uniforms[location], vec.x, vec.y, vec.z, vec.w);
+	if (uniforms[location] != -1)
+		glUniform4f(uniforms[location], vec.x, vec.y, vec.z, vec.w);
 }
 
 uint ShaderProgram::addUniform(const string & uniformName) {
