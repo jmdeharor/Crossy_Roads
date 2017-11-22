@@ -115,6 +115,7 @@ void FloorRow::init(vector<uint>& adjacentRow) {
 		tile.setMesh(&floorMesh);
 		tile.setScale(floorTileSize);
 		tile.rotateY(PI / 2);
+		//tile.setCenter(vec3(boundingBox.x, boundingBox.y + floorMesh.getHeight() / 2., boundingBox.z));
 		tile.setPos(vec3(offsetX + i*realTileSize, -boundingBox.y*0.1f / 2, pos.y));
 		++counter;
 	}

@@ -1,9 +1,9 @@
 #include "Player.h"
 #include <glm/gtc/matrix_transform.hpp>
 #include "Game.h"
+#include "Pi.h"
 using namespace glm;
 
-#define PI 3.14159265359
 #define FRAMES_PER_SECOND 60
 #define JUMP_DURATION 10
 
@@ -19,12 +19,14 @@ void Player::init(vec3 lightDir, vec3 offset, float jumpDistance) {
 	this->jumpDistance = jumpDistance;
 	playerObject.setMesh(&playerMesh);
 	playerObject.setScale(vec3(0.1f));
-	playerObject.setPos(vec3(0, 0, 0) + offset);
+	vec3 bbox = playerMesh.getbbCenter();
+	//playerObject.setCenter(vec3(bbox.x, bbox.y - playerMesh.getHeight()/2.f, bbox.z));
+	playerObject.setPos(vec3(0, playerMesh.getHeight()*0.1f/2, 0));
 	playerObject.setPlane(vec4(0, 1, 0, 0), vec3(1, 1, 0));
 	frontPressed = backPressed = leftPressed = rightPressed = false;
 	wPressed = aPressed = sPressed = dPressed = false;
 	currentOrientation = FRONT;
-	directionVector = vec3(0, 0, 1);
+	directionVector = vec3(0, 0, 1.f);
 	inMovement = false;
 	gravity = -0.1;
 	verticalSpeed = getJumpingSpeed(JUMP_DURATION);
@@ -91,7 +93,7 @@ bool Player::update(int deltaTime) {
 	if (Game::instance().getKey('q')) {
 		if (!leftPressed) {
 			leftPressed = true;
-			playerObject.rotateY(PI/2.);
+			playerObject.rotateY(PI/2.f);
 			currentOrientation = Orientation(currentOrientation + 1);
 			if (currentOrientation == 4) currentOrientation = FRONT;
 		}
@@ -101,7 +103,7 @@ bool Player::update(int deltaTime) {
 	if (Game::instance().getKey('e')) {
 		if (!rightPressed) {
 			rightPressed = true;
-			playerObject.rotateY(-PI/2.);
+			playerObject.rotateY(-PI/2.f);
 			currentOrientation = Orientation(currentOrientation - 1);
 			if (currentOrientation == -1) currentOrientation = RIGHT;
 		}
@@ -148,10 +150,10 @@ void Player::performRotation(Orientation currentOrientation, char key) {
 			playerObject.rotateY(PI);
 			break;
 		case LEFT:
-			playerObject.rotateY(-PI / 2.);
+			playerObject.rotateY(-PI / 2.f);
 			break;
 		case RIGHT:
-			playerObject.rotateY(PI / 2.);
+			playerObject.rotateY(PI / 2.f);
 			break;
 		case FRONT:
 		default:
@@ -161,10 +163,10 @@ void Player::performRotation(Orientation currentOrientation, char key) {
 	case 'a':
 		switch (currentOrientation) {
 		case FRONT:
-			playerObject.rotateY(PI / 2.);
+			playerObject.rotateY(PI / 2.f);
 			break;
 		case BACK:
-			playerObject.rotateY(-PI / 2.);
+			playerObject.rotateY(-PI / 2.f);
 			break;
 		case RIGHT:
 			playerObject.rotateY(PI);
@@ -177,10 +179,10 @@ void Player::performRotation(Orientation currentOrientation, char key) {
 	case 'd':
 		switch (currentOrientation) {
 		case FRONT:
-			playerObject.rotateY(-PI / 2.);
+			playerObject.rotateY(-PI / 2.f);
 			break;
 		case BACK:
-			playerObject.rotateY(PI / 2.);
+			playerObject.rotateY(PI / 2.f);
 			break;
 		case LEFT:
 			playerObject.rotateY(PI);
@@ -196,10 +198,10 @@ void Player::performRotation(Orientation currentOrientation, char key) {
 			playerObject.rotateY(PI);
 			break;
 		case LEFT:
-			playerObject.rotateY(PI / 2.);
+			playerObject.rotateY(PI / 2.f);
 			break;
 		case RIGHT:
-			playerObject.rotateY(-PI / 2.);
+			playerObject.rotateY(-PI / 2.f);
 			break;
 		case BACK:
 		default:
@@ -226,7 +228,7 @@ bool Player::keepMoving() {
 }
 
 float Player::getJumpingSpeed(uint frames) {
-	return -0.5*gravity*frames;
+	return -0.5f*gravity*frames;
 }
 
 Player::Player(){

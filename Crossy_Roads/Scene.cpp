@@ -95,7 +95,7 @@ const uint cols = 5;
 void Scene::init() {
 	GameObject::init();
 	currentTime = 0.0f;
-	lightDir = normalize(vec3(1,1,0));
+	lightDir = normalize(vec3(1,1,0.1f));
 	floor.setLight(lightDir);
 	floor.init();
 	lightAmbient = vec4(0.15f);
@@ -140,8 +140,9 @@ void Scene::render() {
 	glViewport(0, 0, SHADOW_MAP_W, SHADOW_MAP_H);
 	shadowMapProgram.use();
 	glBindFramebuffer(GL_FRAMEBUFFER, framebufferName);
-	glClear(GL_DEPTH_BUFFER_BIT);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	shadowMapProgram.setUniformMatrix4f("depthVP", camera.getVPLightMatrix());
+	shadowMapProgram.setUniform3f("lightDir", lightDir.x, lightDir.y, lightDir.z);
 
 	floor.renderLightObjects(shadowMapProgram);
 	player.render(shadowMapProgram);
@@ -157,6 +158,7 @@ void Scene::render() {
 	drawShadowProgram.setUniformi("shadowMap", 1);
 	drawShadowProgram.setUniformMatrix4f("depthVP", biasMatrix*camera.getVPLightMatrix());
 	drawShadowProgram.setUniformMatrix4f("VP", camera.getVPMatrix());
+	drawShadowProgram.setUniform3f("lightDir", lightDir.x, lightDir.y, lightDir.z);
 
 	floor.renderSimpleObjects(drawShadowProgram);
 	floor.renderLightObjects(drawShadowProgram);

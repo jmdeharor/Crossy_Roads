@@ -3,7 +3,9 @@
 // Ouput data
 out float fragmentdepth;
 
+in vec3 fragNormal;
+uniform vec3 lightDir;
+
 void main(){
-    // Not really needed, OpenGL does it anyway
-    fragmentdepth = gl_FragCoord.z;
+	fragmentdepth = gl_FragCoord.z;
 }

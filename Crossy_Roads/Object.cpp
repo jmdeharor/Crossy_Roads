@@ -51,6 +51,11 @@ const mat4 * Object::getModel() {
 	return &model;
 }
 
+void Object::setCenter(glm::vec3 newCenter) {
+	modified = true;
+	center = newCenter;
+}
+
 void Object::updateModel() {
 	modified = false;
 	model = translate(mat4(1), pos);
@@ -78,10 +83,6 @@ Object::Object() :
 void Object::setMesh(const Mesh * mesh) {
 	this->mesh = mesh;
 	center = mesh->getbbCenter();
-}
-
-void Object::setCenter(vec3 newCenter) {
-	center = newCenter;
 }
 
 void Object::setCenterToBaseCenter() {
