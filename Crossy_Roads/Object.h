@@ -13,6 +13,8 @@ protected:
 
 public:
 	string name;
+	void setCenter(vec3 newCenter);
+	void setCenterToBaseCenter();
 	void updateModel();
 	void update(int deltaTime);
 	void setPos(glm::vec3 pos);

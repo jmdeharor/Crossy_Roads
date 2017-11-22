@@ -78,6 +78,13 @@ Object::Object() :
 void Object::setMesh(const Mesh * mesh) {
 	this->mesh = mesh;
 	center = mesh->getbbCenter();
+}
+
+void Object::setCenter(vec3 newCenter) {
+	center = newCenter;
+}
+
+void Object::setCenterToBaseCenter() {
 	center = vec3(center.x, 0, center.z);
 }
 

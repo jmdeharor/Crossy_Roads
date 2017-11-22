@@ -213,7 +213,6 @@ void Player::performRotation(Orientation currentOrientation, char key) {
 
 bool Player::keepMoving() {
 	currentFrame++;
-	testJump += speed;
 	bool returnValue = true;
 	currentVerticalSpeed = verticalSpeed + gravity*currentFrame;
 	if (playerObject.getPos().y + currentVerticalSpeed <= 0) {
