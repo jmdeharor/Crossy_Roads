@@ -7,8 +7,8 @@
 using namespace glm;
 
 #define PI 3.14159f
-#define SHADOW_MAP_W 1024
-#define SHADOW_MAP_H 1024
+#define SHADOW_MAP_W 4096
+#define SHADOW_MAP_H 4096
 
 Scene::Scene() {
 }
@@ -18,8 +18,8 @@ Scene::~Scene() {
 
 void Scene::firstInit() {
 	initShaders();
+	glEnable(GL_TEXTURE_2D);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	glDepthFunc(GL_LEQUAL);
 	glStencilFunc(GL_EQUAL, 0, 1);
 	glStencilOp(GL_KEEP, GL_KEEP, GL_INCR);
 	pirateMesh.loadFromFile("models/pirate.obj");
@@ -95,14 +95,14 @@ const uint cols = 5;
 void Scene::init() {
 	GameObject::init();
 	currentTime = 0.0f;
-	camera.init();
-	lightDir = vec3(1,1,0);
+	lightDir = normalize(vec3(1,1,0));
 	floor.setLight(lightDir);
 	floor.init();
 	lightAmbient = vec4(0.15f);
 	lightDiffuse = vec4(0.85f);
 	vec3 offset = vec3(0, 0, 0);
 
+	camera.init(lightDir);
 	player.init(lightDir, offset, floor.getTileSize().y);
 	camera.setPos(player.getPos());
 	camera.updateVM();
@@ -124,24 +124,25 @@ void Scene::update(int deltaTime) {
 	if (Game::instance().getKey('m')) {
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	}
-	else if (Game::instance().getKey('k')) {
+	else if (Game::instance().getKey('n')) {
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	}
 }
 
 void Scene::render() {
-	mat4 depthProjectionMatrix = ortho<float>(-40, 40, -30, 30, -10, 20);
-	mat4 depthViewMatrix = lookAt(lightDir, vec3(0, 0, 0), vec3(1, 0, 0));
-	mat4 depthMVP = depthProjectionMatrix * depthViewMatrix;
+	const static mat4 biasMatrix(
+		0.5, 0.0, 0.0, 0.0,
+		0.0, 0.5, 0.0, 0.0,
+		0.0, 0.0, 0.5, 0.0,
+		0.5, 0.5, 0.5, 1.0
+	);
 
-	glEnable(GL_TEXTURE_2D);
 	glViewport(0, 0, SHADOW_MAP_W, SHADOW_MAP_H);
 	shadowMapProgram.use();
 	glBindFramebuffer(GL_FRAMEBUFFER, framebufferName);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	shadowMapProgram.setUniformMatrix4f("depthVP", depthMVP);
+	glClear(GL_DEPTH_BUFFER_BIT);
+	shadowMapProgram.setUniformMatrix4f("depthVP", camera.getVPLightMatrix());
 
-	floor.renderSimpleObjects(shadowMapProgram);
 	floor.renderLightObjects(shadowMapProgram);
 	player.render(shadowMapProgram);
 
@@ -151,10 +152,17 @@ void Scene::render() {
 	glActiveTexture(GL_TEXTURE1);
 	glBindTexture(GL_TEXTURE_2D, depthTexture);
 	glActiveTexture(GL_TEXTURE0);
+	drawShadowProgram.use();
+	drawShadowProgram.setUniformi("tex", 0);
+	drawShadowProgram.setUniformi("shadowMap", 1);
+	drawShadowProgram.setUniformMatrix4f("depthVP", biasMatrix*camera.getVPLightMatrix());
+	drawShadowProgram.setUniformMatrix4f("VP", camera.getVPMatrix());
 
-	glEnable(GL_TEXTURE_2D);
-	texProgram.use();
+	floor.renderSimpleObjects(drawShadowProgram);
+	floor.renderLightObjects(drawShadowProgram);
+	player.render(drawShadowProgram);
 
+	/*texProgram.use();
 	texProgram.setUniformMatrix4f(projectionLoc, *camera.getProjectionMatrix());
 	texProgram.setUniformMatrix4f(viewLoc, *camera.getViewMatrix());
 	texProgram.setUniform4f("color", vec4(1));
@@ -183,7 +191,7 @@ void Scene::render() {
 	floor.renderLightObjects(lambertProgram);
 	player.render(lambertProgram);
 
-	/*glDisable(GL_TEXTURE_2D);
+	glDisable(GL_TEXTURE_2D);
 
 	shadowProgram.use();
 	shadowProgram.setUniformMatrix4f(projectionLoc, *camera.getProjectionMatrix());
@@ -198,11 +206,9 @@ void Scene::render() {
 
 	glDisable(GL_STENCIL_TEST);
 	glDisable(GL_BLEND);
-	glDisable(GL_POLYGON_OFFSET_FILL);*/
+	glDisable(GL_POLYGON_OFFSET_FILL);
 
-	
-
-	/*glViewport(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+	glViewport(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 	drawShadowProgram.use();
 	glActiveTexture(GL_TEXTURE1);
 	glBindTexture(GL_TEXTURE_2D, depthTexture);

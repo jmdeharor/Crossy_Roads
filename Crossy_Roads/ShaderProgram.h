@@ -46,6 +46,9 @@ public:
 	void use();
 
 	// Pass uniforms to the associated shaders
+	void setUniformi(const string& uniformName, int v0);
+	void setUniformi(glm::uint location, int v0);
+
 	void setUniform2f(const string &uniformName, float v0, float v1);
 	void setUniform2f(uint location, float v0, float v1);
 

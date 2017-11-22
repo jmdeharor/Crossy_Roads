@@ -1,9 +1,10 @@
 #include "Camera.h"
 #include "Game.h"
 #include <GL\freeglut.h>
-#define PI 3.141592654f
+#include "Pi.h"
+using namespace glm;
 
-void Camera::init() {
+void Camera::init(glm::vec3 lightDir) {
 	cam.d = 20;
 	cam.phi = 0;
 	cam.psi = 10;
@@ -14,6 +15,19 @@ void Camera::init() {
 	cam.zFar = 100.f;
 	cam.updatePM();
 	cam.updateVM();
+
+	lightCam.OBS = lightDir*25.f;
+	lightCam.VRP = vec3(0);
+	lightCam.UP = vec3(0, 1, 0);
+	lightCam.left = -30;
+	lightCam.right = 30;
+	lightCam.bottom = -30;
+	lightCam.top = 30;
+	lightCam.zNear = 0.01f;
+	lightCam.zFar = 100;
+	lightCam.updatePM();
+	lightCam.updateVM();
+	cameraMode = true;
 }
 
 void Camera::resize(int w, int h) {
@@ -22,6 +36,12 @@ void Camera::resize(int w, int h) {
 }
 
 void Camera::update(int deltaTime) {
+	if (Game::instance().getKey('l')) {
+		cameraMode = false;
+	}
+	else if (Game::instance().getKey('k')) {
+		cameraMode = true;
+	}
 	if (Game::instance().getSpecialKey(GLUT_KEY_LEFT)) {
 		cam.psi += 0.1f;
 		cam.updateVM();
@@ -60,6 +80,14 @@ const glm::mat4 * Camera::getProjectionMatrix() const
 const glm::mat4 * Camera::getViewMatrix() const
 {
 	return cam.getFullViewMatrix();
+}
+
+mat4 Camera::getVPLightMatrix() const {
+	return (*lightCam.getFullProjectionMatrix())*(*lightCam.getFullViewMatrix());
+}
+
+mat4 Camera::getVPMatrix() const {
+	return cameraMode ? (*cam.getFullProjectionMatrix())*(*cam.getFullViewMatrix()) : (*lightCam.getFullProjectionMatrix())*(*lightCam.getFullViewMatrix());
 }
 
 void Camera::setPos(glm::vec3 pos) {

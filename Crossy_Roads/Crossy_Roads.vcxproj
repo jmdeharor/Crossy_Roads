@@ -122,6 +122,7 @@
     <ClCompile Include="Camera\eulerorthocamera.cpp" />
     <ClCompile Include="Camera\eulerperspcamera.cpp" />
     <ClCompile Include="Camera\obscamera.cpp" />
+    <ClCompile Include="Camera\obsorthocamera.cpp" />
     <ClCompile Include="Camera\obsperspcamera.cpp" />
     <ClCompile Include="Camera\orthocamera.cpp" />
     <ClCompile Include="Camera\perspcamera.cpp" />
@@ -152,6 +153,7 @@
     <ClInclude Include="Camera\eulerorthocamera.h" />
     <ClInclude Include="Camera\eulerperspcamera.h" />
     <ClInclude Include="Camera\obscamera.h" />
+    <ClInclude Include="Camera\obsorthocamera.h" />
     <ClInclude Include="Camera\obsperspcamera.h" />
     <ClInclude Include="Camera\orthocamera.h" />
     <ClInclude Include="Camera\perspcamera.h" />
