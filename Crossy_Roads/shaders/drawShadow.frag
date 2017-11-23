@@ -21,5 +21,4 @@ void main(){
 		outColor = vec4(1,0,0,0);
 	}
 	else outColor = mix(0.5,1,storedDepth)*texture(tex, fragTexCoord);
-	//else outColor = vec4(storedDepth);
 }

@@ -42,7 +42,6 @@ private:
 	ShadowedObject* enemies;
 	Floor floor;
 	ImportedMesh pirateMesh;
-	QuadMesh quad;
 	GLuint framebufferName, depthTexture;
 	glm::vec3 lightDir;
 	glm::vec4 lightAmbient;

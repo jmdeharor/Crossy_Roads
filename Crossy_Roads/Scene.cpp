@@ -44,8 +44,6 @@ void Scene::firstInit() {
 	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
 		cout << "Error with frame buffer" << endl;
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
-
-	quad.init();
 }
 
 inline void compileShader(ShaderProgram& program, const string& fileName) {
@@ -97,7 +95,7 @@ const uint cols = 5;
 void Scene::init() {
 	GameObject::init();
 	currentTime = 0.0f;
-	lightDir = normalize(vec3(1,1,0.2f));
+	lightDir = normalize(vec3(1,1,0));
 	floor.setLight(lightDir);
 	floor.init();
 	lightAmbient = vec4(0.15f);
@@ -132,7 +130,7 @@ void Scene::update(int deltaTime) {
 }
 
 void Scene::render() {
-	const static mat4 biasMatrix(
+	const static mat4 offsetMatrix(
 		0.5, 0.0, 0.0, 0.0,
 		0.0, 0.5, 0.0, 0.0,
 		0.0, 0.0, 0.5, 0.0,
@@ -142,7 +140,7 @@ void Scene::render() {
 	glViewport(0, 0, SHADOW_MAP_W, SHADOW_MAP_H);
 	shadowMapProgram.use();
 	glBindFramebuffer(GL_FRAMEBUFFER, framebufferName);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glClear(GL_DEPTH_BUFFER_BIT);
 	shadowMapProgram.setUniformMatrix4f("depthVP", camera.getVPLightMatrix());
 	shadowMapProgram.setUniform3f("lightDir", lightDir.x, lightDir.y, lightDir.z);
 
@@ -158,7 +156,7 @@ void Scene::render() {
 	drawShadowProgram.use();
 	drawShadowProgram.setUniformi("tex", 0);
 	drawShadowProgram.setUniformi("shadowMap", 1);
-	drawShadowProgram.setUniformMatrix4f("depthVP", biasMatrix*camera.getVPLightMatrix());
+	drawShadowProgram.setUniformMatrix4f("depthVP", offsetMatrix*camera.getVPLightMatrix());
 	drawShadowProgram.setUniformMatrix4f("VP", camera.getVPMatrix());
 	drawShadowProgram.setUniform3f("lightDir", lightDir.x, lightDir.y, lightDir.z);
 
@@ -240,11 +238,6 @@ void Scene::render() {
 	glDisable(GL_STENCIL_TEST);
 	glDisable(GL_BLEND);
 	glDisable(GL_POLYGON_OFFSET_FILL);*/
-
-	/*glViewport(0, 0, 200, 200);
-	drawImageProgram.use();
-	glBindTexture(GL_TEXTURE_2D, depthTexture);
-	quad.render(drawImageProgram);*/
 }
 
 void Scene::resize(int w, int h) {
