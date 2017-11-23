@@ -21,8 +21,8 @@ void Camera::init(glm::vec3 lightDir) {
 	lightCam.UP = vec3(0, 1, 0);
 	lightCam.left = -28;
 	lightCam.right = 11.5f;
-	lightCam.bottom = -25;
-	lightCam.top = 25;
+	lightCam.bottom = -21.5f;
+	lightCam.top = 9;
 	lightCam.zNear = 0.01f;
 	lightCam.zFar = 100;
 	lightCam.updatePM();
