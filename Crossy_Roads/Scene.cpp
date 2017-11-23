@@ -7,8 +7,8 @@
 using namespace glm;
 
 #define PI 3.14159f
-#define SHADOW_MAP_W 4096
-#define SHADOW_MAP_H 4096
+#define SHADOW_MAP_W 2048
+#define SHADOW_MAP_H 2048
 
 Scene::Scene() {
 }

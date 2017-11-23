@@ -68,24 +68,14 @@ void CubeMesh::init() {
 		-1,0,0,
 	};
 
-	//0-0.5 0-0.33 cara -z
-	//0.5-1 0-0.33 cara z
-	//0-0.5 0.33-0.66 cara -y
-	//0.5-1 0-33-0.66 cara y
+	//0-0.5 0-0.33 cara y
+	//0.5-1 0-0.33 cara -y
+	//0-0.5 0.33-0.66 cara -z
+	//0.5-1 0-33-0.66 cara z
 	//0-0.5 0.66-1 cara -x
 	//0.5-1 0.66-1 cara x
 	static const float sY = 1.f / 3;
 	static const float texCoords[] = {
-		0,0,
-		0.5,0,
-		0,sY,
-		0.5,sY,
-
-		0.5,0,
-		1,0,
-		0.5,sY,
-		1,sY,
-
 		0,sY,
 		0.5,sY,
 		0,2*sY,
@@ -95,6 +85,16 @@ void CubeMesh::init() {
 		1,sY,
 		0.5,2*sY,
 		1,2*sY,
+
+		0.5,0,
+		1,0,
+		0.5,sY,
+		1,sY,
+
+		0,0,
+		0.5,0,
+		0,sY,
+		0.5,sY,
 
 		0,2*sY,
 		0.5,2*sY,
