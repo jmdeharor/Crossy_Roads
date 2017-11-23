@@ -19,10 +19,10 @@ void Camera::init(glm::vec3 lightDir) {
 	lightCam.OBS = lightDir*25.f;
 	lightCam.VRP = vec3(0);
 	lightCam.UP = vec3(0, 1, 0);
-	lightCam.left = -30;
-	lightCam.right = 30;
-	lightCam.bottom = -30;
-	lightCam.top = 30;
+	lightCam.left = -28;
+	lightCam.right = 11.5f;
+	lightCam.bottom = -25;
+	lightCam.top = 25;
 	lightCam.zNear = 0.01f;
 	lightCam.zFar = 100;
 	lightCam.updatePM();

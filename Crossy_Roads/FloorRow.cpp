@@ -109,14 +109,16 @@ void FloorRow::init(vector<uint>& adjacentRow) {
 			counter = 0;
 		}
 		static vec3 boundingBox = floorMesh.getbbSize();
+		static vec3 bbcenter = floorMesh.getbbCenter();
+		static float height = floorMesh.getHeight();
 		static vec3 floorTileSize = vec3(realTileSize, 0.1f, tileSize.y) / boundingBox;
 		adjacentRow[i] = meshIndex;
 		tile.setTexture(texture);
 		tile.setMesh(&floorMesh);
 		tile.setScale(floorTileSize);
 		tile.rotateY(PI / 2);
-		//tile.setCenter(vec3(boundingBox.x, boundingBox.y + floorMesh.getHeight() / 2., boundingBox.z));
-		tile.setPos(vec3(offsetX + i*realTileSize, -boundingBox.y*0.1f / 2, pos.y));
+		tile.setCenter(vec3(bbcenter.x, bbcenter.y + height / 2.f, bbcenter.z));
+		tile.setPos(vec3(offsetX + i*realTileSize, 0, pos.y));
 		++counter;
 	}
 	static float mastHeight = mastMesh.getHeight()*0.5f;

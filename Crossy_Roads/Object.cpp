@@ -86,7 +86,8 @@ void Object::setMesh(const Mesh * mesh) {
 }
 
 void Object::setCenterToBaseCenter() {
-	center = vec3(center.x, 0, center.z);
+	modified = true;
+	center = vec3(center.x, center.y - mesh->getHeight()/2.f, center.z);
 }
 
 Object::~Object()

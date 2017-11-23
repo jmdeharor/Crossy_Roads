@@ -24,8 +24,8 @@ void QuadMesh::init() {
 		0,1,
 		1,1
 	};
-	bbox[0] = vec3(-1);
-	bbox[1] = vec3(1);
+	bbox[0] = vec3(-1,0,-1);
+	bbox[1] = vec3(1,0,1);
 	height = 0;
 	center = vec3(0);
 

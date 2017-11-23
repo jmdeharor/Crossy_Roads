@@ -13,7 +13,5 @@ out vec3 fragNormal;
 
 void main(){
 	fragNormal = normal;
-	vec3 N = normalize(normal);
 	gl_Position =  depthVP * model * vec4(vertexPosition_modelspace,1);
-	float perp = dot(N, lightDir);
 }

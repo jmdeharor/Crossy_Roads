@@ -15,10 +15,6 @@ class Player : public GameObject {
 	ShadowedObject playerObject;
 	void firstInit();
 private:
-	bool frontPressed;
-	bool leftPressed;
-	bool backPressed;
-	bool rightPressed;
 	bool wPressed, aPressed, sPressed, dPressed;
 	bool inMovement;
 	float speed, verticalSpeed, gravity;

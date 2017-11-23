@@ -128,7 +128,7 @@ void CubeMesh::init() {
 	};
 	bbox[0] = vec3(-1);
 	bbox[1] = vec3(1);
-	height = 0;
+	height = 2;
 	center = vec3(0);
 
 	glGenVertexArrays(1, &VAO);

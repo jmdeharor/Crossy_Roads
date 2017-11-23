@@ -19,12 +19,9 @@ void Player::init(vec3 lightDir, vec3 offset, float jumpDistance) {
 	this->jumpDistance = jumpDistance;
 	playerObject.setMesh(&playerMesh);
 	playerObject.setScale(vec3(0.1f));
-	vec3 bbox = playerMesh.getbbCenter();
-	//playerObject.setCenter(vec3(bbox.x, bbox.y - playerMesh.getHeight()/2.f, bbox.z));
-	playerObject.setPos(vec3(0, playerMesh.getHeight()*0.1f/2, 0));
-	playerObject.setPlane(vec4(0, 1, 0, 0), vec3(1, 1, 0));
 	playerObject.setCenterToBaseCenter();
-	frontPressed = backPressed = leftPressed = rightPressed = false;
+	playerObject.setPos(vec3(0, 0, 0));
+	playerObject.setPlane(vec4(0, 1, 0, 0), vec3(1, 1, 0));
 	wPressed = aPressed = sPressed = dPressed = false;
 	currentOrientation = FRONT;
 	directionVector = vec3(0, 0, 1.f);
@@ -90,27 +87,6 @@ bool Player::update(int deltaTime) {
 		else
 			sPressed = false;
 	}
-	
-	if (Game::instance().getKey('q')) {
-		if (!leftPressed) {
-			leftPressed = true;
-			playerObject.rotateY(PI/2.f);
-			currentOrientation = Orientation(currentOrientation + 1);
-			if (currentOrientation == 4) currentOrientation = FRONT;
-		}
-	}
-	else
-		leftPressed = false;
-	if (Game::instance().getKey('e')) {
-		if (!rightPressed) {
-			rightPressed = true;
-			playerObject.rotateY(-PI/2.f);
-			currentOrientation = Orientation(currentOrientation - 1);
-			if (currentOrientation == -1) currentOrientation = RIGHT;
-		}
-	}
-	else
-		rightPressed = false;
 	return true;
 }
 
