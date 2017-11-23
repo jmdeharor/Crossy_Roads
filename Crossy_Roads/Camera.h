@@ -3,6 +3,7 @@
 #include "Camera\obsorthocamera.h"
 
 class Camera {
+	glm::vec3 lightDir;
 	EulerPerspCamera cam;
 	OBSOrthoCamera uiCam, lightCam;
 	bool cameraMode;

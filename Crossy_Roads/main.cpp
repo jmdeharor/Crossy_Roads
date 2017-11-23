@@ -1,8 +1,9 @@
 #include <GL/glew.h>
 #include <GL/glut.h>
 #include <ctime>
+#include <iostream>
 #include "Game.h"
-
+using namespace std;
 
 //Remove console (only works in Visual Studio)
 //#pragma comment(linker, "/subsystem:\"windows\" /entry:\"mainCRTStartup\"")
@@ -60,8 +61,7 @@ static void mouseCallback(int button, int state, int x, int y)
 		Game::instance().mouseRelease(button);
 }
 
-static void drawCallback()
-{
+static void drawCallback() {
 	Game::instance().render();
 	glutSwapBuffers();
 }
@@ -80,7 +80,6 @@ static void idleCallback()
 		// Every time we enter here is equivalent to a game loop execution
 		if(!Game::instance().update(deltaTime))
 			exit(0);
-		prevTime = currentTime;
 		glutPostRedisplay();
 	}
 }

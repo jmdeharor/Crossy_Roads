@@ -16,10 +16,12 @@ void Camera::init(glm::vec3 lightDir) {
 	cam.updatePM();
 	cam.updateVM();
 
-	lightCam.OBS = lightDir*25.f;
+	this->lightDir = lightDir*25.f;
+
+	lightCam.OBS = this->lightDir;
 	lightCam.VRP = vec3(0);
 	lightCam.UP = vec3(0, 1, 0);
-	lightCam.left = -28;
+	lightCam.left = -30;
 	lightCam.right = 11.5f;
 	lightCam.bottom = -21.5f;
 	lightCam.top = 9;
@@ -70,6 +72,7 @@ void Camera::update(int deltaTime) {
 
 void Camera::updateVM() {
 	cam.updateVM();
+	lightCam.updateVM();
 }
 
 const glm::mat4 * Camera::getProjectionMatrix() const
@@ -90,8 +93,10 @@ mat4 Camera::getVPMatrix() const {
 	return cameraMode ? (*cam.getFullProjectionMatrix())*(*cam.getFullViewMatrix()) : (*lightCam.getFullProjectionMatrix())*(*lightCam.getFullViewMatrix());
 }
 
-void Camera::setPos(glm::vec3 pos) {
+void Camera::setPos(vec3 pos) {
 	cam.VRP = pos;
+	lightCam.VRP = pos;
+	lightCam.OBS = pos + lightDir;
 }
 
 Camera::Camera()
