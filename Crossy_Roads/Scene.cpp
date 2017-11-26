@@ -6,7 +6,6 @@
 #include "Game.h"
 using namespace glm;
 
-#define PI 3.14159f
 #define SHADOW_MAP_W 2048
 #define SHADOW_MAP_H 2048
 
@@ -94,16 +93,13 @@ const uint cols = 5;
 
 void Scene::init() {
 	GameObject::init();
-	currentTime = 0.0f;
-	lightDir = normalize(vec3(1,1,0));
-	floor.setLight(lightDir);
-	floor.init();
-	lightAmbient = vec4(0.15f);
-	lightDiffuse = vec4(0.85f);
-	vec3 offset = vec3(0, 0, 0);
 
+	lightDir = normalize(vec3(1,1,0));
+
+	floor.init(lightDir);
 	camera.init(lightDir);
-	player.init(lightDir, offset, floor.getTileSize().y);
+	player.init(lightDir, vec3(0), floor.getTileSize().y);
+
 	camera.setPos(player.getPos());
 	camera.updateVM();
 	pressed = false;
@@ -112,14 +108,19 @@ void Scene::init() {
 void Scene::update(int deltaTime) {
 	camera.update(deltaTime);
 	floor.update(deltaTime);
-	bool modified = false;
-	modified = player.update(deltaTime);
-	if (Game::instance().getKey('p')) {
-		int a = 3;
+	PlayerReturn playerAction;
+	playerAction = player.update(deltaTime);
+	switch (playerAction) {
+	case PlayerReturn::MOVE_FRONT:
+		floor.addLevel();
+		break;
 	}
-	if (modified) {
+	if (camera.getPos() != player.getPos()) {
 		camera.setPos(player.getPos());
 		camera.updateVM();
+	}
+	if (Game::instance().getKey('p')) {
+		int a = 3;
 	}
 	if (Game::instance().getKey('m')) {
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
@@ -160,40 +161,16 @@ void Scene::render() {
 	drawShadowProgram.setUniformMatrix4f("VP", camera.getVPMatrix());
 	drawShadowProgram.setUniform3f("lightDir", lightDir.x, lightDir.y, lightDir.z);
 
-	floor.renderSimpleObjects(drawShadowProgram);
+	//floor.renderSimpleObjects(drawShadowProgram);
 	floor.renderLightObjects(drawShadowProgram);
 	player.render(drawShadowProgram);
 
-	/*texProgram.use();
+	texProgram.use();
 	texProgram.setUniformMatrix4f(projectionLoc, *camera.getProjectionMatrix());
 	texProgram.setUniformMatrix4f(viewLoc, *camera.getViewMatrix());
 	texProgram.setUniform4f("color", vec4(1));
+
 	floor.renderSimpleObjects(texProgram);
-
-	lambertProgram.use();
-	GLint loc = glGetUniformLocation(lambertProgram.getProgramId(), "shadowMap");
-	glUniform1i(loc, 1); // set it manually
-	loc = glGetUniformLocation(lambertProgram.getProgramId(), "tex");
-	glUniform1i(loc, 0); // set it manually
-	mat4 biasMatrix(
-		0.5, 0.0, 0.0, 0.0,
-		0.0, 0.5, 0.0, 0.0,
-		0.0, 0.0, 0.5, 0.0,
-		0.5, 0.5, 0.5, 1.0
-	);
-	lambertProgram.setUniformMatrix4f("depthVP", biasMatrix*depthMVP);
-	lambertProgram.setUniformMatrix4f(projectionLoc, *camera.getProjectionMatrix());
-	lambertProgram.setUniformMatrix4f(viewLoc, *camera.getViewMatrix());
-	vec3 lightD = mat3(*camera.getViewMatrix())*lightDir;
-	lambertProgram.setUniform4f("lightAmbient", lightAmbient);
-	lambertProgram.setUniform4f("lightDiffuse", lightDiffuse);
-	lambertProgram.setUniform3f("lightDirection", lightD.x, lightD.y, lightD.z);
-	lambertProgram.setUniform4f("matDiffuse", 1, 1, 1, 1);
-	lambertProgram.setUniform4f("matAmbient", 1, 1, 1, 1);
-	floor.renderLightObjects(lambertProgram);
-	player.render(lambertProgram);
-
-	glDisable(GL_TEXTURE_2D);
 
 	shadowProgram.use();
 	shadowProgram.setUniformMatrix4f(projectionLoc, *camera.getProjectionMatrix());
@@ -209,35 +186,6 @@ void Scene::render() {
 	glDisable(GL_STENCIL_TEST);
 	glDisable(GL_BLEND);
 	glDisable(GL_POLYGON_OFFSET_FILL);
-
-	glViewport(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-	drawShadowProgram.use();
-	glActiveTexture(GL_TEXTURE1);
-	glBindTexture(GL_TEXTURE_2D, depthTexture);
-	glActiveTexture(GL_TEXTURE0);
-	mat4 biasMatrix(
-		0.5, 0.0, 0.0, 0.0,
-		0.0, 0.5, 0.0, 0.0,
-		0.0, 0.0, 0.5, 0.0,
-		0.5, 0.5, 0.5, 1.0
-	);
-	GLint loc = glGetUniformLocation(drawShadowProgram.getProgramId(), "shadowMap");
-	glUniform1i(loc, 1); // set it manually
-	drawShadowProgram.setUniformMatrix4f("VP", (*camera.getProjectionMatrix())*(*camera.getViewMatrix()));
-	drawShadowProgram.setUniformMatrix4f("depthVP", biasMatrix*depthMVP);
-	glEnable(GL_POLYGON_OFFSET_FILL);
-	glEnable(GL_BLEND);
-	glEnable(GL_STENCIL_TEST);
-	glPolygonOffset(-1, -1);
-
-	floor.renderSimpleObjects(shadowMapProgram);
-	floor.renderLightObjects(shadowMapProgram);
-	player.render(shadowMapProgram);
-
-
-	glDisable(GL_STENCIL_TEST);
-	glDisable(GL_BLEND);
-	glDisable(GL_POLYGON_OFFSET_FILL);*/
 }
 
 void Scene::resize(int w, int h) {

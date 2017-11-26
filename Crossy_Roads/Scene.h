@@ -34,21 +34,17 @@ public:
 	void resize(int w, int h);
 
 private:
-	void firstInit();
+	void firstInit() override;
 	void initShaders();
 
 private:
 	Player player;
-	ShadowedObject* enemies;
 	Floor floor;
 	ImportedMesh pirateMesh;
 	GLuint framebufferName, depthTexture;
 	glm::vec3 lightDir;
-	glm::vec4 lightAmbient;
-	glm::vec4 lightDiffuse;
 	Camera camera;
 	bool pressed;
-	float currentTime;
 	ShaderProgram texProgram, lambertProgram, shadowProgram;
 	ShaderProgram shadowMapProgram, drawShadowProgram, drawImageProgram;
 };

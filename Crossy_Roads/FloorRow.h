@@ -6,6 +6,7 @@
 #include "TexturedObject.h"
 
 class FloorRow : public GameObject {
+private:
 	std::vector<TexturedObject> floorTiles;
 	ShadowedObject mast;
 	bool hasMast;
@@ -18,7 +19,7 @@ class FloorRow : public GameObject {
 	static ImportedMesh pirateMesh;
 	static ImportedMesh mastMesh;
 	static CubeMesh floorMesh;
-	static std::vector<Texture> floorTextures;
+	static std::vector<vector<Texture>> floorTextures;
 public:
 	static void initMeshes();
 	static void setParameters(glm::vec2 tileSize, uint cols, glm::vec3 lightDir);

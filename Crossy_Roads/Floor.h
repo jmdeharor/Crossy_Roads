@@ -10,15 +10,13 @@ class Floor : GameObject {
 	uint rows, cols;
 	uint lastRow;
 	float firstPos;
-	glm::vec3 lightDir;
 	ImportedMesh floorMesh;
 	std::vector<FloorRow> floorRows;
 	glm::vec2 tileSize;
 public:
 	void addLevel();
-	void firstInit();
-	void setLight(glm::vec3 lightDir);
-	void init();
+	void firstInit() override;
+	void init(glm::vec3 lightDir);
 	void update(int deltaTime);
 	void renderSimpleObjects(ShaderProgram& program);
 	void renderLightObjects(ShaderProgram& program);

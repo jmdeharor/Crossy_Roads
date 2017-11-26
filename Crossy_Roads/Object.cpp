@@ -40,6 +40,21 @@ void Object::rotateZ(float angle) {
 	rot.z += angle;
 }
 
+void Object::setRotationX(float angle) {
+	modified = true;
+	rot.x = angle;
+}
+
+void Object::setRotationY(float angle) {
+	modified = true;
+	rot.y = angle;
+}
+
+void Object::setRotationZ(float angle) {
+	modified = true;
+	rot.z;
+}
+
 void Object::setScale(vec3 scale) {
 	modified = true;
 	this->scale = scale;

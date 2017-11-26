@@ -10,10 +10,18 @@ enum Orientation {
 	RIGHT
 };
 
+enum class PlayerReturn {
+	MOVE_FRONT,
+	MOVE_BACK,
+	MOVE_LEFT,
+	MOVE_RIGHT,
+	NOTHING
+};
+
 class Player : public GameObject {
 	ImportedMesh playerMesh;
 	ShadowedObject playerObject;
-	void firstInit();
+	void firstInit() override;
 private:
 	bool wPressed, aPressed, sPressed, dPressed;
 	bool inMovement;
@@ -33,7 +41,7 @@ private:
 public:
 	void jump();
 	void init(glm::vec3 lightDir, glm::vec3 offset, float jumpDistance);
-	bool update(int deltaTime);
+	PlayerReturn update(int deltaTime);
 	void render(ShaderProgram& program);
 	void renderShadow(ShaderProgram& program);
 	glm::vec3 getPos();

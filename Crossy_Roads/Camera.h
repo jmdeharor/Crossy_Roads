@@ -16,6 +16,7 @@ public:
 	const glm::mat4* getViewMatrix() const;
 	glm::mat4 getVPLightMatrix() const;
 	glm::mat4 getVPMatrix() const;
+	glm::vec3 getPos() const;
 	void setPos(glm::vec3 pos);
 	Camera();
 	~Camera();

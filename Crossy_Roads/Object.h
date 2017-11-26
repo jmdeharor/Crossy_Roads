@@ -23,6 +23,9 @@ public:
 	void rotateX(float angle);
 	void rotateY(float angle);
 	void rotateZ(float angle);
+	void setRotationX(float angle);
+	void setRotationY(float angle);
+	void setRotationZ(float angle);
 	void setScale(glm::vec3 scale);
 	const glm::mat4* getModel();
 	virtual void render(ShaderProgram& program);

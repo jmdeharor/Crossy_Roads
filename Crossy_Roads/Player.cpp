@@ -20,8 +20,8 @@ void Player::init(vec3 lightDir, vec3 offset, float jumpDistance) {
 	playerObject.setMesh(&playerMesh);
 	playerObject.setScale(vec3(0.1f));
 	playerObject.setCenterToBaseCenter();
-	playerObject.setPos(vec3(0, 0, 0));
-	playerObject.setPlane(vec4(0, 1, 0, 0), vec3(1, 1, 0));
+	playerObject.setPos(vec3(0));
+	playerObject.setPlane(vec4(0, 1, 0, 0), lightDir);
 	wPressed = aPressed = sPressed = dPressed = false;
 	currentOrientation = FRONT;
 	directionVector = vec3(0, 0, 1.f);
@@ -33,17 +33,18 @@ void Player::init(vec3 lightDir, vec3 offset, float jumpDistance) {
 	currentFrame = 0;
 }
 
-bool Player::update(int deltaTime) {
+PlayerReturn Player::update(int deltaTime) {
+	PlayerReturn ret = PlayerReturn::NOTHING;
 	if (inMovement) {
 		if (!keepMoving()) {
 			currentFrame = 0;
 			inMovement = false;
 		}
 	}
-
-	if (!inMovement) {
+	else {
 		if (Game::instance().getKey('w')) {
 			if (!wPressed) {
+				ret = PlayerReturn::MOVE_FRONT;
 				wPressed = true;
 				performRotation(currentOrientation, 'w');
 				currentOrientation = FRONT;
@@ -55,6 +56,7 @@ bool Player::update(int deltaTime) {
 			wPressed = false;
 		if (Game::instance().getKey('a')) {
 			if (!aPressed) {
+				ret = PlayerReturn::MOVE_LEFT;
 				aPressed = true;
 				performRotation(currentOrientation, 'a');
 				currentOrientation = LEFT;
@@ -66,6 +68,7 @@ bool Player::update(int deltaTime) {
 			aPressed = false;
 		if (Game::instance().getKey('d')) {
 			if (!dPressed) {
+				ret = PlayerReturn::MOVE_RIGHT;
 				dPressed = true;
 				performRotation(currentOrientation, 'd');
 				currentOrientation = RIGHT;
@@ -77,6 +80,7 @@ bool Player::update(int deltaTime) {
 			dPressed = false;
 		if (Game::instance().getKey('s')) {
 			if (!sPressed) {
+				ret = PlayerReturn::MOVE_BACK;
 				sPressed = true;
 				performRotation(currentOrientation, 's');
 				currentOrientation = BACK;
@@ -87,7 +91,7 @@ bool Player::update(int deltaTime) {
 		else
 			sPressed = false;
 	}
-	return true;
+	return ret;
 }
 
 void Player::render(ShaderProgram & program) {
@@ -122,6 +126,7 @@ void Player::setDirectionVector() {
 void Player::performRotation(Orientation currentOrientation, char key) {
 	switch (key) {
 	case 'w':
+		//playerObject.setRotationY(0);
 		switch (currentOrientation) {
 		case BACK:
 			playerObject.rotateY(PI);
@@ -138,6 +143,7 @@ void Player::performRotation(Orientation currentOrientation, char key) {
 		}
 		break;
 	case 'a':
+		//playerObject.setRotationY(PI/2);
 		switch (currentOrientation) {
 		case FRONT:
 			playerObject.rotateY(PI / 2.f);
@@ -154,6 +160,7 @@ void Player::performRotation(Orientation currentOrientation, char key) {
 		}
 		break;
 	case 'd':
+		//playerObject.setRotationY(-PI / 2);
 		switch (currentOrientation) {
 		case FRONT:
 			playerObject.rotateY(-PI / 2.f);
@@ -170,6 +177,7 @@ void Player::performRotation(Orientation currentOrientation, char key) {
 		}
 		break;
 	case 's':
+		//playerObject.setRotationY(PI);
 		switch (currentOrientation) {
 		case FRONT:
 			playerObject.rotateY(PI);

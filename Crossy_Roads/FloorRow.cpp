@@ -5,19 +5,41 @@ using namespace glm;
 //const string models[] = { "models/floor_2.obj","models/floor_3.obj","models/floor_4.obj",
 //	"models/floor_5.obj"};
 
-const string models[] = { "images/wood_1.png", "images/wood_2.png", "images/road.png",
-	"images/white.png" };
+//const string models[] = { "images/wood_1.png", "images/wood_2.png", "images/road.png",
+//	"images/white.png" };
 
-const uint nModels = sizeof(models) / sizeof(string);
+const vector<vector<string>> models = { 
+	//{ "images/wood_1.png" }, 
+	//{ "images/wood_2.png" },
+	//{ "images/road.png" }, 
+	{ "images/wood_3_1.png", "images/wood_3_2.png", "images/wood_3_3.png", "images/wood_3_4.png", "images/wood_3_5.png" },
+	{ "images/wood_4_0.png", "images/wood_4_1.png", "images/wood_4_2.png", "images/wood_4_3.png", "images/wood_4_4.png" },
+	{ "images/wood_5_0.png", "images/wood_5_1.png", "images/wood_5_2.png", "images/wood_5_3.png", "images/wood_5_4.png" },
+	{ "images/wood_6_0.png", "images/wood_6_1.png", "images/wood_6_2.png", "images/wood_6_3.png", "images/wood_6_4.png" },
+	{ "images/wood_7_0.png", "images/wood_7_1.png", "images/wood_7_2.png", "images/wood_7_3.png", "images/wood_7_4.png" } };
+
+//const uint nModels = sizeof(models) / sizeof(string);
+
+vector<uint> indices;
 
 void FloorRow::initMeshes() {
 	pirateMesh.loadFromFile("models/pirate.obj");
 	mastMesh.loadFromFile("models/palo.obj");
 	floorMesh.init();
-	for (uint i = 0; i < nModels; ++i) {
-		floorTextures[i].loadFromFile(models[i], TEXTURE_PIXEL_FORMAT_RGB);
-		floorTextures[i].setMagFilter(GL_NEAREST);
-		floorTextures[i].setMinFilter(GL_NEAREST);
+
+	indices.resize(models.size());
+	for (uint i = 0; i < indices.size(); ++i) {
+		indices[i] = i;
+	}
+
+	floorTextures.resize(models.size());
+	for (uint i = 0; i < models.size(); ++i) {
+		floorTextures[i].resize(models[i].size());
+		for (uint j = 0; j < models[i].size(); ++j) {
+			floorTextures[i][j].loadFromFile(models[i][j], TEXTURE_PIXEL_FORMAT_RGBA);
+			floorTextures[i][j].setMagFilter(GL_NEAREST);
+			floorTextures[i][j].setMinFilter(GL_NEAREST);
+		}
 	}
 }
 
@@ -34,7 +56,7 @@ vec2 FloorRow::getPos() const {
 float generateSpeed() {
 	const static float maxSpeed = 0.3f;
 	const static float minSpeed = 0.05f;
-	return ((float)rand() / RAND_MAX)*(maxSpeed - minSpeed) + minSpeed;
+	return (((float)rand() / RAND_MAX)*(maxSpeed - minSpeed) + minSpeed)*(-1 + (rand()%2)*2);
 }
 
 void FloorRow::moveToPosition(vec2 position) {
@@ -46,8 +68,13 @@ void FloorRow::moveToPosition(vec2 position) {
 		tile.setPos(vec3(tilePos.x, tilePos.y, position.y));
 	}
 	for (uint i = 0; i < enemies.size(); ++i) {
-		enemies[i].setPos(vec3(-30 + ((float)rand() / RAND_MAX) * 60, enemies[i].getHeight() / 2, position.y));
 		speeds[i] = generateSpeed();
+		float startPoint;
+		if (speeds[i] >= 0)
+			startPoint = -tileSize.x / 2 + ((float)rand() / RAND_MAX) * tileSize.x;
+		else
+			startPoint = tileSize.x / 2 - ((float)rand() / RAND_MAX) * tileSize.x;
+		enemies[i].setPos(vec3(startPoint, 0, position.y));
 	}
 	pos = position;
 }
@@ -56,20 +83,45 @@ void FloorRow::setPos(vec2 position) {
 	pos = position;
 }
 
-bool applyConstraints(uint prevMeshIndex, uint meshIndex, uint numAdjacents, vector<uint>& adjacentRow, uint position) {
-	if (prevMeshIndex == meshIndex)
-		return false;
+bool applyConstraints(uint meshIndex, uint numAdjacents, vector<uint>& adjacentRow, uint position) {
+	//return true;
 	if (position + numAdjacents < adjacentRow.size() && adjacentRow[position + numAdjacents - 1] != adjacentRow[position + numAdjacents])
 		return false;
-	for (uint i = 0; i < numAdjacents; ++i) {
+	if (meshIndex == adjacentRow[position])
+		return false;
+	/*for (uint i = 0; i < numAdjacents; ++i) {
 		if (meshIndex == adjacentRow[position + i])
 			return false;
-	}
+	}*/
 	return true;
 }
 
-uint minim(uint a, uint b) {
+inline uint minim(uint a, uint b) {
 	return a < b ? a : b;
+}
+
+inline int between(int min, int max) {
+	return ((float)rand() / RAND_MAX)*(max - min) + min;
+}
+
+pair<uint,uint> generateRandomTextureIndex(uint i, uint prevMeshIndex, vector<uint>& adjacentRow) {
+	uint textureIndex;
+	uint numAdjacentTiles;
+	vector<uint> indicesCopy = indices;
+	while (indicesCopy.size() > 0) {
+		uint ind = rand() % indicesCopy.size();
+		textureIndex = indicesCopy[ind];
+		indicesCopy.erase(indicesCopy.begin() + ind);
+		if (prevMeshIndex == textureIndex)
+			continue;
+		for (numAdjacentTiles = models[textureIndex].size() - 1; numAdjacentTiles >= 4; --numAdjacentTiles) {
+			if (applyConstraints(textureIndex, numAdjacentTiles, adjacentRow, i)) {
+				indicesCopy.clear();
+				break;
+			}
+		}
+	}
+	return make_pair(textureIndex, numAdjacentTiles);
 }
 
 void FloorRow::init(vector<uint>& adjacentRow) {
@@ -78,6 +130,10 @@ void FloorRow::init(vector<uint>& adjacentRow) {
 	floorTiles.resize(cols);
 
 	static float realTileSize = tileSize.x / cols;
+	static vec3 boundingBox = floorMesh.getbbSize();
+	static vec3 bbcenter = floorMesh.getbbCenter();
+	static float height = floorMesh.getHeight();
+	static vec3 floorTileSize = vec3(realTileSize, 0.1f, tileSize.y) / boundingBox;
 	float offsetX = pos.x -(realTileSize*(cols / 2) - (1 - cols % 2)*realTileSize / 2);
 
 	for (uint i = 0; i < enemies.size(); ++i) {
@@ -86,33 +142,33 @@ void FloorRow::init(vector<uint>& adjacentRow) {
 		enemy.name = "enemy " + to_string(i);
 		enemy.rotateY(PI);
 		enemy.setScale(vec3(0.1f));
-		enemy.setPos(vec3(-tileSize.x / 2 + ((float)rand() / RAND_MAX) * tileSize.x, enemy.getHeight() / 2, pos.y));
+		enemy.setCenterToBaseCenter();
 		enemy.setPlane(vec4(0, 1, 0, 0), lightDir);
 		speeds[i] = generateSpeed();
+		float startPoint;
+		if (speeds[i] >= 0)
+			startPoint = -tileSize.x / 2 + ((float)rand() / RAND_MAX) * tileSize.x;
+		else
+			startPoint = tileSize.x / 2 - ((float)rand() / RAND_MAX) * tileSize.x;
+		enemy.setPos(vec3(startPoint, 0, pos.y));
 	}
-	uint meshIndex = nModels;
+
+	uint textureIndex = models.size();
 	Texture* texture = NULL;
 	uint numAdjacentTiles = 0;
 	uint counter = numAdjacentTiles;
+	vector<uint> indicesAux;
 	for (uint i = 0; i < floorTiles.size(); ++i) {
 		TexturedObject& tile = floorTiles[i];
 		tile.name = "floor tile " + to_string(i);
 		if (counter == numAdjacentTiles) {
-			uint prevMeshIndex = meshIndex;
-			meshIndex = rand() % nModels;
-			numAdjacentTiles = minim(rand() % 6 + 5, floorTiles.size() - i);
-			while (!applyConstraints(prevMeshIndex, meshIndex, numAdjacentTiles, adjacentRow, i)) {
-				meshIndex = rand() % nModels;
-				numAdjacentTiles = minim(rand() % 6 + 5, floorTiles.size() - i);
-			}
-			texture = &floorTextures[meshIndex];
+			pair<uint, uint> ret = generateRandomTextureIndex(i, textureIndex, adjacentRow);
+			textureIndex = ret.first;
+			numAdjacentTiles = ret.second;
 			counter = 0;
 		}
-		static vec3 boundingBox = floorMesh.getbbSize();
-		static vec3 bbcenter = floorMesh.getbbCenter();
-		static float height = floorMesh.getHeight();
-		static vec3 floorTileSize = vec3(realTileSize, 0.1f, tileSize.y) / boundingBox;
-		adjacentRow[i] = meshIndex;
+		texture = &floorTextures[textureIndex][counter];
+		adjacentRow[i] = textureIndex;
 		tile.setTexture(texture);
 		tile.setMesh(&floorMesh);
 		tile.setScale(floorTileSize);
@@ -138,9 +194,15 @@ void FloorRow::update(int deltaTime) {
 	for (uint i = 0; i < enemies.size(); ++i) {
 		Object& object = enemies[i];
 		object.move(speeds[i], 0, 0);
-		if (object.getPos().x > tileSize.x / 2) {
+		float x = object.getPos().x;
+		if (x > tileSize.x / 2 || x < -tileSize.x/2) {
 			speeds[i] = generateSpeed();
-			object.setPos(vec3(-tileSize.x / 2, object.getPos().y, object.getPos().z));
+			float startPoint;
+			if (speeds[i] >= 0)
+				startPoint = -tileSize.x / 2;
+			else
+				startPoint = tileSize.x / 2;
+			object.setPos(vec3(startPoint, 0, pos.y));
 		}
 	}
 }
@@ -182,4 +244,4 @@ vec3 FloorRow::lightDir;
 ImportedMesh FloorRow::pirateMesh;
 ImportedMesh FloorRow::mastMesh;
 CubeMesh FloorRow::floorMesh;
-vector<Texture> FloorRow::floorTextures(nModels);
+vector<vector<Texture>> FloorRow::floorTextures;

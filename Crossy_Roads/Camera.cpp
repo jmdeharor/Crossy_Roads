@@ -93,6 +93,10 @@ mat4 Camera::getVPMatrix() const {
 	return cameraMode ? (*cam.getFullProjectionMatrix())*(*cam.getFullViewMatrix()) : (*lightCam.getFullProjectionMatrix())*(*lightCam.getFullViewMatrix());
 }
 
+glm::vec3 Camera::getPos() const {
+	return cam.VRP;
+}
+
 void Camera::setPos(vec3 pos) {
 	cam.VRP = pos;
 	lightCam.VRP = pos;

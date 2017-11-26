@@ -15,12 +15,14 @@ void Floor::firstInit() {
 	rows = 40;
 	cols = (uint)tileSize.x/2;
 	floorRows.resize(rows);
-	FloorRow::setParameters(tileSize, cols, lightDir);
 	FloorRow::initMeshes();
 }
 
-void Floor::init() {
+void Floor::init(vec3 lightDir) {
 	GameObject::init();
+
+	FloorRow::setParameters(tileSize, cols, lightDir);
+
 	float realTileSize = tileSize.x / cols;
 
 	float offsetZ = -tileSize.y*(rows/2);
@@ -32,10 +34,6 @@ void Floor::init() {
 
 	lastRow = 0;
 	firstPos = floorRows[floorRows.size()-1].getPos().y;
-}
-
-void Floor::setLight(glm::vec3 lightDir) {
-	this->lightDir = lightDir;
 }
 
 void Floor::addLevel() {
@@ -74,7 +72,6 @@ void Floor::renderShadows(ShaderProgram & program) {
 	}
 }
 
-glm::vec2 Floor::getTileSize()
-{
+vec2 Floor::getTileSize() {
 	return tileSize;
 }
