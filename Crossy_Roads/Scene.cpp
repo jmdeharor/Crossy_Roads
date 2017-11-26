@@ -94,7 +94,7 @@ const uint cols = 5;
 void Scene::init() {
 	GameObject::init();
 
-	lightDir = normalize(vec3(1,1,0));
+	lightDir = normalize(vec3(1,1,0.15f));
 
 	floor.init(lightDir);
 	camera.init(lightDir);
@@ -168,7 +168,8 @@ void Scene::render() {
 	texProgram.use();
 	texProgram.setUniformMatrix4f(projectionLoc, *camera.getProjectionMatrix());
 	texProgram.setUniformMatrix4f(viewLoc, *camera.getViewMatrix());
-	texProgram.setUniform4f("color", vec4(1));
+	texProgram.setUniform3f("lightDir", lightDir.x, lightDir.y, lightDir.z);
+	texProgram.setUniformMatrix3f(normalMatrixLoc, mat3(*camera.getViewMatrix()));
 
 	floor.renderSimpleObjects(texProgram);
 

@@ -25,7 +25,7 @@ vector<uint> indices;
 void FloorRow::initMeshes() {
 	pirateMesh.loadFromFile("models/pirate.obj");
 	mastMesh.loadFromFile("models/palo.obj");
-	floorMesh.init();
+	cubeMesh.init();
 
 	indices.resize(models.size());
 	for (uint i = 0; i < indices.size(); ++i) {
@@ -41,6 +41,9 @@ void FloorRow::initMeshes() {
 			floorTextures[i][j].setMinFilter(GL_NEAREST);
 		}
 	}
+	planeWood.loadFromFile("images/wood_plane.png", TEXTURE_PIXEL_FORMAT_RGB);
+	planeWood.setMagFilter(GL_NEAREST);
+	planeWood.setMinFilter(GL_NEAREST);
 }
 
 void FloorRow::setParameters(vec2 tileSize, uint cols, vec3 lightDir) {
@@ -84,7 +87,6 @@ void FloorRow::setPos(vec2 position) {
 }
 
 bool applyConstraints(uint meshIndex, uint numAdjacents, vector<uint>& adjacentRow, uint position) {
-	//return true;
 	if (position + numAdjacents < adjacentRow.size() && adjacentRow[position + numAdjacents - 1] != adjacentRow[position + numAdjacents])
 		return false;
 	if (meshIndex == adjacentRow[position])
@@ -129,12 +131,21 @@ void FloorRow::init(vector<uint>& adjacentRow) {
 	speeds.resize(enemies.size());
 	floorTiles.resize(cols);
 
+	bool safeZone = !(rand() % 10);
+
 	static float realTileSize = tileSize.x / cols;
-	static vec3 boundingBox = floorMesh.getbbSize();
-	static vec3 bbcenter = floorMesh.getbbCenter();
-	static float height = floorMesh.getHeight();
-	static vec3 floorTileSize = vec3(realTileSize, 0.1f, tileSize.y) / boundingBox;
+	static vec3 boundingBox = cubeMesh.getbbSize();
+	static vec3 bbcenter = cubeMesh.getbbCenter();
+	static float height = cubeMesh.getHeight();
+	vec3 floorTileSize = vec3(realTileSize, 0.1f, tileSize.y) / boundingBox;
 	float offsetX = pos.x -(realTileSize*(cols / 2) - (1 - cols % 2)*realTileSize / 2);
+
+	float tilePosY;
+	if (safeZone) {
+		floorTileSize.y = 0.2f/ boundingBox.y;
+		tilePosY = boundingBox.y*floorTileSize.y;
+	}
+	else tilePosY = 0;
 
 	for (uint i = 0; i < enemies.size(); ++i) {
 		ShadowedObject& enemy = enemies[i];
@@ -161,24 +172,28 @@ void FloorRow::init(vector<uint>& adjacentRow) {
 	for (uint i = 0; i < floorTiles.size(); ++i) {
 		TexturedObject& tile = floorTiles[i];
 		tile.name = "floor tile " + to_string(i);
-		if (counter == numAdjacentTiles) {
-			pair<uint, uint> ret = generateRandomTextureIndex(i, textureIndex, adjacentRow);
-			textureIndex = ret.first;
-			numAdjacentTiles = ret.second;
-			counter = 0;
+		if (safeZone)
+			texture = &planeWood;
+		else {
+			if (counter == numAdjacentTiles) {
+				pair<uint, uint> ret = generateRandomTextureIndex(i, textureIndex, adjacentRow);
+				textureIndex = ret.first;
+				numAdjacentTiles = ret.second;
+				counter = 0;
+			}
+			texture = &floorTextures[textureIndex][counter];
 		}
-		texture = &floorTextures[textureIndex][counter];
 		adjacentRow[i] = textureIndex;
 		tile.setTexture(texture);
-		tile.setMesh(&floorMesh);
+		tile.setMesh(&cubeMesh);
 		tile.setScale(floorTileSize);
 		tile.rotateY(PI / 2);
 		tile.setCenter(vec3(bbcenter.x, bbcenter.y + height / 2.f, bbcenter.z));
-		tile.setPos(vec3(offsetX + i*realTileSize, 0, pos.y));
+		tile.setPos(vec3(offsetX + i*realTileSize, tilePosY, pos.y));
 		++counter;
 	}
 	static float mastHeight = mastMesh.getHeight()*0.5f;
-	if (false && rand() % 8 == 0) {
+	if (rand() % 8 == 0) {
 		hasMast = true;
 		mast.setMesh(&mastMesh);
 		mast.setScale(vec3(0.1f,0.5f,0.1f));
@@ -243,5 +258,6 @@ uint FloorRow::cols;
 vec3 FloorRow::lightDir;
 ImportedMesh FloorRow::pirateMesh;
 ImportedMesh FloorRow::mastMesh;
-CubeMesh FloorRow::floorMesh;
+CubeMesh FloorRow::cubeMesh;
 vector<vector<Texture>> FloorRow::floorTextures;
+Texture FloorRow::planeWood;

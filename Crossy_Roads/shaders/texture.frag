@@ -1,18 +1,15 @@
 #version 330
 
-uniform vec4 color;
 uniform sampler2D tex;
+uniform vec3 lightDir;
 
 in vec2 texCoordFrag;
+in vec3 fragNormal;
 out vec4 outColor;
 
-void main()
-{
-	// Discard fragment if texture sample has alpha < 0.5
-	// otherwise compose the texture sample with the fragment's interpolated color
+void main() {
+	vec3 n = normalize(fragNormal);
 	vec4 texColor = texture(tex, texCoordFrag);
-	if(texColor.a < 0.5f)
-		discard;
-	outColor = color * texColor;
+	outColor =  texColor;
 }
 

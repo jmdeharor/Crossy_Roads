@@ -18,8 +18,9 @@ private:
 	static glm::vec3 lightDir;
 	static ImportedMesh pirateMesh;
 	static ImportedMesh mastMesh;
-	static CubeMesh floorMesh;
+	static CubeMesh cubeMesh;
 	static std::vector<vector<Texture>> floorTextures;
+	static Texture planeWood;
 public:
 	static void initMeshes();
 	static void setParameters(glm::vec2 tileSize, uint cols, glm::vec3 lightDir);
