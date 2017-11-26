@@ -18,6 +18,10 @@ void Floor::firstInit() {
 	FloorRow::initMeshes();
 }
 
+inline int between(int min, int max) {
+	return ((float)rand() / RAND_MAX)*(max - min) + min;
+}
+
 void Floor::init(vec3 lightDir) {
 	GameObject::init();
 
@@ -27,9 +31,39 @@ void Floor::init(vec3 lightDir) {
 
 	float offsetZ = -tileSize.y*(rows/2);
 	vector<uint> meshIndex(cols, 999);
+	FloorType type = (FloorType)(rand()%2);
+	uint length = 0;
+	uint counter = length;
 	for (uint i = 0; i < rows; ++i) {
+		bool transition = false;
+		if (counter == length) {
+			switch (type) {
+			case Safe:
+				length = between(3, 10);
+				type = Road;
+				transition = true;
+				break;
+			case Road:
+				length = between(1, 4);
+				type = Safe;
+				break;
+			}
+			counter = 0;
+		}
 		floorRows[i].setPos(vec2(0, offsetZ + i*tileSize.y));
-		floorRows[i].init(meshIndex);
+		switch (type) {
+		case Safe:
+			floorRows[i].initSafeZone();
+			break;
+		case Road:
+			if (transition) {
+				for (uint i = 0; i < cols; ++i)
+					meshIndex[i] = 999;
+			}
+			floorRows[i].initRoad(meshIndex);
+			break;
+		}
+		++counter;
 	}
 
 	lastRow = 0;

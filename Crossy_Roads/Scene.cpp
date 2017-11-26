@@ -94,7 +94,7 @@ const uint cols = 5;
 void Scene::init() {
 	GameObject::init();
 
-	lightDir = normalize(vec3(1,1,0.15f));
+	lightDir = normalize(vec3(1,1,0.2f));
 
 	floor.init(lightDir);
 	camera.init(lightDir);

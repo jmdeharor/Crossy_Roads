@@ -5,11 +5,14 @@
 #include "CubeMesh.h"
 #include "TexturedObject.h"
 
+enum FloorType {
+	Road,
+	Safe
+};
+
 class FloorRow : public GameObject {
 private:
 	std::vector<TexturedObject> floorTiles;
-	ShadowedObject mast;
-	bool hasMast;
 	std::vector<ShadowedObject> enemies;
 	std::vector<float> speeds;
 	glm::vec2 pos;
@@ -17,7 +20,6 @@ private:
 	static uint cols;
 	static glm::vec3 lightDir;
 	static ImportedMesh pirateMesh;
-	static ImportedMesh mastMesh;
 	static CubeMesh cubeMesh;
 	static std::vector<vector<Texture>> floorTextures;
 	static Texture planeWood;
@@ -27,7 +29,8 @@ public:
 	glm::vec2 getPos() const;
 	void moveToPosition(glm::vec2 position);
 	void setPos(glm::vec2 position);
-	void init(vector<uint>& startPositions);
+	void initSafeZone();
+	void initRoad(vector<uint>& adjacentRow);
 	void update(int deltaTime);
 	void renderSimpleObjects(ShaderProgram& program);
 	void renderLightObjects(ShaderProgram& program);
