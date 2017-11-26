@@ -18,8 +18,13 @@ void Floor::firstInit() {
 	FloorRow::initMeshes();
 }
 
-inline int between(int min, int max) {
-	return ((float)rand() / RAND_MAX)*(max - min) + min;
+inline uint between(uint min, uint max) {
+	float num = ((float)rand() / RAND_MAX)*(max - min) + min;
+	uint floor = (uint)num;
+	if (num - floor >= 0.5)
+		return floor + 1;
+	else
+		return floor;
 }
 
 void Floor::init(vec3 lightDir) {
