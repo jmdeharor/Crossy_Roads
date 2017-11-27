@@ -36,7 +36,7 @@ public:
 	void renderSimpleObjects(ShaderProgram& program);
 	void renderLightObjects(ShaderProgram& program);
 	void renderShadows(ShaderProgram& program);
-	float getHeight();
+	float getHeight() const;
 	FloorRow();
 	~FloorRow();
 };

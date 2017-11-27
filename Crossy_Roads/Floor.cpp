@@ -117,6 +117,6 @@ vec2 Floor::getTileSize() {
 uint Floor::getRows() const {
 	return rows;
 }
-const FloorRow* Floor::getFloorRow(uint index) {
+const FloorRow* Floor::getFloorRow(uint index) const {
 	return &floorRows[index];
 }

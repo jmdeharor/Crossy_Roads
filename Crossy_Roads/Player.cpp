@@ -16,6 +16,7 @@ void Player::jump() {
 
 void Player::init(vec3 lightDir, vec3 offset, float jumpDistance, const Floor &floor) {
 	GameObject::init();
+	this->lightDir = lightDir;
 	this->floor = &floor;
 	this->jumpDistance = jumpDistance;
 	playerObject.setMesh(&playerMesh);
@@ -32,7 +33,7 @@ void Player::init(vec3 lightDir, vec3 offset, float jumpDistance, const Floor &f
 	speed = this->jumpDistance / float(JUMP_DURATION-1);
 	testJump = 0;
 	currentFrame = 0;
-	currentRowIndex = 24;
+	currentRowIndex = 20;
 }
 
 PlayerReturn Player::update(int deltaTime) {
@@ -204,11 +205,14 @@ void Player::performRotation(Orientation currentOrientation, char key) {
 }
 
 bool Player::keepMoving() {
+	float auxHeight = floor->getFloorRow(currentRowIndex)->getHeight();
 	currentFrame++;
 	bool returnValue = true;
+	playerObject.setPlane(vec4(0, 1, 0, -auxHeight), lightDir);
+
 	currentVerticalSpeed = verticalSpeed + gravity*currentFrame;
-	if (playerObject.getPos().y + currentVerticalSpeed <= 0) {
-		currentVerticalSpeed = -playerObject.getPos().y;
+	if (playerObject.getPos().y + currentVerticalSpeed <= auxHeight) {
+		currentVerticalSpeed =  -(playerObject.getPos().y - auxHeight);
 		returnValue = false;
 	}
 	vec3 horizontalMove = directionVector*speed;

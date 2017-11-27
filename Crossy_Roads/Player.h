@@ -35,6 +35,7 @@ private:
 	Orientation currentOrientation;
 	const Floor *floor;
 	uint currentRowIndex;
+	glm::vec3 lightDir;
 
 
 	void setDirectionVector();

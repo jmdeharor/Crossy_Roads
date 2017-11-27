@@ -145,7 +145,7 @@ void FloorRow::initSafeZone() {
 		tile.setPos(vec3(offsetX + i*realTileSize, boundingBox.y*floorTileSize.y, pos.y));
 	}
 }
-float FloorRow::getHeight() {
+float FloorRow::getHeight() const {
 	return rowHeight;
 }
 
