@@ -102,7 +102,7 @@ void Player::renderShadow(ShaderProgram & program) {
 	playerObject.renderShadow(program);
 }
 
-vec3 Player::getPos() {
+vec3 Player::getPos() const {
 	return playerObject.getPos();
 }
 

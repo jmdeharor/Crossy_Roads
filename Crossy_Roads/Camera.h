@@ -1,14 +1,19 @@
 #pragma once
 #include "Camera\eulerperspcamera.h"
 #include "Camera\obsorthocamera.h"
+#include "Player.h"
 
 class Camera {
+private:
+	const Player* player;
 	glm::vec3 lightDir;
 	EulerPerspCamera cam;
 	OBSOrthoCamera uiCam, lightCam;
 	bool cameraMode;
+private:
+	void cameraControl();
 public:
-	void init(glm::vec3 lightDir);
+	void init(glm::vec3 lightDir, const Player* player);
 	void resize(int w, int h);
 	void update(int deltaTime);
 	void updateVM();
