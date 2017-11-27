@@ -89,6 +89,8 @@ PlayerReturn Player::update(int deltaTime) {
 				currentOrientation = BACK;
 				setDirectionVector();
 				inMovement = true;
+				if (currentRowIndex == 0) currentRowIndex = floor->getRows() - 1;
+				else currentRowIndex = (currentRowIndex - 1) % floor->getRows();
 			}
 		}
 		else
@@ -105,7 +107,7 @@ void Player::renderShadow(ShaderProgram & program) {
 	playerObject.renderShadow(program);
 }
 
-vec3 Player::getPos() {
+vec3 Player::getPos() const {
 	return playerObject.getPos();
 }
 

@@ -48,7 +48,7 @@ public:
 	PlayerReturn update(int deltaTime);
 	void render(ShaderProgram& program);
 	void renderShadow(ShaderProgram& program);
-	glm::vec3 getPos();
+	glm::vec3 getPos() const;
 	Player();
 	~Player();
 };

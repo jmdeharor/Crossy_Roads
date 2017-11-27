@@ -4,7 +4,8 @@
 #include "Pi.h"
 using namespace glm;
 
-void Camera::init(glm::vec3 lightDir) {
+void Camera::init(vec3 lightDir, const Player* player) {
+	this->player = player;
 	cam.d = 20;
 	cam.phi = 0;
 	cam.psi = 10;
@@ -37,7 +38,7 @@ void Camera::resize(int w, int h) {
 	cam.updatePM();
 }
 
-void Camera::update(int deltaTime) {
+inline void Camera::cameraControl() {
 	if (Game::instance().getKey('l')) {
 		cameraMode = false;
 	}
@@ -67,6 +68,18 @@ void Camera::update(int deltaTime) {
 	else if (Game::instance().getKey('f')) {
 		cam.theta -= 0.1f;
 		cam.updateVM();
+	}
+}
+
+void Camera::update(int deltaTime) {
+	cameraControl();
+	vec3 playerPos = player->getPos();
+	if (cam.VRP != playerPos) {
+		vec3 diff = playerPos - cam.VRP;
+		cam.VRP += diff*0.03f;
+		lightCam.VRP = cam.VRP;
+		lightCam.OBS = cam.VRP + lightDir;
+		updateVM();
 	}
 }
 

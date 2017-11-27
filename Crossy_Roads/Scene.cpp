@@ -97,9 +97,10 @@ void Scene::init() {
 	lightDir = normalize(vec3(1,1,0.2f));
 
 	floor.init(lightDir);
-	camera.init(lightDir);
+	
+	camera.init(lightDir, &player);
 	player.init(lightDir, vec3(0), floor.getTileSize().y, floor);
-
+	
 	camera.setPos(player.getPos());
 	camera.updateVM();
 	pressed = false;
@@ -111,13 +112,12 @@ void Scene::update(int deltaTime) {
 	PlayerReturn playerAction;
 	playerAction = player.update(deltaTime);
 	switch (playerAction) {
+	case PlayerReturn::NOTHING:
+		break;
 	case PlayerReturn::MOVE_FRONT:
 		floor.addLevel();
+	default:
 		break;
-	}
-	if (camera.getPos() != player.getPos()) {
-		camera.setPos(player.getPos());
-		camera.updateVM();
 	}
 	if (Game::instance().getKey('p')) {
 		int a = 3;

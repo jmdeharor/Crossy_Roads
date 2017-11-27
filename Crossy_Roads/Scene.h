@@ -11,7 +11,6 @@
 #include "GameObject.h"
 #include "Floor.h"
 #include "Player.h"
-#include "Renderer.h"
 #include "ImportedMesh.h"
 
 #define CAMERA_WIDTH 640

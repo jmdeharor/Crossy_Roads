@@ -3,7 +3,6 @@
 #include <vector>
 #include "ShadowedObject.h"
 #include "ImportedMesh.h"
-#include "Renderer.h"
 #include "FloorRow.h"
 
 class Floor : GameObject {

@@ -87,9 +87,6 @@
     <ClCompile Include="QuadMesh.cpp">
       <Filter>Archivos de código fuente</Filter>
     </ClCompile>
-    <ClCompile Include="Renderer.cpp">
-      <Filter>Archivos de código fuente</Filter>
-    </ClCompile>
     <ClCompile Include="FloorRow.cpp">
       <Filter>Archivos de código fuente</Filter>
     </ClCompile>
@@ -171,9 +168,6 @@
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
     <ClInclude Include="QuadMesh.h">
-      <Filter>Archivos de encabezado</Filter>
-    </ClInclude>
-    <ClInclude Include="Renderer.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
     <ClInclude Include="FloorRow.h">

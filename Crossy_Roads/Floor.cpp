@@ -70,7 +70,6 @@ void Floor::init(vec3 lightDir) {
 		}
 		++counter;
 	}
-
 	lastRow = 0;
 	firstPos = floorRows[floorRows.size()-1].getPos().y;
 }
