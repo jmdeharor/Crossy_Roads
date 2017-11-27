@@ -2,6 +2,7 @@
 #include "GameObject.h"
 #include "ShadowedObject.h"
 #include "ImportedMesh.h"
+#include "Floor.h"
 
 enum Orientation {
 	FRONT,
@@ -32,6 +33,9 @@ private:
 	uint currentFrame;
 	glm::vec3 directionVector;
 	Orientation currentOrientation;
+	const Floor *floor;
+	uint currentRowIndex;
+
 
 	void setDirectionVector();
 	bool keepMoving();
@@ -40,7 +44,7 @@ private:
 
 public:
 	void jump();
-	void init(glm::vec3 lightDir, glm::vec3 offset, float jumpDistance);
+	void init(glm::vec3 lightDir, glm::vec3 offset, float jumpDistance, const Floor &floor);
 	PlayerReturn update(int deltaTime);
 	void render(ShaderProgram& program);
 	void renderShadow(ShaderProgram& program);

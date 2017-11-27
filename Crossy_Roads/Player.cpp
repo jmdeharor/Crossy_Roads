@@ -14,8 +14,9 @@ void Player::firstInit() {
 void Player::jump() {
 }
 
-void Player::init(vec3 lightDir, vec3 offset, float jumpDistance) {
+void Player::init(vec3 lightDir, vec3 offset, float jumpDistance, const Floor &floor) {
 	GameObject::init();
+	this->floor = &floor;
 	this->jumpDistance = jumpDistance;
 	playerObject.setMesh(&playerMesh);
 	playerObject.setScale(vec3(0.1f));
@@ -31,6 +32,7 @@ void Player::init(vec3 lightDir, vec3 offset, float jumpDistance) {
 	speed = this->jumpDistance / float(JUMP_DURATION-1);
 	testJump = 0;
 	currentFrame = 0;
+	currentRowIndex = 24;
 }
 
 PlayerReturn Player::update(int deltaTime) {
@@ -50,6 +52,7 @@ PlayerReturn Player::update(int deltaTime) {
 				currentOrientation = FRONT;
 				setDirectionVector();
 				inMovement = true;
+				currentRowIndex = (currentRowIndex + 1) % floor->getRows();
 			}
 		}
 		else

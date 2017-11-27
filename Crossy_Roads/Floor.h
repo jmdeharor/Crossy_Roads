@@ -21,6 +21,8 @@ public:
 	void renderSimpleObjects(ShaderProgram& program);
 	void renderLightObjects(ShaderProgram& program);
 	void renderShadows(ShaderProgram& program);
+	const FloorRow* getFloorRow(uint index);
+	uint getRows() const;
 	glm::vec2 getTileSize();
 	Floor();
 	~Floor();

@@ -23,6 +23,7 @@ private:
 	static CubeMesh cubeMesh;
 	static std::vector<vector<Texture>> floorTextures;
 	static Texture planeWood;
+	float rowHeight;
 public:
 	static void initMeshes();
 	static void setParameters(glm::vec2 tileSize, uint cols, glm::vec3 lightDir);
@@ -35,6 +36,7 @@ public:
 	void renderSimpleObjects(ShaderProgram& program);
 	void renderLightObjects(ShaderProgram& program);
 	void renderShadows(ShaderProgram& program);
+	float getHeight();
 	FloorRow();
 	~FloorRow();
 };

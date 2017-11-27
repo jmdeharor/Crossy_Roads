@@ -114,3 +114,10 @@ void Floor::renderShadows(ShaderProgram & program) {
 vec2 Floor::getTileSize() {
 	return tileSize;
 }
+
+uint Floor::getRows() const {
+	return rows;
+}
+const FloorRow* Floor::getFloorRow(uint index) {
+	return &floorRows[index];
+}

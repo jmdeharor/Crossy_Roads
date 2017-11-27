@@ -125,6 +125,7 @@ void FloorRow::initSafeZone() {
 	enemies.clear();
 	speeds.clear();
 	floorTiles.resize(cols);
+	rowHeight = 0.2f;
 
 	static float realTileSize = tileSize.x / cols;
 	static vec3 boundingBox = cubeMesh.getbbSize();
@@ -144,11 +145,15 @@ void FloorRow::initSafeZone() {
 		tile.setPos(vec3(offsetX + i*realTileSize, boundingBox.y*floorTileSize.y, pos.y));
 	}
 }
+float FloorRow::getHeight() {
+	return rowHeight;
+}
 
 void FloorRow::initRoad(vector<uint>& adjacentRow) {
 	enemies.resize(1);
 	speeds.resize(enemies.size());
 	floorTiles.resize(cols);
+	rowHeight = 0.0f;
 
 	static float realTileSize = tileSize.x / cols;
 	static vec3 boundingBox = cubeMesh.getbbSize();

@@ -98,7 +98,7 @@ void Scene::init() {
 
 	floor.init(lightDir);
 	camera.init(lightDir);
-	player.init(lightDir, vec3(0), floor.getTileSize().y);
+	player.init(lightDir, vec3(0), floor.getTileSize().y, floor);
 
 	camera.setPos(player.getPos());
 	camera.updateVM();
