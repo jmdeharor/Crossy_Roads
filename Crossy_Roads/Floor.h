@@ -9,7 +9,8 @@ class Floor : GameObject {
 	uint rows, cols;
 	uint lastRow;
 	float firstPos;
-	ImportedMesh floorMesh;
+	CubeMesh cubeMesh;
+	ImportedMesh deckMesh[4];
 	std::vector<FloorRow> floorRows;
 	glm::vec2 tileSize;
 public:

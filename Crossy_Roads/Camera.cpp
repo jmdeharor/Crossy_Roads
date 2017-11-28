@@ -76,6 +76,7 @@ void Camera::update(int deltaTime) {
 	vec3 playerPos = player->getPos();
 	if (cam.VRP != playerPos) {
 		vec3 diff = playerPos - cam.VRP;
+		vec3 absD = abs(diff);
 		cam.VRP += diff*0.03f;
 		lightCam.VRP = cam.VRP;
 		lightCam.OBS = cam.VRP + lightDir;

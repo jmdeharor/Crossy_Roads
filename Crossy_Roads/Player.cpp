@@ -5,10 +5,10 @@
 using namespace glm;
 
 #define FRAMES_PER_SECOND 60
-#define JUMP_DURATION 10
+#define JUMP_DURATION 11
 
 void Player::firstInit() {
-	playerMesh.loadFromFile("models/pirate.obj");
+	playerMesh.loadFromFile("models/pirate_2.obj");
 }
 
 void Player::jump() {
@@ -29,8 +29,8 @@ void Player::init(vec3 lightDir, vec3 offset, float jumpDistance, const Floor &f
 	directionVector = vec3(0, 0, 1.f);
 	inMovement = false;
 	gravity = -0.1;
-	verticalSpeed = getJumpingSpeed(JUMP_DURATION);
-	speed = this->jumpDistance / float(JUMP_DURATION-1);
+	verticalSpeed = getJumpingSpeed(0,0,JUMP_DURATION);
+	speed = this->jumpDistance / float(JUMP_DURATION);
 	testJump = 0;
 	currentFrame = 0;
 	currentRowIndex = 20;
@@ -53,7 +53,12 @@ PlayerReturn Player::update(int deltaTime) {
 				currentOrientation = FRONT;
 				setDirectionVector();
 				inMovement = true;
+				uint previousRowIndex = currentRowIndex;
 				currentRowIndex = (currentRowIndex + 1) % floor->getRows();
+				float prevHeight = floor->getFloorRow(previousRowIndex)->getHeight();
+				float currentHeight = floor->getFloorRow(currentRowIndex)->getHeight();
+				verticalSpeed = getJumpingSpeed(prevHeight, currentHeight, JUMP_DURATION);
+
 			}
 		}
 		else
@@ -90,8 +95,13 @@ PlayerReturn Player::update(int deltaTime) {
 				currentOrientation = BACK;
 				setDirectionVector();
 				inMovement = true;
+				uint previousRowIndex = currentRowIndex;
 				if (currentRowIndex == 0) currentRowIndex = floor->getRows() - 1;
 				else currentRowIndex = (currentRowIndex - 1) % floor->getRows();
+				float prevHeight = floor->getFloorRow(previousRowIndex)->getHeight();
+				float currentHeight = floor->getFloorRow(currentRowIndex)->getHeight();
+				verticalSpeed = getJumpingSpeed(prevHeight, currentHeight, JUMP_DURATION);
+
 			}
 		}
 		else
@@ -211,7 +221,7 @@ bool Player::keepMoving() {
 	playerObject.setPlane(vec4(0, 1, 0, -auxHeight), lightDir);
 
 	currentVerticalSpeed = verticalSpeed + gravity*currentFrame;
-	if (playerObject.getPos().y + currentVerticalSpeed <= 0) {
+	if (currentFrame == JUMP_DURATION) {
 		currentVerticalSpeed =  -(playerObject.getPos().y - auxHeight);
 		returnValue = false;
 	}
@@ -221,8 +231,8 @@ bool Player::keepMoving() {
 	return returnValue;
 }
 
-float Player::getJumpingSpeed(uint frames) {
-	return -0.5f*gravity*frames;
+float Player::getJumpingSpeed(float y0, float y, uint frames) {
+	return (y-y0)/frames -0.5f*gravity*frames;
 }
 
 Player::Player(){

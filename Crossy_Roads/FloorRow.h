@@ -20,6 +20,8 @@ private:
 	static uint cols;
 	static glm::vec3 lightDir;
 	static ImportedMesh pirateMesh;
+	static ImportedMesh pirateMesh2;
+	static std::vector<ImportedMesh> enemyMeshes;
 	static CubeMesh cubeMesh;
 	static std::vector<vector<Texture>> floorTextures;
 	static Texture planeWood;
@@ -30,7 +32,7 @@ public:
 	glm::vec2 getPos() const;
 	void moveToPosition(glm::vec2 position);
 	void setPos(glm::vec2 position);
-	void initSafeZone();
+	void initSafeZone(vector<Mesh*>& meshes);
 	void initRoad(vector<uint>& adjacentRow);
 	void update(int deltaTime);
 	void renderSimpleObjects(ShaderProgram& program);
