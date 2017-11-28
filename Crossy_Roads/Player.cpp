@@ -211,7 +211,7 @@ bool Player::keepMoving() {
 	playerObject.setPlane(vec4(0, 1, 0, -auxHeight), lightDir);
 
 	currentVerticalSpeed = verticalSpeed + gravity*currentFrame;
-	if (playerObject.getPos().y + currentVerticalSpeed <= auxHeight) {
+	if (playerObject.getPos().y + currentVerticalSpeed <= 0) {
 		currentVerticalSpeed =  -(playerObject.getPos().y - auxHeight);
 		returnValue = false;
 	}
