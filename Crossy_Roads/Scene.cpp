@@ -145,6 +145,7 @@ void Scene::render() {
 	shadowMapProgram.setUniformMatrix4f("depthVP", camera.getVPLightMatrix());
 	shadowMapProgram.setUniform3f("lightDir", lightDir.x, lightDir.y, lightDir.z);
 
+	//floor.renderSimpleObjects(shadowMapProgram);
 	floor.renderLightObjects(shadowMapProgram);
 	player.render(shadowMapProgram);
 

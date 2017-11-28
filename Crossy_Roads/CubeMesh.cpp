@@ -4,8 +4,8 @@ using namespace glm;
 void CubeMesh::render(ShaderProgram & program) const {
 	setProgramParams(program);
 
-	glBindVertexArray(VBOind);
-	glDrawElements(renderMode, nVertices, GL_UNSIGNED_INT, 0);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, VBOind);
+	glDrawElements(renderMode, nVertices, GL_UNSIGNED_INT, (void*)0);
 }
 
 void CubeMesh::init() {

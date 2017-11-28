@@ -11,11 +11,17 @@ Floor::~Floor()
 }
 
 void Floor::firstInit() {
+	cubeMesh.init();
 	tileSize = vec2(60, 2);
 	rows = 40;
 	cols = (uint)tileSize.x/2;
 	floorRows.resize(rows);
 	FloorRow::initMeshes();
+
+	deckMesh[0].loadFromFile("models/cubierta_4.obj");
+	deckMesh[1].loadFromFile("models/cubierta_1.obj");
+	deckMesh[2].loadFromFile("models/cubierta_3.obj");
+	deckMesh[3].loadFromFile("models/cubierta_2.obj");
 }
 
 inline uint between(uint min, uint max) {
@@ -36,6 +42,8 @@ void Floor::init(vec3 lightDir) {
 
 	float offsetZ = -tileSize.y*(rows/2);
 	vector<uint> meshIndex(cols, 999);
+	vector<vector<Mesh*>> map;
+
 	FloorType type = (FloorType)(rand()%2);
 	uint length = 0;
 	uint counter = length;
@@ -50,6 +58,24 @@ void Floor::init(vec3 lightDir) {
 				break;
 			case Road:
 				length = between(1, 4);
+				map.resize(length);
+
+				for (uint i = 0; i < length; ++i) {
+					map[i].resize(cols);
+					for (uint j = 0; j < cols; ++j) {
+						map[i][j] = &cubeMesh;
+					}
+				}
+
+				if (length >= 2) {
+					uint start = between(0, cols - 2);
+					for (uint i = 0; i < 2; ++i) {
+						for (uint j = 0; j < 2; ++j) {
+							map[i][start + j] = &deckMesh[i * 2 + j];
+						}
+					}
+				}
+
 				type = Safe;
 				break;
 			}
@@ -58,7 +84,8 @@ void Floor::init(vec3 lightDir) {
 		floorRows[i].setPos(vec2(0, offsetZ + i*tileSize.y));
 		switch (type) {
 		case Safe:
-			floorRows[i].initSafeZone();
+			floorRows[i].initSafeZone(map[map.size()-1]);
+			map.pop_back();
 			break;
 		case Road:
 			if (transition) {

@@ -40,7 +40,7 @@ private:
 
 	void setDirectionVector();
 	bool keepMoving();
-	float getJumpingSpeed(uint frames);
+	float getJumpingSpeed(float y0, float y, uint frames);
 	void performRotation(Orientation currentOrientation, char key);
 
 public:

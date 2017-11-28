@@ -25,7 +25,6 @@ vector<uint> indices;
 void FloorRow::initMeshes() {
 	pirateMesh.loadFromFile("models/pirate.obj");
 	cubeMesh.init();
-
 	indices.resize(models.size());
 	for (uint i = 0; i < indices.size(); ++i) {
 		indices[i] = i;
@@ -121,28 +120,29 @@ pair<uint,uint> generateRandomTextureIndex(uint i, uint prevMeshIndex, vector<ui
 	return make_pair(textureIndex, numAdjacentTiles);
 }
 
-void FloorRow::initSafeZone() {
+void FloorRow::initSafeZone(vector<Mesh*>& meshes) {
 	enemies.clear();
 	speeds.clear();
 	floorTiles.resize(cols);
 	rowHeight = 0.2f;
 
 	static float realTileSize = tileSize.x / cols;
-	static vec3 boundingBox = cubeMesh.getbbSize();
-	static vec3 bbcenter = cubeMesh.getbbCenter();
-	static float height = cubeMesh.getHeight();
-	vec3 floorTileSize = vec3(realTileSize, 0.2f, tileSize.y) / boundingBox;
 	float offsetX = pos.x - (realTileSize*(cols / 2) - (1 - cols % 2)*realTileSize / 2);
 
 	for (uint i = 0; i < floorTiles.size(); ++i) {
+		vec3 boundingBox = meshes[i]->getbbSize();
+		vec3 bbcenter = meshes[i]->getbbCenter();
+		float height = meshes[i]->getHeight();
+		vec3 floorTileSize = vec3(realTileSize, 0.2f, tileSize.y) / boundingBox;
+
 		TexturedObject& tile = floorTiles[i];
 		tile.name = "floor tile " + to_string(i);
 		tile.setTexture(&planeWood);
-		tile.setMesh(&cubeMesh);
+		tile.setMesh(meshes[i]);
 		tile.setScale(floorTileSize);
-		tile.rotateY(PI / 2);
+		//tile.rotateY(PI / 2);
 		tile.setCenter(vec3(bbcenter.x, bbcenter.y + height / 2.f, bbcenter.z));
-		tile.setPos(vec3(offsetX + i*realTileSize, boundingBox.y*floorTileSize.y, pos.y));
+		tile.setPos(vec3(offsetX + i*realTileSize, rowHeight, pos.y));
 	}
 }
 float FloorRow::getHeight() const {
