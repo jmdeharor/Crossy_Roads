@@ -1,4 +1,5 @@
 #include "FloorRow.h"
+#include "Scene.h"
 #include "Pi.h"
 using namespace glm;
 
@@ -232,18 +233,24 @@ void FloorRow::update(int deltaTime) {
 
 void FloorRow::renderSimpleObjects(ShaderProgram & program) {
 	for (Object& object : floorTiles) {
+		Scene::sceneTriangles += object.getTriangles();
+		Scene::sceneDrawCalls += 1;
 		object.render(program);
 	}
 }
 
 void FloorRow::renderLightObjects(ShaderProgram & program) {
 	for (Object& object : enemies) {
+		Scene::sceneTriangles += object.getTriangles();
+		Scene::sceneDrawCalls += 1;
 		object.render(program);
 	}
 }
 
 void FloorRow::renderShadows(ShaderProgram & program) {
 	for (ShadowedObject& object : enemies) {
+		Scene::sceneTriangles += object.getTriangles();
+		Scene::sceneDrawCalls += 1;
 		object.renderShadow(program);
 	}
 }

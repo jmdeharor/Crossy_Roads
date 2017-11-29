@@ -19,8 +19,7 @@ void ShaderProgram::addShader(const Shader &shader)
 	glAttachShader(programId, shader.getId());
 }
 
-void ShaderProgram::bindFragmentOutput(const string &outputName)
-{
+void ShaderProgram::bindFragmentOutput(const string &outputName) {
 	glBindAttribLocation(programId, 0, outputName.c_str());
 }
 
@@ -29,7 +28,8 @@ GLint ShaderProgram::bindVertexAttribute(const string &attribName, GLint size, G
 	GLint attribPos;
 
 	attribPos = glGetAttribLocation(programId, attribName.c_str());
-	glVertexAttribPointer(attribPos, size, GL_FLOAT, GL_FALSE, stride, firstPointer);
+	if (attribPos != -1)
+		glVertexAttribPointer(attribPos, size, GL_FLOAT, GL_FALSE, stride, firstPointer);
 
 	return attribPos;
 }

@@ -45,6 +45,7 @@ void QuadMesh::init() {
 	glBufferData(GL_ARRAY_BUFFER, sizeof(texCoords), texCoords, GL_STATIC_DRAW);
 
 	nVertices = 4;
+	totalTriangles = 2;
 }
 
 QuadMesh::QuadMesh()

@@ -12,6 +12,8 @@
 #include "Floor.h"
 #include "Player.h"
 #include "ImportedMesh.h"
+#include <Windows.h>
+#include "MultiCubeMesh.h"
 
 #define CAMERA_WIDTH 640
 #define CAMERA_HEIGHT 480
@@ -24,6 +26,9 @@
 class Scene: public GameObject {
 
 public:
+	static uint sceneTriangles;
+	static uint sceneDrawCalls;
+
 	Scene();
 	~Scene();
 
@@ -37,6 +42,11 @@ private:
 	void initShaders();
 
 private:
+	Object object;
+	MultiCubeMesh multiCube;
+	LARGE_INTEGER frequency;
+	uint depthVPLoc1, depthVPLoc2, VPLoc;
+
 	Player player;
 	Floor floor;
 	ImportedMesh pirateMesh;
@@ -46,6 +56,7 @@ private:
 	bool pressed;
 	ShaderProgram texProgram, lambertProgram, shadowProgram;
 	ShaderProgram shadowMapProgram, drawShadowProgram, drawImageProgram;
+	ShaderProgram simple;
 };
 
 

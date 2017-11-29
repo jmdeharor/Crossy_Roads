@@ -16,6 +16,8 @@ Scene::~Scene() {
 }
 
 void Scene::firstInit() {
+	QueryPerformanceFrequency(&frequency);
+
 	initShaders();
 	glEnable(GL_TEXTURE_2D);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -43,6 +45,13 @@ void Scene::firstInit() {
 	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
 		cout << "Error with frame buffer" << endl;
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+	uint N;
+	N = 11432;
+
+	//multiCube.init(N);
+	object.setMesh(&multiCube);
+	object.setPos(vec3(0));
 }
 
 inline void compileShader(ShaderProgram& program, const string& fileName) {
@@ -86,6 +95,17 @@ void Scene::initShaders() {
 	drawShadowProgram.bindFragmentOutput("outColor");
 	compileShader(drawImageProgram, "drawImage");
 	drawImageProgram.bindFragmentOutput("outColor");
+	compileShader(simple, "simple");
+	simple.bindFragmentOutput("outColor");
+
+	depthVPLoc1 = shadowMapProgram.addUniform("depthVP");
+	VPLoc = drawShadowProgram.addUniform("VP");
+
+	depthVPLoc2 = drawShadowProgram.addUniform("depthVP");
+
+	drawShadowProgram.use();
+	drawShadowProgram.setUniformi("tex", 0);
+	drawShadowProgram.setUniformi("shadowMap", 1);
 }
 
 const uint rows = 5;
@@ -95,6 +115,11 @@ void Scene::init() {
 	GameObject::init();
 
 	lightDir = normalize(vec3(1,1,0.2f));
+
+	shadowMapProgram.use();
+	shadowMapProgram.setUniform3f("lightDir", lightDir.x, lightDir.y, lightDir.z);
+	drawShadowProgram.use();
+	drawShadowProgram.setUniform3f("lightDir", lightDir.x, lightDir.y, lightDir.z);
 
 	floor.init(lightDir);
 	
@@ -107,6 +132,7 @@ void Scene::init() {
 }
 
 void Scene::update(int deltaTime) {
+
 	camera.update(deltaTime);
 	floor.update(deltaTime);
 	PlayerReturn playerAction;
@@ -131,21 +157,23 @@ void Scene::update(int deltaTime) {
 }
 
 void Scene::render() {
+	LARGE_INTEGER start, end;
+	QueryPerformanceCounter(&start);
+
 	const static mat4 offsetMatrix(
 		0.5, 0.0, 0.0, 0.0,
 		0.0, 0.5, 0.0, 0.0,
 		0.0, 0.0, 0.5, 0.0,
 		0.5, 0.5, 0.5, 1.0
 	);
-
+	sceneDrawCalls = 0;
+	sceneTriangles = 0;
 	glViewport(0, 0, SHADOW_MAP_W, SHADOW_MAP_H);
 	shadowMapProgram.use();
 	glBindFramebuffer(GL_FRAMEBUFFER, framebufferName);
 	glClear(GL_DEPTH_BUFFER_BIT);
-	shadowMapProgram.setUniformMatrix4f("depthVP", camera.getVPLightMatrix());
-	shadowMapProgram.setUniform3f("lightDir", lightDir.x, lightDir.y, lightDir.z);
+	shadowMapProgram.setUniformMatrix4f(depthVPLoc1, camera.getVPLightMatrix());
 
-	//floor.renderSimpleObjects(shadowMapProgram);
 	floor.renderLightObjects(shadowMapProgram);
 	player.render(shadowMapProgram);
 
@@ -156,17 +184,32 @@ void Scene::render() {
 	glBindTexture(GL_TEXTURE_2D, depthTexture);
 	glActiveTexture(GL_TEXTURE0);
 	drawShadowProgram.use();
-	drawShadowProgram.setUniformi("tex", 0);
-	drawShadowProgram.setUniformi("shadowMap", 1);
-	drawShadowProgram.setUniformMatrix4f("depthVP", offsetMatrix*camera.getVPLightMatrix());
-	drawShadowProgram.setUniformMatrix4f("VP", camera.getVPMatrix());
-	drawShadowProgram.setUniform3f("lightDir", lightDir.x, lightDir.y, lightDir.z);
+	drawShadowProgram.setUniformMatrix4f(depthVPLoc2, offsetMatrix*camera.getVPLightMatrix());
+	drawShadowProgram.setUniformMatrix4f(VPLoc, camera.getVPMatrix());
 
-	//floor.renderSimpleObjects(drawShadowProgram);
 	floor.renderLightObjects(drawShadowProgram);
 	player.render(drawShadowProgram);
+	floor.renderSimpleObjects(drawShadowProgram);
 
-	texProgram.use();
+	/*sceneDrawCalls = 0;
+	sceneTriangles = 0;
+	simple.use();
+	simple.setUniformMatrix4f((uint)UniformLocation::viewLoc, *camera.getViewMatrix());
+	simple.setUniformMatrix4f((uint)UniformLocation::projectionLoc, *camera.getProjectionMatrix());
+
+	sceneTriangles += object.getTriangles();
+	sceneDrawCalls += 1;
+	object.render(simple);*/
+
+	QueryPerformanceCounter(&end);
+	cout << sceneTriangles << " " << sceneDrawCalls << endl;
+
+	LARGE_INTEGER elapsed;
+	elapsed.QuadPart = ((end.QuadPart-start.QuadPart)*1000000) / frequency.QuadPart;
+
+	cout << elapsed.QuadPart/(double)1000 << endl;
+
+	/*texProgram.use();
 	texProgram.setUniformMatrix4f(projectionLoc, *camera.getProjectionMatrix());
 	texProgram.setUniformMatrix4f(viewLoc, *camera.getViewMatrix());
 	texProgram.setUniform3f("lightDir", lightDir.x, lightDir.y, lightDir.z);
@@ -187,9 +230,12 @@ void Scene::render() {
 
 	glDisable(GL_STENCIL_TEST);
 	glDisable(GL_BLEND);
-	glDisable(GL_POLYGON_OFFSET_FILL);
+	glDisable(GL_POLYGON_OFFSET_FILL);*/
 }
 
 void Scene::resize(int w, int h) {
 	camera.resize(w, h);
 }
+
+uint Scene::sceneTriangles = 0;
+uint Scene::sceneDrawCalls = 0;

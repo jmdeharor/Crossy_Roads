@@ -12,6 +12,7 @@ protected:
 	bool modified;
 
 public:
+	uint getTriangles() const;
 	string name;
 	void setCenter(glm::vec3 newCenter);
 	void setCenterToBaseCenter();

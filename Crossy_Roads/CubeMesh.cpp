@@ -156,6 +156,8 @@ void CubeMesh::init() {
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 
 	nVertices = sizeof(indices)/sizeof(GLuint);
+
+	totalTriangles = 12;
 }
 
 CubeMesh::CubeMesh()

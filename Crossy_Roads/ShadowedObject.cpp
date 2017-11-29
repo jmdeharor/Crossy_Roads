@@ -4,7 +4,7 @@ using namespace glm;
 void ShadowedObject::renderShadow(ShaderProgram & program) {
 	if (modified)
 		updateModel();
-	program.setUniformMatrix4f("model", shadowProjection*model);
+	program.setUniformMatrix4f((uint)UniformLocation::modelLoc, shadowProjection*model);
 	mesh->render(program);
 }
 

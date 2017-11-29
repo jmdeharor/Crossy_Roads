@@ -33,7 +33,7 @@ void Player::init(vec3 lightDir, vec3 offset, float jumpDistance, const Floor &f
 	speed = this->jumpDistance / float(JUMP_DURATION);
 	testJump = 0;
 	currentFrame = 0;
-	currentRowIndex = 20;
+	currentRowIndex = floor.getRows()/2;
 }
 
 PlayerReturn Player::update(int deltaTime) {
@@ -111,10 +111,14 @@ PlayerReturn Player::update(int deltaTime) {
 }
 
 void Player::render(ShaderProgram & program) {
+	Scene::sceneTriangles += playerObject.getTriangles();
+	Scene::sceneDrawCalls += 1;
 	playerObject.render(program);
 }
 
 void Player::renderShadow(ShaderProgram & program) {
+	Scene::sceneDrawCalls += 1;
+	Scene::sceneTriangles += playerObject.getTriangles();
 	playerObject.renderShadow(program);
 }
 

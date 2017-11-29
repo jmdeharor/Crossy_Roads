@@ -45,7 +45,7 @@ void Mesh::clear() {
 	glDeleteVertexArrays(1, &VAO);
 }
 
-Mesh::Mesh() : renderMode(GL_TRIANGLES) {
+Mesh::Mesh() : renderMode(GL_TRIANGLES), totalTriangles(0) {
 }
 
 Mesh::~Mesh() {

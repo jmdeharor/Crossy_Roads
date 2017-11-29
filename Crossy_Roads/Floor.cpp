@@ -120,8 +120,11 @@ void Floor::update(int deltaTime) {
 }
 
 void Floor::renderSimpleObjects(ShaderProgram & program) {
-	for (FloorRow& row : floorRows) {
+	/*for (FloorRow& row : floorRows) {
 		row.renderSimpleObjects(program);
+	}*/
+	for (uint i = 0; i < rows; ++i) {
+		floorRows[i].renderSimpleObjects(program);
 	}
 }
 

@@ -105,6 +105,9 @@
     <ClCompile Include="Camera\obsorthocamera.cpp">
       <Filter>Archivos de código fuente\Camera</Filter>
     </ClCompile>
+    <ClCompile Include="MultiCubeMesh.cpp">
+      <Filter>Archivos de código fuente</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game.h">
@@ -190,6 +193,9 @@
     </ClInclude>
     <ClInclude Include="Camera\obsorthocamera.h">
       <Filter>Archivos de encabezado\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="MultiCubeMesh.h">
+      <Filter>Archivos de encabezado</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

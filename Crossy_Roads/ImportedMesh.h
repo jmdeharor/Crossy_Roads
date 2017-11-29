@@ -5,9 +5,9 @@
 
 class ImportedMesh : public Mesh {
 	Texture texture;
-	std::vector<glm::vec3> vertices, normals;
-	std::vector<glm::vec2> texCoords;
-	std::vector<unsigned int> triangles;
+	//std::vector<glm::vec3> vertices, normals;
+	//std::vector<glm::vec2> texCoords;
+	//std::vector<unsigned int> triangles;
 
 	void prepareArrays();
 	void computeBoundingBox();

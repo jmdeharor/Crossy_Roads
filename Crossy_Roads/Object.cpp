@@ -66,6 +66,11 @@ const mat4 * Object::getModel() {
 	return &model;
 }
 
+uint Object::getTriangles() const
+{
+	return mesh->totalTriangles;
+}
+
 void Object::setCenter(glm::vec3 newCenter) {
 	modified = true;
 	center = newCenter;
@@ -84,6 +89,8 @@ void Object::updateModel() {
 void Object::render(ShaderProgram & program) {
 	if (modified)
 		updateModel();
+	//program.setUniformMatrix4f((uint)UniformLocation::modelLoc, model);
+	//program.setUniformMatrix3f((uint)UniformLocation::normalMatrixLoc, mat3(model));
 	program.setUniformMatrix4f("model", model);
 	program.setUniformMatrix3f("normalMatrix", mat3(model));
 	mesh->render(program);

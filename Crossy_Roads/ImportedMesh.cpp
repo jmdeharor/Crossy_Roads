@@ -92,6 +92,8 @@ void ImportedMesh::initMesh(const aiMesh *paiMesh) {
 		triangles.push_back(Face.mIndices[1]);
 		triangles.push_back(Face.mIndices[2]);
 	}
+
+	totalTriangles = paiMesh->mNumFaces;
 }
 
 void ImportedMesh::prepareArrays() {
@@ -152,9 +154,9 @@ bool ImportedMesh::loadFromFile(const string &filename) {
 	computeBoundingBox();
 	prepareArrays();
 
-	vertices.clear();
-	normals.clear();
-	triangles.clear();
+	//vertices.clear();
+	//normals.clear();
+	//triangles.clear();
 
 	return true;
 }
