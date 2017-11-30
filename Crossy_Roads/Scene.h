@@ -49,11 +49,9 @@ private:
 
 	Player player;
 	Floor floor;
-	ImportedMesh pirateMesh;
 	GLuint framebufferName, depthTexture;
 	glm::vec3 lightDir;
 	Camera camera;
-	bool pressed;
 	ShaderProgram texProgram, lambertProgram, shadowProgram;
 	ShaderProgram shadowMapProgram, drawShadowProgram, drawImageProgram;
 	ShaderProgram simple;

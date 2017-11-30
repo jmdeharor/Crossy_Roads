@@ -23,7 +23,6 @@ void Scene::firstInit() {
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glStencilFunc(GL_EQUAL, 0, 1);
 	glStencilOp(GL_KEEP, GL_KEEP, GL_INCR);
-	pirateMesh.loadFromFile("models/pirate.obj");
 
 	glGenFramebuffers(1, &framebufferName);
 	glBindFramebuffer(GL_FRAMEBUFFER, framebufferName);
@@ -48,7 +47,7 @@ void Scene::firstInit() {
 
 	uint N;
 	N = 11432;
-
+	//N = 1;
 	//multiCube.init(N);
 	object.setMesh(&multiCube);
 	object.setPos(vec3(0));
@@ -122,13 +121,11 @@ void Scene::init() {
 	drawShadowProgram.setUniform3f("lightDir", lightDir.x, lightDir.y, lightDir.z);
 
 	floor.init(lightDir);
-	
 	camera.init(lightDir, &player);
 	player.init(lightDir, vec3(0), floor.getTileSize().y, floor);
 	
 	camera.setPos(player.getPos());
 	camera.updateVM();
-	pressed = false;
 }
 
 void Scene::update(int deltaTime) {

@@ -5,7 +5,6 @@ using namespace std;
 using namespace glm;
 
 void MultiCubeMesh::init(uint N) {
-	renderMode = GL_TRIANGLE_STRIP;
 	// 6 caras de 4 vertices cada una
 	vector<float> vert;
 	vector<float> norm;
@@ -142,7 +141,7 @@ void MultiCubeMesh::init(uint N) {
 
 	for (uint i = 0; i < N; ++i) {
 		for (uint j = 0; j < 6*4; ++j) {
-			vert.push_back(vertices[j*3]);
+			vert.push_back(vertices[j*3]+i*2);
 			vert.push_back(vertices[j*3 + 1]);
 			vert.push_back(vertices[j*3 + 2]);
 
@@ -160,7 +159,7 @@ void MultiCubeMesh::init(uint N) {
 
 	
 	bbox[0] = vec3(-1, -1, -1);
-	bbox[1] = vec3(1, 1, 1);
+	bbox[1] = vec3(2*N, 1, 1);
 	height = bbox[1].y-bbox[0].y;
 	center = (bbox[1]+bbox[0])/2.f;
 
