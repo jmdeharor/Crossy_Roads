@@ -30,17 +30,17 @@ private:
 	float currentVerticalSpeed;
 	float jumpDistance;
 	float testJump;
-	uint currentFrame;
+	glm::uint currentFrame;
 	glm::vec3 directionVector;
 	Orientation currentOrientation;
 	const Floor *floor;
-	uint currentRowIndex;
+	glm::uint currentRowIndex;
 	glm::vec3 lightDir;
 
 
 	void setDirectionVector();
 	bool keepMoving();
-	float getJumpingSpeed(float y0, float y, uint frames);
+	float getJumpingSpeed(float y0, float y, glm::uint frames);
 	void performRotation(Orientation currentOrientation, char key);
 
 public:

@@ -28,7 +28,7 @@ void Player::init(vec3 lightDir, vec3 offset, float jumpDistance, const Floor &f
 	currentOrientation = FRONT;
 	directionVector = vec3(0, 0, 1.f);
 	inMovement = false;
-	gravity = -0.1;
+	gravity = -0.1f;
 	verticalSpeed = getJumpingSpeed(0,0,JUMP_DURATION);
 	speed = this->jumpDistance / float(JUMP_DURATION);
 	testJump = 0;

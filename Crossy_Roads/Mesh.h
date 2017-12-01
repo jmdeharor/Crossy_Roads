@@ -19,7 +19,7 @@ protected:
 	Mesh();
 	virtual void setProgramParams(ShaderProgram& program) const;
 public:
-	uint totalTriangles;
+	glm::uint totalTriangles;
 
 	glm::vec3 getbbCenter() const;
 	glm::vec3 getbbSize() const;

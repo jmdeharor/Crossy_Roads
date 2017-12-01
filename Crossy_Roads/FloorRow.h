@@ -17,7 +17,7 @@ private:
 	std::vector<float> speeds;
 	glm::vec2 pos;
 	static glm::vec2 tileSize;
-	static uint cols;
+	static glm::uint cols;
 	static glm::vec3 lightDir;
 	static ImportedMesh pirateMesh;
 	static ImportedMesh pirateMesh2;
@@ -28,12 +28,12 @@ private:
 	float rowHeight;
 public:
 	static void initMeshes();
-	static void setParameters(glm::vec2 tileSize, uint cols, glm::vec3 lightDir);
+	static void setParameters(glm::vec2 tileSize, glm::uint cols, glm::vec3 lightDir);
 	glm::vec2 getPos() const;
 	void moveToPosition(glm::vec2 position);
 	void setPos(glm::vec2 position);
 	void initSafeZone(vector<Mesh*>& meshes);
-	void initRoad(vector<uint>& adjacentRow);
+	void initRoad(vector<glm::uint>& adjacentRow);
 	void update(int deltaTime);
 	void renderSimpleObjects(ShaderProgram& program);
 	void renderLightObjects(ShaderProgram& program);

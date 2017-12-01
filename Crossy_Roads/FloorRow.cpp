@@ -28,7 +28,7 @@ vector<uint> indices;
 
 void FloorRow::initMeshes() {
 	enemyMeshes.resize(enemyMeshesStrings.size());
-	for (int i = 0; i < enemyMeshesStrings.size(); ++i) {
+	for (uint i = 0; i < enemyMeshesStrings.size(); ++i) {
 		enemyMeshes[i].loadFromFile(enemyMeshesStrings[i]);
 	}
 	//pirateMesh.loadFromFile("models/pirate.obj");
@@ -105,10 +105,14 @@ inline uint minim(uint a, uint b) {
 	return a < b ? a : b;
 }
 
-inline int between(int min, int max) {
-	return ((float)rand() / RAND_MAX)*(max - min) + min;
+inline uint between(uint min, uint max) {
+	float num = ((float)rand() / RAND_MAX)*(max - min) + min;
+	uint floor = (uint)num;
+	if (num - floor >= 0.5)
+		return floor + 1;
+	else
+		return floor;
 }
-
 pair<uint,uint> generateRandomTextureIndex(uint i, uint prevMeshIndex, vector<uint>& adjacentRow) {
 	uint textureIndex;
 	uint numAdjacentTiles;

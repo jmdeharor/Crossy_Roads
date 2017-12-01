@@ -26,8 +26,8 @@
 class Scene: public GameObject {
 
 public:
-	static uint sceneTriangles;
-	static uint sceneDrawCalls;
+	static glm::uint sceneTriangles;
+	static glm::uint sceneDrawCalls;
 
 	Scene();
 	~Scene();
@@ -45,7 +45,7 @@ private:
 	Object object;
 	MultiCubeMesh multiCube;
 	LARGE_INTEGER frequency;
-	uint depthVPLoc1, depthVPLoc2, VPLoc;
+	glm::uint depthVPLoc1, depthVPLoc2, VPLoc;
 
 	Player player;
 	Floor floor;
