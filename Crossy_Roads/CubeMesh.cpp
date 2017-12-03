@@ -83,37 +83,47 @@ void CubeMesh::init() {
 	//0.5-1 0-33-0.66 cara z
 	//0-0.5 0.66-1 cara -x
 	//0.5-1 0.66-1 cara x
+
+	/*static const float st = 0.1;
+	static const float sX = 0.5f;
 	static const float sY = 1.f / 3;
+
+	static const float x0 = 0;
+	static const float x1 = sX;
+	static const float y0 = 0;
+	static const float y1 = sY;*/
+
 	static const float texCoords[] = {
-		0,sY,
-		0.5,sY,
-		0,2*sY,
-		0.5,2*sY,
-
-		0.5,sY,
-		1,sY,
-		0.5,2*sY,
-		1,2*sY,
-
-		0.5,0,
+		0,0,
 		1,0,
-		0.5,sY,
-		1,sY,
+		0,1,
+		1,1,
 
 		0,0,
-		0.5,0,
-		0,sY,
-		0.5,sY,
-
-		0,2*sY,
-		0.5,2*sY,
+		1,0,
 		0,1,
-		0.5,1,
+		1,1,
 
-		0.5,2*sY,
-		1,2*sY,
-		0.5,1,
+		0,0,
+		1,0,
+		0,1,
+		1,1,
+
+		0,0,
+		1,0,
+		0,1,
+		1,1,
+
+		0,0,
+		1,0,
+		0,1,
+		1,1,
+
+		0,0,
+		1,0,
+		0,1,
 		1,1
+
 	};
 	
 	static const GLuint indices[] = {

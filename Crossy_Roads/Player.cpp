@@ -8,7 +8,6 @@ using namespace glm;
 #define JUMP_DURATION 11
 
 void Player::firstInit() {
-	playerMesh.loadFromFile("models/pirate_2.obj");
 }
 
 void Player::groupDrawableObjects(std::vector<std::vector<Object*>>& objects, std::vector<std::vector<TexturedObject*>>& texturedObjects) {

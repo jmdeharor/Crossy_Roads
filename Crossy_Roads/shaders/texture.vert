@@ -11,7 +11,7 @@ out vec2 texCoordFrag;
 out vec3 fragNormal;
 
 void main() {
-	fragNormal = normalMatrix*mat3(model)*normal;
+	fragNormal = mat3(model)*normal;
 	// Pass texture coordinates
 	texCoordFrag = texCoord;
 	// Transform position from pixel coordinates to clipping coordinates

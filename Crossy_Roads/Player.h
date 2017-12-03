@@ -20,7 +20,6 @@ enum class PlayerReturn {
 };
 
 class Player : public GameObject, public ObjectContainer {
-	ImportedMesh playerMesh;
 	ShadowedObject playerObject;
 	void firstInit() override;
 private:

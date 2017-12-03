@@ -205,7 +205,6 @@ void Scene::render() {
 		for (uint j = 0; j < objects.size(); ++j) {
 			Object* object = objects[j];
 			drawShadowProgram.setUniformMatrix4f(modelLoc, *object->getModel());
-			drawShadowProgram.setUniformMatrix3f(normalMatrixLoc, mat3(*object->getModel()));
 			mesh->render(drawShadowProgram);
 		}
 	}
@@ -228,7 +227,6 @@ void Scene::render() {
 		for (uint j = 0; j < objects.size(); ++j) {
 			Object* object = objects[j];
 			drawShadowProgram.setUniformMatrix4f(modelLoc, *object->getModel());
-			drawShadowProgram.setUniformMatrix3f(normalMatrixLoc, mat3(*object->getModel()));
 			mesh->render(drawShadowProgram);
 		}
 	}
@@ -237,7 +235,6 @@ void Scene::render() {
 	texProgram.setUniformMatrix4f(projectionLoc, *camera.getProjectionMatrix());
 	texProgram.setUniformMatrix4f(viewLoc, *camera.getViewMatrix());
 	texProgram.setUniform3f("lightDir", lightDir.x, lightDir.y, lightDir.z);
-	texProgram.setUniformMatrix3f(normalMatrixLoc, mat3(*camera.getViewMatrix()));
 
 	const Mesh* mesh = assets.getCubeMesh();
 	mesh->setProgramParams(drawShadowProgram);
