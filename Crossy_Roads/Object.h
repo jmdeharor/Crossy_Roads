@@ -33,7 +33,7 @@ public:
 	void setScale(glm::vec3 scale);
 	const glm::mat4* getModel();
 	virtual void render(ShaderProgram& program);
-	void setMesh(uint meshId, const Mesh* mesh);
+	void setMesh(glm::uint meshId, const Mesh* mesh);
 	void setMesh(const Mesh* mesh);
 	glm::vec3 getPos() const;
 	float getHeight() const;

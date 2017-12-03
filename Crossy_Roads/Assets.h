@@ -16,7 +16,7 @@ enum TextureFilter {
 class Assets {
 	ImportedMesh* meshes;
 	CubeMesh cubeMesh;
-	uint nImportedMeshes;
+	glm::uint nImportedMeshes;
 	Texture* textures;
 	std::map<string, IdTex> textureIds;
 	std::map<string, IdMesh> meshIds;
@@ -27,7 +27,7 @@ public:
 	const ImportedMesh* getMesh(IdMesh id) const;
 	const Texture* getTexture(IdTex id) const;
 	void loadAssets(const string * meshNames, const string * textureNames,
-		const TextureFilter* textureFilters, uint nMeshes, uint nTextures);
+		const TextureFilter* textureFilters, glm::uint nMeshes, glm::uint nTextures);
 	Assets();
 	~Assets();
 };

@@ -8,7 +8,7 @@
 #include "Shader.h"
 #include <vector>
 
-typedef unsigned int uint;
+//typedef unsigned int uint;
 
 // Using the Shader class ShaderProgram can link a vertex and a fragment shader
 // together, bind input attributes to their corresponding vertex shader names, 

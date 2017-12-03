@@ -1,5 +1,6 @@
 #include "Assets.h"
 using namespace std;
+using namespace glm;
 typedef map<string, int>::const_iterator Iterator;
 
 const CubeMesh * Assets::getCubeMesh() const {
