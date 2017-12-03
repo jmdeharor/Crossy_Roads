@@ -100,7 +100,6 @@ inline uint between(uint min, uint max) {
 	else
 		return floor;
 }
-
 pair<uint,uint> generateRandomTextureIndex(uint i, uint prevMeshIndex, vector<uint>& adjacentRow) {
 	uint textureIndex;
 	uint numAdjacentTiles;

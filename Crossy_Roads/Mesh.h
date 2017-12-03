@@ -15,7 +15,7 @@ protected:
 	GLenum renderMode;
 	Mesh();
 public:
-	uint totalTriangles;
+	glm::uint totalTriangles;
 
 	glm::vec3 getbbCenter() const;
 	glm::vec3 getbbSize() const;

@@ -19,7 +19,7 @@ private:
 	glm::vec2 pos;
 	const static Assets* assets;
 	static glm::vec2 tileSize;
-	static uint cols;
+	static glm::uint cols;
 	static glm::vec3 lightDir;
 	static IdMesh pirateMesh;
 	static IdMesh pirateMesh2;
@@ -30,12 +30,12 @@ private:
 	float rowHeight;
 public:
 	static void initIds(const Assets& assets);
-	static void setParameters(glm::vec2 tileSize, uint cols, glm::vec3 lightDir);
+	void initSafeZone(vector<IdMesh>& meshes);
+	static void setParameters(glm::vec2 tileSize, glm::uint cols, glm::vec3 lightDir);
 	glm::vec2 getPos() const;
 	void moveToPosition(glm::vec2 position);
 	void setPos(glm::vec2 position);
-	void initSafeZone(vector<IdMesh>& meshes);
-	void initRoad(vector<uint>& adjacentRow);
+	void initRoad(vector<glm::uint>& adjacentRow);
 	void update(int deltaTime);
 	void groupDrawableObjects(
 		std::vector<std::vector<Object*>>& objects,

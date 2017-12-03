@@ -26,8 +26,8 @@
 class Scene: public GameObject {
 
 public:
-	static uint sceneTriangles;
-	static uint sceneDrawCalls;
+	static glm::uint sceneTriangles;
+	static glm::uint sceneDrawCalls;
 
 	Scene();
 	~Scene();
@@ -43,7 +43,7 @@ private:
 
 private:
 	LARGE_INTEGER frequency;
-	uint depthVPLoc1, depthVPLoc2, VPLoc;
+	glm::uint depthVPLoc1, depthVPLoc2, VPLoc;
 
 	std::vector<std::vector<Object*>> objectsToRender;
 	std::vector<std::vector<TexturedObject*>> texturedObjects;

@@ -3,7 +3,7 @@
 
 class MultiCubeMesh : public CubeMesh {
 public:
-	void init(uint N);
+	void init(glm::uint N);
 	MultiCubeMesh();
 	~MultiCubeMesh();
 };
