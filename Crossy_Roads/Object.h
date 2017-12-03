@@ -1,9 +1,9 @@
 #pragma once
 #include "Mesh.h"
+#include "Assets.h"
 
 class Object {
 protected:
-	const Mesh* mesh;
 	glm::vec3 center;
 	glm::mat4 model;
 	glm::vec3 pos;
@@ -12,12 +12,15 @@ protected:
 	bool modified;
 
 public:
+	IdMesh meshId;
+	const Mesh* mesh;
+
+public:
 	uint getTriangles() const;
 	string name;
 	void setCenter(glm::vec3 newCenter);
 	void setCenterToBaseCenter();
 	void updateModel();
-	void update(int deltaTime);
 	void setPos(glm::vec3 pos);
 	void move(float x, float y, float z);
 	void move(glm::vec3 movement);
@@ -30,10 +33,12 @@ public:
 	void setScale(glm::vec3 scale);
 	const glm::mat4* getModel();
 	virtual void render(ShaderProgram& program);
-	Object();
+	void setMesh(uint meshId, const Mesh* mesh);
 	void setMesh(const Mesh* mesh);
-	virtual ~Object();
 	glm::vec3 getPos() const;
 	float getHeight() const;
+
+	Object();
+	virtual ~Object();
 };
 

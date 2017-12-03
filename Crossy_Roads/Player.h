@@ -19,7 +19,7 @@ enum class PlayerReturn {
 	NOTHING
 };
 
-class Player : public GameObject {
+class Player : public GameObject, public ObjectContainer {
 	ImportedMesh playerMesh;
 	ShadowedObject playerObject;
 	void firstInit() override;
@@ -44,8 +44,12 @@ private:
 	void performRotation(Orientation currentOrientation, char key);
 
 public:
+	void groupDrawableObjects(
+		std::vector<std::vector<Object*>>& objects,
+		std::vector<std::vector<TexturedObject*>>& texturedObjects
+	) override;
 	void jump();
-	void init(glm::vec3 lightDir, glm::vec3 offset, float jumpDistance, const Floor &floor);
+	void init(const Assets& assets, glm::vec3 lightDir, glm::vec3 offset, float jumpDistance, const Floor &floor);
 	PlayerReturn update(int deltaTime);
 	void render(ShaderProgram& program);
 	void renderShadow(ShaderProgram& program);

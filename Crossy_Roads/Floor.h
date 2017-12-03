@@ -4,20 +4,25 @@
 #include "ShadowedObject.h"
 #include "ImportedMesh.h"
 #include "FloorRow.h"
+#include "Assets.h"
+#include "ObjectContainer.h"
 
-class Floor : GameObject {
+class Floor : public GameObject, public ObjectContainer {
 	uint rows, cols;
 	uint lastRow;
+	IdMesh deckMesh[4];
 	float firstPos;
-	CubeMesh cubeMesh;
-	ImportedMesh deckMesh[4];
 	std::vector<FloorRow> floorRows;
 	glm::vec2 tileSize;
 public:
 	void addLevel();
 	void firstInit() override;
-	void init(glm::vec3 lightDir);
+	void init(glm::vec3 lightDir, const Assets& assets);
 	void update(int deltaTime);
+	void groupDrawableObjects(
+		std::vector<std::vector<Object*>>& objects,
+		std::vector<std::vector<TexturedObject*>>& texturedObjects
+	) override;
 	void renderSimpleObjects(ShaderProgram& program);
 	void renderLightObjects(ShaderProgram& program);
 	void renderShadows(ShaderProgram& program);

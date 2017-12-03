@@ -2,10 +2,6 @@
 #include "glm/gtc/matrix_transform.hpp"
 using namespace glm;
 
-void Object::update(int deltaTime)
-{
-}
-
 void Object::setPos(vec3 pos) {
 	modified = true;
 	this->pos = pos;
@@ -64,9 +60,8 @@ const mat4 * Object::getModel() {
 	return &model;
 }
 
-uint Object::getTriangles() const
-{
-	return mesh->totalTriangles;
+uint Object::getTriangles() const {
+	return 0;//mesh->totalTriangles;
 }
 
 void Object::setCenter(glm::vec3 newCenter) {
@@ -91,13 +86,19 @@ void Object::render(ShaderProgram & program) {
 	program.setUniformMatrix3f((uint)UniformLocation::normalMatrixLoc, mat3(model));
 	//program.setUniformMatrix4f("model", model);
 	//program.setUniformMatrix3f("normalMatrix", mat3(model));
-	mesh->render(program);
+	//mesh->render(program);
 }
 
 Object::Object() : 
 	pos(vec3(0)), rot(vec3(0)), scale(vec3(1)),
-	center(vec3(0)), model(mat4(1)), mesh(NULL),
+	center(vec3(0)), model(mat4(1)), meshId(INVALID),
 	modified(true) {
+}
+
+void Object::setMesh(uint meshId, const Mesh* mesh) {
+	this->mesh = mesh;
+	this->meshId = meshId;
+	center = mesh->getbbCenter();
 }
 
 void Object::setMesh(const Mesh * mesh) {

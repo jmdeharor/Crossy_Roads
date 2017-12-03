@@ -3,10 +3,10 @@
 #include "Texture.h"
 
 class TexturedObject : public Object {
-	const Texture* texture;
 public:
+	IdTex texture;
+
 	void render(ShaderProgram& program) override;
-	void setTexture(const Texture* texture);
 	TexturedObject();
 	~TexturedObject();
 };

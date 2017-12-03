@@ -15,7 +15,38 @@ Scene::Scene() {
 Scene::~Scene() {
 }
 
+const string meshNames[] = { 
+	"pirate", "pirate_2",
+	"cubierta_1", "cubierta_2", "cubierta_3", "cubierta_4"
+};
+
+const string textureNames[] = { 
+	"wood_3_1", "wood_3_2", "wood_3_3", "wood_3_4", "wood_3_5",
+	"wood_4_0", "wood_4_1", "wood_4_2", "wood_4_3", "wood_4_4",
+	"wood_5_0", "wood_5_1", "wood_5_2", "wood_5_3", "wood_5_4",
+	"wood_6_0", "wood_6_1", "wood_6_2", "wood_6_3", "wood_6_4",
+	"wood_7_0", "wood_7_1", "wood_7_2", "wood_7_3", "wood_7_4",
+	"wood_plane"
+};
+
+const TextureFilter textureMode[] = {
+	LINEAR, LINEAR, LINEAR, LINEAR, LINEAR,
+	LINEAR, LINEAR, LINEAR, LINEAR, LINEAR,
+	LINEAR, LINEAR, LINEAR, LINEAR, LINEAR,
+	LINEAR, LINEAR, LINEAR, LINEAR, LINEAR,
+	LINEAR, LINEAR, LINEAR, LINEAR, LINEAR,
+	NEAREST
+};
+
+const uint nMeshes = sizeof(meshNames) / sizeof(string);
+const uint nTextures = sizeof(textureNames) / sizeof(string);
+
 void Scene::firstInit() {
+	assets.loadAssets(meshNames, textureNames, textureMode, nMeshes, nTextures);
+
+	objectsToRender.resize(nMeshes);
+	texturedObjects.resize(nTextures);
+
 	QueryPerformanceFrequency(&frequency);
 
 	initShaders();
@@ -44,13 +75,6 @@ void Scene::firstInit() {
 	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
 		cout << "Error with frame buffer" << endl;
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
-
-	uint N;
-	N = 11432;
-	//N = 1;
-	//multiCube.init(N);
-	object.setMesh(&multiCube);
-	object.setPos(vec3(0));
 }
 
 inline void compileShader(ShaderProgram& program, const string& fileName) {
@@ -120,9 +144,9 @@ void Scene::init() {
 	drawShadowProgram.use();
 	drawShadowProgram.setUniform3f("lightDir", lightDir.x, lightDir.y, lightDir.z);
 
-	floor.init(lightDir);
+	floor.init(lightDir, assets);
 	camera.init(lightDir, &player);
-	player.init(lightDir, vec3(0), floor.getTileSize().y, floor);
+	player.init(assets, lightDir, vec3(0), floor.getTileSize().y, floor);
 	
 	camera.setPos(player.getPos());
 	camera.updateVM();
@@ -157,6 +181,9 @@ void Scene::render() {
 	LARGE_INTEGER start, end;
 	QueryPerformanceCounter(&start);
 
+	floor.groupDrawableObjects(objectsToRender, texturedObjects);
+	player.groupDrawableObjects(objectsToRender, texturedObjects);
+
 	const static mat4 offsetMatrix(
 		0.5, 0.0, 0.0, 0.0,
 		0.0, 0.5, 0.0, 0.0,
@@ -171,8 +198,17 @@ void Scene::render() {
 	glClear(GL_DEPTH_BUFFER_BIT);
 	shadowMapProgram.setUniformMatrix4f(depthVPLoc1, camera.getVPLightMatrix());
 
-	floor.renderLightObjects(shadowMapProgram);
-	player.render(shadowMapProgram);
+	for (uint i = 0; i < objectsToRender.size(); ++i) {
+		vector<Object*>& objects = objectsToRender[i];
+		const Mesh* mesh = assets.getMesh(i);
+		mesh->setProgramParams(drawShadowProgram);
+		for (uint j = 0; j < objects.size(); ++j) {
+			Object* object = objects[j];
+			drawShadowProgram.setUniformMatrix4f(modelLoc, *object->getModel());
+			drawShadowProgram.setUniformMatrix3f(normalMatrixLoc, mat3(*object->getModel()));
+			mesh->render(drawShadowProgram);
+		}
+	}
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
@@ -184,35 +220,39 @@ void Scene::render() {
 	drawShadowProgram.setUniformMatrix4f(depthVPLoc2, offsetMatrix*camera.getVPLightMatrix());
 	drawShadowProgram.setUniformMatrix4f(VPLoc, camera.getVPMatrix());
 
-	floor.renderLightObjects(drawShadowProgram);
-	player.render(drawShadowProgram);
-	floor.renderSimpleObjects(drawShadowProgram);
+	for (uint i = 0; i < objectsToRender.size(); ++i) {
+		vector<Object*>& objects = objectsToRender[i];
+		const ImportedMesh* mesh = assets.getMesh(i);
+		mesh->setProgramParams(drawShadowProgram);
+		mesh->useTexture();
+		for (uint j = 0; j < objects.size(); ++j) {
+			Object* object = objects[j];
+			drawShadowProgram.setUniformMatrix4f(modelLoc, *object->getModel());
+			drawShadowProgram.setUniformMatrix3f(normalMatrixLoc, mat3(*object->getModel()));
+			mesh->render(drawShadowProgram);
+		}
+	}
 
-	/*sceneDrawCalls = 0;
-	sceneTriangles = 0;
-	simple.use();
-	simple.setUniformMatrix4f((uint)UniformLocation::viewLoc, *camera.getViewMatrix());
-	simple.setUniformMatrix4f((uint)UniformLocation::projectionLoc, *camera.getProjectionMatrix());
-
-	sceneTriangles += object.getTriangles();
-	sceneDrawCalls += 1;
-	object.render(simple);*/
-
-	QueryPerformanceCounter(&end);
-	cout << sceneTriangles << " " << sceneDrawCalls << endl;
-
-	LARGE_INTEGER elapsed;
-	elapsed.QuadPart = ((end.QuadPart-start.QuadPart)*1000000) / frequency.QuadPart;
-
-	cout << elapsed.QuadPart/(double)1000 << endl;
-
-	/*texProgram.use();
+	texProgram.use();
 	texProgram.setUniformMatrix4f(projectionLoc, *camera.getProjectionMatrix());
 	texProgram.setUniformMatrix4f(viewLoc, *camera.getViewMatrix());
 	texProgram.setUniform3f("lightDir", lightDir.x, lightDir.y, lightDir.z);
 	texProgram.setUniformMatrix3f(normalMatrixLoc, mat3(*camera.getViewMatrix()));
 
-	floor.renderSimpleObjects(texProgram);
+	const Mesh* mesh = assets.getCubeMesh();
+	mesh->setProgramParams(drawShadowProgram);
+	for (uint i = 0; i < texturedObjects.size(); ++i) {
+		vector<TexturedObject*>& objects = texturedObjects[i];
+		const Texture* tex = assets.getTexture(i);
+		tex->use();
+		for (uint j = 0; j < objects.size(); ++j) {
+			Object* object = objects[j];
+			texProgram.setUniformMatrix4f(modelLoc, *object->getModel());
+			texProgram.setUniformMatrix3f(normalMatrixLoc, mat3(*object->getModel()));
+			mesh->render(texProgram);
+		}
+		objects.clear();
+	}
 
 	shadowProgram.use();
 	shadowProgram.setUniformMatrix4f(projectionLoc, *camera.getProjectionMatrix());
@@ -222,12 +262,29 @@ void Scene::render() {
 	glEnable(GL_STENCIL_TEST);
 	glPolygonOffset(-1, -1);
 
-	floor.renderShadows(shadowProgram);
-	player.renderShadow(shadowProgram);
+	for (uint i = 0; i < objectsToRender.size(); ++i) {
+		vector<Object*>& objects = objectsToRender[i];
+		const Mesh* mesh = assets.getMesh(i);
+		mesh->setProgramParams(shadowProgram);
+		for (uint j = 0; j < objects.size(); ++j) {
+			ShadowedObject* object = dynamic_cast<ShadowedObject*>(objects[j]);
+			if (object != NULL) {
+				shadowProgram.setUniformMatrix4f(modelLoc, object->getShadowModel());
+				mesh->render(shadowProgram);
+			}
+		}
+		objects.clear();
+	}
 
 	glDisable(GL_STENCIL_TEST);
 	glDisable(GL_BLEND);
-	glDisable(GL_POLYGON_OFFSET_FILL);*/
+	glDisable(GL_POLYGON_OFFSET_FILL);
+
+	QueryPerformanceCounter(&end);
+	LARGE_INTEGER elapsed;
+	elapsed.QuadPart = ((end.QuadPart - start.QuadPart) * 1000000) / frequency.QuadPart;
+	cout << elapsed.QuadPart / (double)1000 << endl;
+	cout << sceneTriangles << " " << sceneDrawCalls << endl;
 }
 
 void Scene::resize(int w, int h) {

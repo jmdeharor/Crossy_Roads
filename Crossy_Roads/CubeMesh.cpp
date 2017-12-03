@@ -2,10 +2,14 @@
 using namespace glm;
 
 void CubeMesh::render(ShaderProgram & program) const {
-	setProgramParams(program);
-
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, VBOind);
+	//setProgramParams(program);
+	//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, VBOind);
 	glDrawElements(renderMode, nVertices, GL_UNSIGNED_INT, (void*)0);
+}
+
+void CubeMesh::setProgramParams(ShaderProgram & program) const {
+	Mesh::setProgramParams(program);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, VBOind);
 }
 
 void CubeMesh::init() {

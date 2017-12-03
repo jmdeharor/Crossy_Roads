@@ -11,15 +11,20 @@ void Player::firstInit() {
 	playerMesh.loadFromFile("models/pirate_2.obj");
 }
 
+void Player::groupDrawableObjects(std::vector<std::vector<Object*>>& objects, std::vector<std::vector<TexturedObject*>>& texturedObjects) {
+	objects[playerObject.meshId].push_back(&playerObject);
+}
+
 void Player::jump() {
 }
 
-void Player::init(vec3 lightDir, vec3 offset, float jumpDistance, const Floor &floor) {
+void Player::init(const Assets& assets, vec3 lightDir, vec3 offset, float jumpDistance, const Floor &floor) {
 	GameObject::init();
 	this->lightDir = lightDir;
 	this->floor = &floor;
 	this->jumpDistance = jumpDistance;
-	playerObject.setMesh(&playerMesh);
+	IdMesh pirateId = assets.getMeshId("pirate_2");
+	playerObject.setMesh(pirateId, assets.getMesh(pirateId));
 	playerObject.setScale(vec3(0.1f));
 	playerObject.setCenterToBaseCenter();
 	playerObject.setPos(vec3(0));
@@ -28,7 +33,7 @@ void Player::init(vec3 lightDir, vec3 offset, float jumpDistance, const Floor &f
 	currentOrientation = FRONT;
 	directionVector = vec3(0, 0, 1.f);
 	inMovement = false;
-	gravity = -0.1;
+	gravity = -0.1f;
 	verticalSpeed = getJumpingSpeed(0,0,JUMP_DURATION);
 	speed = this->jumpDistance / float(JUMP_DURATION);
 	testJump = 0;

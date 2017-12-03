@@ -34,7 +34,7 @@ void Mesh::setProgramParams(ShaderProgram & program) const {
 }
 
 void Mesh::render(ShaderProgram& program) const {
-	setProgramParams(program);
+	//setProgramParams(program);
 	glDrawArrays(renderMode, 0, nVertices);
 }
 

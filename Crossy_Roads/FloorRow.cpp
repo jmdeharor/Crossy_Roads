@@ -3,37 +3,28 @@
 #include "Pi.h"
 using namespace glm;
 
-//const string models[] = { "models/floor_2.obj","models/floor_3.obj","models/floor_4.obj",
-//	"models/floor_5.obj"};
-
-//const string models[] = { "images/wood_1.png", "images/wood_2.png", "images/road.png",
-//	"images/white.png" };
-
 const vector<vector<string>> models = { 
-	//{ "images/wood_1.png" }, 
-	//{ "images/wood_2.png" },
-	//{ "images/road.png" }, 
-	{ "images/wood_3_1.png", "images/wood_3_2.png", "images/wood_3_3.png", "images/wood_3_4.png", "images/wood_3_5.png" },
-	{ "images/wood_4_0.png", "images/wood_4_1.png", "images/wood_4_2.png", "images/wood_4_3.png", "images/wood_4_4.png" },
-	{ "images/wood_5_0.png", "images/wood_5_1.png", "images/wood_5_2.png", "images/wood_5_3.png", "images/wood_5_4.png" },
-	{ "images/wood_6_0.png", "images/wood_6_1.png", "images/wood_6_2.png", "images/wood_6_3.png", "images/wood_6_4.png" },
-	{ "images/wood_7_0.png", "images/wood_7_1.png", "images/wood_7_2.png", "images/wood_7_3.png", "images/wood_7_4.png" } };
+	{ "wood_3_1", "wood_3_2", "wood_3_3", "wood_3_4", "wood_3_5" },
+	{ "wood_4_0", "wood_4_1", "wood_4_2", "wood_4_3", "wood_4_4" },
+	{ "wood_5_0", "wood_5_1", "wood_5_2", "wood_5_3", "wood_5_4" },
+	{ "wood_6_0", "wood_6_1", "wood_6_2", "wood_6_3", "wood_6_4" },
+	{ "wood_7_0", "wood_7_1", "wood_7_2", "wood_7_3", "wood_7_4" } };
 
 const vector<string> enemyMeshesStrings = {
-	"models/pirate.obj", "models/pirate_2.obj"
+	"pirate", "pirate_2"
 };
-//const uint nModels = sizeof(models) / sizeof(string);
 
 vector<uint> indices;
 
-void FloorRow::initMeshes() {
+void FloorRow::initIds(const Assets& assets) {
+	FloorRow::assets = &assets;
+
 	enemyMeshes.resize(enemyMeshesStrings.size());
-	for (int i = 0; i < enemyMeshesStrings.size(); ++i) {
-		enemyMeshes[i].loadFromFile(enemyMeshesStrings[i]);
+	for (uint i = 0; i < enemyMeshesStrings.size(); ++i) {
+		enemyMeshes[i] = assets.getMeshId(enemyMeshesStrings[i]);
 	}
-	//pirateMesh.loadFromFile("models/pirate.obj");
-	//pirateMesh2.loadFromFile("models/pirate2.obj");
-	cubeMesh.init();
+
+	cubeMesh = assets.getCubeMesh();
 	indices.resize(models.size());
 	for (uint i = 0; i < indices.size(); ++i) {
 		indices[i] = i;
@@ -43,14 +34,10 @@ void FloorRow::initMeshes() {
 	for (uint i = 0; i < models.size(); ++i) {
 		floorTextures[i].resize(models[i].size());
 		for (uint j = 0; j < models[i].size(); ++j) {
-			floorTextures[i][j].loadFromFile(models[i][j], TEXTURE_PIXEL_FORMAT_RGBA);
-			floorTextures[i][j].setMagFilter(GL_NEAREST);
-			floorTextures[i][j].setMinFilter(GL_NEAREST);
+			floorTextures[i][j] = assets.getTextureId(models[i][j]);
 		}
 	}
-	planeWood.loadFromFile("images/wood_plane.png", TEXTURE_PIXEL_FORMAT_RGB);
-	planeWood.setMagFilter(GL_NEAREST);
-	planeWood.setMinFilter(GL_NEAREST);
+	planeWood = assets.getTextureId("wood_plane");
 }
 
 void FloorRow::setParameters(vec2 tileSize, uint cols, vec3 lightDir) {
@@ -105,8 +92,13 @@ inline uint minim(uint a, uint b) {
 	return a < b ? a : b;
 }
 
-inline int between(int min, int max) {
-	return ((float)rand() / RAND_MAX)*(max - min) + min;
+inline uint between(uint min, uint max) {
+	float num = ((float)rand() / RAND_MAX)*(max - min) + min;
+	uint floor = (uint)num;
+	if (num - floor >= 0.5)
+		return floor + 1;
+	else
+		return floor;
 }
 
 pair<uint,uint> generateRandomTextureIndex(uint i, uint prevMeshIndex, vector<uint>& adjacentRow) {
@@ -129,7 +121,7 @@ pair<uint,uint> generateRandomTextureIndex(uint i, uint prevMeshIndex, vector<ui
 	return make_pair(textureIndex, numAdjacentTiles);
 }
 
-void FloorRow::initSafeZone(vector<Mesh*>& meshes) {
+void FloorRow::initSafeZone(vector<IdMesh>& meshes) {
 	enemies.clear();
 	speeds.clear();
 	floorTiles.resize(cols);
@@ -138,18 +130,18 @@ void FloorRow::initSafeZone(vector<Mesh*>& meshes) {
 	static float realTileSize = tileSize.x / cols;
 	float offsetX = pos.x - (realTileSize*(cols / 2) - (1 - cols % 2)*realTileSize / 2);
 
+	static vec3 boundingBox = cubeMesh->getbbSize();
+	static vec3 bbcenter = cubeMesh->getbbCenter();
+	static float height = cubeMesh->getHeight();
+	static vec3 floorTileSize = vec3(realTileSize, 0.2f, tileSize.y) / boundingBox;
+
 	for (uint i = 0; i < floorTiles.size(); ++i) {
-		vec3 boundingBox = meshes[i]->getbbSize();
-		vec3 bbcenter = meshes[i]->getbbCenter();
-		float height = meshes[i]->getHeight();
-		vec3 floorTileSize = vec3(realTileSize, 0.2f, tileSize.y) / boundingBox;
 
 		TexturedObject& tile = floorTiles[i];
 		tile.name = "floor tile " + to_string(i);
-		tile.setTexture(&planeWood);
-		tile.setMesh(meshes[i]);
+		tile.texture = planeWood;
+		tile.setMesh(cubeMesh);
 		tile.setScale(floorTileSize);
-		//tile.rotateY(PI / 2);
 		tile.setCenter(vec3(bbcenter.x, bbcenter.y + height / 2.f, bbcenter.z));
 		tile.setPos(vec3(offsetX + i*realTileSize, rowHeight, pos.y));
 	}
@@ -165,15 +157,15 @@ void FloorRow::initRoad(vector<uint>& adjacentRow) {
 	rowHeight = 0.0f;
 
 	static float realTileSize = tileSize.x / cols;
-	static vec3 boundingBox = cubeMesh.getbbSize();
-	static vec3 bbcenter = cubeMesh.getbbCenter();
-	static float height = cubeMesh.getHeight();
+	static vec3 boundingBox = cubeMesh->getbbSize();
+	static vec3 bbcenter = cubeMesh->getbbCenter();
+	static float height = cubeMesh->getHeight();
 	vec3 floorTileSize = vec3(realTileSize, 0.1f, tileSize.y) / boundingBox;
 	float offsetX = pos.x - (realTileSize*(cols / 2) - (1 - cols % 2)*realTileSize / 2);
 
 	for (uint i = 0; i < enemies.size(); ++i) {
 		ShadowedObject& enemy = enemies[i];
-		enemy.setMesh(&enemyMeshes[i]);
+		enemy.setMesh(enemyMeshes[i], assets->getMesh(enemyMeshes[i]));
 		enemy.name = "enemy " + to_string(i);
 		enemy.rotateY(PI);
 		enemy.setScale(vec3(0.1f));
@@ -189,7 +181,7 @@ void FloorRow::initRoad(vector<uint>& adjacentRow) {
 	}
 
 	uint textureIndex = models.size();
-	Texture* texture = NULL;
+	IdTex texture = INVALID;
 	uint numAdjacentTiles = 0;
 	uint counter = numAdjacentTiles;
 	vector<uint> indicesAux;
@@ -202,10 +194,10 @@ void FloorRow::initRoad(vector<uint>& adjacentRow) {
 			numAdjacentTiles = ret.second;
 			counter = 0;
 		}
-		texture = &floorTextures[textureIndex][counter];
+		texture = floorTextures[textureIndex][counter];
 		adjacentRow[i] = textureIndex;
-		tile.setTexture(texture);
-		tile.setMesh(&cubeMesh);
+		tile.texture = texture;
+		tile.setMesh(cubeMesh);
 		tile.setScale(floorTileSize);
 		tile.rotateY(PI / 2);
 		tile.setCenter(vec3(bbcenter.x, bbcenter.y + height / 2.f, bbcenter.z));
@@ -228,6 +220,15 @@ void FloorRow::update(int deltaTime) {
 				startPoint = tileSize.x / 2;
 			object.setPos(vec3(startPoint, 0, pos.y));
 		}
+	}
+}
+
+void FloorRow::groupDrawableObjects(vector<vector<Object*>>& objects, vector<vector<TexturedObject*>>& texturedObjects) {
+	for (uint i = 0; i < enemies.size(); ++i) {
+		objects[enemies[i].meshId].push_back(&enemies[i]);
+	}
+	for (uint i = 0; i < floorTiles.size(); ++i) {
+		texturedObjects[floorTiles[i].texture].push_back(&floorTiles[i]);
 	}
 }
 
@@ -267,8 +268,9 @@ FloorRow::~FloorRow()
 vec2 FloorRow::tileSize;
 uint FloorRow::cols;
 vec3 FloorRow::lightDir;
-ImportedMesh FloorRow::pirateMesh;
-CubeMesh FloorRow::cubeMesh;
-vector<vector<Texture>> FloorRow::floorTextures;
-vector<ImportedMesh> FloorRow::enemyMeshes;
-Texture FloorRow::planeWood;
+IdMesh FloorRow::pirateMesh;
+const Mesh* FloorRow::cubeMesh;
+vector<vector<IdTex>> FloorRow::floorTextures;
+vector<IdMesh> FloorRow::enemyMeshes;
+IdTex FloorRow::planeWood;
+const Assets* FloorRow::assets;

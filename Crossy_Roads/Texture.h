@@ -23,7 +23,7 @@ public:
 	Texture();
 	~Texture();
 
-	bool loadFromFile(const string &filename, PixelFormat format);
+	bool loadFromFile(const string &filename, PixelFormat format, bool mipmap);
 	void loadFromGlyphBuffer(unsigned char *buffer, int width, int height);
 
 	void createEmptyTexture(int width, int height);
@@ -34,6 +34,8 @@ public:
 	void setWrapT(GLint value);
 	void setMinFilter(GLint value);
 	void setMagFilter(GLint value);
+
+	void applyParams() const;
 	
 	void use() const;
 	

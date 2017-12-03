@@ -14,6 +14,7 @@
 #include "ImportedMesh.h"
 #include <Windows.h>
 #include "MultiCubeMesh.h"
+#include "Assets.h"
 
 #define CAMERA_WIDTH 640
 #define CAMERA_HEIGHT 480
@@ -21,7 +22,6 @@
 
 // Scene contains all the entities of our game.
 // It is responsible for updating and render them.
-
 
 class Scene: public GameObject {
 
@@ -42,10 +42,13 @@ private:
 	void initShaders();
 
 private:
-	Object object;
-	MultiCubeMesh multiCube;
 	LARGE_INTEGER frequency;
 	uint depthVPLoc1, depthVPLoc2, VPLoc;
+
+	std::vector<std::vector<Object*>> objectsToRender;
+	std::vector<std::vector<TexturedObject*>> texturedObjects;
+
+	Assets assets;
 
 	Player player;
 	Floor floor;

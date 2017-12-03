@@ -5,9 +5,9 @@
 
 class ImportedMesh : public Mesh {
 	Texture texture;
-	//std::vector<glm::vec3> vertices, normals;
-	//std::vector<glm::vec2> texCoords;
-	//std::vector<unsigned int> triangles;
+	std::vector<glm::vec3> vertices, normals;
+	std::vector<glm::vec2> texCoords;
+	std::vector<unsigned int> triangles;
 
 	void prepareArrays();
 	void computeBoundingBox();
@@ -15,7 +15,8 @@ class ImportedMesh : public Mesh {
 	bool initMaterials(const aiScene *pScene, const string &filename);
 public:
 	bool loadFromFile(const string &filename);
-	void render(ShaderProgram& shaderProgram) const override;
+	void useTexture() const;
+	//void render(ShaderProgram& shaderProgram) const override;
 	ImportedMesh();
 	~ImportedMesh();
 };

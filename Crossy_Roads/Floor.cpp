@@ -11,17 +11,10 @@ Floor::~Floor()
 }
 
 void Floor::firstInit() {
-	cubeMesh.init();
 	tileSize = vec2(60, 2);
 	rows = 40;
 	cols = (uint)tileSize.x/2;
 	floorRows.resize(rows);
-	FloorRow::initMeshes();
-
-	deckMesh[0].loadFromFile("models/cubierta_4.obj");
-	deckMesh[1].loadFromFile("models/cubierta_1.obj");
-	deckMesh[2].loadFromFile("models/cubierta_3.obj");
-	deckMesh[3].loadFromFile("models/cubierta_2.obj");
 }
 
 inline uint between(uint min, uint max) {
@@ -33,16 +26,22 @@ inline uint between(uint min, uint max) {
 		return floor;
 }
 
-void Floor::init(vec3 lightDir) {
+void Floor::init(vec3 lightDir, const Assets& assets) {
 	GameObject::init();
 
+	deckMesh[0] = assets.getMeshId("cubierta_4");
+	deckMesh[1] = assets.getMeshId("cubierta_1");
+	deckMesh[2] = assets.getMeshId("cubierta_3");
+	deckMesh[3] = assets.getMeshId("cubierta_2");
+
+	FloorRow::initIds(assets);
 	FloorRow::setParameters(tileSize, cols, lightDir);
 
 	float realTileSize = tileSize.x / cols;
 
 	float offsetZ = -tileSize.y*(rows/2);
 	vector<uint> meshIndex(cols, 999);
-	vector<vector<Mesh*>> map;
+	vector<vector<IdMesh>> map;
 
 	FloorType type = (FloorType)(rand()%2);
 	uint length = 0;
@@ -60,10 +59,10 @@ void Floor::init(vec3 lightDir) {
 				length = between(1, 4);
 				map.resize(length);
 
-				for (uint i = 0; i < length; ++i) {
+				/*for (uint i = 0; i < length; ++i) {
 					map[i].resize(cols);
 					for (uint j = 0; j < cols; ++j) {
-						map[i][j] = &cubeMesh;
+						map[i][j] = cubeId;
 					}
 				}
 
@@ -71,10 +70,10 @@ void Floor::init(vec3 lightDir) {
 					uint start = between(0, cols - 2);
 					for (uint i = 0; i < 2; ++i) {
 						for (uint j = 0; j < 2; ++j) {
-							map[i][start + j] = &deckMesh[i * 2 + j];
+							map[i][start + j] = deckMesh[i * 2 + j];
 						}
 					}
-				}
+				}*/
 
 				type = Safe;
 				break;
@@ -116,6 +115,12 @@ void Floor::addLevel() {
 void Floor::update(int deltaTime) {
 	for (FloorRow& row : floorRows) {
 		row.update(deltaTime);
+	}
+}
+
+void Floor::groupDrawableObjects(std::vector<std::vector<Object*>>& objects, std::vector<std::vector<TexturedObject*>>& texturedObjects) {
+	for (uint i = 0; i < rows; ++i) {
+		floorRows[i].groupDrawableObjects(objects, texturedObjects);
 	}
 }
 

@@ -4,6 +4,7 @@
 class ShadowedObject : public Object {
 	glm::mat4 shadowProjection;
 public:
+	glm::mat4 getShadowModel();
 	void renderShadow(ShaderProgram& program);
 	void setPlane(glm::vec4 plane, glm::vec3 direction);
 	ShadowedObject();

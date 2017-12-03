@@ -51,10 +51,13 @@ bool ImportedMesh::initMaterials(const aiScene *pScene, const string &filename) 
 				char fullPath[200];
 				strcpy_s(fullPath, sFullPath.c_str());
 
-				if (!texture.loadFromFile(fullPath, TEXTURE_PIXEL_FORMAT_RGB)) {
+				if (!texture.loadFromFile(fullPath, TEXTURE_PIXEL_FORMAT_RGB, false)) {
 					cerr << "Error loading texture '" << fullPath << "'" << endl;
 					return false;
 				}
+				texture.setMagFilter(GL_NEAREST);
+				texture.setMinFilter(GL_NEAREST);
+				texture.applyParams();
 				break;
 			}
 		}
@@ -154,14 +157,18 @@ bool ImportedMesh::loadFromFile(const string &filename) {
 	computeBoundingBox();
 	prepareArrays();
 
-	//vertices.clear();
-	//normals.clear();
-	//triangles.clear();
+	vertices.clear();
+	normals.clear();
+	triangles.clear();
 
 	return true;
 }
 
-void ImportedMesh::render(ShaderProgram & shaderProgram) const {
+void ImportedMesh::useTexture() const {
+	texture.use();
+}
+
+/*void ImportedMesh::render(ShaderProgram & shaderProgram) const {
 	texture.use();
 	Mesh::render(shaderProgram);
-}
+}*/

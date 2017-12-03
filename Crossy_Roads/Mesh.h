@@ -3,13 +3,10 @@
 #include <glm\glm.hpp>
 #include <GL\glew.h>
 #include "ShaderProgram.h"
+#include <map>
 
 class Mesh {
 protected:
-	std::vector<glm::vec3> vertices, normals;
-	std::vector<glm::vec2> texCoords;
-	std::vector<unsigned int> triangles;
-
 	unsigned int nVertices;
 	float height;
 	glm::vec3 center, bbox[2];
@@ -17,13 +14,13 @@ protected:
 	GLuint VBOvert, VBOnorm, VBOtex;
 	GLenum renderMode;
 	Mesh();
-	virtual void setProgramParams(ShaderProgram& program) const;
 public:
 	uint totalTriangles;
 
 	glm::vec3 getbbCenter() const;
 	glm::vec3 getbbSize() const;
 	float getHeight() const;
+	virtual void setProgramParams(ShaderProgram& program) const;
 	virtual void render(ShaderProgram& program) const;
 	void clear();
 	virtual ~Mesh();

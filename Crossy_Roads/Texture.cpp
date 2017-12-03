@@ -20,7 +20,7 @@ Texture::~Texture() {
 }
 
 
-bool Texture::loadFromFile(const string &filename, PixelFormat format)
+bool Texture::loadFromFile(const string &filename, PixelFormat format, bool mipmap)
 {
 	unsigned char *image = NULL;
 	
@@ -47,7 +47,8 @@ bool Texture::loadFromFile(const string &filename, PixelFormat format)
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, widthTex, heightTex, 0, GL_RGBA, GL_UNSIGNED_BYTE, image);
 		break;
 	}
-	glGenerateMipmap(GL_TEXTURE_2D);
+	if (mipmap)
+		glGenerateMipmap(GL_TEXTURE_2D);
 	SOIL_free_image_data(image);
 	return true;
 }
@@ -107,12 +108,17 @@ void Texture::setMagFilter(GLint value)
 	magFilter = value;
 }
 
-void Texture::use() const {
-	glBindTexture(GL_TEXTURE_2D, texId);
+void Texture::applyParams() const {
+	use();
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, wrapS);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, wrapT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, minFilter);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, magFilter);
+}
+
+
+void Texture::use() const {
+	glBindTexture(GL_TEXTURE_2D, texId);
 }
 
 

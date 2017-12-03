@@ -1,6 +1,10 @@
 #include "ShadowedObject.h"
 using namespace glm;
 
+mat4 ShadowedObject::getShadowModel() {
+	return shadowProjection*model;
+}
+
 void ShadowedObject::renderShadow(ShaderProgram & program) {
 	if (modified)
 		updateModel();
