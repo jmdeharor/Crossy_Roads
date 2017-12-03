@@ -118,9 +118,9 @@ void Floor::update(int deltaTime) {
 	}
 }
 
-void Floor::groupDrawableObjects(std::vector<std::vector<Object*>>& objects, std::vector<std::vector<TexturedObject*>>& texturedObjects) {
+void Floor::groupDrawableObjects(std::vector<std::vector<Object*>>& objects, std::vector<std::vector<TexturedObject*>>& texturedObjects, glm::mat4& viewProjection) {
 	for (uint i = 0; i < rows; ++i) {
-		floorRows[i].groupDrawableObjects(objects, texturedObjects);
+		floorRows[i].groupDrawableObjects(objects, texturedObjects, viewProjection);
 	}
 }
 

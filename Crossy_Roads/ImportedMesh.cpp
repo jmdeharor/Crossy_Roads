@@ -8,7 +8,6 @@ ImportedMesh::ImportedMesh()
 {
 }
 
-
 ImportedMesh::~ImportedMesh()
 {
 }
@@ -21,6 +20,8 @@ void ImportedMesh::computeBoundingBox() {
 		bbox[0] = min(bbox[0], vertices[j]);
 		bbox[1] = max(bbox[1], vertices[j]);
 	}
+
+	generateAllbbPoints();
 	height = bbox[1].y - bbox[0].y;
 	center = (bbox[0] + bbox[1]) / 2.f;
 }

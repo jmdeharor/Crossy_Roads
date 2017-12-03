@@ -1,9 +1,11 @@
 #include "CubeMesh.h"
 using namespace glm;
-
+#include "Scene.h"
 void CubeMesh::render(ShaderProgram & program) const {
 	//setProgramParams(program);
 	//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, VBOind);
+	Scene::sceneTriangles += totalTriangles;
+	Scene::sceneDrawCalls += 1;
 	glDrawElements(renderMode, nVertices, GL_UNSIGNED_INT, (void*)0);
 }
 
@@ -147,6 +149,7 @@ void CubeMesh::init() {
 	};
 	bbox[0] = vec3(-1);
 	bbox[1] = vec3(1);
+	generateAllbbPoints();
 	height = 2;
 	center = vec3(0);
 

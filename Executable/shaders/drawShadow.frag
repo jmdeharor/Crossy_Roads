@@ -5,9 +5,6 @@ uniform sampler2DShadow shadowMap;
 
 uniform vec3 lightDir;
 
-uniform mat4 depthVP, model;
-uniform mat4 VP;
-
 in vec4 shadowCoord;
 in vec2 fragTexCoord;
 in vec3 fragNormal;
@@ -30,6 +27,7 @@ float sampleShadow() {
 }
 
 void main(){
+	vec3 N = normalize(fragNormal);
 	vec2 st = shadowCoord.st;
 	float trueDepth = shadowCoord.z;
 	//float storedDepth = sampleShadow();
@@ -37,5 +35,11 @@ void main(){
 	if (st.s < 0 || st.s > 1 || st.t < 0 || st.t > 1) {
 		outColor = vec4(1,0,0,0);
 	}
-	else outColor = mix(0.5,1,storedDepth)*texture(tex, fragTexCoord);
+	else {
+		float diffuse = max(0, dot(N,lightDir));
+		//float finalFactor = 0.3*diffuse + 0.7*storedDepth;
+		float finalFactor = min(diffuse, storedDepth);
+		vec4 color = texture(tex, fragTexCoord);
+		outColor = mix(0.5, 1, finalFactor)*color;
+	}
 }

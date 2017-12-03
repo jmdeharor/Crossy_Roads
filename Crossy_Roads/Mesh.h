@@ -9,14 +9,16 @@ class Mesh {
 protected:
 	unsigned int nVertices;
 	float height;
-	glm::vec3 center, bbox[2];
+	glm::vec3 center, bbox[8];
 	GLuint VAO;
 	GLuint VBOvert, VBOnorm, VBOtex;
 	GLenum renderMode;
+protected:
+	void generateAllbbPoints();
 	Mesh();
 public:
 	glm::uint totalTriangles;
-
+	const glm::vec3* getbb() const;
 	glm::vec3 getbbCenter() const;
 	glm::vec3 getbbSize() const;
 	float getHeight() const;

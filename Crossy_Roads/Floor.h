@@ -21,7 +21,9 @@ public:
 	void update(int deltaTime);
 	void groupDrawableObjects(
 		std::vector<std::vector<Object*>>& objects,
-		std::vector<std::vector<TexturedObject*>>& texturedObjects
+
+
+		std::vector<std::vector<TexturedObject*>>& texturedObjects, glm::mat4& viewProjection
 	) override;
 	void renderSimpleObjects(ShaderProgram& program);
 	void renderLightObjects(ShaderProgram& program);

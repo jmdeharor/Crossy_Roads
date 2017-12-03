@@ -222,12 +222,14 @@ void FloorRow::update(int deltaTime) {
 	}
 }
 
-void FloorRow::groupDrawableObjects(vector<vector<Object*>>& objects, vector<vector<TexturedObject*>>& texturedObjects) {
+void FloorRow::groupDrawableObjects(vector<vector<Object*>>& objects, vector<vector<TexturedObject*>>& texturedObjects, glm::mat4& viewProjection) {
 	for (uint i = 0; i < enemies.size(); ++i) {
-		objects[enemies[i].meshId].push_back(&enemies[i]);
+		//if (enemies[i].isInsideViewFrustrum(viewProjection))
+			objects[enemies[i].meshId].push_back(&enemies[i]);
 	}
 	for (uint i = 0; i < floorTiles.size(); ++i) {
-		texturedObjects[floorTiles[i].texture].push_back(&floorTiles[i]);
+		//if (floorTiles[i].isInsideViewFrustrum(viewProjection))
+			texturedObjects[floorTiles[i].texture].push_back(&floorTiles[i]);
 	}
 }
 

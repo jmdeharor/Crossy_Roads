@@ -137,12 +137,14 @@ const uint cols = 5;
 void Scene::init() {
 	GameObject::init();
 
-	lightDir = normalize(vec3(1,1,0.2f));
+	lightDir = normalize(vec3(1,1,0));
 
 	shadowMapProgram.use();
 	shadowMapProgram.setUniform3f("lightDir", lightDir.x, lightDir.y, lightDir.z);
 	drawShadowProgram.use();
 	drawShadowProgram.setUniform3f("lightDir", lightDir.x, lightDir.y, lightDir.z);
+	texProgram.use();
+	texProgram.setUniform3f("lightDir", lightDir.x, lightDir.y, lightDir.z);
 
 	floor.init(lightDir, assets);
 	camera.init(lightDir, &player);
@@ -181,8 +183,10 @@ void Scene::render() {
 	LARGE_INTEGER start, end;
 	QueryPerformanceCounter(&start);
 
-	floor.groupDrawableObjects(objectsToRender, texturedObjects);
-	player.groupDrawableObjects(objectsToRender, texturedObjects);
+	mat4 viewProjection = camera.getVPMatrix();
+
+	floor.groupDrawableObjects(objectsToRender, texturedObjects, viewProjection);
+	player.groupDrawableObjects(objectsToRender, texturedObjects, viewProjection);
 
 	const static mat4 offsetMatrix(
 		0.5, 0.0, 0.0, 0.0,
@@ -201,11 +205,11 @@ void Scene::render() {
 	for (uint i = 0; i < objectsToRender.size(); ++i) {
 		vector<Object*>& objects = objectsToRender[i];
 		const Mesh* mesh = assets.getMesh(i);
-		mesh->setProgramParams(drawShadowProgram);
+		mesh->setProgramParams(shadowMapProgram);
 		for (uint j = 0; j < objects.size(); ++j) {
 			Object* object = objects[j];
-			drawShadowProgram.setUniformMatrix4f(modelLoc, *object->getModel());
-			mesh->render(drawShadowProgram);
+			shadowMapProgram.setUniformMatrix4f(modelLoc, *object->getModel());
+			mesh->render(shadowMapProgram);
 		}
 	}
 
@@ -217,7 +221,7 @@ void Scene::render() {
 	glActiveTexture(GL_TEXTURE0);
 	drawShadowProgram.use();
 	drawShadowProgram.setUniformMatrix4f(depthVPLoc2, offsetMatrix*camera.getVPLightMatrix());
-	drawShadowProgram.setUniformMatrix4f(VPLoc, camera.getVPMatrix());
+	drawShadowProgram.setUniformMatrix4f(VPLoc, viewProjection);
 
 	for (uint i = 0; i < objectsToRender.size(); ++i) {
 		vector<Object*>& objects = objectsToRender[i];
@@ -234,10 +238,9 @@ void Scene::render() {
 	texProgram.use();
 	texProgram.setUniformMatrix4f(projectionLoc, *camera.getProjectionMatrix());
 	texProgram.setUniformMatrix4f(viewLoc, *camera.getViewMatrix());
-	texProgram.setUniform3f("lightDir", lightDir.x, lightDir.y, lightDir.z);
 
 	const Mesh* mesh = assets.getCubeMesh();
-	mesh->setProgramParams(drawShadowProgram);
+	mesh->setProgramParams(texProgram);
 	for (uint i = 0; i < texturedObjects.size(); ++i) {
 		vector<TexturedObject*>& objects = texturedObjects[i];
 		const Texture* tex = assets.getTexture(i);
@@ -245,7 +248,6 @@ void Scene::render() {
 		for (uint j = 0; j < objects.size(); ++j) {
 			Object* object = objects[j];
 			texProgram.setUniformMatrix4f(modelLoc, *object->getModel());
-			texProgram.setUniformMatrix3f(normalMatrixLoc, mat3(*object->getModel()));
 			mesh->render(texProgram);
 		}
 		objects.clear();

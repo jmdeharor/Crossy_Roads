@@ -16,6 +16,7 @@ public:
 	const Mesh* mesh;
 
 public:
+	bool isInsideViewFrustrum(glm::mat4& viewProjection);
 	glm::uint getTriangles() const;
 	string name;
 	void setCenter(glm::vec3 newCenter);

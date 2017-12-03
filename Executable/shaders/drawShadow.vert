@@ -13,9 +13,9 @@ out vec4 shadowCoord;
 out vec2 fragTexCoord;
 out vec3 fragNormal;
 
-void main(){
-	fragNormal = normal;
+void main() {
 	fragTexCoord = texCoord;
 	gl_Position =  VP * model * vec4(vertexPosition_modelspace,1);
 	shadowCoord =  depthVP * model * vec4(vertexPosition_modelspace,1);
+	fragNormal = mat3(model)*normal;
 }

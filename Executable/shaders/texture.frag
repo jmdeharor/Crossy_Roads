@@ -10,5 +10,8 @@ out vec4 outColor;
 void main() {
 	vec3 n = normalize(fragNormal);
 	vec4 texColor = texture(tex, texCoordFrag);
-	outColor =  texColor;
+	if (dot(n, lightDir) <= 0)
+		outColor = 0.5*texColor;
+	else
+		outColor =  texColor;
 }
