@@ -9,6 +9,8 @@ private:
 	const Player* player;
 	glm::vec3 lightDir;
 	EulerPerspCamera cam;
+	glm::mat4 VP;
+	glm::mat4 VPLight;
 	OBSOrthoCamera uiCam, lightCam;
 	bool cameraMode;
 	FrustumG frustum;
@@ -21,8 +23,8 @@ public:
 	void updateVM();
 	const glm::mat4* getProjectionMatrix() const;
 	const glm::mat4* getViewMatrix() const;
-	glm::mat4 getVPLightMatrix() const;
-	glm::mat4 getVPMatrix() const;
+	const glm::mat4* getVPLightMatrix() const;
+	const glm::mat4* getVPMatrix() const;
 	glm::vec3 getPos() const;
 	void renderFrustum() const;
 	void setPos(glm::vec3 pos);

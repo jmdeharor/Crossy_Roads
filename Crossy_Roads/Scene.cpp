@@ -183,24 +183,20 @@ void Scene::render() {
 	LARGE_INTEGER start, end;
 	QueryPerformanceCounter(&start);
 
-	mat4 viewProjection = camera.getVPMatrix();
-	
+	const mat4& viewProjection = *camera.getVPMatrix();
+	const mat4& lightViewProjection = *camera.getVPLightMatrix();
+
 	floor.groupDrawableObjects(objectsToRender, texturedObjects, camera.getFrustum());
 	player.groupDrawableObjects(objectsToRender, texturedObjects, camera.getFrustum());
 
-	const static mat4 offsetMatrix(
-		0.5, 0.0, 0.0, 0.0,
-		0.0, 0.5, 0.0, 0.0,
-		0.0, 0.0, 0.5, 0.0,
-		0.5, 0.5, 0.5, 1.0
-	);
 	sceneDrawCalls = 0;
 	sceneTriangles = 0;
+
 	glViewport(0, 0, SHADOW_MAP_W, SHADOW_MAP_H);
 	shadowMapProgram.use();
 	glBindFramebuffer(GL_FRAMEBUFFER, framebufferName);
 	glClear(GL_DEPTH_BUFFER_BIT);
-	shadowMapProgram.setUniformMatrix4f(depthVPLoc1, camera.getVPLightMatrix());
+	shadowMapProgram.setUniformMatrix4f(depthVPLoc1, lightViewProjection);
 
 	for (uint i = 0; i < objectsToRender.size(); ++i) {
 		vector<Object*>& objects = objectsToRender[i];
@@ -215,12 +211,18 @@ void Scene::render() {
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
+	const static mat4 offsetMatrix(
+		0.5, 0.0, 0.0, 0.0,
+		0.0, 0.5, 0.0, 0.0,
+		0.0, 0.0, 0.5, 0.0,
+		0.5, 0.5, 0.5, 1.0
+	);
 	glViewport(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 	glActiveTexture(GL_TEXTURE1);
 	glBindTexture(GL_TEXTURE_2D, depthTexture);
 	glActiveTexture(GL_TEXTURE0);
 	drawShadowProgram.use();
-	drawShadowProgram.setUniformMatrix4f(depthVPLoc2, offsetMatrix*camera.getVPLightMatrix());
+	drawShadowProgram.setUniformMatrix4f(depthVPLoc2, offsetMatrix*lightViewProjection);
 	drawShadowProgram.setUniformMatrix4f(VPLoc, viewProjection);
 
 	for (uint i = 0; i < objectsToRender.size(); ++i) {

@@ -16,7 +16,6 @@ void Camera::init(vec3 lightDir, const Player* player) {
 	cam.zNear = 0.1f;
 	cam.zFar = 100.f;
 	cam.updatePM();
-	cam.updateVM();
 
 	this->lightDir = lightDir*25.f;
 
@@ -30,11 +29,9 @@ void Camera::init(vec3 lightDir, const Player* player) {
 	lightCam.zNear = 0.01f;
 	lightCam.zFar = 100;
 	lightCam.updatePM();
-	lightCam.updateVM();
 	cameraMode = true;
 
-	mat4 VP = getVPMatrix();
-	frustum.setFrustum(&VP[0][0]);
+	updateVM();
 }
 
 void Camera::resize(int w, int h) {
@@ -51,34 +48,34 @@ inline void Camera::cameraControl() {
 	}
 	if (Game::instance().getSpecialKey(GLUT_KEY_LEFT)) {
 		cam.psi += 0.1f;
-		cam.updateVM();
+		updateVM();
 	}
 	else if (Game::instance().getSpecialKey(GLUT_KEY_RIGHT)) {
 		cam.psi -= 0.1f;
-		cam.updateVM();
+		updateVM();
 	}
 	else if (Game::instance().getSpecialKey(GLUT_KEY_UP)) {
 		cam.d -= 0.1f;
-		cam.updateVM();
+		updateVM();
 	}
 	else if (Game::instance().getSpecialKey(GLUT_KEY_DOWN)) {
 		cam.d += 0.1f;
-		cam.updateVM();
+		updateVM();
 	}
 	else if (Game::instance().getKey('r')) {
 		cam.theta += 0.1f;
-		cam.updateVM();
+		updateVM();
 	}
 	else if (Game::instance().getKey('f')) {
 		cam.theta -= 0.1f;
-		cam.updateVM();
+		updateVM();
 	}
 }
 
 void Camera::update(int deltaTime) {
 	cameraControl();
 	vec3 playerPos = player->getPos();
-	if (cam.VRP != playerPos) {
+	if (distance(playerPos, cam.VRP) > 0.1f) {
 		vec3 diff = playerPos - cam.VRP;
 		vec3 absD = abs(diff);
 		cam.VRP += diff*0.03f;
@@ -91,26 +88,25 @@ void Camera::update(int deltaTime) {
 void Camera::updateVM() {
 	cam.updateVM();
 	lightCam.updateVM();
-	mat4 VP = getVPMatrix();
+	VP = (*cam.getFullProjectionMatrix())*(*cam.getFullViewMatrix());
+	VPLight = (*lightCam.getFullProjectionMatrix())*(*lightCam.getFullViewMatrix());
 	frustum.setFrustum(&VP[0][0]);
 }
 
-const glm::mat4 * Camera::getProjectionMatrix() const
-{
+const glm::mat4 * Camera::getProjectionMatrix() const {
 	return cam.getFullProjectionMatrix();
 }
 
-const glm::mat4 * Camera::getViewMatrix() const
-{
+const glm::mat4 * Camera::getViewMatrix() const {
 	return cam.getFullViewMatrix();
 }
 
-mat4 Camera::getVPLightMatrix() const {
-	return (*lightCam.getFullProjectionMatrix())*(*lightCam.getFullViewMatrix());
+const glm::mat4* Camera::getVPLightMatrix() const {
+	return &VPLight;
 }
 
-mat4 Camera::getVPMatrix() const {
-	return cameraMode ? (*cam.getFullProjectionMatrix())*(*cam.getFullViewMatrix()) : (*lightCam.getFullProjectionMatrix())*(*lightCam.getFullViewMatrix());
+const mat4* Camera::getVPMatrix() const {
+	return &VP;
 }
 
 glm::vec3 Camera::getPos() const {
