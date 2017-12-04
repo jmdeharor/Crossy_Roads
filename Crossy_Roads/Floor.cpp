@@ -11,7 +11,7 @@ Floor::~Floor()
 }
 
 void Floor::firstInit() {
-	tileSize = vec2(60, 2);
+	tileSize = vec2(58, 2);
 	rows = 40;
 	cols = (uint)tileSize.x/2;
 	floorRows.resize(rows);
@@ -40,12 +40,11 @@ void Floor::init(vec3 lightDir, const Assets& assets) {
 	float realTileSize = tileSize.x / cols;
 
 	float offsetZ = -tileSize.y*(rows/2);
-	vector<uint> meshIndex(cols, 999);
-	vector<vector<IdMesh>> map;
+	textureIndex = vector<uint>(cols, 999);
 
-	FloorType type = (FloorType)(rand()%2);
-	uint length = 0;
-	uint counter = length;
+	type = (FloorType)(rand()%2);
+	length = 0;
+	counter = length;
 	for (uint i = 0; i < rows; ++i) {
 		bool transition = false;
 		if (counter == length) {
@@ -57,24 +56,6 @@ void Floor::init(vec3 lightDir, const Assets& assets) {
 				break;
 			case Road:
 				length = between(1, 4);
-				map.resize(length);
-
-				/*for (uint i = 0; i < length; ++i) {
-					map[i].resize(cols);
-					for (uint j = 0; j < cols; ++j) {
-						map[i][j] = cubeId;
-					}
-				}
-
-				if (length >= 2) {
-					uint start = between(0, cols - 2);
-					for (uint i = 0; i < 2; ++i) {
-						for (uint j = 0; j < 2; ++j) {
-							map[i][start + j] = deckMesh[i * 2 + j];
-						}
-					}
-				}*/
-
 				type = Safe;
 				break;
 			}
@@ -83,15 +64,14 @@ void Floor::init(vec3 lightDir, const Assets& assets) {
 		floorRows[i].setPos(vec2(0, offsetZ + i*tileSize.y));
 		switch (type) {
 		case Safe:
-			floorRows[i].initSafeZone(map[map.size()-1]);
-			map.pop_back();
+			floorRows[i].initSafeZone();
 			break;
 		case Road:
 			if (transition) {
 				for (uint i = 0; i < cols; ++i)
-					meshIndex[i] = 999;
+					textureIndex[i] = 999;
 			}
-			floorRows[i].initRoad(meshIndex);
+			floorRows[i].initRoad(textureIndex);
 			break;
 		}
 		++counter;
@@ -103,7 +83,35 @@ void Floor::init(vec3 lightDir, const Assets& assets) {
 void Floor::addLevel() {
 	firstPos += tileSize.y;
 	vec2 lastPos = floorRows[lastRow].getPos();
-	floorRows[lastRow].moveToPosition(vec2(lastPos.x, firstPos));
+	bool transition = false;
+	if (counter == length) {
+		switch (type) {
+		case Safe:
+			length = between(3, 10);
+			type = Road;
+			transition = true;
+			break;
+		case Road:
+			length = between(1, 4);
+			type = Safe;
+			break;
+		}
+		counter = 0;
+	}
+	floorRows[lastRow].setPos(vec2(lastPos.x, firstPos));
+	switch (type) {
+	case Safe:
+		floorRows[lastRow].initSafeZone();
+		break;
+	case Road:
+		if (transition) {
+			for (uint i = 0; i < cols; ++i)
+				textureIndex[i] = 999;
+		}
+		floorRows[lastRow].initRoad(textureIndex);
+		break;
+	}
+	++counter;
 	if (lastRow == rows - 1) {
 		lastRow = 0;
 	}

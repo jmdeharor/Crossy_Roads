@@ -13,7 +13,11 @@ class Floor : public GameObject, public ObjectContainer {
 	glm::uint lastRow;
 	IdMesh deckMesh[4];
 	float firstPos;
+	glm::uint counter;
+	glm::uint length;
 	std::vector<FloorRow> floorRows;
+	std::vector<glm::uint> textureIndex;
+	FloorType type;
 	glm::vec2 tileSize;
 public:
 	void addLevel();

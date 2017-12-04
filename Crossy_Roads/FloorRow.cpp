@@ -120,7 +120,7 @@ pair<uint,uint> generateRandomTextureIndex(uint i, uint prevMeshIndex, vector<ui
 	return make_pair(textureIndex, numAdjacentTiles);
 }
 
-void FloorRow::initSafeZone(vector<IdMesh>& meshes) {
+void FloorRow::initSafeZone() {
 	enemies.clear();
 	speeds.clear();
 	floorTiles.resize(cols);
@@ -137,19 +137,45 @@ void FloorRow::initSafeZone(vector<IdMesh>& meshes) {
 	for (uint i = 0; i < floorTiles.size(); ++i) {
 
 		TexturedObject& tile = floorTiles[i];
-		tile.name = "floor tile " + to_string(i);
 		tile.texture = planeWood;
 		tile.setMesh(cubeMesh);
 		tile.setScale(floorTileSize);
 		tile.setCenter(vec3(bbcenter.x, bbcenter.y + height / 2.f, bbcenter.z));
 		tile.setPos(vec3(offsetX + i*realTileSize, rowHeight, pos.y));
 	}
+	IdMesh ids[2];
+	ids[0] = assets->getMeshId("barrel");
+	ids[1] = assets->getMeshId("box");
+
+	if (rand() % 2 == 0) {
+		furniture.resize(rand() % 3 + 1);
+
+		for (uint i = 0; i < furniture.size(); ++i) {
+			ShadowedObject& object = furniture[i];
+			IdMesh meshId = ids[rand() % 2];
+
+			const Mesh* mesh = assets->getMesh(meshId);
+
+			vec3 boundingBox = mesh->getbbSize();
+			vec3 objectSize = vec3(realTileSize, 2, tileSize.y) / boundingBox;
+
+			object.setMesh(meshId, mesh);
+			object.setScale(objectSize);
+			object.setCenterToBaseCenter();
+			vec3 randPos = floorTiles[rand() % cols].getPos();
+			object.setPos(vec3(randPos.x, rowHeight, randPos.z));
+			object.setPlane(vec4(0, 1, 0, -rowHeight), lightDir);
+		}
+	}
+	else furniture.clear();
 }
+
 float FloorRow::getHeight() const {
 	return rowHeight;
 }
 
 void FloorRow::initRoad(vector<uint>& adjacentRow) {
+	furniture.clear();
 	enemies.resize(2);
 	speeds.resize(enemies.size());
 	floorTiles.resize(cols);
@@ -165,8 +191,7 @@ void FloorRow::initRoad(vector<uint>& adjacentRow) {
 	for (uint i = 0; i < enemies.size(); ++i) {
 		ShadowedObject& enemy = enemies[i];
 		enemy.setMesh(enemyMeshes[i], assets->getMesh(enemyMeshes[i]));
-		enemy.name = "enemy " + to_string(i);
-		enemy.rotateY(PI);
+		enemy.setRotationY(PI);
 		enemy.setScale(vec3(0.1f));
 		enemy.setCenterToBaseCenter();
 		enemy.setPlane(vec4(0, 1, 0, 0), lightDir);
@@ -186,7 +211,6 @@ void FloorRow::initRoad(vector<uint>& adjacentRow) {
 	vector<uint> indicesAux;
 	for (uint i = 0; i < floorTiles.size(); ++i) {
 		TexturedObject& tile = floorTiles[i];
-		tile.name = "floor tile " + to_string(i);
 		if (counter == numAdjacentTiles) {
 			pair<uint, uint> ret = generateRandomTextureIndex(i, textureIndex, adjacentRow);
 			textureIndex = ret.first;
@@ -198,7 +222,7 @@ void FloorRow::initRoad(vector<uint>& adjacentRow) {
 		tile.texture = texture;
 		tile.setMesh(cubeMesh);
 		tile.setScale(floorTileSize);
-		tile.rotateY(PI / 2);
+		tile.setRotationY(PI / 2);
 		tile.setCenter(vec3(bbcenter.x, bbcenter.y + height / 2.f, bbcenter.z));
 		tile.setPos(vec3(offsetX + i*realTileSize, 0, pos.y));
 		++counter;
@@ -230,6 +254,10 @@ void FloorRow::groupDrawableObjects(vector<vector<Object*>>& objects, vector<vec
 	for (uint i = 0; i < floorTiles.size(); ++i) {
 		if (floorTiles[i].isInsideViewFrustrum(frustum))
 			texturedObjects[floorTiles[i].texture].push_back(&floorTiles[i]);
+	}
+	for (uint i = 0; i < furniture.size(); ++i) {
+		if (furniture[i].isInsideViewFrustrum(frustum))
+			objects[furniture[i].meshId].push_back(&furniture[i]);
 	}
 }
 
