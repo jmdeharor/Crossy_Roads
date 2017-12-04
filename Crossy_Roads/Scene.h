@@ -15,6 +15,7 @@
 #include <Windows.h>
 #include "MultiCubeMesh.h"
 #include "Assets.h"
+#include "FrustumG.h"
 
 #define CAMERA_WIDTH 640
 #define CAMERA_HEIGHT 480

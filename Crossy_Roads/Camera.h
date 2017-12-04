@@ -2,6 +2,7 @@
 #include "Camera\eulerperspcamera.h"
 #include "Camera\obsorthocamera.h"
 #include "Player.h"
+#include "FrustumG.h"
 
 class Camera {
 private:
@@ -10,6 +11,7 @@ private:
 	EulerPerspCamera cam;
 	OBSOrthoCamera uiCam, lightCam;
 	bool cameraMode;
+	FrustumG frustum;
 private:
 	void cameraControl();
 public:
@@ -22,7 +24,9 @@ public:
 	glm::mat4 getVPLightMatrix() const;
 	glm::mat4 getVPMatrix() const;
 	glm::vec3 getPos() const;
+	void renderFrustum() const;
 	void setPos(glm::vec3 pos);
+	const FrustumG& getFrustum() const;
 	Camera();
 	~Camera();
 };

@@ -1,6 +1,7 @@
 #pragma once
 #include "Mesh.h"
 #include "Assets.h"
+#include "FrustumG.h"
 
 class Object {
 protected:
@@ -16,7 +17,7 @@ public:
 	const Mesh* mesh;
 
 public:
-	bool isInsideViewFrustrum(glm::mat4& viewProjection);
+	bool isInsideViewFrustrum(const FrustumG& frustum);
 	glm::uint getTriangles() const;
 	string name;
 	void setCenter(glm::vec3 newCenter);

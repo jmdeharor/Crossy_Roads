@@ -1,5 +1,6 @@
 #include "Object.h"
 #include "glm/gtc/matrix_transform.hpp"
+#include "AABox.h"
 using namespace glm;
 
 void Object::setPos(vec3 pos) {
@@ -60,51 +61,15 @@ const mat4 * Object::getModel() {
 	return &model;
 }
 
-bool Object::isInsideViewFrustrum(glm::mat4& viewProjection) {
+bool Object::isInsideViewFrustrum(const FrustumG& frustum) {
 	const vec3* bbox = mesh->getbb();
 	if (modified)
 		updateModel();
-	mat4 modelViewProjection = viewProjection*model;
-	vec4 point1 = modelViewProjection*vec4(bbox[0], 1);
-	vec4 point2 = modelViewProjection*vec4(bbox[1], 1);
-	vec4 point3 = modelViewProjection*vec4(bbox[2], 1);
-	vec4 point4 = modelViewProjection*vec4(bbox[3], 1);
-	vec4 point5 = modelViewProjection*vec4(bbox[4], 1);
-	vec4 point6 = modelViewProjection*vec4(bbox[5], 1);
-	vec4 point7 = modelViewProjection*vec4(bbox[6], 1);
-	vec4 point8 = modelViewProjection*vec4(bbox[7], 1);
-
-	return ((-point1.w < point1.x && point1.x < point1.w &&
-		-point1.w < point1.y && point1.y < point1.w &&
-		-point1.w < point1.z && point1.z < point1.w)||
-
-		(-point2.w < point2.x && point2.x < point2.w &&
-		 -point2.w < point2.y && point2.y < point2.w &&
-		 -point2.w < point2.z && point2.z < point2.w)||
-
-		(-point3.w < point3.x && point3.x < point3.w &&
-		 -point3.w < point3.y && point3.y < point3.w &&
-		 -point3.w < point3.z && point3.z < point3.w)||
-
-		(-point4.w < point4.x && point4.x < point4.w &&
-		 -point4.w < point4.y && point4.y < point4.w &&
-		 -point4.w < point4.z && point4.z < point4.w)||
-
-		(-point5.w < point5.x && point5.x < point5.w &&
-		 -point5.w < point5.y && point5.y < point5.w &&
-		 -point5.w < point5.z && point5.z < point5.w)||
-
-		(-point6.w < point6.x && point6.x < point6.w &&
-		 -point6.w < point6.y && point6.y < point6.w &&
-		 -point6.w < point6.z && point6.z < point6.w)||
-
-		(-point7.w < point7.x && point7.x < point7.w &&
-		 -point7.w < point7.y && point7.y < point7.w &&
-		 -point7.w < point7.z && point7.z < point7.w)||
-
-		(-point8.w < point8.x && point8.x < point8.w &&
-		 -point8.w < point8.y && point8.y < point8.w &&
-		 -point8.w < point8.z && point8.z < point8.w));
+	vec3 mins = vec3(model*vec4(bbox[0], 1));
+	vec3 maxs = vec3(model*vec4(bbox[1], 1));
+	vec3 size = maxs - mins;
+	AABox box(Vec3(mins), size.x, size.y, size.z);
+	return frustum.boxInFrustum(box) != FrustumG::OUTSIDE;
 }
 
 uint Object::getTriangles() const {

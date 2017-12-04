@@ -3,7 +3,6 @@
 #include <glm\glm.hpp>
 #include <GL\glew.h>
 #include "ShaderProgram.h"
-#include <map>
 
 class Mesh {
 protected:

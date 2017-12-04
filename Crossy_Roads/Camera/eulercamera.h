@@ -10,6 +10,7 @@ public:
     EulerCamera(float phi, float theta, float psi, float d);
     virtual ~EulerCamera();
 
+	glm::mat4 viewMatrixInverse();
     void updateVM();
 };
 

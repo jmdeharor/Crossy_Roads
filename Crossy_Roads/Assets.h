@@ -2,6 +2,7 @@
 #include "ImportedMesh.h"
 #include "CubeMesh.h"
 #include "Texture.h"
+#include <map>
 
 typedef int IdMesh;
 typedef int IdTex;

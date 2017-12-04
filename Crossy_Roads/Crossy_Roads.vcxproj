@@ -119,6 +119,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="AABox.cpp" />
     <ClCompile Include="Assets.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Camera\basecamera.cpp" />
@@ -133,6 +134,7 @@
     <ClCompile Include="CubeMesh.cpp" />
     <ClCompile Include="Floor.cpp" />
     <ClCompile Include="FloorRow.cpp" />
+    <ClCompile Include="FrustumG.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="ImportedMesh.cpp" />
@@ -141,6 +143,7 @@
     <ClCompile Include="MultiCubeMesh.cpp" />
     <ClCompile Include="Object.cpp" />
     <ClCompile Include="ObjectContainer.cpp" />
+    <ClCompile Include="Plane.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="QuadMesh.cpp" />
     <ClCompile Include="Scene.cpp" />
@@ -150,8 +153,10 @@
     <ClCompile Include="Sphere.cpp" />
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="TexturedObject.cpp" />
+    <ClCompile Include="Vec3.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AABox.h" />
     <ClInclude Include="Assets.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Camera\basecamera.h" />
@@ -166,6 +171,7 @@
     <ClInclude Include="CubeMesh.h" />
     <ClInclude Include="Floor.h" />
     <ClInclude Include="FloorRow.h" />
+    <ClInclude Include="FrustumG.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="ImportedMesh.h" />
@@ -174,6 +180,7 @@
     <ClInclude Include="Pi.h" />
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="Object.h" />
+    <ClInclude Include="Plane.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="QuadMesh.h" />
     <ClInclude Include="Scene.h" />
@@ -183,6 +190,7 @@
     <ClInclude Include="Sphere.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="TexturedObject.h" />
+    <ClInclude Include="Vec3.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

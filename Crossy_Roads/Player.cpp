@@ -10,7 +10,7 @@ using namespace glm;
 void Player::firstInit() {
 }
 
-void Player::groupDrawableObjects(std::vector<std::vector<Object*>>& objects, std::vector<std::vector<TexturedObject*>>& texturedObjects, glm::mat4& viewProjection) {
+void Player::groupDrawableObjects(std::vector<std::vector<Object*>>& objects, std::vector<std::vector<TexturedObject*>>& texturedObjects, const FrustumG& frustum) {
 	objects[playerObject.meshId].push_back(&playerObject);
 }
 

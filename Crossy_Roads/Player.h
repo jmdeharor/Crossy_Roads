@@ -47,7 +47,8 @@ public:
 		std::vector<std::vector<Object*>>& objects,
 
 
-		std::vector<std::vector<TexturedObject*>>& texturedObjects, glm::mat4& viewProjection
+
+		std::vector<std::vector<TexturedObject*>>& texturedObjects, const FrustumG& frustum
 	) override;
 	void jump();
 	void init(const Assets& assets, glm::vec3 lightDir, glm::vec3 offset, float jumpDistance, const Floor &floor);

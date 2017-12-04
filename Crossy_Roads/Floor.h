@@ -6,6 +6,7 @@
 #include "FloorRow.h"
 #include "Assets.h"
 #include "ObjectContainer.h"
+#include "FrustumG.h"
 
 class Floor : public GameObject, public ObjectContainer {
 	glm::uint rows, cols;
@@ -21,9 +22,8 @@ public:
 	void update(int deltaTime);
 	void groupDrawableObjects(
 		std::vector<std::vector<Object*>>& objects,
-
-
-		std::vector<std::vector<TexturedObject*>>& texturedObjects, glm::mat4& viewProjection
+		std::vector<std::vector<TexturedObject*>>& texturedObjects,
+		const FrustumG& frustum
 	) override;
 	void renderSimpleObjects(ShaderProgram& program);
 	void renderLightObjects(ShaderProgram& program);

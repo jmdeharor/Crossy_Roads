@@ -184,9 +184,9 @@ void Scene::render() {
 	QueryPerformanceCounter(&start);
 
 	mat4 viewProjection = camera.getVPMatrix();
-
-	floor.groupDrawableObjects(objectsToRender, texturedObjects, viewProjection);
-	player.groupDrawableObjects(objectsToRender, texturedObjects, viewProjection);
+	
+	floor.groupDrawableObjects(objectsToRender, texturedObjects, camera.getFrustum());
+	player.groupDrawableObjects(objectsToRender, texturedObjects, camera.getFrustum());
 
 	const static mat4 offsetMatrix(
 		0.5, 0.0, 0.0, 0.0,

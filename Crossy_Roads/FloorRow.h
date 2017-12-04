@@ -41,7 +41,8 @@ public:
 		std::vector<std::vector<Object*>>& objects,
 
 
-		std::vector<std::vector<TexturedObject*>>& texturedObjects, glm::mat4& viewProjection
+
+		std::vector<std::vector<TexturedObject*>>& texturedObjects, const FrustumG& frustum
 	) override;
 	void renderSimpleObjects(ShaderProgram& program);
 	void renderLightObjects(ShaderProgram& program);

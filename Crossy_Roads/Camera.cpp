@@ -6,6 +6,7 @@ using namespace glm;
 
 void Camera::init(vec3 lightDir, const Player* player) {
 	this->player = player;
+	cam.VRP = vec3(0);
 	cam.d = 20;
 	cam.phi = 0;
 	cam.psi = 10;
@@ -31,6 +32,9 @@ void Camera::init(vec3 lightDir, const Player* player) {
 	lightCam.updatePM();
 	lightCam.updateVM();
 	cameraMode = true;
+
+	mat4 VP = getVPMatrix();
+	frustum.setFrustum(&VP[0][0]);
 }
 
 void Camera::resize(int w, int h) {
@@ -87,6 +91,8 @@ void Camera::update(int deltaTime) {
 void Camera::updateVM() {
 	cam.updateVM();
 	lightCam.updateVM();
+	mat4 VP = getVPMatrix();
+	frustum.setFrustum(&VP[0][0]);
 }
 
 const glm::mat4 * Camera::getProjectionMatrix() const
@@ -111,10 +117,19 @@ glm::vec3 Camera::getPos() const {
 	return cam.VRP;
 }
 
+void Camera::renderFrustum() const {
+	frustum.drawPlanes();
+	//frustum.drawNormals();
+}
+
 void Camera::setPos(vec3 pos) {
 	cam.VRP = pos;
 	lightCam.VRP = pos;
 	lightCam.OBS = pos + lightDir;
+}
+
+const FrustumG & Camera::getFrustum() const {
+	return frustum;
 }
 
 Camera::Camera()
