@@ -31,7 +31,7 @@ private:
 	float rowHeight;
 public:
 	static void initIds(const Assets& assets);
-	void initSafeZone();
+	void initSafeZone(std::vector<IdMesh> map);
 	static void setParameters(glm::vec2 tileSize, glm::uint cols, glm::vec3 lightDir);
 	glm::vec2 getPos() const;
 	void moveToPosition(glm::vec2 position);

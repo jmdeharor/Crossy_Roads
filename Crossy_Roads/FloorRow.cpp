@@ -120,7 +120,7 @@ pair<uint,uint> generateRandomTextureIndex(uint i, uint prevMeshIndex, vector<ui
 	return make_pair(textureIndex, numAdjacentTiles);
 }
 
-void FloorRow::initSafeZone() {
+void FloorRow::initSafeZone(vector<IdMesh> map) {
 	enemies.clear();
 	speeds.clear();
 	floorTiles.resize(cols);
@@ -143,31 +143,26 @@ void FloorRow::initSafeZone() {
 		tile.setCenter(vec3(bbcenter.x, bbcenter.y + height / 2.f, bbcenter.z));
 		tile.setPos(vec3(offsetX + i*realTileSize, rowHeight, pos.y));
 	}
-	IdMesh ids[2];
-	ids[0] = assets->getMeshId("barrel");
-	ids[1] = assets->getMeshId("box");
+	furniture.clear();
+	for (uint i = 0; i < cols; ++i) {
+		if (map[i] == INVALID)
+			continue;
+		furniture.push_back(ShadowedObject());
+		ShadowedObject& object = furniture[furniture.size()-1];
+		IdMesh meshId = map[i];
 
-	if (rand() % 2 == 0) {
-		furniture.resize(rand() % 3 + 1);
+		const Mesh* mesh = assets->getMesh(meshId);
 
-		for (uint i = 0; i < furniture.size(); ++i) {
-			ShadowedObject& object = furniture[i];
-			IdMesh meshId = ids[rand() % 2];
+		vec3 boundingBox = mesh->getbbSize();
+		vec3 objectSize = vec3(realTileSize, 2, tileSize.y) / boundingBox;
 
-			const Mesh* mesh = assets->getMesh(meshId);
-
-			vec3 boundingBox = mesh->getbbSize();
-			vec3 objectSize = vec3(realTileSize, 2, tileSize.y) / boundingBox;
-
-			object.setMesh(meshId, mesh);
-			object.setScale(objectSize);
-			object.setCenterToBaseCenter();
-			vec3 randPos = floorTiles[rand() % cols].getPos();
-			object.setPos(vec3(randPos.x, rowHeight, randPos.z));
-			object.setPlane(vec4(0, 1, 0, -rowHeight), lightDir);
-		}
+		object.setMesh(meshId, mesh);
+		object.setScale(objectSize);
+		object.setCenterToBaseCenter();
+		vec3 pos = floorTiles[i].getPos();
+		object.setPos(vec3(pos.x, rowHeight, pos.z));
+		object.setPlane(vec4(0, 1, 0, -rowHeight), lightDir);
 	}
-	else furniture.clear();
 }
 
 float FloorRow::getHeight() const {

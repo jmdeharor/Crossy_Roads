@@ -15,10 +15,14 @@ class Floor : public GameObject, public ObjectContainer {
 	float firstPos;
 	glm::uint counter;
 	glm::uint length;
+	std::vector<std::vector<IdMesh>> furniture;
 	std::vector<FloorRow> floorRows;
+	std::vector<std::vector<IdMesh>> safeZoneMap;
 	std::vector<glm::uint> textureIndex;
 	FloorType type;
 	glm::vec2 tileSize;
+private:
+	void updateFloorRow(FloorRow& floorRow);
 public:
 	void addLevel();
 	void firstInit() override;
@@ -29,9 +33,6 @@ public:
 		std::vector<std::vector<TexturedObject*>>& texturedObjects,
 		const FrustumG& frustum
 	) override;
-	void renderSimpleObjects(ShaderProgram& program);
-	void renderLightObjects(ShaderProgram& program);
-	void renderShadows(ShaderProgram& program);
 	const FloorRow* getFloorRow(glm::uint index) const;
 	glm::uint getRows() const;
 	glm::vec2 getTileSize();
