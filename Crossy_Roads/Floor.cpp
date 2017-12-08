@@ -26,23 +26,44 @@ inline uint between(uint min, uint max) {
 		return floor;
 }
 
-inline void updateSafeZoneMap(uint size, uint cols, vector<vector<IdMesh>> furniture, vector<vector<IdMesh>>& map) {
-	map.resize(size, vector<IdMesh>(cols, INVALID));
-	vector<vec2> indices(size*cols);
-	for (uint i = 0; i < size; ++i) {
-		for (uint j = 0; j < cols; ++j) {
-			indices[i*cols + j] = vec2(i, j);
-		}
-	}
+inline void updateSafeZoneMap(uint size, uint cols, vector<MeshConfig>& furniture, vector<vector<CellProperties>>& map) {
+	CellProperties aux;
+	aux.mesh = INVALID;
+	map.resize(size, vector<CellProperties>(cols, aux));
+	vector<ivec2> indices;
+	indices.reserve(size*cols);
 
 	uint objects = between(size, size*2);
 
 	for (uint i = 0; i < objects; ++i) {
+
+		MeshConfig& meshConfig = furniture[rand() % furniture.size()];
+
+		for (uint i = 0; i < size-meshConfig.rows+1; ++i) {
+			for (uint j = 0; j < cols-meshConfig.cols+1; ++j) {
+				bool conflict = false;
+				for (uint i1 = 0; i1 < meshConfig.rows && !conflict; ++i1) {
+					for (uint j1 = 0; j1 < meshConfig.cols && !conflict; ++j1) {
+						conflict = map[i + i1][j + j1].mesh != INVALID;
+					}
+				}
+				if (!conflict)
+					indices.push_back(ivec2(i, j));
+			}
+		}
+
 		uint index = rand() % indices.size();
-		vec2 pos = indices[index];
-		indices.erase(indices.begin() + index);
-		IdMesh object = furniture[rand() % furniture.size()][0];
-		map[pos.x][pos.y] = object;
+		ivec2 pos = indices[index];
+
+		for (uint i = 0; i < meshConfig.rows; ++i) {
+			for (uint j = 0; j < meshConfig.cols; ++j) {
+				CellProperties cell;
+				cell.mesh = meshConfig.meshes[i*meshConfig.cols + j];
+				cell.height = meshConfig.height;
+				map[pos.x+i][pos.y+j] = cell;
+			}
+		}
+		indices.clear();
 	}
 }
 
@@ -82,15 +103,30 @@ void Floor::updateFloorRow(FloorRow& floorRow) {
 void Floor::init(vec3 lightDir, const Assets& assets) {
 	GameObject::init();
 
-	deckMesh[0] = assets.getMeshId("cubierta_4");
-	deckMesh[1] = assets.getMeshId("cubierta_1");
-	deckMesh[2] = assets.getMeshId("cubierta_3");
-	deckMesh[3] = assets.getMeshId("cubierta_2");
+	furniture.resize(3);
 
-	furniture.resize(2, vector<IdMesh>(1));
+	MeshConfig configAux;
+	configAux.rows = 1;
+	configAux.cols = 1;
+	configAux.height = 2;
+	configAux.meshes = new IdMesh;
+	*configAux.meshes = assets.getMeshId("box");
+	furniture[0] = configAux;
 
-	furniture[0][0] = assets.getMeshId("box");
-	furniture[1][0] = assets.getMeshId("barrel");
+	configAux.meshes = new IdMesh;
+	*configAux.meshes = assets.getMeshId("barrel");
+	furniture[1] = configAux;
+
+	configAux.rows = 2;
+	configAux.cols = 2;
+	configAux.height = 0.5f;
+	configAux.meshes = new IdMesh[4];
+	configAux.meshes[0] = assets.getMeshId("cubierta_4");
+	configAux.meshes[1] = assets.getMeshId("cubierta_1");
+	configAux.meshes[2] = assets.getMeshId("cubierta_3");
+	configAux.meshes[3] = assets.getMeshId("cubierta_2");
+	furniture[2] = configAux;
+	configAux.meshes = NULL;
 
 	FloorRow::initIds(assets);
 	FloorRow::setParameters(tileSize, cols, lightDir);

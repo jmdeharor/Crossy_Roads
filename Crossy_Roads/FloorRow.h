@@ -6,6 +6,11 @@
 #include "TexturedObject.h"
 #include "ObjectContainer.h"
 
+struct CellProperties {
+	IdMesh mesh;
+	float height;
+};
+
 enum FloorType {
 	Road,
 	Safe
@@ -31,7 +36,7 @@ private:
 	float rowHeight;
 public:
 	static void initIds(const Assets& assets);
-	void initSafeZone(std::vector<IdMesh> map);
+	void initSafeZone(std::vector<CellProperties> map);
 	static void setParameters(glm::vec2 tileSize, glm::uint cols, glm::vec3 lightDir);
 	glm::vec2 getPos() const;
 	void moveToPosition(glm::vec2 position);

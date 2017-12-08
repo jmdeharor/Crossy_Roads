@@ -8,6 +8,16 @@
 #include "ObjectContainer.h"
 #include "FrustumG.h"
 
+struct MeshConfig {
+	glm::uint rows, cols;
+	float height;
+	IdMesh* meshes;
+
+	~MeshConfig() {
+		delete meshes;
+	}
+};
+
 class Floor : public GameObject, public ObjectContainer {
 	glm::uint rows, cols;
 	glm::uint lastRow;
@@ -15,9 +25,9 @@ class Floor : public GameObject, public ObjectContainer {
 	float firstPos;
 	glm::uint counter;
 	glm::uint length;
-	std::vector<std::vector<IdMesh>> furniture;
+	std::vector<MeshConfig> furniture;
 	std::vector<FloorRow> floorRows;
-	std::vector<std::vector<IdMesh>> safeZoneMap;
+	std::vector<std::vector<CellProperties>> safeZoneMap;
 	std::vector<glm::uint> textureIndex;
 	FloorType type;
 	glm::vec2 tileSize;

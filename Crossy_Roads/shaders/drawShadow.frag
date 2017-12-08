@@ -39,6 +39,6 @@ void main(){
 		float diffuse = max(0, dot(N,lightDir));
 		float finalFactor = min(diffuse, storedDepth);
 		vec4 color = texture(tex, fragTexCoord);
-		outColor = mix(0.5, 1, finalFactor)*color;
+		outColor = mix(0.5, 1, finalFactor)*color; //+ 0.1*abs(dot(N,lightDir))*color;
 	}
 }
