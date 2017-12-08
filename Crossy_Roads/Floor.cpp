@@ -51,6 +51,8 @@ inline void updateSafeZoneMap(uint size, uint cols, vector<MeshConfig>& furnitur
 					indices.push_back(ivec2(i, j));
 			}
 		}
+		if (indices.size() == 0)
+			continue;
 
 		uint index = rand() % indices.size();
 		ivec2 pos = indices[index];

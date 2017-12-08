@@ -12,7 +12,6 @@ private:
 	glm::mat4 VP;
 	glm::mat4 VPLight;
 	OBSOrthoCamera uiCam, lightCam;
-	bool cameraMode;
 	FrustumG frustum;
 private:
 	void cameraControl();

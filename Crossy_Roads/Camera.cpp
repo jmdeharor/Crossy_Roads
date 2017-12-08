@@ -29,7 +29,6 @@ void Camera::init(vec3 lightDir, const Player* player) {
 	lightCam.zNear = 0.01f;
 	lightCam.zFar = 100;
 	lightCam.updatePM();
-	cameraMode = true;
 
 	updateVM();
 }
@@ -40,12 +39,6 @@ void Camera::resize(int w, int h) {
 }
 
 inline void Camera::cameraControl() {
-	if (Game::instance().getKey('l')) {
-		cameraMode = false;
-	}
-	else if (Game::instance().getKey('k')) {
-		cameraMode = true;
-	}
 	if (Game::instance().getSpecialKey(GLUT_KEY_LEFT)) {
 		cam.psi += 0.1f;
 		updateVM();

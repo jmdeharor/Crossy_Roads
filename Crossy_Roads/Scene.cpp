@@ -156,7 +156,7 @@ void Scene::init() {
 }
 
 void Scene::update(int deltaTime) {
-
+	QueryPerformanceCounter(&start);
 	camera.update(deltaTime);
 	floor.update(deltaTime);
 	PlayerReturn playerAction;
@@ -181,9 +181,6 @@ void Scene::update(int deltaTime) {
 }
 
 void Scene::render() {
-	LARGE_INTEGER start, end;
-	QueryPerformanceCounter(&start);
-
 	const mat4& viewProjection = *camera.getVPMatrix();
 	const mat4& lightViewProjection = *camera.getVPLightMatrix();
 

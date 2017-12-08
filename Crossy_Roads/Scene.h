@@ -43,6 +43,7 @@ private:
 	void initShaders();
 
 private:
+	LARGE_INTEGER start, end;
 	LARGE_INTEGER frequency;
 	glm::uint depthVPLoc1, depthVPLoc2, VPLoc;
 
