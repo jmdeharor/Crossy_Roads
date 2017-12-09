@@ -37,9 +37,8 @@ void main(){
 	}
 	else {
 		float diffuse = max(0, dot(N,lightDir));
-		//float finalFactor = 0.3*diffuse + 0.7*storedDepth;
 		float finalFactor = min(diffuse, storedDepth);
 		vec4 color = texture(tex, fragTexCoord);
-		outColor = mix(0.5, 1, finalFactor)*color;
+		outColor = mix(0.5, 1, finalFactor)*color; //+ 0.1*abs(dot(N,lightDir))*color;
 	}
 }

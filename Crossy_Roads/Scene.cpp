@@ -76,6 +76,9 @@ void Scene::firstInit() {
 	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
 		cout << "Error with frame buffer" << endl;
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	glActiveTexture(GL_TEXTURE1);
+	glBindTexture(GL_TEXTURE_2D, depthTexture);
+	glActiveTexture(GL_TEXTURE0);
 }
 
 inline void compileShader(ShaderProgram& program, const string& fileName) {
@@ -206,19 +209,6 @@ void Scene::render() {
 		}
 	}
 
-	const Mesh* mesh = assets.getCubeMesh();
-	mesh->setProgramParams(shadowMapProgram);
-	for (uint i = 0; i < texturedObjects.size(); ++i) {
-		vector<TexturedObject*>& objects = texturedObjects[i];
-		const Texture* tex = assets.getTexture(i);
-		tex->use();
-		for (uint j = 0; j < objects.size(); ++j) {
-			Object* object = objects[j];
-			shadowMapProgram.setUniformMatrix4f(modelLoc, *object->getModel());
-			mesh->render(shadowMapProgram);
-		}
-	}
-
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
 	const static mat4 offsetMatrix(
@@ -228,9 +218,6 @@ void Scene::render() {
 		0.5, 0.5, 0.5, 1.0
 	);
 	glViewport(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-	glActiveTexture(GL_TEXTURE1);
-	glBindTexture(GL_TEXTURE_2D, depthTexture);
-	glActiveTexture(GL_TEXTURE0);
 	drawShadowProgram.use();
 	drawShadowProgram.setUniformMatrix4f(depthVPLoc, offsetMatrix*lightViewProjection);
 	drawShadowProgram.setUniformMatrix4f(VPLoc, viewProjection);
@@ -248,21 +235,7 @@ void Scene::render() {
 		objects.clear();
 	}
 
-	mesh = assets.getCubeMesh();
-	mesh->setProgramParams(drawShadowProgram);
-	for (uint i = 0; i < texturedObjects.size(); ++i) {
-		vector<TexturedObject*>& objects = texturedObjects[i];
-		const Texture* tex = assets.getTexture(i);
-		tex->use();
-		for (uint j = 0; j < objects.size(); ++j) {
-			Object* object = objects[j];
-			drawShadowProgram.setUniformMatrix4f(modelLoc, *object->getModel());
-			mesh->render(drawShadowProgram);
-		}
-		objects.clear();
-	}
-
-	/*texProgram.use();
+	texProgram.use();
 	texProgram.setUniformMatrix4f(projectionLoc, *camera.getProjectionMatrix());
 	texProgram.setUniformMatrix4f(viewLoc, *camera.getViewMatrix());
 
@@ -304,7 +277,7 @@ void Scene::render() {
 
 	glDisable(GL_STENCIL_TEST);
 	glDisable(GL_BLEND);
-	glDisable(GL_POLYGON_OFFSET_FILL);*/
+	glDisable(GL_POLYGON_OFFSET_FILL);
 
 	QueryPerformanceCounter(&end);
 	LARGE_INTEGER elapsed;
