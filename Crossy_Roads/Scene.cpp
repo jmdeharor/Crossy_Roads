@@ -148,10 +148,9 @@ void Scene::init() {
 	texProgram.setUniform3f("lightDir", lightDir.x, lightDir.y, lightDir.z);
 
 	floor.init(lightDir, assets);
-	camera.init(lightDir, &player);
 	player.init(assets, lightDir, vec3(0), floor.getTileSize().y, floor);
+	camera.init(lightDir, &player);
 	
-	camera.setPos(player.getPos());
 	camera.updateVM();
 }
 

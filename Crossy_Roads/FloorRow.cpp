@@ -135,7 +135,6 @@ void FloorRow::initSafeZone(vector<CellProperties>& map) {
 	static vec3 floorTileSize = vec3(realTileSize, 0.2f, tileSize.y) / boundingBox;
 
 	for (uint i = 0; i < floorTiles.size(); ++i) {
-
 		TexturedObject& tile = floorTiles[i];
 		tile.texture = planeWood;
 		tile.setMesh(cubeMesh);

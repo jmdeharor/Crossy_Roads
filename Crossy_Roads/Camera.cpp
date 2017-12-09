@@ -4,13 +4,15 @@
 #include "Pi.h"
 using namespace glm;
 
+const float playerOffset = 5;
+
 void Camera::init(vec3 lightDir, const Player* player) {
 	this->player = player;
-	cam.VRP = vec3(0);
-	cam.d = 20;
+	cam.VRP = player->getPos() + vec3(0, 0, playerOffset);
+	cam.d = 24;
 	cam.phi = 0;
-	cam.psi = 10;
-	cam.theta = -5.5f;
+	cam.psi = 9.6f;
+	cam.theta = -5.4f;
 	cam.ra = float(CAMERA_WIDTH) / float(CAMERA_HEIGHT);
 	cam.setFOV(45.f / 180.f * PI);
 	cam.zNear = 0.1f;
@@ -19,8 +21,8 @@ void Camera::init(vec3 lightDir, const Player* player) {
 
 	this->lightDir = lightDir*25.f;
 
-	lightCam.OBS = this->lightDir;
-	lightCam.VRP = vec3(0);
+	lightCam.VRP = cam.VRP;
+	lightCam.OBS = cam.VRP + lightDir;
 	lightCam.UP = vec3(0, 1, 0);
 	lightCam.left = -30;
 	lightCam.right = 11.5f;
@@ -68,14 +70,26 @@ inline void Camera::cameraControl() {
 void Camera::update(int deltaTime) {
 	cameraControl();
 	vec3 playerPos = player->getPos();
-	if (distance(playerPos, cam.VRP) > 0.1f) {
-		vec3 diff = playerPos - cam.VRP;
-		vec3 absD = abs(diff);
-		cam.VRP += diff*0.03f;
-		lightCam.VRP = cam.VRP;
-		lightCam.OBS = cam.VRP + lightDir;
-		updateVM();
-	}
+	playerPos.z += playerOffset;
+
+	vec2 vel(0);
+
+	if (playerPos.z-cam.VRP.z > 0.5f)
+		vel.y = (playerPos.z - cam.VRP.z)*0.03f;
+	else
+		vel.y = 0.01f;
+	if (playerPos.x > 5.f)
+		vel.x = (5.f - cam.VRP.x)*0.03f;
+	else if (playerPos.x < -5.f)
+		vel.x = (-5.f - cam.VRP.x)*0.03f;
+	else
+		vel.x = (playerPos.x - cam.VRP.x)*0.03f;
+
+	cam.VRP.x += vel.x;
+	cam.VRP.z += vel.y;
+	lightCam.VRP = cam.VRP;
+	lightCam.OBS = cam.VRP + lightDir;
+	updateVM();
 }
 
 void Camera::updateVM() {
@@ -109,12 +123,6 @@ glm::vec3 Camera::getPos() const {
 void Camera::renderFrustum() const {
 	frustum.drawPlanes();
 	//frustum.drawNormals();
-}
-
-void Camera::setPos(vec3 pos) {
-	cam.VRP = pos;
-	lightCam.VRP = pos;
-	lightCam.OBS = pos + lightDir;
 }
 
 const FrustumG & Camera::getFrustum() const {

@@ -26,7 +26,6 @@ public:
 	const glm::mat4* getVPMatrix() const;
 	glm::vec3 getPos() const;
 	void renderFrustum() const;
-	void setPos(glm::vec3 pos);
 	const FrustumG& getFrustum() const;
 	Camera();
 	~Camera();

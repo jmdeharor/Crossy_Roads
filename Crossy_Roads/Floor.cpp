@@ -13,7 +13,7 @@ Floor::~Floor()
 void Floor::firstInit() {
 	tileSize = vec2(58, 2);
 	rows = 40;
-	cols = (uint)tileSize.x/2;
+	cols = (uint)tileSize.x/(uint)tileSize.y;
 	floorRows.resize(rows);
 }
 
@@ -61,7 +61,6 @@ inline void updateSafeZoneMap(uint size, uint cols, vector<MeshConfig>& furnitur
 			for (uint j = 0; j < meshConfig.cols; ++j) {
 				CellProperties cell;
 				cell.mesh = INVALID;
-				//cell.mesh = meshConfig.mesh;
 				cell.height = meshConfig.height;
 				map[pos.x+i][pos.y+j] = cell;
 			}
@@ -139,7 +138,7 @@ void Floor::init(vec3 lightDir, const Assets& assets) {
 	length = 0;
 	counter = length;
 	for (uint i = 0; i < rows; ++i) {
-		floorRows[i].setPos(vec2(0, offsetZ + i*tileSize.y));
+		floorRows[i].setPos(vec2(3.f*realTileSize, offsetZ + i*tileSize.y));
 		updateFloorRow(floorRows[i]);
 	}
 	lastRow = 0;
