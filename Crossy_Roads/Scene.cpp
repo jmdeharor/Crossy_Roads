@@ -76,6 +76,9 @@ void Scene::firstInit() {
 	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
 		cout << "Error with frame buffer" << endl;
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	glActiveTexture(GL_TEXTURE1);
+	glBindTexture(GL_TEXTURE_2D, depthTexture);
+	glActiveTexture(GL_TEXTURE0);
 }
 
 inline void compileShader(ShaderProgram& program, const string& fileName) {
@@ -122,10 +125,10 @@ void Scene::initShaders() {
 	compileShader(simple, "simple");
 	simple.bindFragmentOutput("outColor");
 
-	depthVPLoc1 = shadowMapProgram.addUniform("depthVP");
-	VPLoc = drawShadowProgram.addUniform("VP");
+	depthVPLoc = shadowMapProgram.addUniform("depthVP");
 
-	depthVPLoc2 = drawShadowProgram.addUniform("depthVP");
+	drawShadowProgram.addUniform("depthVP");
+	VPLoc = drawShadowProgram.addUniform("VP");
 
 	drawShadowProgram.use();
 	drawShadowProgram.setUniformi("tex", 0);
@@ -193,7 +196,7 @@ void Scene::render() {
 	shadowMapProgram.use();
 	glBindFramebuffer(GL_FRAMEBUFFER, framebufferName);
 	glClear(GL_DEPTH_BUFFER_BIT);
-	shadowMapProgram.setUniformMatrix4f(depthVPLoc1, lightViewProjection);
+	shadowMapProgram.setUniformMatrix4f(depthVPLoc, lightViewProjection);
 
 	for (uint i = 0; i < objectsToRender.size(); ++i) {
 		vector<Object*>& objects = objectsToRender[i];
@@ -215,11 +218,8 @@ void Scene::render() {
 		0.5, 0.5, 0.5, 1.0
 	);
 	glViewport(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-	glActiveTexture(GL_TEXTURE1);
-	glBindTexture(GL_TEXTURE_2D, depthTexture);
-	glActiveTexture(GL_TEXTURE0);
 	drawShadowProgram.use();
-	drawShadowProgram.setUniformMatrix4f(depthVPLoc2, offsetMatrix*lightViewProjection);
+	drawShadowProgram.setUniformMatrix4f(depthVPLoc, offsetMatrix*lightViewProjection);
 	drawShadowProgram.setUniformMatrix4f(VPLoc, viewProjection);
 
 	for (uint i = 0; i < objectsToRender.size(); ++i) {

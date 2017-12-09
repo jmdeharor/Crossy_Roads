@@ -24,11 +24,11 @@ void Camera::init(vec3 lightDir, const Player* player) {
 	lightCam.VRP = cam.VRP;
 	lightCam.OBS = cam.VRP + lightDir;
 	lightCam.UP = vec3(0, 1, 0);
-	lightCam.left = -30;
-	lightCam.right = 11.5f;
-	lightCam.bottom = -21.5f;
-	lightCam.top = 9;
-	lightCam.zNear = 0.01f;
+	lightCam.left = -22.5f;
+	lightCam.right = 11.6;
+	lightCam.bottom = -16.5;
+	lightCam.top = 11.6f;
+	lightCam.zNear = 0;
 	lightCam.zFar = 100;
 	lightCam.updatePM();
 

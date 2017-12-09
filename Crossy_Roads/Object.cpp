@@ -112,9 +112,7 @@ void Object::render(ShaderProgram & program) {
 	if (modified)
 		updateModel();
 	program.setUniformMatrix4f((uint)UniformLocation::modelLoc, model);
-	program.setUniformMatrix3f((uint)UniformLocation::normalMatrixLoc, mat3(model));
 	//program.setUniformMatrix4f("model", model);
-	//program.setUniformMatrix3f("normalMatrix", mat3(model));
 	//mesh->render(program);
 }
 
