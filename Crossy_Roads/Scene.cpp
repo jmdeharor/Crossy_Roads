@@ -232,7 +232,6 @@ void Scene::render() {
 			drawShadowProgram.setUniformMatrix4f(modelLoc, *object->getModel());
 			mesh->render(drawShadowProgram);
 		}
-		objects.clear();
 	}
 
 	texProgram.use();
