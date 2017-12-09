@@ -18,7 +18,7 @@ Scene::~Scene() {
 const string meshNames[] = { 
 	"pirate", "pirate_2",
 	"barrel", "box",
-	"cubierta_1", "cubierta_2", "cubierta_3", "cubierta_4"
+	"cubierta"
 };
 
 const string textureNames[] = { 

@@ -7,8 +7,9 @@
 #include "ObjectContainer.h"
 
 struct CellProperties {
-	IdMesh mesh;
+	glm::uint rows, cols;
 	float height;
+	IdMesh mesh;
 };
 
 enum FloorType {
@@ -36,7 +37,7 @@ private:
 	float rowHeight;
 public:
 	static void initIds(const Assets& assets);
-	void initSafeZone(std::vector<CellProperties> map);
+	void initSafeZone(std::vector<CellProperties>& map);
 	static void setParameters(glm::vec2 tileSize, glm::uint cols, glm::vec3 lightDir);
 	glm::vec2 getPos() const;
 	void moveToPosition(glm::vec2 position);
@@ -45,10 +46,8 @@ public:
 	void update(int deltaTime);
 	void groupDrawableObjects(
 		std::vector<std::vector<Object*>>& objects,
-
-
-
-		std::vector<std::vector<TexturedObject*>>& texturedObjects, const FrustumG& frustum
+		std::vector<std::vector<TexturedObject*>>& texturedObjects,
+		const FrustumG& frustum
 	) override;
 	void renderSimpleObjects(ShaderProgram& program);
 	void renderLightObjects(ShaderProgram& program);

@@ -11,11 +11,7 @@
 struct MeshConfig {
 	glm::uint rows, cols;
 	float height;
-	IdMesh* meshes;
-
-	~MeshConfig() {
-		delete meshes;
-	}
+	IdMesh mesh;
 };
 
 class Floor : public GameObject, public ObjectContainer {
