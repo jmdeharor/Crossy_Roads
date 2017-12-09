@@ -45,7 +45,7 @@ private:
 private:
 	LARGE_INTEGER start, end;
 	LARGE_INTEGER frequency;
-	glm::uint depthVPLoc1, depthVPLoc2, VPLoc;
+	glm::uint depthVPLoc, VPLoc;
 
 	std::vector<std::vector<Object*>> objectsToRender;
 	std::vector<std::vector<TexturedObject*>> texturedObjects;

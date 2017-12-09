@@ -122,10 +122,10 @@ void Scene::initShaders() {
 	compileShader(simple, "simple");
 	simple.bindFragmentOutput("outColor");
 
-	depthVPLoc1 = shadowMapProgram.addUniform("depthVP");
-	VPLoc = drawShadowProgram.addUniform("VP");
+	depthVPLoc = shadowMapProgram.addUniform("depthVP");
 
-	depthVPLoc2 = drawShadowProgram.addUniform("depthVP");
+	drawShadowProgram.addUniform("depthVP");
+	VPLoc = drawShadowProgram.addUniform("VP");
 
 	drawShadowProgram.use();
 	drawShadowProgram.setUniformi("tex", 0);
@@ -193,12 +193,25 @@ void Scene::render() {
 	shadowMapProgram.use();
 	glBindFramebuffer(GL_FRAMEBUFFER, framebufferName);
 	glClear(GL_DEPTH_BUFFER_BIT);
-	shadowMapProgram.setUniformMatrix4f(depthVPLoc1, lightViewProjection);
+	shadowMapProgram.setUniformMatrix4f(depthVPLoc, lightViewProjection);
 
 	for (uint i = 0; i < objectsToRender.size(); ++i) {
 		vector<Object*>& objects = objectsToRender[i];
 		const Mesh* mesh = assets.getMesh(i);
 		mesh->setProgramParams(shadowMapProgram);
+		for (uint j = 0; j < objects.size(); ++j) {
+			Object* object = objects[j];
+			shadowMapProgram.setUniformMatrix4f(modelLoc, *object->getModel());
+			mesh->render(shadowMapProgram);
+		}
+	}
+
+	const Mesh* mesh = assets.getCubeMesh();
+	mesh->setProgramParams(shadowMapProgram);
+	for (uint i = 0; i < texturedObjects.size(); ++i) {
+		vector<TexturedObject*>& objects = texturedObjects[i];
+		const Texture* tex = assets.getTexture(i);
+		tex->use();
 		for (uint j = 0; j < objects.size(); ++j) {
 			Object* object = objects[j];
 			shadowMapProgram.setUniformMatrix4f(modelLoc, *object->getModel());
@@ -219,7 +232,7 @@ void Scene::render() {
 	glBindTexture(GL_TEXTURE_2D, depthTexture);
 	glActiveTexture(GL_TEXTURE0);
 	drawShadowProgram.use();
-	drawShadowProgram.setUniformMatrix4f(depthVPLoc2, offsetMatrix*lightViewProjection);
+	drawShadowProgram.setUniformMatrix4f(depthVPLoc, offsetMatrix*lightViewProjection);
 	drawShadowProgram.setUniformMatrix4f(VPLoc, viewProjection);
 
 	for (uint i = 0; i < objectsToRender.size(); ++i) {
@@ -232,9 +245,24 @@ void Scene::render() {
 			drawShadowProgram.setUniformMatrix4f(modelLoc, *object->getModel());
 			mesh->render(drawShadowProgram);
 		}
+		objects.clear();
 	}
 
-	texProgram.use();
+	mesh = assets.getCubeMesh();
+	mesh->setProgramParams(drawShadowProgram);
+	for (uint i = 0; i < texturedObjects.size(); ++i) {
+		vector<TexturedObject*>& objects = texturedObjects[i];
+		const Texture* tex = assets.getTexture(i);
+		tex->use();
+		for (uint j = 0; j < objects.size(); ++j) {
+			Object* object = objects[j];
+			drawShadowProgram.setUniformMatrix4f(modelLoc, *object->getModel());
+			mesh->render(drawShadowProgram);
+		}
+		objects.clear();
+	}
+
+	/*texProgram.use();
 	texProgram.setUniformMatrix4f(projectionLoc, *camera.getProjectionMatrix());
 	texProgram.setUniformMatrix4f(viewLoc, *camera.getViewMatrix());
 
@@ -276,7 +304,7 @@ void Scene::render() {
 
 	glDisable(GL_STENCIL_TEST);
 	glDisable(GL_BLEND);
-	glDisable(GL_POLYGON_OFFSET_FILL);
+	glDisable(GL_POLYGON_OFFSET_FILL);*/
 
 	QueryPerformanceCounter(&end);
 	LARGE_INTEGER elapsed;
