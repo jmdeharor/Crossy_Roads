@@ -162,7 +162,7 @@ void FloorRow::initSafeZone(vector<CellProperties>& map) {
 		object.setScale(objectSize);
 		object.setCenterToBaseCenter();
 		vec3 pos = floorTiles[i].getPos();
-		object.setPos(vec3(pos.x - (realTileSize*(map[i].cols/2.f)) + realTileSize/2, rowHeight, pos.z - tileSize.y*(map[i].cols / 2.f) + tileSize.y/2));
+		object.setPos(vec3(pos.x + (realTileSize*(map[i].cols/2.f)) - realTileSize/2, rowHeight, pos.z - tileSize.y*(map[i].cols / 2.f) + tileSize.y/2));
 		object.setPlane(vec4(0, 1, 0, -rowHeight), lightDir);
 	}
 }

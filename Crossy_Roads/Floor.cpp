@@ -39,8 +39,8 @@ inline void updateSafeZoneMap(uint size, uint cols, vector<MeshConfig>& furnitur
 
 		MeshConfig& meshConfig = furniture[rand() % furniture.size()];
 
-		for (uint i = 0; i < size-meshConfig.rows+1; ++i) {
-			for (uint j = 0; j < cols-meshConfig.cols+1; ++j) {
+		for (int i = 0; i < (int)size-(int)meshConfig.rows+1; ++i) {
+			for (int j = 0; j < (int)cols-(int)meshConfig.cols+1; ++j) {
 				bool conflict = false;
 				for (uint i1 = 0; i1 < meshConfig.rows && !conflict; ++i1) {
 					for (uint j1 = 0; j1 < meshConfig.cols && !conflict; ++j1) {
@@ -61,6 +61,7 @@ inline void updateSafeZoneMap(uint size, uint cols, vector<MeshConfig>& furnitur
 			for (uint j = 0; j < meshConfig.cols; ++j) {
 				CellProperties cell;
 				cell.mesh = INVALID;
+				//cell.mesh = meshConfig.mesh;
 				cell.height = meshConfig.height;
 				map[pos.x+i][pos.y+j] = cell;
 			}
@@ -120,8 +121,8 @@ void Floor::init(vec3 lightDir, const Assets& assets) {
 	configAux.mesh = assets.getMeshId("barrel");
 	furniture[1] = configAux;
 
-	configAux.rows = 2;
-	configAux.cols = 2;
+	configAux.rows = 3;
+	configAux.cols = 3;
 	configAux.height = 0.5f;
 	configAux.mesh = assets.getMeshId("cubierta");
 	furniture[2] = configAux;
