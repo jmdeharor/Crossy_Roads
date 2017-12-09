@@ -72,6 +72,23 @@ bool Object::isInsideViewFrustrum(const FrustumG& frustum) {
 	return frustum.boxInFrustum(box) != FrustumG::OUTSIDE;
 }
 
+bool Object::collidesWith(Object& otherObject) {
+	const vec3* bbox1 = mesh->getbb();
+	const vec3* bbox2 = otherObject.mesh->getbb();
+	if (modified)
+		updateModel();
+	if (otherObject.modified)
+		otherObject.updateModel();
+	vec3 mins1 = vec3(model*vec4(bbox1[0], 1));
+	vec3 maxs1 = vec3(model*vec4(bbox1[1], 1));
+	vec3 mins2 = vec3(otherObject.model*vec4(bbox2[0], 1));
+	vec3 maxs2 = vec3(otherObject.model*vec4(bbox2[1], 1));
+
+	return (mins1[0] <= maxs2[0] && maxs1[0] >= mins2[0]) &&
+		(mins1[1] <= maxs2[1] && maxs1[1] >= mins2[1]) &&
+		(mins1[2] <= maxs2[2] && maxs1[2] >= mins2[2]);
+}
+
 uint Object::getTriangles() const {
 	return 0;//mesh->totalTriangles;
 }

@@ -42,6 +42,10 @@ void Player::init(const Assets& assets, vec3 lightDir, vec3 offset, float jumpDi
 
 PlayerReturn Player::update(int deltaTime) {
 	PlayerReturn ret = PlayerReturn::NOTHING;
+	if (collides()) {
+		playerObject.rotateZ(PI);
+		return ret;
+	}
 	if (inMovement) {
 		if (!keepMoving()) {
 			currentFrame = 0;
@@ -244,8 +248,18 @@ float Player::getJumpingSpeed(float y0, float y, uint frames) {
 }
 
 bool Player::collides() {
+	bool collision = false;
 	const FloorRow* currentRow = floor->getFloorRow(currentRowIndex);
 	const vector<ShadowedObject>* rowEnemies = currentRow->getEnemies();
+	for (int i = 0; i < rowEnemies->size() && !collision; ++i) {
+		
+		if (playerObject.collidesWith((Object)(*rowEnemies)[i])) {
+			collision = true;
+		}
+	}
+
+	return collision;
+
 }
 
 Player::Player(){

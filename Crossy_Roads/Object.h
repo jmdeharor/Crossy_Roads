@@ -18,6 +18,7 @@ public:
 
 public:
 	bool isInsideViewFrustrum(const FrustumG& frustum);
+	bool collidesWith(Object& otherObject);
 	glm::uint getTriangles() const;
 	string name;
 	void setCenter(glm::vec3 newCenter);
