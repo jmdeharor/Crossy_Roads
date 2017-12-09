@@ -281,7 +281,7 @@ void FloorRow::renderShadows(ShaderProgram & program) {
 	}
 }
 
-const vector<ShadowedObject>* FloorRow::getEnemies() const {
+vector<ShadowedObject>* FloorRow::getEnemies() {
 	return &enemies;
 }
 

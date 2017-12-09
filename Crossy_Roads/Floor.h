@@ -39,7 +39,7 @@ public:
 		std::vector<std::vector<TexturedObject*>>& texturedObjects,
 		const FrustumG& frustum
 	) override;
-	const FloorRow* getFloorRow(glm::uint index) const;
+	FloorRow* getFloorRow(glm::uint index);
 	glm::uint getRows() const;
 	glm::vec2 getTileSize();
 	Floor();

@@ -23,7 +23,7 @@ class Player : public GameObject, public ObjectContainer {
 	ShadowedObject playerObject;
 	void firstInit() override;
 private:
-	bool wPressed, aPressed, sPressed, dPressed;
+	bool wPressed, aPressed, sPressed, dPressed, bPressed;
 	bool inMovement;
 	float speed, verticalSpeed, gravity;
 	float currentVerticalSpeed;
@@ -32,9 +32,10 @@ private:
 	glm::uint currentFrame;
 	glm::vec3 directionVector;
 	Orientation currentOrientation;
-	const Floor *floor;
+	Floor *floor;
 	glm::uint currentRowIndex;
 	glm::vec3 lightDir;
+	bool upsideDown;
 
 
 	void setDirectionVector();
@@ -46,13 +47,10 @@ private:
 public:
 	void groupDrawableObjects(
 		std::vector<std::vector<Object*>>& objects,
-
-
-
 		std::vector<std::vector<TexturedObject*>>& texturedObjects, const FrustumG& frustum
 	) override;
 	void jump();
-	void init(const Assets& assets, glm::vec3 lightDir, glm::vec3 offset, float jumpDistance, const Floor &floor);
+	void init(const Assets& assets, glm::vec3 lightDir, glm::vec3 offset, float jumpDistance, Floor &floor);
 	PlayerReturn update(int deltaTime);
 	void render(ShaderProgram& program);
 	void renderShadow(ShaderProgram& program);

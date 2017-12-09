@@ -17,7 +17,7 @@ void Player::groupDrawableObjects(std::vector<std::vector<Object*>>& objects, st
 void Player::jump() {
 }
 
-void Player::init(const Assets& assets, vec3 lightDir, vec3 offset, float jumpDistance, const Floor &floor) {
+void Player::init(const Assets& assets, vec3 lightDir, vec3 offset, float jumpDistance, Floor &floor) {
 	GameObject::init();
 	this->lightDir = lightDir;
 	this->floor = &floor;
@@ -28,7 +28,7 @@ void Player::init(const Assets& assets, vec3 lightDir, vec3 offset, float jumpDi
 	playerObject.setCenterToBaseCenter();
 	playerObject.setPos(vec3(0));
 	playerObject.setPlane(vec4(0, 1, 0, 0), lightDir);
-	wPressed = aPressed = sPressed = dPressed = false;
+	wPressed = aPressed = sPressed = dPressed = bPressed = false;
 	currentOrientation = FRONT;
 	directionVector = vec3(0, 0, 1.f);
 	inMovement = false;
@@ -38,12 +38,14 @@ void Player::init(const Assets& assets, vec3 lightDir, vec3 offset, float jumpDi
 	testJump = 0;
 	currentFrame = 0;
 	currentRowIndex = floor.getRows()/2;
+	upsideDown = false;
 }
 
 PlayerReturn Player::update(int deltaTime) {
 	PlayerReturn ret = PlayerReturn::NOTHING;
-	if (collides()) {
+	if (!upsideDown && collides()) {
 		playerObject.rotateZ(PI);
+		upsideDown = true;
 		return ret;
 	}
 	if (inMovement) {
@@ -114,6 +116,17 @@ PlayerReturn Player::update(int deltaTime) {
 		}
 		else
 			sPressed = false;
+		//THIS IS THE DEBUG KEY AND WILL BE DELETED BEFORE DELIVERING
+		//USE IT TO TEST STUFF ON THE PLAYER
+		if (Game::instance().getKey('b')) {
+			if (!bPressed) {
+				bPressed = true;
+				playerObject.rotateZ(PI);
+				upsideDown = false;
+			}
+		}
+		else
+			bPressed = false;
 	}
 	return ret;
 }
@@ -249,15 +262,11 @@ float Player::getJumpingSpeed(float y0, float y, uint frames) {
 
 bool Player::collides() {
 	bool collision = false;
-	const FloorRow* currentRow = floor->getFloorRow(currentRowIndex);
-	const vector<ShadowedObject>* rowEnemies = currentRow->getEnemies();
+	FloorRow* currentRow = floor->getFloorRow(currentRowIndex);
+	vector<ShadowedObject>* rowEnemies = currentRow->getEnemies();
 	for (int i = 0; i < rowEnemies->size() && !collision; ++i) {
-		
-		if (playerObject.collidesWith((Object)(*rowEnemies)[i])) {
-			collision = true;
-		}
+		collision = playerObject.collidesWith((*rowEnemies)[i]);
 	}
-
 	return collision;
 
 }

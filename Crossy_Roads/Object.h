@@ -40,6 +40,8 @@ public:
 	void setMesh(const Mesh* mesh);
 	glm::vec3 getPos() const;
 	float getHeight() const;
+	glm::vec3 getMin();
+	glm::vec3 getMax();
 
 	Object();
 	virtual ~Object();

@@ -72,17 +72,43 @@ bool Object::isInsideViewFrustrum(const FrustumG& frustum) {
 	return frustum.boxInFrustum(box) != FrustumG::OUTSIDE;
 }
 
+vec3 Object::getMin() {
+	const vec3* bbox = mesh->getbb();
+	vec3 min = vec3(model*vec4(bbox[0], 1));
+	vec3 aux;
+	for (int i = 1; i < 8; ++i) {
+		aux = vec3(model*vec4(bbox[i], 1));
+		if (aux[0] < min[0]) min[0] = aux[0];
+		if (aux[1] < min[1]) min[1] = aux[1];
+		if (aux[2] < min[2]) min[2] = aux[2];
+	}
+	return min;
+}
+
+vec3 Object::getMax() {
+	const vec3* bbox = mesh->getbb();
+	vec3 max = vec3(model*vec4(bbox[0], 1));
+	vec3 aux;
+	for (int i = 1; i < 8; ++i) {
+		aux = vec3(model*vec4(bbox[i], 1));
+		if (aux[0] > max[0]) max[0] = aux[0];
+		if (aux[1] > max[1]) max[1] = aux[1];
+		if (aux[2] > max[2]) max[2] = aux[2];
+	}
+	return max;
+}
+
 bool Object::collidesWith(Object& otherObject) {
 	const vec3* bbox1 = mesh->getbb();
 	const vec3* bbox2 = otherObject.mesh->getbb();
-	if (modified)
+	//if (modified)
 		updateModel();
-	if (otherObject.modified)
+	//if (otherObject.modified)
 		otherObject.updateModel();
-	vec3 mins1 = vec3(model*vec4(bbox1[0], 1));
-	vec3 maxs1 = vec3(model*vec4(bbox1[1], 1));
-	vec3 mins2 = vec3(otherObject.model*vec4(bbox2[0], 1));
-	vec3 maxs2 = vec3(otherObject.model*vec4(bbox2[1], 1));
+	vec3 mins1 = getMin();
+	vec3 maxs1 = getMax();
+	vec3 mins2 = otherObject.getMin();
+	vec3 maxs2 = otherObject.getMax();
 
 	return (mins1[0] <= maxs2[0] && maxs1[0] >= mins2[0]) &&
 		(mins1[1] <= maxs2[1] && maxs1[1] >= mins2[1]) &&

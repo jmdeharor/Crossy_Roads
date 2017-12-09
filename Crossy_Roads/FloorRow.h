@@ -53,7 +53,7 @@ public:
 	void renderLightObjects(ShaderProgram& program);
 	void renderShadows(ShaderProgram& program);
 	float getHeight() const;
-	const vector<ShadowedObject>* getEnemies() const;
+	vector<ShadowedObject>* getEnemies();
 	FloorRow();
 	~FloorRow();
 };
