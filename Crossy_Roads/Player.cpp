@@ -243,6 +243,11 @@ float Player::getJumpingSpeed(float y0, float y, uint frames) {
 	return (y-y0)/frames -0.5f*gravity*frames;
 }
 
+bool Player::collides() {
+	const FloorRow* currentRow = floor->getFloorRow(currentRowIndex);
+	const vector<ShadowedObject>* rowEnemies = currentRow->getEnemies();
+}
+
 Player::Player(){
 }
 

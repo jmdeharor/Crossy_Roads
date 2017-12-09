@@ -41,6 +41,7 @@ private:
 	bool keepMoving();
 	float getJumpingSpeed(float y0, float y, glm::uint frames);
 	void performRotation(Orientation currentOrientation, char key);
+	bool collides();
 
 public:
 	void groupDrawableObjects(
