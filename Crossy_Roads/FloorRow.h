@@ -19,11 +19,13 @@ enum FloorType {
 
 class FloorRow : public ObjectContainer {
 private:
+	float rowHeight;
 	std::vector<ShadowedObject> furniture;
 	std::vector<TexturedObject> floorTiles;
 	std::vector<ShadowedObject> enemies;
 	std::vector<float> speeds;
 	glm::vec2 pos;
+
 	const static Assets* assets;
 	static glm::vec2 tileSize;
 	static glm::uint cols;
@@ -34,7 +36,6 @@ private:
 	const static Mesh* cubeMesh;
 	static std::vector<vector<IdTex>> floorTextures;
 	static IdMesh planeWood;
-	float rowHeight;
 public:
 	static void initIds(const Assets& assets);
 	void initSafeZone(std::vector<CellProperties>& map);
