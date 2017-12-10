@@ -39,7 +39,7 @@ void Player::init(const Assets& assets, vec3 lightDir, vec3 offset, float jumpDi
 	currentFrame = 0;
 	currentRowIndex = floor.getRows()/2;
 	currentColIndex = 14 - 3;
-	upsideDown = false;
+	upsideDown = false;ddd
 }
 
 PlayerReturn Player::update(int deltaTime) {
@@ -76,7 +76,7 @@ PlayerReturn Player::update(int deltaTime) {
 			wPressed = false;
 		if (Game::instance().getKey('a')) {
 			uint nextCol = currentColIndex == 28 ? 28 : currentColIndex + 1;
-			if (!aPressed && !collidesWithEnv(currentRowIndex, currentColIndex + 1)) {
+			if (!aPressed && !collidesWithEnv(currentRowIndex, nextCol)) {
 				ret = PlayerReturn::MOVE_LEFT;
 				aPressed = true;
 				performRotation('a');
