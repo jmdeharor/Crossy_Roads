@@ -1,4 +1,5 @@
 #include "Floor.h"
+#include <cmath>
 #include <glm\glm.hpp>
 using namespace glm;
 
@@ -17,13 +18,9 @@ void Floor::firstInit() {
 	floorRows.resize(rows);
 }
 
-inline uint between(uint min, uint max) {
+inline int between(int min, int max) {
 	float num = ((float)rand() / RAND_MAX)*(max - min) + min;
-	uint floor = (uint)num;
-	if (num - floor >= 0.5)
-		return floor + 1;
-	else
-		return floor;
+	return round(num);
 }
 
 inline void updateSafeZoneMap(uint size, uint cols, vector<MeshConfig>& furniture, vector<vector<CellProperties>>& map) {

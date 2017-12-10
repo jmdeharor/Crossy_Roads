@@ -68,7 +68,6 @@ PlayerReturn Player::update(int deltaTime) {
 				float prevHeight = floor->getFloorRow(previousRowIndex)->getHeight();
 				float currentHeight = floor->getFloorRow(currentRowIndex)->getHeight();
 				verticalSpeed = getJumpingSpeed(prevHeight, currentHeight, JUMP_DURATION);
-
 			}
 		}
 		else

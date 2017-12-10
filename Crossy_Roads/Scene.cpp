@@ -155,6 +155,8 @@ void Scene::init() {
 	camera.init(lightDir, &player);
 	
 	camera.updateVM();
+
+	playerReferenceRow = playerRow = 0;
 }
 
 void Scene::update(int deltaTime) {
@@ -167,7 +169,15 @@ void Scene::update(int deltaTime) {
 	case PlayerReturn::NOTHING:
 		break;
 	case PlayerReturn::MOVE_FRONT:
-		floor.addLevel();
+		if (playerReferenceRow == playerRow) {
+			floor.addLevel();
+			++playerReferenceRow;
+		}
+		++playerRow;
+		break;
+	case PlayerReturn::MOVE_BACK:
+		playerRow = playerRow - 1;
+		break;
 	default:
 		break;
 	}
