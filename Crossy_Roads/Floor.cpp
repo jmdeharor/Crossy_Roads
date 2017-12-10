@@ -12,15 +12,17 @@ Floor::~Floor()
 }
 
 void Floor::firstInit() {
-	tileSize = vec2(58, 2);
-	rows = 40;
+	colOffset = 1;
+	rowOffset = 4;
+	tileSize = vec2(54, 2);
+	rows = 22;
 	cols = (uint)tileSize.x/(uint)tileSize.y;
 	floorRows.resize(rows);
 }
 
 inline int between(int min, int max) {
 	float num = ((float)rand() / RAND_MAX)*(max - min) + min;
-	return round(num);
+	return (int)round(num);
 }
 
 inline void updateSafeZoneMap(uint size, uint cols, vector<MeshConfig>& furniture, vector<vector<CellProperties>>& map) {
@@ -135,7 +137,7 @@ void Floor::init(vec3 lightDir, const Assets& assets) {
 	length = 0;
 	counter = length;
 	for (uint i = 0; i < rows; ++i) {
-		floorRows[i].setPos(vec2(3.f*realTileSize, offsetZ + i*tileSize.y));
+		floorRows[i].setPos(vec2(colOffset*realTileSize, rowOffset*tileSize.y + offsetZ + i*tileSize.y));
 		updateFloorRow(floorRows[i]);
 	}
 	lastRow = 0;
@@ -167,8 +169,20 @@ vec2 Floor::getTileSize() const {
 	return tileSize;
 }
 
+uint Floor::getColOffset() const {
+	return colOffset;
+}
+
+glm::uint Floor::getRowOffset() const
+{
+	return rowOffset;
+}
+
 uint Floor::getRows() const {
 	return rows;
+}
+glm::uint Floor::getCols() const {
+	return cols;
 }
 FloorRow* Floor::getFloorRow(uint index) {
 	return &floorRows[index];

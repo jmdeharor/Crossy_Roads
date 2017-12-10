@@ -124,6 +124,7 @@ void FloorRow::initSafeZone(vector<CellProperties>& map) {
 	safeZone = true;
 	enemies.clear();
 	speeds.clear();
+	rowObjects = map;
 	floorTiles.resize(cols);
 	rowHeight = 0.2f;
 
@@ -165,7 +166,6 @@ void FloorRow::initSafeZone(vector<CellProperties>& map) {
 		object.setPos(vec3(pos.x + (realTileSize*(map[i].cols/2.f)) - realTileSize/2, rowHeight, pos.z - tileSize.y*(map[i].cols / 2.f) + tileSize.y/2));
 		object.setPlane(vec4(0, 1, 0, -rowHeight), lightDir);
 	}
-	rowObjects = map;
 }
 
 float FloorRow::getHeight() const {
@@ -174,11 +174,12 @@ float FloorRow::getHeight() const {
 
 void FloorRow::initRoad(vector<uint>& adjacentRow) {
 	safeZone = false;
+	rowObjects.clear();
 	furniture.clear();
 	enemies.resize(2);
 	speeds.resize(enemies.size());
 	floorTiles.resize(cols);
-	rowHeight = 0.0f;
+	rowHeight = 0;
 
 	static float realTileSize = tileSize.x / cols;
 	static vec3 boundingBox = cubeMesh->getbbSize();
@@ -268,7 +269,7 @@ vector<CellProperties>* FloorRow::getRowObjects() {
 	return &rowObjects;
 }
 
-bool FloorRow::isSafeZone() {
+bool FloorRow::isSafeZone() const {
 	return safeZone;
 }
 FloorRow::FloorRow()

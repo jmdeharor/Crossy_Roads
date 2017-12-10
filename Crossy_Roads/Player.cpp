@@ -37,9 +37,15 @@ void Player::init(const Assets& assets, vec3 lightDir, vec3 offset, float jumpDi
 	speed = this->jumpDistance / float(JUMP_DURATION);
 	testJump = 0;
 	currentFrame = 0;
+<<<<<<< HEAD
 	currentRowIndex = floor.getRows()/2;
 	currentColIndex = 14 - 3;
 	upsideDown = false;ddd
+=======
+	currentRowIndex = floor.getRows()/2 - floor.getRowOffset();
+	currentColIndex = floor.getCols()/2 - floor.getColOffset();
+	upsideDown = false;
+>>>>>>> 0ae6891edd0ee83fb1a130b9958fd298eb74905a
 }
 
 PlayerReturn Player::update(int deltaTime) {

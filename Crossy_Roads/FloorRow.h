@@ -19,11 +19,15 @@ enum FloorType {
 
 class FloorRow : public ObjectContainer {
 private:
+	bool safeZone;
+	float rowHeight;
+	std::vector<CellProperties> rowObjects;
 	std::vector<ShadowedObject> furniture;
 	std::vector<TexturedObject> floorTiles;
 	std::vector<ShadowedObject> enemies;
 	std::vector<float> speeds;
 	glm::vec2 pos;
+
 	const static Assets* assets;
 	static glm::vec2 tileSize;
 	static glm::uint cols;
@@ -34,9 +38,6 @@ private:
 	const static Mesh* cubeMesh;
 	static std::vector<vector<IdTex>> floorTextures;
 	static IdMesh planeWood;
-	float rowHeight;
-	bool safeZone;
-	std::vector<CellProperties> rowObjects;
 public:
 	static void initIds(const Assets& assets);
 	void initSafeZone(std::vector<CellProperties>& map);
@@ -52,9 +53,9 @@ public:
 		const FrustumG& frustum
 	) override;
 	float getHeight() const;
-	vector<ShadowedObject>* getEnemies();
-	vector<CellProperties>* getRowObjects();
-	bool isSafeZone();
+	std::vector<ShadowedObject>* getEnemies();
+	std::vector<CellProperties>* getRowObjects();
+	bool isSafeZone() const;
 	FloorRow();
 	~FloorRow();
 };
