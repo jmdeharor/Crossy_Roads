@@ -151,12 +151,7 @@ void Floor::addLevel() {
 	floorRows[lastRow].setPos(vec2(lastPos.x, firstPos));
 	updateFloorRow(floorRows[lastRow]);
 
-	if (lastRow == rows - 1) {
-		lastRow = 0;
-	}
-	else {
-		++lastRow;
-	}
+	lastRow = (lastRow + 1) % rows;
 }
 
 void Floor::update(int deltaTime) {
@@ -165,13 +160,13 @@ void Floor::update(int deltaTime) {
 	}
 }
 
-void Floor::groupDrawableObjects(std::vector<std::vector<Object*>>& objects, std::vector<std::vector<TexturedObject*>>& texturedObjects, const FrustumG& frustum) {
+void Floor::groupDrawableObjects(std::vector<vector<Object*>>& objects, vector<vector<TexturedObject*>>& texturedObjects, const FrustumG& frustum) {
 	for (uint i = 0; i < rows; ++i) {
 		floorRows[i].groupDrawableObjects(objects, texturedObjects, frustum);
 	}
 }
 
-vec2 Floor::getTileSize() {
+vec2 Floor::getTileSize() const {
 	return tileSize;
 }
 

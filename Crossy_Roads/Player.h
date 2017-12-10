@@ -41,19 +41,18 @@ private:
 	void setDirectionVector();
 	bool keepMoving();
 	float getJumpingSpeed(float y0, float y, glm::uint frames);
-	void performRotation(Orientation currentOrientation, char key);
+	void performRotation(char key);
 	bool collides();
 
 public:
 	void groupDrawableObjects(
 		std::vector<std::vector<Object*>>& objects,
-		std::vector<std::vector<TexturedObject*>>& texturedObjects, const FrustumG& frustum
+		std::vector<std::vector<TexturedObject*>>& texturedObjects,
+		const FrustumG& frustum
 	) override;
 	void jump();
 	void init(const Assets& assets, glm::vec3 lightDir, glm::vec3 offset, float jumpDistance, Floor &floor);
 	PlayerReturn update(int deltaTime);
-	void render(ShaderProgram& program);
-	void renderShadow(ShaderProgram& program);
 	glm::vec3 getPos() const;
 	Player();
 	~Player();

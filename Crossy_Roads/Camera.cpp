@@ -76,8 +76,8 @@ void Camera::update(int deltaTime) {
 
 	if (playerPos.z-cam.VRP.z > 0.5f)
 		vel.y = (playerPos.z - cam.VRP.z)*0.03f;
-	else
-		vel.y = 0.01f;
+	//else
+	//	vel.y = 0.01f;
 	if (playerPos.x > 5.f)
 		vel.x = (5.f - cam.VRP.x)*0.03f;
 	else if (playerPos.x < -5.f)

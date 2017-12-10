@@ -41,7 +41,7 @@ public:
 	) override;
 	FloorRow* getFloorRow(glm::uint index);
 	glm::uint getRows() const;
-	glm::vec2 getTileSize();
+	glm::vec2 getTileSize() const;
 	Floor();
 	~Floor();
 };

@@ -5,13 +5,6 @@ mat4 ShadowedObject::getShadowModel() {
 	return shadowProjection*model;
 }
 
-void ShadowedObject::renderShadow(ShaderProgram & program) {
-	if (modified)
-		updateModel();
-	program.setUniformMatrix4f((uint)UniformLocation::modelLoc, shadowProjection*model);
-	mesh->render(program);
-}
-
 void ShadowedObject::setPlane(vec4 plane, vec3 direction) {
 	float a = plane.x;
 	float b = plane.y;

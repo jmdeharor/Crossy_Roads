@@ -49,9 +49,6 @@ public:
 		std::vector<std::vector<TexturedObject*>>& texturedObjects,
 		const FrustumG& frustum
 	) override;
-	void renderSimpleObjects(ShaderProgram& program);
-	void renderLightObjects(ShaderProgram& program);
-	void renderShadows(ShaderProgram& program);
 	float getHeight() const;
 	vector<ShadowedObject>* getEnemies();
 	FloorRow();
