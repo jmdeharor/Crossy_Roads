@@ -37,15 +37,9 @@ void Player::init(const Assets& assets, vec3 lightDir, vec3 offset, float jumpDi
 	speed = this->jumpDistance / float(JUMP_DURATION);
 	testJump = 0;
 	currentFrame = 0;
-<<<<<<< HEAD
-	currentRowIndex = floor.getRows()/2;
-	currentColIndex = 14 - 3;
-	upsideDown = false;ddd
-=======
 	currentRowIndex = floor.getRows()/2 - floor.getRowOffset();
 	currentColIndex = floor.getCols()/2 - floor.getColOffset();
 	upsideDown = false;
->>>>>>> 0ae6891edd0ee83fb1a130b9958fd298eb74905a
 }
 
 PlayerReturn Player::update(int deltaTime) {
@@ -77,10 +71,9 @@ PlayerReturn Player::update(int deltaTime) {
 				float currentHeight = floor->getFloorRow(currentRowIndex)->getHeight();
 				verticalSpeed = getJumpingSpeed(prevHeight, currentHeight, JUMP_DURATION);
 			}
+			aPressed = dPressed = sPressed = false;
 		}
-		else
-			wPressed = false;
-		if (Game::instance().getKey('a')) {
+		else if (Game::instance().getKey('a')) {
 			uint nextCol = currentColIndex == 28 ? 28 : currentColIndex + 1;
 			if (!aPressed && !collidesWithEnv(currentRowIndex, nextCol)) {
 				ret = PlayerReturn::MOVE_LEFT;
@@ -91,10 +84,9 @@ PlayerReturn Player::update(int deltaTime) {
 				inMovement = true;
 				currentColIndex += 1;
 			}
+			wPressed = dPressed = sPressed = false;
 		}
-		else
-			aPressed = false;
-		if (Game::instance().getKey('d')) {
+		else if (Game::instance().getKey('d')) {
 			uint nextCol = currentColIndex == 0 ? 0 : currentRowIndex - 1;
 			if (!dPressed && !collidesWithEnv(currentRowIndex, currentColIndex - 1)) {
 				ret = PlayerReturn::MOVE_RIGHT;
@@ -105,10 +97,9 @@ PlayerReturn Player::update(int deltaTime) {
 				inMovement = true;
 				currentColIndex -= 1;
 			}
+			wPressed = aPressed = sPressed = false;
 		}
-		else
-			dPressed = false;
-		if (Game::instance().getKey('s')) {
+		else if (Game::instance().getKey('s')) {
 			uint nextRow = currentRowIndex == 0 ? floor->getRows() - 1 : currentRowIndex - 1;
 			if (!sPressed && !collidesWithEnv(nextRow, currentColIndex)) {
 				ret = PlayerReturn::MOVE_BACK;
@@ -123,9 +114,10 @@ PlayerReturn Player::update(int deltaTime) {
 				float currentHeight = floor->getFloorRow(currentRowIndex)->getHeight();
 				verticalSpeed = getJumpingSpeed(prevHeight, currentHeight, JUMP_DURATION);
 			}
+			wPressed = dPressed = aPressed = false;
 		}
 		else
-			sPressed = false;
+			wPressed = aPressed = dPressed = sPressed = false;
 		//THIS IS THE DEBUG KEY AND WILL BE DELETED BEFORE DELIVERING
 		//USE IT TO TEST STUFF ON THE PLAYER
 		if (Game::instance().getKey('b')) {
