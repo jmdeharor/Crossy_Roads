@@ -165,7 +165,7 @@ void FloorRow::initSafeZone(vector<CellProperties>& map) {
 		object.setPos(vec3(pos.x + (realTileSize*(map[i].cols/2.f)) - realTileSize/2, rowHeight, pos.z - tileSize.y*(map[i].cols / 2.f) + tileSize.y/2));
 		object.setPlane(vec4(0, 1, 0, -rowHeight), lightDir);
 	}
-	rowObjects = &map;
+	rowObjects = map;
 }
 
 float FloorRow::getHeight() const {
@@ -264,6 +264,13 @@ vector<ShadowedObject>* FloorRow::getEnemies() {
 	return &enemies;
 }
 
+vector<CellProperties>* FloorRow::getRowObjects() {
+	return &rowObjects;
+}
+
+bool FloorRow::isSafeZone() {
+	return safeZone;
+}
 FloorRow::FloorRow()
 {
 }

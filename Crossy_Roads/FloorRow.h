@@ -36,7 +36,7 @@ private:
 	static IdMesh planeWood;
 	float rowHeight;
 	bool safeZone;
-	vector<CellProperties>* rowObjects;
+	std::vector<CellProperties> rowObjects;
 public:
 	static void initIds(const Assets& assets);
 	void initSafeZone(std::vector<CellProperties>& map);
@@ -53,6 +53,8 @@ public:
 	) override;
 	float getHeight() const;
 	vector<ShadowedObject>* getEnemies();
+	vector<CellProperties>* getRowObjects();
+	bool isSafeZone();
 	FloorRow();
 	~FloorRow();
 };

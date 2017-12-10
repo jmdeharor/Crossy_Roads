@@ -38,7 +38,7 @@ void Player::init(const Assets& assets, vec3 lightDir, vec3 offset, float jumpDi
 	testJump = 0;
 	currentFrame = 0;
 	currentRowIndex = floor.getRows()/2;
-	currentColIndex = 14;
+	currentColIndex = 14 - 3;
 	upsideDown = false;
 }
 
@@ -57,7 +57,8 @@ PlayerReturn Player::update(int deltaTime) {
 	}
 	else {
 		if (Game::instance().getKey('w')) {
-			if (!wPressed) {
+			uint nextRow = (currentRowIndex + 1) % floor->getRows();
+			if (!wPressed && !collidesWithEnv(nextRow,currentColIndex)) {
 				ret = PlayerReturn::MOVE_FRONT;
 				wPressed = true;
 				performRotation('w');
@@ -65,7 +66,7 @@ PlayerReturn Player::update(int deltaTime) {
 				setDirectionVector();
 				inMovement = true;
 				uint previousRowIndex = currentRowIndex;
-				currentRowIndex = (currentRowIndex + 1) % floor->getRows();
+				currentRowIndex = nextRow;
 				float prevHeight = floor->getFloorRow(previousRowIndex)->getHeight();
 				float currentHeight = floor->getFloorRow(currentRowIndex)->getHeight();
 				verticalSpeed = getJumpingSpeed(prevHeight, currentHeight, JUMP_DURATION);
@@ -74,31 +75,36 @@ PlayerReturn Player::update(int deltaTime) {
 		else
 			wPressed = false;
 		if (Game::instance().getKey('a')) {
-			if (!aPressed) {
+			uint nextCol = currentColIndex == 28 ? 28 : currentColIndex + 1;
+			if (!aPressed && !collidesWithEnv(currentRowIndex, currentColIndex + 1)) {
 				ret = PlayerReturn::MOVE_LEFT;
 				aPressed = true;
 				performRotation('a');
 				currentOrientation = LEFT;
 				setDirectionVector();
 				inMovement = true;
+				currentColIndex += 1;
 			}
 		}
 		else
 			aPressed = false;
 		if (Game::instance().getKey('d')) {
-			if (!dPressed) {
+			uint nextCol = currentColIndex == 0 ? 0 : currentRowIndex - 1;
+			if (!dPressed && !collidesWithEnv(currentRowIndex, currentColIndex - 1)) {
 				ret = PlayerReturn::MOVE_RIGHT;
 				dPressed = true;
 				performRotation('d');
 				currentOrientation = RIGHT;
 				setDirectionVector();
 				inMovement = true;
+				currentColIndex -= 1;
 			}
 		}
 		else
 			dPressed = false;
 		if (Game::instance().getKey('s')) {
-			if (!sPressed) {
+			uint nextRow = currentRowIndex == 0 ? floor->getRows() - 1 : currentRowIndex - 1;
+			if (!sPressed && !collidesWithEnv(nextRow, currentColIndex)) {
 				ret = PlayerReturn::MOVE_BACK;
 				sPressed = true;
 				performRotation('s');
@@ -106,7 +112,7 @@ PlayerReturn Player::update(int deltaTime) {
 				setDirectionVector();
 				inMovement = true;
 				uint previousRowIndex = currentRowIndex;
-				currentRowIndex = currentRowIndex == 0 ? floor->getRows() - 1 : currentRowIndex - 1;
+				currentRowIndex = nextRow;
 				float prevHeight = floor->getFloorRow(previousRowIndex)->getHeight();
 				float currentHeight = floor->getFloorRow(currentRowIndex)->getHeight();
 				verticalSpeed = getJumpingSpeed(prevHeight, currentHeight, JUMP_DURATION);
@@ -196,6 +202,13 @@ bool Player::collides() {
 		collision = playerObject.collidesWith((*rowEnemies)[i]);
 	}
 	return collision;
+}
+
+bool Player::collidesWithEnv(uint row, uint col) {
+	FloorRow* rowToCheck = floor->getFloorRow(row);
+	if (!rowToCheck->isSafeZone()) return false;
+	vector<CellProperties>* rowObjects = rowToCheck->getRowObjects();
+	return (*rowObjects)[col].height != 0;
 }
 
 Player::Player(){
