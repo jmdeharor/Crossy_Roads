@@ -34,6 +34,7 @@ private:
 	Orientation currentOrientation;
 	Floor *floor;
 	glm::uint currentRowIndex;
+	glm::uint currentColIndex;
 	glm::vec3 lightDir;
 	bool upsideDown;
 

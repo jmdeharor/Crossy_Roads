@@ -38,6 +38,7 @@ void Player::init(const Assets& assets, vec3 lightDir, vec3 offset, float jumpDi
 	testJump = 0;
 	currentFrame = 0;
 	currentRowIndex = floor.getRows()/2;
+	currentColIndex = 14;
 	upsideDown = false;
 }
 

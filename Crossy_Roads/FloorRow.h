@@ -35,6 +35,8 @@ private:
 	static std::vector<vector<IdTex>> floorTextures;
 	static IdMesh planeWood;
 	float rowHeight;
+	bool safeZone;
+	vector<CellProperties>* rowObjects;
 public:
 	static void initIds(const Assets& assets);
 	void initSafeZone(std::vector<CellProperties>& map);
