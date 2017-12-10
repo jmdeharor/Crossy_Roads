@@ -268,7 +268,7 @@ vector<CellProperties>* FloorRow::getRowObjects() {
 	return &rowObjects;
 }
 
-bool FloorRow::isSafeZone() {
+bool FloorRow::isSafeZone() const {
 	return safeZone;
 }
 FloorRow::FloorRow()

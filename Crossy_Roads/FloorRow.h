@@ -19,7 +19,9 @@ enum FloorType {
 
 class FloorRow : public ObjectContainer {
 private:
+	bool safeZone;
 	float rowHeight;
+	std::vector<CellProperties> rowObjects;
 	std::vector<ShadowedObject> furniture;
 	std::vector<TexturedObject> floorTiles;
 	std::vector<ShadowedObject> enemies;
@@ -51,7 +53,9 @@ public:
 		const FrustumG& frustum
 	) override;
 	float getHeight() const;
-	vector<ShadowedObject>* getEnemies();
+	std::vector<ShadowedObject>* getEnemies();
+	std::vector<CellProperties>* getRowObjects();
+	bool isSafeZone() const;
 	FloorRow();
 	~FloorRow();
 };
