@@ -25,6 +25,54 @@ inline int between(int min, int max) {
 	return (int)round(num);
 }
 
+inline void updateSafeZoneMap(uint size, uint cols, vector<MeshConfig>& furniture, vector<vector<CellProperties>>& map, ivec2 restriction) {
+	CellProperties aux;
+	aux.height = 0;
+	map.resize(size, vector<CellProperties>(cols, aux));
+	vector<ivec2> indices;
+	indices.reserve(size*cols);
+
+	uint objects = between(size, size * 2);
+
+	for (uint i = 0; i < objects; ++i) {
+
+		MeshConfig& meshConfig = furniture[rand() % furniture.size()];
+
+		for (int i = 0; i < (int)size - (int)meshConfig.rows + 1; ++i) {
+			bool rowConflict = i <= restriction.x && i + (int)meshConfig.rows >= restriction.x;
+			for (int j = 0; j < (int)cols - (int)meshConfig.cols + 1; ++j) {
+				bool colConflict = j <= restriction.y && j + (int)meshConfig.cols >= restriction.y;
+				bool conflict = rowConflict && colConflict;
+				for (uint i1 = 0; i1 < meshConfig.rows && !conflict; ++i1) {
+					for (uint j1 = 0; j1 < meshConfig.cols && !conflict; ++j1) {
+						conflict = map[i + i1][j + j1].height != 0;
+					}
+				}
+				if (!conflict)
+					indices.push_back(ivec2(i, j));
+			}
+		}
+		if (indices.size() == 0)
+			continue;
+
+		uint index = rand() % indices.size();
+		ivec2 pos = indices[index];
+
+		for (uint i = 0; i < meshConfig.rows; ++i) {
+			for (uint j = 0; j < meshConfig.cols; ++j) {
+				CellProperties cell;
+				cell.mesh = INVALID;
+				cell.height = meshConfig.height;
+				map[pos.x + i][pos.y + j] = cell;
+			}
+		}
+		map[pos.x][pos.y].mesh = meshConfig.mesh;
+		map[pos.x][pos.y].rows = meshConfig.rows;
+		map[pos.x][pos.y].cols = meshConfig.cols;
+		indices.clear();
+	}
+}
+
 inline void updateSafeZoneMap(uint size, uint cols, vector<MeshConfig>& furniture, vector<vector<CellProperties>>& map) {
 	CellProperties aux;
 	aux.height = 0;
@@ -133,9 +181,14 @@ void Floor::init(vec3 lightDir, const Assets& assets) {
 	float offsetZ = -tileSize.y*(rows/2);
 	textureIndex.resize(cols, 999);
 
+	ivec2 playerIni;
+	playerIni.x = rows / 2 - rowOffset;
+	playerIni.y = cols / 2 - colOffset;
+
 	type = Safe;
 	length = rows/2 - rowOffset + between(2, 5);
 	counter = 0;
+	updateSafeZoneMap(length, cols, furniture, safeZoneMap, playerIni);
 	CellProperties aux;
 	aux.height = 0;
 	safeZoneMap.resize(length, vector<CellProperties>(cols, aux));
