@@ -19,6 +19,8 @@ class Floor : public GameObject, public ObjectContainer {
 	glm::uint lastRow;
 	IdMesh deckMesh[4];
 	float firstPos;
+	glm::uint colOffset;
+	glm::uint rowOffset;
 	glm::uint counter;
 	glm::uint length;
 	std::vector<MeshConfig> furniture;
@@ -41,6 +43,9 @@ public:
 	) override;
 	FloorRow* getFloorRow(glm::uint index);
 	glm::uint getRows() const;
+	glm::uint getCols() const;
+	glm::uint getColOffset() const;
+	glm::uint getRowOffset() const;
 	glm::vec2 getTileSize() const;
 	Floor();
 	~Floor();
