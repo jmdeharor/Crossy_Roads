@@ -34,6 +34,7 @@ private:
 	Orientation currentOrientation;
 	Floor *floor;
 	glm::uint currentRowIndex;
+	glm::uint currentColIndex;
 	glm::vec3 lightDir;
 	bool upsideDown;
 
@@ -43,6 +44,8 @@ private:
 	float getJumpingSpeed(float y0, float y, glm::uint frames);
 	void performRotation(char key);
 	bool collides();
+	bool collidesWithEnv(glm::uint row, glm::uint col);
+
 
 public:
 	void groupDrawableObjects(

@@ -121,6 +121,7 @@ pair<uint,uint> generateRandomTextureIndex(uint i, uint prevMeshIndex, vector<ui
 }
 
 void FloorRow::initSafeZone(vector<CellProperties>& map) {
+	safeZone = true;
 	enemies.clear();
 	speeds.clear();
 	floorTiles.resize(cols);
@@ -164,6 +165,7 @@ void FloorRow::initSafeZone(vector<CellProperties>& map) {
 		object.setPos(vec3(pos.x + (realTileSize*(map[i].cols/2.f)) - realTileSize/2, rowHeight, pos.z - tileSize.y*(map[i].cols / 2.f) + tileSize.y/2));
 		object.setPlane(vec4(0, 1, 0, -rowHeight), lightDir);
 	}
+	rowObjects = map;
 }
 
 float FloorRow::getHeight() const {
@@ -171,6 +173,7 @@ float FloorRow::getHeight() const {
 }
 
 void FloorRow::initRoad(vector<uint>& adjacentRow) {
+	safeZone = false;
 	furniture.clear();
 	enemies.resize(2);
 	speeds.resize(enemies.size());
@@ -261,6 +264,13 @@ vector<ShadowedObject>* FloorRow::getEnemies() {
 	return &enemies;
 }
 
+vector<CellProperties>* FloorRow::getRowObjects() {
+	return &rowObjects;
+}
+
+bool FloorRow::isSafeZone() {
+	return safeZone;
+}
 FloorRow::FloorRow()
 {
 }
