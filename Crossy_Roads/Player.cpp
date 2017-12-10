@@ -22,12 +22,18 @@ void Player::init(const Assets& assets, vec3 lightDir, vec3 offset, float jumpDi
 	this->lightDir = lightDir;
 	this->floor = &floor;
 	this->jumpDistance = jumpDistance;
+
+	currentRowIndex = floor.getRows() / 2 - floor.getRowOffset();
+	currentColIndex = floor.getCols() / 2 - floor.getColOffset();
+	float rowHeight = floor.getFloorRow(currentRowIndex)->getHeight();
+
 	IdMesh pirateId = assets.getMeshId("pirate_2");
 	playerObject.setMesh(pirateId, assets.getMesh(pirateId));
 	playerObject.setScale(vec3(0.1f));
 	playerObject.setCenterToBaseCenter();
-	playerObject.setPos(vec3(0));
-	playerObject.setPlane(vec4(0, 1, 0, 0), lightDir);
+	playerObject.setPos(vec3(0,rowHeight,0));
+	playerObject.setPlane(vec4(0, 1, 0, -rowHeight), lightDir);
+
 	wPressed = aPressed = sPressed = dPressed = bPressed = false;
 	currentOrientation = FRONT;
 	directionVector = vec3(0, 0, 1.f);
@@ -37,8 +43,6 @@ void Player::init(const Assets& assets, vec3 lightDir, vec3 offset, float jumpDi
 	speed = this->jumpDistance / float(JUMP_DURATION);
 	testJump = 0;
 	currentFrame = 0;
-	currentRowIndex = floor.getRows()/2 - floor.getRowOffset();
-	currentColIndex = floor.getCols()/2 - floor.getColOffset();
 	upsideDown = false;
 }
 
