@@ -17,8 +17,14 @@ enum FloorType {
 	Safe
 };
 
+enum Biome {
+	Ship,
+	Sea
+};
+
 class FloorRow : public ObjectContainer {
 private:
+	Biome biome;
 	bool safeZone;
 	float rowHeight;
 	std::vector<CellProperties> rowObjects;
@@ -37,7 +43,7 @@ private:
 	static std::vector<IdMesh> enemyMeshes;
 	const static Mesh* cubeMesh;
 	static std::vector<vector<IdTex>> floorTextures;
-	static IdMesh planeWood;
+	static IdMesh planeWood, water;
 public:
 	static void initIds(const Assets& assets);
 	void initSafeZone(std::vector<CellProperties>& map);
@@ -45,7 +51,9 @@ public:
 	glm::vec2 getPos() const;
 	void moveToPosition(glm::vec2 position);
 	void setPos(glm::vec2 position);
-	void initRoad(vector<glm::uint>& adjacentRow);
+	void initRoad(Biome biome, std::vector<glm::uint>* adjacentRow = NULL);
+	void initShipRoad(std::vector<glm::uint>& adjacentRow);
+	void initSea();
 	void update(int deltaTime);
 	void groupDrawableObjects(
 		std::vector<std::vector<Object*>>& objects,
@@ -56,6 +64,7 @@ public:
 	std::vector<ShadowedObject>* getEnemies();
 	std::vector<CellProperties>* getRowObjects();
 	bool isSafeZone() const;
+	Biome getBiome() const;
 	FloorRow();
 	~FloorRow();
 };

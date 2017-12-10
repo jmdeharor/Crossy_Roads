@@ -38,6 +38,7 @@ void FloorRow::initIds(const Assets& assets) {
 		}
 	}
 	planeWood = assets.getTextureId("wood_plane");
+	water = assets.getTextureId("water_plane");
 }
 
 void FloorRow::setParameters(vec2 tileSize, uint cols, vec3 lightDir) {
@@ -78,6 +79,18 @@ void FloorRow::moveToPosition(vec2 position) {
 
 void FloorRow::setPos(vec2 position) {
 	pos = position;
+}
+
+void FloorRow::initRoad(Biome biome, vector<uint>* adjacentRow) {
+	this->biome = biome;
+	switch (biome) {
+		case Ship:
+			initShipRoad(*adjacentRow);
+			break;
+		case Sea:
+			initSea();
+			break;
+	}
 }
 
 bool applyConstraints(uint meshIndex, uint numAdjacents, vector<uint>& adjacentRow, uint position) {
@@ -121,11 +134,11 @@ pair<uint,uint> generateRandomTextureIndex(uint i, uint prevMeshIndex, vector<ui
 }
 
 void FloorRow::initSafeZone(vector<CellProperties>& map) {
+	biome = Ship;
 	safeZone = true;
 	enemies.clear();
 	speeds.clear();
 	rowObjects = map;
-	//floorTiles.resize(cols);
 	floorTiles.resize(1);
 	rowHeight = 0.2f;
 
@@ -172,7 +185,7 @@ float FloorRow::getHeight() const {
 	return rowHeight;
 }
 
-void FloorRow::initRoad(vector<uint>& adjacentRow) {
+void FloorRow::initShipRoad(vector<uint>& adjacentRow) {
 	safeZone = false;
 	rowObjects.clear();
 	furniture.clear();
@@ -229,6 +242,31 @@ void FloorRow::initRoad(vector<uint>& adjacentRow) {
 	}
 }
 
+void FloorRow::initSea() {
+	safeZone = true;
+	furniture.clear();
+	enemies.clear();
+	speeds.clear();
+	rowObjects.clear();
+	floorTiles.resize(1);
+	rowHeight = -5;
+
+	static float realTileSize = tileSize.x / cols;
+	float offsetX = pos.x - (realTileSize*(cols / 2) - (1 - cols % 2)*realTileSize / 2);
+
+	static vec3 boundingBox = cubeMesh->getbbSize();
+	static vec3 bbcenter = cubeMesh->getbbCenter();
+	static float height = cubeMesh->getHeight();
+	static vec3 floorTileSize = vec3(tileSize.x, 0.2f, tileSize.y) / boundingBox;
+
+	TexturedObject& tile = floorTiles[0];
+	tile.texture = water;
+	tile.setMesh(cubeMesh);
+	tile.setScale(floorTileSize);
+	tile.setCenter(vec3(bbcenter.x, bbcenter.y + height / 2.f, bbcenter.z));
+	tile.setPos(vec3(pos.x, rowHeight, pos.y));
+}
+
 void FloorRow::update(int deltaTime) {
 	for (uint i = 0; i < enemies.size(); ++i) {
 		Object& object = enemies[i];
@@ -272,6 +310,9 @@ vector<CellProperties>* FloorRow::getRowObjects() {
 bool FloorRow::isSafeZone() const {
 	return safeZone;
 }
+Biome FloorRow::getBiome() const {
+	return biome;
+}
 FloorRow::FloorRow()
 {
 }
@@ -289,4 +330,5 @@ const Mesh* FloorRow::cubeMesh;
 vector<vector<IdTex>> FloorRow::floorTextures;
 vector<IdMesh> FloorRow::enemyMeshes;
 IdTex FloorRow::planeWood;
+IdTex FloorRow::water;
 const Assets* FloorRow::assets;

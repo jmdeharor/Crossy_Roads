@@ -78,8 +78,7 @@ PlayerReturn Player::update(int deltaTime) {
 			aPressed = dPressed = sPressed = false;
 		}
 		else if (Game::instance().getKey('a')) {
-			uint nextCol = currentColIndex == 28 ? 28 : currentColIndex + 1;
-			if (!aPressed && !collidesWithEnv(currentRowIndex, nextCol)) {
+			if (!aPressed && !collidesWithEnv(currentRowIndex, currentColIndex+1)) {
 				ret = PlayerReturn::MOVE_LEFT;
 				aPressed = true;
 				performRotation('a');
@@ -91,7 +90,6 @@ PlayerReturn Player::update(int deltaTime) {
 			wPressed = dPressed = sPressed = false;
 		}
 		else if (Game::instance().getKey('d')) {
-			uint nextCol = currentColIndex == 0 ? 0 : currentRowIndex - 1;
 			if (!dPressed && !collidesWithEnv(currentRowIndex, currentColIndex - 1)) {
 				ret = PlayerReturn::MOVE_RIGHT;
 				dPressed = true;
@@ -208,7 +206,8 @@ bool Player::collides() {
 
 bool Player::collidesWithEnv(uint row, uint col) {
 	FloorRow* rowToCheck = floor->getFloorRow(row);
-	if (!rowToCheck->isSafeZone()) return false;
+	if (!rowToCheck->isSafeZone() || rowToCheck->getBiome() == Sea)
+		return false;
 	vector<CellProperties>* rowObjects = rowToCheck->getRowObjects();
 	return (*rowObjects)[col].height != 0;
 }

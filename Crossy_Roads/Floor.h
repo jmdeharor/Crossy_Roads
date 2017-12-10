@@ -21,13 +21,14 @@ class Floor : public GameObject, public ObjectContainer {
 	float firstPos;
 	glm::uint colOffset;
 	glm::uint rowOffset;
-	glm::uint counter;
-	glm::uint length;
+	glm::uint counter, biomeCounter;
+	glm::uint length, biomeLength;
 	std::vector<MeshConfig> furniture;
 	std::vector<FloorRow> floorRows;
 	std::vector<std::vector<CellProperties>> safeZoneMap;
 	std::vector<glm::uint> textureIndex;
 	FloorType type;
+	Biome biome;
 	glm::vec2 tileSize;
 private:
 	void updateFloorRow(FloorRow& floorRow);

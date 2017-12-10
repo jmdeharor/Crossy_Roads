@@ -120,36 +120,58 @@ inline void updateSafeZoneMap(uint size, uint cols, vector<MeshConfig>& furnitur
 }
 
 void Floor::updateFloorRow(FloorRow& floorRow) {
-	bool transition = false;
-	if (counter == length) {
+	if (biomeCounter == biomeLength) {
+		switch (biome) {
+		case Ship:
+			biome = Sea;
+			break;
+		case Sea:
+			type = Road;
+			counter = length = 0;
+			biome = Ship;
+			break;
+		}
+		biomeLength = between(10, 20);
+		biomeCounter = 0;
+	}
+	++biomeCounter;
+	switch (biome) {
+	case Sea:
+		floorRow.initRoad(Sea);
+		break;
+	case Ship:
+		bool transition = false;
+		if (counter == length) {
+			switch (type) {
+			case Safe:
+				length = between(3, 10);
+				type = Road;
+				transition = true;
+				break;
+			case Road:
+				length = between(1, 4);
+				updateSafeZoneMap(length, cols, furniture, safeZoneMap);
+				type = Safe;
+				break;
+			}
+			counter = 0;
+		}
 		switch (type) {
 		case Safe:
-			length = between(3, 10);
-			type = Road;
-			transition = true;
+			floorRow.initSafeZone(safeZoneMap[safeZoneMap.size() - 1]);
+			safeZoneMap.pop_back();
 			break;
 		case Road:
-			length = between(1, 4);
-			updateSafeZoneMap(length, cols, furniture, safeZoneMap);
-			type = Safe;
+			if (transition) {
+				for (uint i = 0; i < cols; ++i)
+					textureIndex[i] = 999;
+			}
+			floorRow.initRoad(Ship, &textureIndex);
 			break;
 		}
-		counter = 0;
-	}
-	switch (type) {
-	case Safe:
-		floorRow.initSafeZone(safeZoneMap[safeZoneMap.size()-1]);
-		safeZoneMap.pop_back();
-		break;
-	case Road:
-		if (transition) {
-			for (uint i = 0; i < cols; ++i)
-				textureIndex[i] = 999;
-		}
-		floorRow.initRoad(textureIndex);
+		++counter;
 		break;
 	}
-	++counter;
 }
 
 void Floor::init(vec3 lightDir, const Assets& assets) {
@@ -181,8 +203,12 @@ void Floor::init(vec3 lightDir, const Assets& assets) {
 	float offsetZ = -tileSize.y*(rows/2);
 	textureIndex.resize(cols, 999);
 
+	biome = Ship;
+	biomeLength = between(20, 30);
+	biomeCounter = 0;
+
 	ivec2 playerIni;
-	playerIni.x = rows / 2 - rowOffset;
+	playerIni.x = biomeLength - 1 - rows / 2 - rowOffset;
 	playerIni.y = cols / 2 - colOffset;
 
 	type = Safe;
