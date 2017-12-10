@@ -6,7 +6,6 @@ class TexturedObject : public Object {
 public:
 	IdTex texture;
 
-	void render(ShaderProgram& program) override;
 	TexturedObject();
 	~TexturedObject();
 };

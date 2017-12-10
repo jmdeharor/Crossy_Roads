@@ -45,7 +45,7 @@ void Player::init(const Assets& assets, vec3 lightDir, vec3 offset, float jumpDi
 PlayerReturn Player::update(int deltaTime) {
 	PlayerReturn ret = PlayerReturn::NOTHING;
 	if (!upsideDown && collides()) {
-		playerObject.rotateZ(PI);
+		playerObject.setRotationZ(PI);
 		upsideDown = true;
 		return ret;
 	}
@@ -60,7 +60,7 @@ PlayerReturn Player::update(int deltaTime) {
 			if (!wPressed) {
 				ret = PlayerReturn::MOVE_FRONT;
 				wPressed = true;
-				performRotation(currentOrientation, 'w');
+				performRotation('w');
 				currentOrientation = FRONT;
 				setDirectionVector();
 				inMovement = true;
@@ -69,7 +69,6 @@ PlayerReturn Player::update(int deltaTime) {
 				float prevHeight = floor->getFloorRow(previousRowIndex)->getHeight();
 				float currentHeight = floor->getFloorRow(currentRowIndex)->getHeight();
 				verticalSpeed = getJumpingSpeed(prevHeight, currentHeight, JUMP_DURATION);
-
 			}
 		}
 		else
@@ -78,7 +77,7 @@ PlayerReturn Player::update(int deltaTime) {
 			if (!aPressed) {
 				ret = PlayerReturn::MOVE_LEFT;
 				aPressed = true;
-				performRotation(currentOrientation, 'a');
+				performRotation('a');
 				currentOrientation = LEFT;
 				setDirectionVector();
 				inMovement = true;
@@ -90,7 +89,7 @@ PlayerReturn Player::update(int deltaTime) {
 			if (!dPressed) {
 				ret = PlayerReturn::MOVE_RIGHT;
 				dPressed = true;
-				performRotation(currentOrientation, 'd');
+				performRotation('d');
 				currentOrientation = RIGHT;
 				setDirectionVector();
 				inMovement = true;
@@ -102,17 +101,15 @@ PlayerReturn Player::update(int deltaTime) {
 			if (!sPressed) {
 				ret = PlayerReturn::MOVE_BACK;
 				sPressed = true;
-				performRotation(currentOrientation, 's');
+				performRotation('s');
 				currentOrientation = BACK;
 				setDirectionVector();
 				inMovement = true;
 				uint previousRowIndex = currentRowIndex;
-				if (currentRowIndex == 0) currentRowIndex = floor->getRows() - 1;
-				else currentRowIndex = (currentRowIndex - 1) % floor->getRows();
+				currentRowIndex = currentRowIndex == 0 ? floor->getRows() - 1 : currentRowIndex - 1;
 				float prevHeight = floor->getFloorRow(previousRowIndex)->getHeight();
 				float currentHeight = floor->getFloorRow(currentRowIndex)->getHeight();
 				verticalSpeed = getJumpingSpeed(prevHeight, currentHeight, JUMP_DURATION);
-
 			}
 		}
 		else
@@ -130,18 +127,6 @@ PlayerReturn Player::update(int deltaTime) {
 			bPressed = false;
 	}
 	return ret;
-}
-
-void Player::render(ShaderProgram & program) {
-	Scene::sceneTriangles += playerObject.getTriangles();
-	Scene::sceneDrawCalls += 1;
-	playerObject.render(program);
-}
-
-void Player::renderShadow(ShaderProgram & program) {
-	Scene::sceneDrawCalls += 1;
-	Scene::sceneTriangles += playerObject.getTriangles();
-	playerObject.renderShadow(program);
 }
 
 vec3 Player::getPos() const {
@@ -165,77 +150,19 @@ void Player::setDirectionVector() {
 	}
 }
 
-void Player::performRotation(Orientation currentOrientation, char key) {
+void Player::performRotation(char key) {
 	switch (key) {
 	case 'w':
-		//playerObject.setRotationY(0);
-		switch (currentOrientation) {
-		case BACK:
-			playerObject.rotateY(PI);
-			break;
-		case LEFT:
-			playerObject.rotateY(-PI / 2.f);
-			break;
-		case RIGHT:
-			playerObject.rotateY(PI / 2.f);
-			break;
-		case FRONT:
-		default:
-			break;
-		}
+		playerObject.setRotationY(0);
 		break;
 	case 'a':
-		//playerObject.setRotationY(PI/2);
-		switch (currentOrientation) {
-		case FRONT:
-			playerObject.rotateY(PI / 2.f);
-			break;
-		case BACK:
-			playerObject.rotateY(-PI / 2.f);
-			break;
-		case RIGHT:
-			playerObject.rotateY(PI);
-			break;
-		case LEFT:
-		default:
-			break;
-		}
+		playerObject.setRotationY(PI/2);
 		break;
 	case 'd':
-		//playerObject.setRotationY(-PI / 2);
-		switch (currentOrientation) {
-		case FRONT:
-			playerObject.rotateY(-PI / 2.f);
-			break;
-		case BACK:
-			playerObject.rotateY(PI / 2.f);
-			break;
-		case LEFT:
-			playerObject.rotateY(PI);
-			break;
-		case RIGHT:
-		default:
-			break;
-		}
+		playerObject.setRotationY(-PI / 2);
 		break;
 	case 's':
-		//playerObject.setRotationY(PI);
-		switch (currentOrientation) {
-		case FRONT:
-			playerObject.rotateY(PI);
-			break;
-		case LEFT:
-			playerObject.rotateY(PI / 2.f);
-			break;
-		case RIGHT:
-			playerObject.rotateY(-PI / 2.f);
-			break;
-		case BACK:
-		default:
-			break;
-		}
-		break;
-	default:
+		playerObject.setRotationY(PI);
 		break;
 	}
 }
@@ -265,11 +192,10 @@ bool Player::collides() {
 	bool collision = false;
 	FloorRow* currentRow = floor->getFloorRow(currentRowIndex);
 	vector<ShadowedObject>* rowEnemies = currentRow->getEnemies();
-	for (int i = 0; i < rowEnemies->size() && !collision; ++i) {
+	for (uint i = 0; i < rowEnemies->size() && !collision; ++i) {
 		collision = playerObject.collidesWith((*rowEnemies)[i]);
 	}
 	return collision;
-
 }
 
 Player::Player(){

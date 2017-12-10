@@ -47,7 +47,7 @@ void Object::setRotationY(float angle) {
 
 void Object::setRotationZ(float angle) {
 	modified = true;
-	rot.z;
+	rot.z = angle;
 }
 
 void Object::setScale(vec3 scale) {
@@ -101,9 +101,9 @@ vec3 Object::getMax() {
 bool Object::collidesWith(Object& otherObject) {
 	const vec3* bbox1 = mesh->getbb();
 	const vec3* bbox2 = otherObject.mesh->getbb();
-	//if (modified)
+	if (modified)
 		updateModel();
-	//if (otherObject.modified)
+	if (otherObject.modified)
 		otherObject.updateModel();
 	vec3 mins1 = getMin();
 	vec3 maxs1 = getMax();
@@ -132,14 +132,6 @@ void Object::updateModel() {
 	model = rotate(model, rot.y, vec3(0, 1, 0));
 	model = rotate(model, rot.z, vec3(0, 0, 1));
 	model = translate(model, -center);
-}
-
-void Object::render(ShaderProgram & program) {
-	if (modified)
-		updateModel();
-	program.setUniformMatrix4f((uint)UniformLocation::modelLoc, model);
-	//program.setUniformMatrix4f("model", model);
-	//mesh->render(program);
 }
 
 Object::Object() : 

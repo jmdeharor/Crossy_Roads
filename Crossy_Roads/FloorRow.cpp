@@ -193,14 +193,14 @@ void FloorRow::initRoad(vector<uint>& adjacentRow) {
 		enemy.setRotationY(PI);
 		enemy.setScale(vec3(0.1f));
 		enemy.setCenterToBaseCenter();
-		enemy.setPlane(vec4(0, 1, 0, 0), lightDir);
+		enemy.setPlane(vec4(0, 1, 0, -rowHeight), lightDir);
 		speeds[i] = generateSpeed();
 		float startPoint;
 		if (speeds[i] >= 0)
 			startPoint = -tileSize.x / 2 + ((float)rand() / RAND_MAX) * tileSize.x;
 		else
 			startPoint = tileSize.x / 2 - ((float)rand() / RAND_MAX) * tileSize.x;
-		enemy.setPos(vec3(startPoint, 0, pos.y));
+		enemy.setPos(vec3(startPoint, rowHeight, pos.y));
 	}
 
 	uint textureIndex = models.size();
@@ -223,7 +223,7 @@ void FloorRow::initRoad(vector<uint>& adjacentRow) {
 		tile.setScale(floorTileSize);
 		tile.setRotationY(PI / 2);
 		tile.setCenter(vec3(bbcenter.x, bbcenter.y + height / 2.f, bbcenter.z));
-		tile.setPos(vec3(offsetX + i*realTileSize, 0, pos.y));
+		tile.setPos(vec3(offsetX + i*realTileSize, rowHeight, pos.y));
 		++counter;
 	}
 }
@@ -257,30 +257,6 @@ void FloorRow::groupDrawableObjects(vector<vector<Object*>>& objects, vector<vec
 	for (uint i = 0; i < furniture.size(); ++i) {
 		if (furniture[i].isInsideViewFrustrum(frustum))
 			objects[furniture[i].meshId].push_back(&furniture[i]);
-	}
-}
-
-void FloorRow::renderSimpleObjects(ShaderProgram & program) {
-	for (Object& object : floorTiles) {
-		Scene::sceneTriangles += object.getTriangles();
-		Scene::sceneDrawCalls += 1;
-		object.render(program);
-	}
-}
-
-void FloorRow::renderLightObjects(ShaderProgram & program) {
-	for (Object& object : enemies) {
-		Scene::sceneTriangles += object.getTriangles();
-		Scene::sceneDrawCalls += 1;
-		object.render(program);
-	}
-}
-
-void FloorRow::renderShadows(ShaderProgram & program) {
-	for (ShadowedObject& object : enemies) {
-		Scene::sceneTriangles += object.getTriangles();
-		Scene::sceneDrawCalls += 1;
-		object.renderShadow(program);
 	}
 }
 

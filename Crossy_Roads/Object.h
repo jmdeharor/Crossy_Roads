@@ -35,7 +35,6 @@ public:
 	void setRotationZ(float angle);
 	void setScale(glm::vec3 scale);
 	const glm::mat4* getModel();
-	virtual void render(ShaderProgram& program);
 	void setMesh(glm::uint meshId, const Mesh* mesh);
 	void setMesh(const Mesh* mesh);
 	glm::vec3 getPos() const;

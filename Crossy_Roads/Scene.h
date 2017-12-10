@@ -46,6 +46,7 @@ private:
 	LARGE_INTEGER start, end;
 	LARGE_INTEGER frequency;
 	glm::uint depthVPLoc, VPLoc;
+	int playerReferenceRow, playerRow;
 
 	std::vector<std::vector<Object*>> objectsToRender;
 	std::vector<std::vector<TexturedObject*>> texturedObjects;
