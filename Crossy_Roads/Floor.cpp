@@ -189,9 +189,6 @@ void Floor::init(vec3 lightDir, const Assets& assets) {
 	length = rows/2 - rowOffset + between(2, 5);
 	counter = 0;
 	updateSafeZoneMap(length, cols, furniture, safeZoneMap, playerIni);
-	CellProperties aux;
-	aux.height = 0;
-	safeZoneMap.resize(length, vector<CellProperties>(cols, aux));
 	for (uint i = 0; i < rows; ++i) {
 		floorRows[i].setPos(vec2(colOffset*realTileSize, rowOffset*tileSize.y + offsetZ + i*tileSize.y));
 		updateFloorRow(floorRows[i]);
