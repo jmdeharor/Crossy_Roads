@@ -57,6 +57,7 @@ public:
 	void init(const Assets& assets, glm::vec3 lightDir, glm::vec3 offset, float jumpDistance, Floor &floor);
 	PlayerReturn update(int deltaTime);
 	glm::vec3 getPos() const;
+	float getHeight() const;
 	Player();
 	~Player();
 };

@@ -239,10 +239,14 @@ void FloorRow::initSea() {
 	tile.setCenter(vec3(bbcenter.x, bbcenter.y + height / 2.f, bbcenter.z));
 	tile.setPos(vec3(pos.x, rowHeight, pos.y));
 
+	static const Mesh* crocoMesh = assets->getMesh(crocodile);
+	static vec3 crocodilebb = crocoMesh->getbbSize();
+	static vec3 crocoSize = vec3(3 * realTileSize, 1, tileSize.y) / crocodilebb;
+
 	for (uint i = 0; i < enemies.size(); ++i) {
 		ShadowedObject& enemy = enemies[i];
 		enemy.setMesh(crocodile, assets->getMesh(crocodile));
-		enemy.setScale(vec3(0.1f));
+		enemy.setScale(crocoSize);
 		enemy.setCenterToBaseCenter();
 		enemy.setPlane(vec4(0, 1, 0, -rowHeight), lightDir);
 		speeds[i] = generateSpeed();

@@ -6,6 +6,8 @@
 
 class Camera {
 private:
+	float prevHeight;
+	bool heightTransition;
 	const Player* player;
 	glm::vec3 lightDir;
 	EulerPerspCamera cam;

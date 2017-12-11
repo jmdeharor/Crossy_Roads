@@ -162,8 +162,8 @@ void Scene::init() {
 
 void Scene::update(int deltaTime) {
 	QueryPerformanceCounter(&start);
-	camera.update(deltaTime);
 	floor.update(deltaTime);
+	camera.update(deltaTime);
 	PlayerReturn playerAction;
 	playerAction = player.update(deltaTime);
 	switch (playerAction) {

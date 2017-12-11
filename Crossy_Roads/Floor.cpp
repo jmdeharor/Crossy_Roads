@@ -139,7 +139,7 @@ void Floor::updateFloorRow(FloorRow& floorRow) {
 			biome = Ship;
 			break;
 		}
-		biomeLength = between(10, 20);
+		biomeLength = between(40, 60);
 		biomeCounter = 0;
 	}
 	++biomeCounter;
@@ -212,7 +212,7 @@ void Floor::init(vec3 lightDir, const Assets& assets) {
 	textureIndex.resize(cols, 999);
 
 	biome = Ship;
-	biomeLength = between(20, 30);
+	biomeLength = between(40, 60);
 	biomeCounter = 0;
 
 	type = Safe;

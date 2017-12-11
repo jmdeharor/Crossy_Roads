@@ -8,6 +8,7 @@ const float playerOffset = 5;
 
 void Camera::init(vec3 lightDir, const Player* player) {
 	this->player = player;
+	prevHeight = player->getHeight();
 	cam.VRP = player->getPos() + vec3(0, 0, playerOffset);
 	cam.d = 24;
 	cam.phi = 0;
@@ -72,21 +73,40 @@ void Camera::update(int deltaTime) {
 	vec3 playerPos = player->getPos();
 	playerPos.z += playerOffset;
 
-	vec2 vel(0);
+	vec3 vel(0);
 
-	if (playerPos.z-cam.VRP.z > 0.5f)
-		vel.y = (playerPos.z - cam.VRP.z)*0.03f;
+	float diffz = cam.VRP.z - playerPos.z;
+	if (diffz > 0.5f)
+		vel.z = diffz*0.03f;
 	//else
 	//	vel.y = 0.01f;
 	if (playerPos.x > 5.f)
 		vel.x = (5.f - cam.VRP.x)*0.03f;
 	else if (playerPos.x < -5.f)
 		vel.x = (-5.f - cam.VRP.x)*0.03f;
-	else
-		vel.x = (playerPos.x - cam.VRP.x)*0.03f;
+	else {
+		vel.x = (cam.VRP.x - playerPos.x)*0.03f;
+	}
 
-	cam.VRP.x += vel.x;
-	cam.VRP.z += vel.y;
+	float currHeight = player->getHeight();
+
+	if (currHeight != prevHeight) {
+		heightTransition = true;
+		prevHeight = currHeight;
+	}
+
+	if (heightTransition) {
+		float heightDiff = prevHeight - cam.VRP.y;
+		if (abs(heightDiff) > 0.01f)
+			vel.y = heightDiff*0.03f;
+		else {
+			heightTransition = false;
+			vel.y = 0;
+			cam.VRP.y = prevHeight;
+		}
+	}
+
+	cam.VRP += vel;
 	lightCam.VRP = cam.VRP;
 	lightCam.OBS = cam.VRP + lightDir;
 	updateVM();

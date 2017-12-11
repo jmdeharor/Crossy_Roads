@@ -143,6 +143,10 @@ vec3 Player::getPos() const {
 	return playerObject.getPos();
 }
 
+float Player::getHeight() const {
+	return floor->getFloorRow(currentRowIndex)->getHeight();
+}
+
 void Player::setDirectionVector() {
 	switch (currentOrientation) {
 	case FRONT:
