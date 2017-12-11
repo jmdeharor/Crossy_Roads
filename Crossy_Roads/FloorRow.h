@@ -38,18 +38,16 @@ private:
 	static glm::vec2 tileSize;
 	static glm::uint cols;
 	static glm::vec3 lightDir;
-	static IdMesh pirateMesh;
-	static IdMesh pirateMesh2;
 	static std::vector<IdMesh> enemyMeshes;
 	const static Mesh* cubeMesh;
 	static std::vector<vector<IdTex>> floorTextures;
 	static IdMesh planeWood, water;
+	static IdMesh crocodile;
 public:
 	static void initIds(const Assets& assets);
 	void initSafeZone(std::vector<CellProperties>& map);
 	static void setParameters(glm::vec2 tileSize, glm::uint cols, glm::vec3 lightDir);
 	glm::vec2 getPos() const;
-	void moveToPosition(glm::vec2 position);
 	void setPos(glm::vec2 position);
 	void initRoad(Biome biome, std::vector<glm::uint>* adjacentRow = NULL);
 	void initShipRoad(std::vector<glm::uint>& adjacentRow);

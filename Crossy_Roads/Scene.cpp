@@ -18,7 +18,8 @@ Scene::~Scene() {
 const string meshNames[] = { 
 	"pirate", "pirate_2",
 	"barrel", "box",
-	"cubierta"
+	"cubierta",
+	"crocodile-00", "crocodile-01"
 };
 
 const string textureNames[] = { 
@@ -36,7 +37,7 @@ const TextureFilter textureMode[] = {
 	LINEAR, LINEAR, LINEAR, LINEAR, LINEAR,
 	LINEAR, LINEAR, LINEAR, LINEAR, LINEAR,
 	LINEAR, LINEAR, LINEAR, LINEAR, LINEAR,
-	NEAREST
+	NEAREST, NEAREST
 };
 
 const uint nMeshes = sizeof(meshNames) / sizeof(string);

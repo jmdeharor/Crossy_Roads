@@ -157,7 +157,7 @@ void Floor::updateFloorRow(FloorRow& floorRow) {
 				transition = true;
 				break;
 			case Road:
-				length = between(1, 4);
+				length = std::min((uint)between(1, 4), biomeLength-biomeCounter+1);
 				updateSafeZoneMap(length, cols, furniture, safeZoneMap);
 				type = Safe;
 				break;

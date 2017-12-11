@@ -39,6 +39,7 @@ void FloorRow::initIds(const Assets& assets) {
 	}
 	planeWood = assets.getTextureId("wood_plane");
 	water = assets.getTextureId("water_plane");
+	crocodile = assets.getMeshId("crocodile-01");
 }
 
 void FloorRow::setParameters(vec2 tileSize, uint cols, vec3 lightDir) {
@@ -51,30 +52,10 @@ vec2 FloorRow::getPos() const {
 	return pos;
 }
 
-float generateSpeed() {
+inline float generateSpeed() {
 	const static float maxSpeed = 0.3f;
 	const static float minSpeed = 0.05f;
 	return (((float)rand() / RAND_MAX)*(maxSpeed - minSpeed) + minSpeed)*(-1 + (rand()%2)*2);
-}
-
-void FloorRow::moveToPosition(vec2 position) {
-	static float realTileSize = tileSize.x / cols;
-	float offsetX = pos.x - (realTileSize*(cols / 2) - (1 - cols % 2)*realTileSize / 2);
-	for (uint i = 0; i < floorTiles.size(); ++i) {
-		Object& tile = floorTiles[i];
-		vec3 tilePos = tile.getPos();
-		tile.setPos(vec3(tilePos.x, tilePos.y, position.y));
-	}
-	for (uint i = 0; i < enemies.size(); ++i) {
-		speeds[i] = generateSpeed();
-		float startPoint;
-		if (speeds[i] >= 0)
-			startPoint = -tileSize.x / 2 + ((float)rand() / RAND_MAX) * tileSize.x;
-		else
-			startPoint = tileSize.x / 2 - ((float)rand() / RAND_MAX) * tileSize.x;
-		enemies[i].setPos(vec3(startPoint, 0, position.y));
-	}
-	pos = position;
 }
 
 void FloorRow::setPos(vec2 position) {
@@ -100,10 +81,6 @@ bool applyConstraints(uint meshIndex, uint numAdjacents, vector<uint>& adjacentR
 	if (meshIndex == adjacentRow[position])
 		return false;
 	return true;
-}
-
-inline uint minim(uint a, uint b) {
-	return a < b ? a : b;
 }
 
 inline int between(int min, int max) {
@@ -240,10 +217,9 @@ void FloorRow::initShipRoad(vector<uint>& adjacentRow) {
 }
 
 void FloorRow::initSea() {
-	safeZone = true;
 	furniture.clear();
-	enemies.clear();
-	speeds.clear();
+	enemies.resize(1);
+	speeds.resize(enemies.size());
 	rowObjects.clear();
 	floorTiles.resize(1);
 	rowHeight = -5;
@@ -262,6 +238,25 @@ void FloorRow::initSea() {
 	tile.setScale(floorTileSize);
 	tile.setCenter(vec3(bbcenter.x, bbcenter.y + height / 2.f, bbcenter.z));
 	tile.setPos(vec3(pos.x, rowHeight, pos.y));
+
+	for (uint i = 0; i < enemies.size(); ++i) {
+		ShadowedObject& enemy = enemies[i];
+		enemy.setMesh(crocodile, assets->getMesh(crocodile));
+		enemy.setScale(vec3(0.1f));
+		enemy.setCenterToBaseCenter();
+		enemy.setPlane(vec4(0, 1, 0, -rowHeight), lightDir);
+		speeds[i] = generateSpeed();
+		float startPoint;
+		if (speeds[i] >= 0) {
+			enemy.setRotationY(0);
+			startPoint = -tileSize.x / 2 + ((float)rand() / RAND_MAX) * tileSize.x;
+		}
+		else {
+			enemy.setRotationY(PI);
+			startPoint = tileSize.x / 2 - ((float)rand() / RAND_MAX) * tileSize.x;
+		}
+		enemy.setPos(vec3(startPoint, rowHeight, pos.y));
+	}
 }
 
 void FloorRow::update(int deltaTime) {
@@ -272,11 +267,17 @@ void FloorRow::update(int deltaTime) {
 		if (x > tileSize.x / 2 || x < -tileSize.x/2) {
 			speeds[i] = generateSpeed();
 			float startPoint;
-			if (speeds[i] >= 0)
+			if (speeds[i] >= 0) {
+				if (biome == Sea)
+					object.setRotationY(0);
 				startPoint = -tileSize.x / 2;
-			else
+			}
+			else {
+				if (biome == Sea)
+					object.setRotationY(PI);
 				startPoint = tileSize.x / 2;
-			object.setPos(vec3(startPoint, 0, pos.y));
+			}
+			object.setPos(vec3(startPoint, rowHeight, pos.y));
 		}
 	}
 }
@@ -322,7 +323,7 @@ FloorRow::~FloorRow()
 vec2 FloorRow::tileSize;
 uint FloorRow::cols;
 vec3 FloorRow::lightDir;
-IdMesh FloorRow::pirateMesh;
+IdMesh FloorRow::crocodile;
 const Mesh* FloorRow::cubeMesh;
 vector<vector<IdTex>> FloorRow::floorTextures;
 vector<IdMesh> FloorRow::enemyMeshes;
