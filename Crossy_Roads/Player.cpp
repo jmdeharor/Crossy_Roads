@@ -86,6 +86,8 @@ PlayerReturn Player::update(int deltaTime) {
 				setDirectionVector();
 				inMovement = true;
 				currentColIndex += 1;
+				float currentHeight = floor->getFloorRow(currentRowIndex)->getHeight();
+				verticalSpeed = getJumpingSpeed(currentHeight, currentHeight, JUMP_DURATION);
 			}
 			wPressed = dPressed = sPressed = false;
 		}
@@ -98,6 +100,8 @@ PlayerReturn Player::update(int deltaTime) {
 				setDirectionVector();
 				inMovement = true;
 				currentColIndex -= 1;
+				float currentHeight = floor->getFloorRow(currentRowIndex)->getHeight();
+				verticalSpeed = getJumpingSpeed(currentHeight, currentHeight, JUMP_DURATION);
 			}
 			wPressed = aPressed = sPressed = false;
 		}

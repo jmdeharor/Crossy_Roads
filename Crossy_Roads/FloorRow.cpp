@@ -83,6 +83,7 @@ void FloorRow::setPos(vec2 position) {
 
 void FloorRow::initRoad(Biome biome, vector<uint>* adjacentRow) {
 	this->biome = biome;
+	safeZone = false;
 	switch (biome) {
 		case Ship:
 			initShipRoad(*adjacentRow);
@@ -105,14 +106,11 @@ inline uint minim(uint a, uint b) {
 	return a < b ? a : b;
 }
 
-inline uint between(uint min, uint max) {
+inline int between(int min, int max) {
 	float num = ((float)rand() / RAND_MAX)*(max - min) + min;
-	uint floor = (uint)num;
-	if (num - floor >= 0.5)
-		return floor + 1;
-	else
-		return floor;
+	return (int)round(num);
 }
+
 pair<uint,uint> generateRandomTextureIndex(uint i, uint prevMeshIndex, vector<uint>& adjacentRow) {
 	uint textureIndex;
 	uint numAdjacentTiles;
@@ -186,7 +184,6 @@ float FloorRow::getHeight() const {
 }
 
 void FloorRow::initShipRoad(vector<uint>& adjacentRow) {
-	safeZone = false;
 	rowObjects.clear();
 	furniture.clear();
 	enemies.resize(2);

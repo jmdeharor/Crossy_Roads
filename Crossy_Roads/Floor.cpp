@@ -76,7 +76,15 @@ inline void updateSafeZoneMap(uint size, uint cols, vector<MeshConfig>& furnitur
 inline void updateSafeZoneMap(uint size, uint cols, vector<MeshConfig>& furniture, vector<vector<CellProperties>>& map) {
 	CellProperties aux;
 	aux.height = 0;
+	
+	uint prevSize = map.size();
 	map.resize(size, vector<CellProperties>(cols, aux));
+	for (uint i = 0; i < std::min(prevSize, size); ++i) {
+		for (uint j = 0; j < cols; ++j) {
+			map[i][j] = aux;
+		}
+	}
+
 	vector<ivec2> indices;
 	indices.reserve(size*cols);
 
