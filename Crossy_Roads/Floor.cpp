@@ -215,13 +215,14 @@ void Floor::init(vec3 lightDir, const Assets& assets) {
 	biomeLength = between(20, 30);
 	biomeCounter = 0;
 
-	ivec2 playerIni;
-	playerIni.x = biomeLength - 1 - rows / 2 - rowOffset;
-	playerIni.y = cols / 2 - colOffset;
-
 	type = Safe;
 	length = rows/2 - rowOffset + between(2, 5);
 	counter = 0;
+
+	ivec2 playerIni;
+	playerIni.x = length - 1 - rows / 2 - rowOffset;
+	playerIni.y = cols / 2 - colOffset;
+
 	updateSafeZoneMap(length, cols, furniture, safeZoneMap, playerIni);
 	for (uint i = 0; i < rows; ++i) {
 		floorRows[i].setPos(vec2(colOffset*realTileSize, rowOffset*tileSize.y + offsetZ + i*tileSize.y));
