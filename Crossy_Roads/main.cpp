@@ -84,10 +84,12 @@ static void idleCallback()
 	}
 }
 
+unsigned int seed;
 
 int main(int argc, char **argv)
 {
-	srand((unsigned int)time(NULL));
+	seed = (unsigned int)time(NULL);
+	srand(seed);
 	// GLUT initialization
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE | GLUT_DEPTH);

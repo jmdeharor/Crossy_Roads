@@ -220,7 +220,7 @@ void Floor::init(vec3 lightDir, const Assets& assets) {
 	counter = 0;
 
 	ivec2 playerIni;
-	playerIni.x = length - 1 - rows / 2 - rowOffset;
+	playerIni.x = length - 1 - (rows / 2 - rowOffset);
 	playerIni.y = cols / 2 - colOffset;
 
 	updateSafeZoneMap(length, cols, furniture, safeZoneMap, playerIni);
