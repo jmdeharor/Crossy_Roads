@@ -75,17 +75,17 @@ void Camera::update(int deltaTime) {
 
 	vec3 vel(0);
 
-	float diffz = cam.VRP.z - playerPos.z;
+	float diffz = playerPos.z - cam.VRP.z;
 	if (diffz > 0.5f)
 		vel.z = diffz*0.03f;
 	//else
-	//	vel.y = 0.01f;
+	//	vel.z = 0.01f;
 	if (playerPos.x > 5.f)
 		vel.x = (5.f - cam.VRP.x)*0.03f;
 	else if (playerPos.x < -5.f)
 		vel.x = (-5.f - cam.VRP.x)*0.03f;
 	else {
-		vel.x = (cam.VRP.x - playerPos.x)*0.03f;
+		vel.x = (playerPos.x - cam.VRP.x)*0.03f;
 	}
 
 	float currHeight = player->getHeight();
