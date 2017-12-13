@@ -205,7 +205,7 @@ float Player::getJumpingSpeed(float y0, float y, uint frames) {
 bool Player::collides() {
 	bool collision = false;
 	FloorRow* currentRow = floor->getFloorRow(currentRowIndex);
-	vector<ShadowedObject>* rowEnemies = currentRow->getEnemies();
+	vector<Jumper>* rowEnemies = currentRow->getEnemies();
 	for (uint i = 0; i < rowEnemies->size() && !collision; ++i) {
 		collision = playerObject.collidesWith((*rowEnemies)[i]);
 	}
