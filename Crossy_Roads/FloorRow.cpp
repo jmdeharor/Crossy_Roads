@@ -49,6 +49,11 @@ void FloorRow::setParameters(vec2 tileSize, uint cols, vec3 lightDir, uint colOf
 	offset = -tileSize.x/2 + colOffset*realTileSize;
 }
 
+float FloorRow::worldToCol(float x)
+{
+	return (x - offset) / realTileSize;
+}
+
 vec2 FloorRow::getPos() const {
 	return pos;
 }
@@ -159,15 +164,18 @@ void FloorRow::initSafeZone(vector<CellProperties>& map) {
 }
 
 vec3 FloorRow::getHeight(uint col) const {
-	vec3 myHeight = vec3(0, rowHeight, 0);
+	//vec3 myHeight = vec3(0, rowHeight, 0);
+	float offsetX = pos.x - (realTileSize*(cols / 2) - (1 - cols % 2)*realTileSize / 2);
+	vec3 myHeight = vec3(offsetX + col*realTileSize, rowHeight, pos.y);
 	//float myHeight = rowHeight;
 	for (uint i = 0; i < platforms.size(); ++i) {
-		uint index = (platforms[i].getPos().x - offset) / realTileSize;
+		uint index = worldToCol(platforms[i].getPos().x);
 		if (index == col || index == col + 1 || index == col - 1) {
-			if ((rowHeight + platforms[i].getHeight()) > myHeight.y) {
-				myHeight.y = rowHeight + platforms[i].getHeight();
-				myHeight.x = platforms[i].getPos().x + speeds[i] * 11;
-			}
+			myHeight.y = rowHeight + platforms[i].getHeight();
+			myHeight.x = platforms[i].getPos().x + speeds[i] * 11;
+			if (index == col + 1) myHeight.x -= realTileSize;
+			else if (index == col - 1) myHeight.x += realTileSize;
+			break;
 		}
 	}
 	return myHeight;
@@ -352,6 +360,11 @@ vector<Jumper>* FloorRow::getEnemies() {
 
 vector<CellProperties>* FloorRow::getRowObjects() {
 	return &rowObjects;
+}
+
+std::vector<ShadowedObject>* FloorRow::getPlatforms()
+{
+	return &platforms;
 }
 
 bool FloorRow::isSafeZone() const {

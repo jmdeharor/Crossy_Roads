@@ -26,6 +26,7 @@ private:
 	bool wPressed, aPressed, sPressed, dPressed, bPressed;
 	bool inMovement;
 	float speed, verticalSpeed, gravity;
+	glm::vec3 speeds;
 	float currentVerticalSpeed;
 	float jumpDistance;
 	float testJump;
@@ -37,7 +38,7 @@ private:
 	glm::uint currentColIndex;
 	glm::vec3 lightDir;
 	bool upsideDown;
-
+	glm::vec3 nextPos;
 
 	void setDirectionVector();
 	bool keepMoving();
@@ -45,7 +46,6 @@ private:
 	void performRotation(char key);
 	bool collides();
 	bool collidesWithEnv(glm::uint row, glm::uint col);
-
 
 public:
 	void groupDrawableObjects(
@@ -58,6 +58,7 @@ public:
 	PlayerReturn update(int deltaTime);
 	glm::vec3 getPos() const;
 	float getHeight() const;
+	void calculateSpeeds();
 	Player();
 	~Player();
 };
