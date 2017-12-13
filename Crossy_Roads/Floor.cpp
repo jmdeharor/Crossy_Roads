@@ -204,7 +204,7 @@ void Floor::init(vec3 lightDir, const Assets& assets) {
 	furniture[2] = configAux;
 
 	FloorRow::initIds(assets);
-	FloorRow::setParameters(tileSize, cols, lightDir);
+	FloorRow::setParameters(tileSize, cols, lightDir, colOffset);
 
 	float realTileSize = tileSize.x / cols;
 

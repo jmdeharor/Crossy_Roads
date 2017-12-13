@@ -25,7 +25,7 @@ void Player::init(const Assets& assets, vec3 lightDir, vec3 offset, float jumpDi
 
 	currentRowIndex = floor.getRows() / 2 - floor.getRowOffset();
 	currentColIndex = floor.getCols() / 2 - floor.getColOffset();
-	float rowHeight = floor.getFloorRow(currentRowIndex)->getHeight();
+	float rowHeight = floor.getFloorRow(currentRowIndex)->getHeight(currentColIndex);
 
 	IdMesh pirateId = assets.getMeshId("pirate_2");
 	playerObject.setMesh(pirateId, assets.getMesh(pirateId));
@@ -71,8 +71,8 @@ PlayerReturn Player::update(int deltaTime) {
 				inMovement = true;
 				uint previousRowIndex = currentRowIndex;
 				currentRowIndex = nextRow;
-				float prevHeight = floor->getFloorRow(previousRowIndex)->getHeight();
-				float currentHeight = floor->getFloorRow(currentRowIndex)->getHeight();
+				float prevHeight = floor->getFloorRow(previousRowIndex)->getHeight(currentColIndex);
+				float currentHeight = floor->getFloorRow(currentRowIndex)->getHeight(currentColIndex);
 				verticalSpeed = getJumpingSpeed(prevHeight, currentHeight, JUMP_DURATION);
 			}
 			aPressed = dPressed = sPressed = false;
@@ -86,7 +86,7 @@ PlayerReturn Player::update(int deltaTime) {
 				setDirectionVector();
 				inMovement = true;
 				currentColIndex += 1;
-				float currentHeight = floor->getFloorRow(currentRowIndex)->getHeight();
+				float currentHeight = floor->getFloorRow(currentRowIndex)->getHeight(currentColIndex);
 				verticalSpeed = getJumpingSpeed(currentHeight, currentHeight, JUMP_DURATION);
 			}
 			wPressed = dPressed = sPressed = false;
@@ -100,7 +100,7 @@ PlayerReturn Player::update(int deltaTime) {
 				setDirectionVector();
 				inMovement = true;
 				currentColIndex -= 1;
-				float currentHeight = floor->getFloorRow(currentRowIndex)->getHeight();
+				float currentHeight = floor->getFloorRow(currentRowIndex)->getHeight(currentColIndex);
 				verticalSpeed = getJumpingSpeed(currentHeight, currentHeight, JUMP_DURATION);
 			}
 			wPressed = aPressed = sPressed = false;
@@ -116,8 +116,8 @@ PlayerReturn Player::update(int deltaTime) {
 				inMovement = true;
 				uint previousRowIndex = currentRowIndex;
 				currentRowIndex = nextRow;
-				float prevHeight = floor->getFloorRow(previousRowIndex)->getHeight();
-				float currentHeight = floor->getFloorRow(currentRowIndex)->getHeight();
+				float prevHeight = floor->getFloorRow(previousRowIndex)->getHeight(currentColIndex);
+				float currentHeight = floor->getFloorRow(currentRowIndex)->getHeight(currentColIndex);
 				verticalSpeed = getJumpingSpeed(prevHeight, currentHeight, JUMP_DURATION);
 			}
 			wPressed = dPressed = aPressed = false;
@@ -144,7 +144,7 @@ vec3 Player::getPos() const {
 }
 
 float Player::getHeight() const {
-	return floor->getFloorRow(currentRowIndex)->getHeight();
+	return floor->getFloorRow(currentRowIndex)->getHeight(currentColIndex);
 }
 
 void Player::setDirectionVector() {
@@ -182,7 +182,7 @@ void Player::performRotation(char key) {
 }
 
 bool Player::keepMoving() {
-	float auxHeight = floor->getFloorRow(currentRowIndex)->getHeight();
+	float auxHeight = floor->getFloorRow(currentRowIndex)->getHeight(currentColIndex);
 	currentFrame++;
 	bool returnValue = true;
 	playerObject.setPlane(vec4(0, 1, 0, -auxHeight), lightDir);

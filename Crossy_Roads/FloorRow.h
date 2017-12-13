@@ -31,6 +31,7 @@ private:
 	std::vector<ShadowedObject> furniture;
 	std::vector<TexturedObject> floorTiles;
 	std::vector<ShadowedObject> enemies;
+	std::vector<ShadowedObject> platforms;
 	std::vector<float> speeds;
 	glm::vec2 pos;
 
@@ -43,10 +44,12 @@ private:
 	static std::vector<vector<IdTex>> floorTextures;
 	static IdMesh planeWood, water;
 	static IdMesh crocodile;
+	static float offset;
+	static float realTileSize;
 public:
 	static void initIds(const Assets& assets);
 	void initSafeZone(std::vector<CellProperties>& map);
-	static void setParameters(glm::vec2 tileSize, glm::uint cols, glm::vec3 lightDir);
+	static void setParameters(glm::vec2 tileSize, glm::uint cols, glm::vec3 lightDir, glm::uint colOffset);
 	glm::vec2 getPos() const;
 	void setPos(glm::vec2 position);
 	void initRoad(Biome biome, std::vector<glm::uint>* adjacentRow = NULL);
@@ -58,7 +61,7 @@ public:
 		std::vector<std::vector<TexturedObject*>>& texturedObjects,
 		const FrustumG& frustum
 	) override;
-	float getHeight() const;
+	float getHeight(glm::uint col) const;
 	std::vector<ShadowedObject>* getEnemies();
 	std::vector<CellProperties>* getRowObjects();
 	bool isSafeZone() const;

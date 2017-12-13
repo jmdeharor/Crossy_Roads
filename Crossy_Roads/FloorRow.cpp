@@ -18,7 +18,6 @@ vector<uint> indices;
 
 void FloorRow::initIds(const Assets& assets) {
 	FloorRow::assets = &assets;
-
 	enemyMeshes.resize(enemyMeshesStrings.size());
 	for (uint i = 0; i < enemyMeshesStrings.size(); ++i) {
 		enemyMeshes[i] = assets.getMeshId(enemyMeshesStrings[i]);
@@ -38,14 +37,16 @@ void FloorRow::initIds(const Assets& assets) {
 		}
 	}
 	planeWood = assets.getTextureId("wood_plane");
-	water = assets.getTextureId("water_plane");
+	water = assets.getTextureId("water_3");
 	crocodile = assets.getMeshId("crocodile-01");
 }
 
-void FloorRow::setParameters(vec2 tileSize, uint cols, vec3 lightDir) {
+void FloorRow::setParameters(vec2 tileSize, uint cols, vec3 lightDir, uint colOffset) {
 	FloorRow::tileSize = tileSize;
 	FloorRow::cols = cols;
 	FloorRow::lightDir = lightDir;
+	realTileSize = tileSize.x / cols;
+	offset = -tileSize.x/2 + colOffset*realTileSize;
 }
 
 vec2 FloorRow::getPos() const {
@@ -111,6 +112,7 @@ pair<uint,uint> generateRandomTextureIndex(uint i, uint prevMeshIndex, vector<ui
 void FloorRow::initSafeZone(vector<CellProperties>& map) {
 	biome = Ship;
 	safeZone = true;
+	platforms.clear();
 	enemies.clear();
 	speeds.clear();
 	rowObjects = map;
@@ -156,13 +158,22 @@ void FloorRow::initSafeZone(vector<CellProperties>& map) {
 	}
 }
 
-float FloorRow::getHeight() const {
-	return rowHeight;
+float FloorRow::getHeight(uint col) const {
+	float myHeight = rowHeight;
+	for (uint i = 0; i < platforms.size(); ++i) {
+		uint index = (platforms[i].getPos().x - offset) / realTileSize;
+		if (index == col || index == col + 1 || index == col - 1) {
+			if((rowHeight + platforms[i].getHeight()) > myHeight)
+				myHeight = rowHeight + platforms[i].getHeight();
+		}
+	}
+	return myHeight;
 }
 
 void FloorRow::initShipRoad(vector<uint>& adjacentRow) {
 	rowObjects.clear();
 	furniture.clear();
+	platforms.clear();
 	enemies.resize(2);
 	speeds.resize(enemies.size());
 	floorTiles.resize(cols);
@@ -178,16 +189,19 @@ void FloorRow::initShipRoad(vector<uint>& adjacentRow) {
 	for (uint i = 0; i < enemies.size(); ++i) {
 		ShadowedObject& enemy = enemies[i];
 		enemy.setMesh(enemyMeshes[i], assets->getMesh(enemyMeshes[i]));
-		enemy.setRotationY(PI);
 		enemy.setScale(vec3(0.1f));
 		enemy.setCenterToBaseCenter();
 		enemy.setPlane(vec4(0, 1, 0, -rowHeight), lightDir);
 		speeds[i] = generateSpeed();
 		float startPoint;
-		if (speeds[i] >= 0)
+		if (speeds[i] >= 0) {
+			enemy.setRotationY(PI / 2);
 			startPoint = -tileSize.x / 2 + ((float)rand() / RAND_MAX) * tileSize.x;
-		else
+		}
+		else {
+			enemy.setRotationY(-PI / 2);
 			startPoint = tileSize.x / 2 - ((float)rand() / RAND_MAX) * tileSize.x;
+		}
 		enemy.setPos(vec3(startPoint, rowHeight, pos.y));
 	}
 
@@ -218,10 +232,11 @@ void FloorRow::initShipRoad(vector<uint>& adjacentRow) {
 
 void FloorRow::initSea() {
 	furniture.clear();
-	enemies.resize(1);
-	speeds.resize(enemies.size());
+	enemies.clear();
+	platforms.resize(1);
+	speeds.resize(platforms.size());
 	rowObjects.clear();
-	floorTiles.resize(1);
+	floorTiles.resize(cols);
 	rowHeight = -5;
 
 	static float realTileSize = tileSize.x / cols;
@@ -230,36 +245,39 @@ void FloorRow::initSea() {
 	static vec3 boundingBox = cubeMesh->getbbSize();
 	static vec3 bbcenter = cubeMesh->getbbCenter();
 	static float height = cubeMesh->getHeight();
-	static vec3 floorTileSize = vec3(tileSize.x, 0.2f, tileSize.y) / boundingBox;
+	static vec3 floorTileSize = vec3(realTileSize, 0.2f, tileSize.y) / boundingBox;
 
-	TexturedObject& tile = floorTiles[0];
-	tile.texture = water;
-	tile.setMesh(cubeMesh);
-	tile.setScale(floorTileSize);
-	tile.setCenter(vec3(bbcenter.x, bbcenter.y + height / 2.f, bbcenter.z));
-	tile.setPos(vec3(pos.x, rowHeight, pos.y));
+	for (uint i = 0; i < floorTiles.size(); ++i) {
+		TexturedObject& tile = floorTiles[i];
+		tile.texture = water;
+		tile.setRotationY(PI/2);
+		tile.setMesh(cubeMesh);
+		tile.setScale(floorTileSize);
+		tile.setCenter(vec3(bbcenter.x, bbcenter.y + height / 2.f, bbcenter.z));
+		tile.setPos(vec3(offsetX + i*realTileSize, rowHeight, pos.y));
+	}
 
 	static const Mesh* crocoMesh = assets->getMesh(crocodile);
 	static vec3 crocodilebb = crocoMesh->getbbSize();
 	static vec3 crocoSize = vec3(3 * realTileSize, 1, tileSize.y) / crocodilebb;
 
-	for (uint i = 0; i < enemies.size(); ++i) {
-		ShadowedObject& enemy = enemies[i];
-		enemy.setMesh(crocodile, assets->getMesh(crocodile));
-		enemy.setScale(crocoSize);
-		enemy.setCenterToBaseCenter();
-		enemy.setPlane(vec4(0, 1, 0, -rowHeight), lightDir);
+	for (uint i = 0; i < platforms.size(); ++i) {
+		ShadowedObject& platform = platforms[i];
+		platform.setMesh(crocodile, crocoMesh);
+		platform.setScale(crocoSize);
+		platform.setCenterToBaseCenter();
+		platform.setPlane(vec4(0, 1, 0, -rowHeight), lightDir);
 		speeds[i] = generateSpeed();
 		float startPoint;
 		if (speeds[i] >= 0) {
-			enemy.setRotationY(0);
+			platform.setRotationY(0);
 			startPoint = -tileSize.x / 2 + ((float)rand() / RAND_MAX) * tileSize.x;
 		}
 		else {
-			enemy.setRotationY(PI);
+			platform.setRotationY(PI);
 			startPoint = tileSize.x / 2 - ((float)rand() / RAND_MAX) * tileSize.x;
 		}
-		enemy.setPos(vec3(startPoint, rowHeight, pos.y));
+		platform.setPos(vec3(startPoint, rowHeight, pos.y));
 	}
 }
 
@@ -272,13 +290,29 @@ void FloorRow::update(int deltaTime) {
 			speeds[i] = generateSpeed();
 			float startPoint;
 			if (speeds[i] >= 0) {
-				if (biome == Sea)
-					object.setRotationY(0);
+				object.setRotationY(PI/2);
 				startPoint = -tileSize.x / 2;
 			}
 			else {
-				if (biome == Sea)
-					object.setRotationY(PI);
+				object.setRotationY(-PI/2);
+				startPoint = tileSize.x / 2;
+			}
+			object.setPos(vec3(startPoint, rowHeight, pos.y));
+		}
+	}
+	for (uint i = 0; i < platforms.size(); ++i) {
+		Object& object = platforms[i];
+		object.move(speeds[i], 0, 0);
+		float x = object.getPos().x;
+		if (x > tileSize.x / 2 || x < -tileSize.x / 2) {
+			speeds[i] = generateSpeed();
+			float startPoint;
+			if (speeds[i] >= 0) {
+				object.setRotationY(0);
+				startPoint = -tileSize.x / 2;
+			}
+			else {
+				object.setRotationY(PI);
 				startPoint = tileSize.x / 2;
 			}
 			object.setPos(vec3(startPoint, rowHeight, pos.y));
@@ -298,6 +332,11 @@ void FloorRow::groupDrawableObjects(vector<vector<Object*>>& objects, vector<vec
 	for (uint i = 0; i < furniture.size(); ++i) {
 		if (furniture[i].isInsideViewFrustrum(frustum))
 			objects[furniture[i].meshId].push_back(&furniture[i]);
+	}
+	for (uint i = 0; i < platforms.size(); ++i) {
+		if (platforms[i].isInsideViewFrustrum(frustum)) {
+			objects[platforms[i].meshId].push_back(&platforms[i]);
+		}
 	}
 }
 
@@ -324,6 +363,8 @@ FloorRow::~FloorRow()
 {
 }
 
+float FloorRow::offset;
+float FloorRow::realTileSize;
 vec2 FloorRow::tileSize;
 uint FloorRow::cols;
 vec3 FloorRow::lightDir;
