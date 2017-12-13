@@ -61,7 +61,7 @@ public:
 		std::vector<std::vector<TexturedObject*>>& texturedObjects,
 		const FrustumG& frustum
 	) override;
-	float getHeight(glm::uint col) const;
+	glm::vec3 getHeight(glm::uint col) const;
 	std::vector<ShadowedObject>* getEnemies();
 	std::vector<CellProperties>* getRowObjects();
 	bool isSafeZone() const;
