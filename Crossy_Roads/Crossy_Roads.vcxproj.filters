@@ -19,6 +19,24 @@
     <Filter Include="Archivos de encabezado\Camera">
       <UniqueIdentifier>{7ced8d26-7307-4364-b4ad-5a171a5ffdad}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Archivos de código fuente\Objects">
+      <UniqueIdentifier>{015563b2-b7be-4547-be19-7ce2f2b7b00c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de código fuente\Meshes">
+      <UniqueIdentifier>{d905adfd-e5f1-438f-ad46-bb6655e4f043}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de código fuente\FrustumCulling">
+      <UniqueIdentifier>{d2b009b4-fe75-4c31-9840-bfa46f71ce96}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de encabezado\Meshes">
+      <UniqueIdentifier>{2db7fc4b-4006-4500-8db5-7350fa88c9b4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de encabezado\FrustumCulling">
+      <UniqueIdentifier>{f693f9a3-75c1-4d3a-b019-7a39cdfbbb4d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de encabezado\Objects">
+      <UniqueIdentifier>{8cddedde-0178-4442-ba03-eaf63db55abe}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Game.cpp">
@@ -69,22 +87,10 @@
     <ClCompile Include="Camera\eulerorthocamera.cpp">
       <Filter>Archivos de código fuente\Camera</Filter>
     </ClCompile>
-    <ClCompile Include="Mesh.cpp">
-      <Filter>Archivos de código fuente</Filter>
-    </ClCompile>
     <ClCompile Include="Sphere.cpp">
       <Filter>Archivos de código fuente</Filter>
     </ClCompile>
-    <ClCompile Include="Object.cpp">
-      <Filter>Archivos de código fuente</Filter>
-    </ClCompile>
-    <ClCompile Include="ShadowedObject.cpp">
-      <Filter>Archivos de código fuente</Filter>
-    </ClCompile>
     <ClCompile Include="Floor.cpp">
-      <Filter>Archivos de código fuente</Filter>
-    </ClCompile>
-    <ClCompile Include="QuadMesh.cpp">
       <Filter>Archivos de código fuente</Filter>
     </ClCompile>
     <ClCompile Include="FloorRow.cpp">
@@ -93,20 +99,8 @@
     <ClCompile Include="Player.cpp">
       <Filter>Archivos de código fuente</Filter>
     </ClCompile>
-    <ClCompile Include="CubeMesh.cpp">
-      <Filter>Archivos de código fuente</Filter>
-    </ClCompile>
-    <ClCompile Include="ImportedMesh.cpp">
-      <Filter>Archivos de código fuente</Filter>
-    </ClCompile>
-    <ClCompile Include="TexturedObject.cpp">
-      <Filter>Archivos de código fuente</Filter>
-    </ClCompile>
     <ClCompile Include="Camera\obsorthocamera.cpp">
       <Filter>Archivos de código fuente\Camera</Filter>
-    </ClCompile>
-    <ClCompile Include="MultiCubeMesh.cpp">
-      <Filter>Archivos de código fuente</Filter>
     </ClCompile>
     <ClCompile Include="Assets.cpp">
       <Filter>Archivos de código fuente</Filter>
@@ -114,17 +108,44 @@
     <ClCompile Include="ObjectContainer.cpp">
       <Filter>Archivos de código fuente</Filter>
     </ClCompile>
+    <ClCompile Include="CubeMesh.cpp">
+      <Filter>Archivos de código fuente\Meshes</Filter>
+    </ClCompile>
+    <ClCompile Include="ImportedMesh.cpp">
+      <Filter>Archivos de código fuente\Meshes</Filter>
+    </ClCompile>
+    <ClCompile Include="Mesh.cpp">
+      <Filter>Archivos de código fuente\Meshes</Filter>
+    </ClCompile>
+    <ClCompile Include="MultiCubeMesh.cpp">
+      <Filter>Archivos de código fuente\Meshes</Filter>
+    </ClCompile>
+    <ClCompile Include="QuadMesh.cpp">
+      <Filter>Archivos de código fuente\Meshes</Filter>
+    </ClCompile>
     <ClCompile Include="AABox.cpp">
-      <Filter>Archivos de código fuente</Filter>
+      <Filter>Archivos de código fuente\FrustumCulling</Filter>
     </ClCompile>
     <ClCompile Include="FrustumG.cpp">
-      <Filter>Archivos de código fuente</Filter>
-    </ClCompile>
-    <ClCompile Include="Plane.cpp">
-      <Filter>Archivos de código fuente</Filter>
+      <Filter>Archivos de código fuente\FrustumCulling</Filter>
     </ClCompile>
     <ClCompile Include="Vec3.cpp">
-      <Filter>Archivos de código fuente</Filter>
+      <Filter>Archivos de código fuente\FrustumCulling</Filter>
+    </ClCompile>
+    <ClCompile Include="Object.cpp">
+      <Filter>Archivos de código fuente\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Jumper.cpp">
+      <Filter>Archivos de código fuente\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="ShadowedObject.cpp">
+      <Filter>Archivos de código fuente\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="TexturedObject.cpp">
+      <Filter>Archivos de código fuente\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Plane.cpp">
+      <Filter>Archivos de código fuente\FrustumCulling</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -173,16 +194,7 @@
     <ClInclude Include="Camera\eulerorthocamera.h">
       <Filter>Archivos de encabezado\Camera</Filter>
     </ClInclude>
-    <ClInclude Include="Mesh.h">
-      <Filter>Archivos de encabezado</Filter>
-    </ClInclude>
     <ClInclude Include="Sphere.h">
-      <Filter>Archivos de encabezado</Filter>
-    </ClInclude>
-    <ClInclude Include="Object.h">
-      <Filter>Archivos de encabezado</Filter>
-    </ClInclude>
-    <ClInclude Include="ShadowedObject.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
     <ClInclude Include="Floor.h">
@@ -197,20 +209,8 @@
     <ClInclude Include="Player.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
-    <ClInclude Include="CubeMesh.h">
-      <Filter>Archivos de encabezado</Filter>
-    </ClInclude>
-    <ClInclude Include="ImportedMesh.h">
-      <Filter>Archivos de encabezado</Filter>
-    </ClInclude>
-    <ClInclude Include="TexturedObject.h">
-      <Filter>Archivos de encabezado</Filter>
-    </ClInclude>
     <ClInclude Include="Camera\obsorthocamera.h">
       <Filter>Archivos de encabezado\Camera</Filter>
-    </ClInclude>
-    <ClInclude Include="MultiCubeMesh.h">
-      <Filter>Archivos de encabezado</Filter>
     </ClInclude>
     <ClInclude Include="Assets.h">
       <Filter>Archivos de encabezado</Filter>
@@ -222,16 +222,40 @@
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
     <ClInclude Include="AABox.h">
-      <Filter>Archivos de encabezado</Filter>
+      <Filter>Archivos de encabezado\FrustumCulling</Filter>
     </ClInclude>
     <ClInclude Include="FrustumG.h">
-      <Filter>Archivos de encabezado</Filter>
-    </ClInclude>
-    <ClInclude Include="Plane.h">
-      <Filter>Archivos de encabezado</Filter>
+      <Filter>Archivos de encabezado\FrustumCulling</Filter>
     </ClInclude>
     <ClInclude Include="Vec3.h">
-      <Filter>Archivos de encabezado</Filter>
+      <Filter>Archivos de encabezado\FrustumCulling</Filter>
+    </ClInclude>
+    <ClInclude Include="CubeMesh.h">
+      <Filter>Archivos de encabezado\Meshes</Filter>
+    </ClInclude>
+    <ClInclude Include="ImportedMesh.h">
+      <Filter>Archivos de encabezado\Meshes</Filter>
+    </ClInclude>
+    <ClInclude Include="MultiCubeMesh.h">
+      <Filter>Archivos de encabezado\Meshes</Filter>
+    </ClInclude>
+    <ClInclude Include="Mesh.h">
+      <Filter>Archivos de encabezado\Meshes</Filter>
+    </ClInclude>
+    <ClInclude Include="Object.h">
+      <Filter>Archivos de encabezado\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="ShadowedObject.h">
+      <Filter>Archivos de encabezado\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="TexturedObject.h">
+      <Filter>Archivos de encabezado\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Jumper.h">
+      <Filter>Archivos de encabezado\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Plane.h">
+      <Filter>Archivos de encabezado\FrustumCulling</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

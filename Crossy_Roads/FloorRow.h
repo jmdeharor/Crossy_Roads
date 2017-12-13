@@ -5,6 +5,7 @@
 #include "CubeMesh.h"
 #include "TexturedObject.h"
 #include "ObjectContainer.h"
+#include "Jumper.h"
 
 struct CellProperties {
 	glm::uint rows, cols;
@@ -30,7 +31,7 @@ private:
 	std::vector<CellProperties> rowObjects;
 	std::vector<ShadowedObject> furniture;
 	std::vector<TexturedObject> floorTiles;
-	std::vector<ShadowedObject> enemies;
+	std::vector<Jumper> enemies;
 	std::vector<ShadowedObject> platforms;
 	std::vector<float> speeds;
 	glm::vec2 pos;
@@ -61,8 +62,13 @@ public:
 		std::vector<std::vector<TexturedObject*>>& texturedObjects,
 		const FrustumG& frustum
 	) override;
+<<<<<<< HEAD
 	glm::vec3 getHeight(glm::uint col) const;
 	std::vector<ShadowedObject>* getEnemies();
+=======
+	float getHeight(glm::uint col) const;
+	std::vector<Jumper>* getEnemies();
+>>>>>>> 3d5211c903debf53b27b1129ed23563c8b6b85f6
 	std::vector<CellProperties>* getRowObjects();
 	bool isSafeZone() const;
 	Biome getBiome() const;

@@ -190,14 +190,14 @@ void FloorRow::initShipRoad(vector<uint>& adjacentRow) {
 	float offsetX = pos.x - (realTileSize*(cols / 2) - (1 - cols % 2)*realTileSize / 2);
 
 	for (uint i = 0; i < enemies.size(); ++i) {
-		ShadowedObject& enemy = enemies[i];
+		Jumper& enemy = enemies[i];
 		enemy.setMesh(enemyMeshes[i], assets->getMesh(enemyMeshes[i]));
 		enemy.setScale(vec3(0.1f));
 		enemy.setCenterToBaseCenter();
 		enemy.setPlane(vec4(0, 1, 0, -rowHeight), lightDir);
-		speeds[i] = generateSpeed();
+		enemy.horizontalSpeed = generateSpeed();
 		float startPoint;
-		if (speeds[i] >= 0) {
+		if (enemy.horizontalSpeed >= 0) {
 			enemy.setRotationY(PI / 2);
 			startPoint = -tileSize.x / 2 + ((float)rand() / RAND_MAX) * tileSize.x;
 		}
@@ -286,13 +286,13 @@ void FloorRow::initSea() {
 
 void FloorRow::update(int deltaTime) {
 	for (uint i = 0; i < enemies.size(); ++i) {
-		Object& object = enemies[i];
-		object.move(speeds[i], 0, 0);
+		Jumper& object = enemies[i];
+		object.update();
 		float x = object.getPos().x;
 		if (x > tileSize.x / 2 || x < -tileSize.x/2) {
-			speeds[i] = generateSpeed();
+			object.horizontalSpeed = generateSpeed();
 			float startPoint;
-			if (speeds[i] >= 0) {
+			if (object.horizontalSpeed >= 0) {
 				object.setRotationY(PI/2);
 				startPoint = -tileSize.x / 2;
 			}
@@ -301,6 +301,9 @@ void FloorRow::update(int deltaTime) {
 				startPoint = tileSize.x / 2;
 			}
 			object.setPos(vec3(startPoint, rowHeight, pos.y));
+		}
+		if (rand() % 128 == 0) {
+			object.jump();
 		}
 	}
 	for (uint i = 0; i < platforms.size(); ++i) {
@@ -343,7 +346,7 @@ void FloorRow::groupDrawableObjects(vector<vector<Object*>>& objects, vector<vec
 	}
 }
 
-vector<ShadowedObject>* FloorRow::getEnemies() {
+vector<Jumper>* FloorRow::getEnemies() {
 	return &enemies;
 }
 
