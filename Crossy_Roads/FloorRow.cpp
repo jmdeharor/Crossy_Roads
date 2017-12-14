@@ -14,6 +14,15 @@ const vector<string> enemyMeshesStrings = {
 	"pirate", "pirate_2"
 };
 
+union {
+	float f;
+	struct {
+		unsigned int mantisa : 23;
+		unsigned int exponent : 8;
+		unsigned int sign : 1;
+	} parts;
+} floatCast;
+
 vector<uint> indices;
 
 void FloorRow::initIds(const Assets& assets) {
@@ -39,6 +48,7 @@ void FloorRow::initIds(const Assets& assets) {
 	planeWood = assets.getTextureId("wood_plane");
 	water = assets.getTextureId("water_3");
 	crocodile = assets.getMeshId("crocodile-01");
+	shark = assets.getMeshId("shark-00");
 }
 
 void FloorRow::setParameters(vec2 tileSize, uint cols, vec3 lightDir, uint colOffset) {
@@ -58,10 +68,15 @@ vec2 FloorRow::getPos() const {
 	return pos;
 }
 
+const float maxSpeed = 0.3f;
+const float minSpeed = 0.05f;
+
 inline float generateSpeed() {
-	const static float maxSpeed = 0.3f;
-	const static float minSpeed = 0.05f;
 	return (((float)rand() / RAND_MAX)*(maxSpeed - minSpeed) + minSpeed)*(-1 + (rand()%2)*2);
+}
+
+inline float generateSpeed(float minSpeed, float maxSpeed, bool sign) {
+	return (((float)rand() / RAND_MAX)*(maxSpeed - minSpeed) + minSpeed)*(-1 + sign*2);
 }
 
 void FloorRow::setPos(vec2 position) {
@@ -244,7 +259,7 @@ void FloorRow::initShipRoad(vector<uint>& adjacentRow) {
 void FloorRow::initSea() {
 	furniture.clear();
 	enemies.clear();
-	platforms.resize(1);
+	platforms.resize(between(2, 4));
 	speeds.resize(platforms.size());
 	rowObjects.clear();
 	floorTiles.resize(cols);
@@ -269,26 +284,35 @@ void FloorRow::initSea() {
 	}
 
 	static const Mesh* crocoMesh = assets->getMesh(crocodile);
+	static const Mesh* sharkMesh = assets->getMesh(shark);
 	static vec3 crocodilebb = crocoMesh->getbbSize();
 	static vec3 crocoSize = vec3(3 * realTileSize, 1, tileSize.y) / crocodilebb;
 
-	for (uint i = 0; i < platforms.size(); ++i) {
+	uint nPlat = platforms.size();
+	for (uint i = 0; i < nPlat; ++i) {
 		ShadowedObject& platform = platforms[i];
-		platform.setMesh(crocodile, crocoMesh);
+		platform.setMesh(shark, sharkMesh);
 		platform.setScale(crocoSize);
 		platform.setCenterToBaseCenter();
 		platform.setPlane(vec4(0, 1, 0, -rowHeight), lightDir);
-		speeds[i] = generateSpeed();
+		float upperLimit;
+		if (i == 0) {
+			upperLimit = 0.2f;
+		}
+		else {
+			upperLimit = abs(speeds[i - 1]);
+		}
+		speeds[i] = generateSpeed(0.1f / (i+1), upperLimit, int(pos.y / tileSize.y) % 2);
 		float startPoint;
 		if (speeds[i] >= 0) {
 			platform.setRotationY(0);
-			startPoint = -tileSize.x / 2 + ((float)rand() / RAND_MAX) * tileSize.x;
+			startPoint = -tileSize.x / 2;
 		}
 		else {
 			platform.setRotationY(PI);
-			startPoint = tileSize.x / 2 - ((float)rand() / RAND_MAX) * tileSize.x;
+			startPoint = tileSize.x / 2;
 		}
-		platform.setPos(vec3(startPoint, rowHeight, pos.y));
+		platform.setPos(vec3(startPoint, rowHeight-0.5f, pos.y));
 	}
 }
 
@@ -319,7 +343,16 @@ void FloorRow::update(int deltaTime) {
 		object.move(speeds[i], 0, 0);
 		float x = object.getPos().x;
 		if (x > tileSize.x / 2 || x < -tileSize.x / 2) {
-			speeds[i] = generateSpeed();
+			float upperLimit;
+			if (i == 0) {
+				upperLimit = 0.2f;
+			}
+			else {
+				upperLimit = abs(speeds[i - 1]);
+			}
+			floatCast.f = speeds[i];
+			speeds[i] = generateSpeed(0.15f / (i+1), upperLimit, !floatCast.parts.sign);
+
 			float startPoint;
 			if (speeds[i] >= 0) {
 				object.setRotationY(0);
@@ -329,7 +362,8 @@ void FloorRow::update(int deltaTime) {
 				object.setRotationY(PI);
 				startPoint = tileSize.x / 2;
 			}
-			object.setPos(vec3(startPoint, rowHeight, pos.y));
+			vec3 prevPos = object.getPos();
+			object.setPos(vec3(startPoint, prevPos.y, pos.y));
 		}
 	}
 }
@@ -388,6 +422,7 @@ vec2 FloorRow::tileSize;
 uint FloorRow::cols;
 vec3 FloorRow::lightDir;
 IdMesh FloorRow::crocodile;
+IdMesh FloorRow::shark;
 const Mesh* FloorRow::cubeMesh;
 vector<vector<IdTex>> FloorRow::floorTextures;
 vector<IdMesh> FloorRow::enemyMeshes;

@@ -19,7 +19,7 @@ const string meshNames[] = {
 	"pirate", "pirate_2",
 	"barrel", "box",
 	"cubierta",
-	"crocodile-00", "crocodile-01"
+	"crocodile-00", "crocodile-01", "shark-00"
 };
 
 const string textureNames[] = { 
@@ -52,6 +52,7 @@ void Scene::firstInit() {
 	QueryPerformanceFrequency(&frequency);
 
 	initShaders();
+	//glEnable(GL_CULL_FACE);
 	glEnable(GL_TEXTURE_2D);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glStencilFunc(GL_EQUAL, 0, 1);

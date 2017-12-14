@@ -44,7 +44,7 @@ private:
 	const static Mesh* cubeMesh;
 	static std::vector<vector<IdTex>> floorTextures;
 	static IdMesh planeWood, water;
-	static IdMesh crocodile;
+	static IdMesh crocodile, shark;
 	static float offset;
 	static float realTileSize;
 public:
