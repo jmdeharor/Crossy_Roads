@@ -185,7 +185,7 @@ pair<vec3, float> FloorRow::getHeight(uint col) {
 	for (uint i = 0; i < platforms.size(); ++i) {
 		uint index = worldToCol(platforms[i].getPos().x);
 		if (index == col || index == col + 1 || index == col - 1) {
-			myHeight.y = rowHeight + platforms[i].getHeight();
+			myHeight.y = platforms[i].getPos().y + platforms[i].getHeight();
 			myHeight.x = platforms[i].getPos().x + speeds[i] * 11;
 			if (index == col + 1) myHeight.x -= realTileSize;
 			else if (index == col - 1) myHeight.x += realTileSize;
