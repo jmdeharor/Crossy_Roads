@@ -23,6 +23,7 @@ class Player : public GameObject, public ObjectContainer {
 	ShadowedObject playerObject;
 	void firstInit() override;
 private:
+	float platformSpeed;
 	bool wPressed, aPressed, sPressed, dPressed, bPressed;
 	bool inMovement;
 	float speed, verticalSpeed, gravity;

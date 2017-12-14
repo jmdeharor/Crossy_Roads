@@ -64,7 +64,7 @@ public:
 		std::vector<std::vector<TexturedObject*>>& texturedObjects,
 		const FrustumG& frustum
 	) override;
-	glm::vec3 getHeight(glm::uint col) const;
+	pair<glm::vec3, float> getHeight(glm::uint col);
 	std::vector<Jumper>* getEnemies();
 	std::vector<CellProperties>* getRowObjects();
 	std::vector<ShadowedObject>* getPlatforms();

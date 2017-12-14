@@ -25,7 +25,7 @@ void Player::init(const Assets& assets, vec3 lightDir, vec3 offset, float jumpDi
 
 	currentRowIndex = floor.getRows() / 2 - floor.getRowOffset();
 	currentColIndex = floor.getCols() / 2 - floor.getColOffset();
-	vec3 rowHeight = floor.getFloorRow(currentRowIndex)->getHeight(currentColIndex);
+	vec3 rowHeight = floor.getFloorRow(currentRowIndex)->getHeight(currentColIndex).first;
 
 	IdMesh pirateId = assets.getMeshId("pirate_2");
 	playerObject.setMesh(pirateId, assets.getMesh(pirateId));
@@ -47,21 +47,7 @@ void Player::init(const Assets& assets, vec3 lightDir, vec3 offset, float jumpDi
 }
 
 PlayerReturn Player::update(int deltaTime) {
-	vector<ShadowedObject>& platforms = *floor->getFloorRow(currentRowIndex)->getPlatforms();
-	for (uint i = 0; i < platforms.size(); ++i) {
-		uint index = FloorRow::worldToCol(platforms[i].getPos().x);
-		if (index == currentColIndex || index == currentColIndex + 1 || index == currentColIndex - 1) {
-			float newX = platforms[i].getPos().x;
-			float realTileSize = floor->getTileSize().x / floor->getCols();
-			if (index == currentColIndex + 1) newX -= realTileSize;
-			else if (index == currentColIndex - 1) newX += realTileSize;
-			playerObject.setPos(vec3(newX, playerObject.getPos().y, playerObject.getPos().z));
-			break;
-		}
-	}
 	currentColIndex = FloorRow::worldToCol(playerObject.getPos().x);
-
-
 
 	PlayerReturn ret = PlayerReturn::NOTHING;
 	if (!upsideDown && collides()) {
@@ -77,6 +63,8 @@ PlayerReturn Player::update(int deltaTime) {
 		}
 	}
 	else {
+		playerObject.move(platformSpeed, 0, 0);
+
 		if (Game::instance().getKey('w')) {
 			uint nextRow = (currentRowIndex + 1) % floor->getRows();
 			if (!wPressed && !collidesWithEnv(nextRow,currentColIndex)) {
@@ -88,9 +76,9 @@ PlayerReturn Player::update(int deltaTime) {
 				inMovement = true;
 				uint previousRowIndex = currentRowIndex;
 				currentRowIndex = nextRow;
-				vec3 prevPos = floor->getFloorRow(previousRowIndex)->getHeight(currentColIndex);
-				vec3 currentPos = floor->getFloorRow(currentRowIndex)->getHeight(currentColIndex);
-				nextPos = currentPos;
+				pair<vec3, float> currentPos = floor->getFloorRow(currentRowIndex)->getHeight(currentColIndex);
+				nextPos = currentPos.first;
+				platformSpeed = currentPos.second;
 				calculateSpeeds();
 			}
 			aPressed = dPressed = sPressed = false;
@@ -104,9 +92,9 @@ PlayerReturn Player::update(int deltaTime) {
 				setDirectionVector();
 				inMovement = true;
 				currentColIndex += 1;
-				vec3 currentPos = floor->getFloorRow(currentRowIndex)->getHeight(currentColIndex);
-				nextPos = currentPos;
-				verticalSpeed = getJumpingSpeed(currentPos.y, currentPos.y, JUMP_DURATION);
+				pair<vec3, float> currentPos = floor->getFloorRow(currentRowIndex)->getHeight(currentColIndex);
+				nextPos = currentPos.first;
+				platformSpeed = currentPos.second;
 				calculateSpeeds();
 			}
 			wPressed = dPressed = sPressed = false;
@@ -120,9 +108,9 @@ PlayerReturn Player::update(int deltaTime) {
 				setDirectionVector();
 				inMovement = true;
 				currentColIndex -= 1;
-				vec3 currentPos = floor->getFloorRow(currentRowIndex)->getHeight(currentColIndex);
-				nextPos = currentPos;
-				verticalSpeed = getJumpingSpeed(currentPos.y, currentPos.y, JUMP_DURATION);
+				pair<vec3, float> currentPos = floor->getFloorRow(currentRowIndex)->getHeight(currentColIndex);
+				nextPos = currentPos.first;
+				platformSpeed = currentPos.second;
 				calculateSpeeds();
 			}
 			wPressed = aPressed = sPressed = false;
@@ -138,10 +126,9 @@ PlayerReturn Player::update(int deltaTime) {
 				inMovement = true;
 				uint previousRowIndex = currentRowIndex;
 				currentRowIndex = nextRow;
-				vec3 prevPos = floor->getFloorRow(previousRowIndex)->getHeight(currentColIndex);
-				vec3 currentPos = floor->getFloorRow(currentRowIndex)->getHeight(currentColIndex);
-				nextPos = currentPos;
-				verticalSpeed = getJumpingSpeed(prevPos.y, currentPos.y, JUMP_DURATION);
+				pair<vec3, float> currentPos = floor->getFloorRow(currentRowIndex)->getHeight(currentColIndex);
+				nextPos = currentPos.first;
+				platformSpeed = currentPos.second;
 				calculateSpeeds();
 			}
 			wPressed = dPressed = aPressed = false;
@@ -168,7 +155,7 @@ vec3 Player::getPos() const {
 }
 
 float Player::getHeight() const {
-	return floor->getFloorRow(currentRowIndex)->getHeight(currentColIndex).y;
+	return floor->getFloorRow(currentRowIndex)->getHeight(currentColIndex).first.y;
 }
 
 void Player::calculateSpeeds()

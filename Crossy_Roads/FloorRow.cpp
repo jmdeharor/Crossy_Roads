@@ -163,11 +163,10 @@ void FloorRow::initSafeZone(vector<CellProperties>& map) {
 	}
 }
 
-vec3 FloorRow::getHeight(uint col) const {
-	//vec3 myHeight = vec3(0, rowHeight, 0);
+pair<vec3, float> FloorRow::getHeight(uint col) {
 	float offsetX = pos.x - (realTileSize*(cols / 2) - (1 - cols % 2)*realTileSize / 2);
 	vec3 myHeight = vec3(offsetX + col*realTileSize, rowHeight, pos.y);
-	//float myHeight = rowHeight;
+	float platformSpeed = 0;
 	for (uint i = 0; i < platforms.size(); ++i) {
 		uint index = worldToCol(platforms[i].getPos().x);
 		if (index == col || index == col + 1 || index == col - 1) {
@@ -175,10 +174,11 @@ vec3 FloorRow::getHeight(uint col) const {
 			myHeight.x = platforms[i].getPos().x + speeds[i] * 11;
 			if (index == col + 1) myHeight.x -= realTileSize;
 			else if (index == col - 1) myHeight.x += realTileSize;
+			platformSpeed = speeds[i];
 			break;
 		}
 	}
-	return myHeight;
+	return make_pair(myHeight, platformSpeed);
 }
 
 void FloorRow::initShipRoad(vector<uint>& adjacentRow) {
