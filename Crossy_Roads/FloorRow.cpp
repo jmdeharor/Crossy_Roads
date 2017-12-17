@@ -169,7 +169,6 @@ void FloorRow::initSafeZone(vector<CellProperties>& map) {
 		vec3 bbCenter = mesh->getbbCenter();
 		vec3 objectSize = vec3(realTileSize*map[i].cols, height, 0) / boundingBox;
 		objectSize.z = objectSize.x;
-		objectSize.y = objectSize.x;
 		object.setMesh(meshId, mesh);
 		object.setScale(objectSize);
 		object.setCenterToBaseCenter();

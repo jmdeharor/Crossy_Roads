@@ -187,9 +187,6 @@ void Floor::updateFloorRow(FloorRow& floorRow) {
 				length = between(3, 10);
 				if (length >= biomeLength - biomeCounter) {
 					length = biomeLength - biomeCounter-1;
-					if (biomeLength - biomeCounter == 1) {
-						int a = 3;
-					}
 				}
 				type = Road;
 				transition = true;
@@ -201,7 +198,12 @@ void Floor::updateFloorRow(FloorRow& floorRow) {
 					length = biomeLength - biomeCounter + (plankLength - 1);
 					lastRow = true;
 				}
-				else lastRow = false;
+				else if (length + 1 == biomeLength - biomeCounter) {
+					lastRow = false;
+					++length;
+				}
+				else
+					lastRow = false;
 				updateMap(lastRow, length);
 				type = Safe;
 				break;
