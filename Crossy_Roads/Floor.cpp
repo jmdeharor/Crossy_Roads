@@ -73,10 +73,12 @@ inline void updateSafeZoneMap(uint size, uint cols, vector<MeshConfig>& furnitur
 	}
 }
 
-inline void updateSafeZoneMap(uint size, uint cols, vector<MeshConfig>& furniture, vector<vector<CellProperties>>& map) {
+const uint plankLength = 3;
+
+void Floor::updateMap(bool lastRow, uint size) {
 	CellProperties aux;
 	aux.height = 0;
-	
+
 	uint prevSize = map.size();
 	map.resize(size, vector<CellProperties>(cols, aux));
 	for (uint i = 0; i < std::min(prevSize, size); ++i) {
@@ -84,6 +86,31 @@ inline void updateSafeZoneMap(uint size, uint cols, vector<MeshConfig>& furnitur
 			map[i][j] = aux;
 		}
 	}
+
+	uint start;
+
+	if (lastRow) {
+		aux.height = 1.5f;
+		aux.mesh = railMesh;
+		aux.cols = 1;
+		aux.rows = 1;
+		for (uint j = 0; j < cols; ++j) {
+			map[plankLength - 1][j] = aux;
+		}
+
+		uint plankPos = between(cols / 2 - 3, cols / 2 + 3);
+		aux.height = 0.1f;
+		aux.mesh = INVALID;
+		aux.rows = plankLength;
+		aux.cols = 1;
+		for (uint i = 0; i < plankLength; ++i) {
+			map[i][plankPos] = aux;
+		}
+		map[0][plankPos].mesh = plankMesh;
+		start = plankLength - 1;
+	}
+	else
+		start = 0;
 
 	vector<ivec2> indices;
 	indices.reserve(size*cols);
@@ -139,13 +166,18 @@ void Floor::updateFloorRow(FloorRow& floorRow) {
 			biome = Ship;
 			break;
 		}
-		biomeLength = between(40, 60);
+		biomeLength = between(15, 20);
 		biomeCounter = 0;
 	}
-	++biomeCounter;
 	switch (biome) {
 	case Sea:
-		floorRow.initRoad(Sea);
+		if (map.size() > 0) {
+			floorRow.initRoad(Sea, NULL, &map[map.size() - 1]);
+			map.pop_back();
+		}
+		else {
+			floorRow.initRoad(Sea);
+		}
 		break;
 	case Ship:
 		bool transition = false;
@@ -153,12 +185,24 @@ void Floor::updateFloorRow(FloorRow& floorRow) {
 			switch (type) {
 			case Safe:
 				length = between(3, 10);
+				if (length >= biomeLength - biomeCounter) {
+					length = biomeLength - biomeCounter-1;
+					if (biomeLength - biomeCounter == 1) {
+						int a = 3;
+					}
+				}
 				type = Road;
 				transition = true;
 				break;
 			case Road:
-				length = std::min((uint)between(1, 4), biomeLength-biomeCounter+1);
-				updateSafeZoneMap(length, cols, furniture, safeZoneMap);
+				length = between(1, 4);
+				bool lastRow;
+				if (length >= biomeLength - biomeCounter) {
+					length = biomeLength - biomeCounter + (plankLength - 1);
+					lastRow = true;
+				}
+				else lastRow = false;
+				updateMap(lastRow, length);
 				type = Safe;
 				break;
 			}
@@ -166,8 +210,8 @@ void Floor::updateFloorRow(FloorRow& floorRow) {
 		}
 		switch (type) {
 		case Safe:
-			floorRow.initSafeZone(safeZoneMap[safeZoneMap.size() - 1]);
-			safeZoneMap.pop_back();
+			floorRow.initSafeZone(map[map.size() - 1]);
+			map.pop_back();
 			break;
 		case Road:
 			if (transition) {
@@ -180,6 +224,7 @@ void Floor::updateFloorRow(FloorRow& floorRow) {
 		++counter;
 		break;
 	}
+	++biomeCounter;
 }
 
 void Floor::init(vec3 lightDir, const Assets& assets) {
@@ -189,12 +234,12 @@ void Floor::init(vec3 lightDir, const Assets& assets) {
 
 	MeshConfig configAux;
 	configAux.rows = 1;
-	configAux.cols = 1;
+	configAux.cols = 2;
 	configAux.height = 2;
-	configAux.mesh = assets.getMeshId("box");
+	configAux.mesh = assets.getMeshId("cannon");
 	furniture[0] = configAux;
 
-	configAux.mesh = assets.getMeshId("barrel");
+	configAux.mesh = assets.getMeshId("cannon");
 	furniture[1] = configAux;
 
 	configAux.rows = 3;
@@ -202,6 +247,9 @@ void Floor::init(vec3 lightDir, const Assets& assets) {
 	configAux.height = 0.5f;
 	configAux.mesh = assets.getMeshId("cubierta");
 	furniture[2] = configAux;
+
+	plankMesh = assets.getMeshId("plank");
+	railMesh = assets.getMeshId("railing_parrot");
 
 	FloorRow::initIds(assets);
 	FloorRow::setParameters(tileSize, cols, lightDir, colOffset);
@@ -212,7 +260,7 @@ void Floor::init(vec3 lightDir, const Assets& assets) {
 	textureIndex.resize(cols, 999);
 
 	biome = Ship;
-	biomeLength = between(40, 60);
+	biomeLength = between(15, 20);
 	biomeCounter = 0;
 
 	type = Safe;
@@ -223,7 +271,7 @@ void Floor::init(vec3 lightDir, const Assets& assets) {
 	playerIni.x = length - 1 - (rows / 2 - rowOffset);
 	playerIni.y = cols / 2 - colOffset;
 
-	updateSafeZoneMap(length, cols, furniture, safeZoneMap, playerIni);
+	updateSafeZoneMap(length, cols, furniture, map, playerIni);
 	for (uint i = 0; i < rows; ++i) {
 		floorRows[i].setPos(vec2(colOffset*realTileSize, rowOffset*tileSize.y + offsetZ + i*tileSize.y));
 		updateFloorRow(floorRows[i]);

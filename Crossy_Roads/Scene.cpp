@@ -19,7 +19,11 @@ const string meshNames[] = {
 	"pirate", "pirate_2",
 	"barrel", "box",
 	"cubierta",
-	"crocodile-00", "crocodile-01", "shark-00"
+	"crocodile-00", "crocodile-01",
+	"shark-00",
+	"plank",
+	"railing", "railing_parrot", "railing_rip",
+	"cannon"
 };
 
 const string textureNames[] = { 
@@ -244,9 +248,24 @@ void Scene::render() {
 			drawShadowProgram.setUniformMatrix4f(modelLoc, *object->getModel());
 			mesh->render(drawShadowProgram);
 		}
+		objects.clear();
 	}
 
-	texProgram.use();
+	const Mesh* mesh = assets.getCubeMesh();
+	mesh->setProgramParams(drawShadowProgram);
+	for (uint i = 0; i < texturedObjects.size(); ++i) {
+		vector<TexturedObject*>& objects = texturedObjects[i];
+		const Texture* tex = assets.getTexture(i);
+		tex->use();
+		for (uint j = 0; j < objects.size(); ++j) {
+			Object* object = objects[j];
+			drawShadowProgram.setUniformMatrix4f(modelLoc, *object->getModel());
+			mesh->render(drawShadowProgram);
+		}
+		objects.clear();
+	}
+
+	/*texProgram.use();
 	texProgram.setUniformMatrix4f(projectionLoc, *camera.getProjectionMatrix());
 	texProgram.setUniformMatrix4f(viewLoc, *camera.getViewMatrix());
 
@@ -288,7 +307,7 @@ void Scene::render() {
 
 	glDisable(GL_STENCIL_TEST);
 	glDisable(GL_BLEND);
-	glDisable(GL_POLYGON_OFFSET_FILL);
+	glDisable(GL_POLYGON_OFFSET_FILL);*/
 
 	QueryPerformanceCounter(&end);
 	LARGE_INTEGER elapsed;

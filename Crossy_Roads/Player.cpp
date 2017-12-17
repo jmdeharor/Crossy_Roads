@@ -203,7 +203,7 @@ void Player::performRotation(char key) {
 bool Player::keepMoving() {
 	currentFrame++;
 	bool returnValue = true;
-	playerObject.setPlane(vec4(0, 1, 0, -nextPos.y), lightDir);
+	//playerObject.setPlane(vec4(0, 1, 0, -nextPos.y), lightDir);
 
 	speeds.y = verticalSpeed + gravity*currentFrame;
 	if (currentFrame == JUMP_DURATION) {

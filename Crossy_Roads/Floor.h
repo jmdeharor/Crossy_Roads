@@ -17,7 +17,7 @@ struct MeshConfig {
 class Floor : public GameObject, public ObjectContainer {
 	glm::uint rows, cols;
 	glm::uint lastRow;
-	IdMesh deckMesh[4];
+	IdMesh plankMesh, railMesh;
 	float firstPos;
 	glm::uint colOffset;
 	glm::uint rowOffset;
@@ -25,13 +25,14 @@ class Floor : public GameObject, public ObjectContainer {
 	glm::uint length, biomeLength;
 	std::vector<MeshConfig> furniture;
 	std::vector<FloorRow> floorRows;
-	std::vector<std::vector<CellProperties>> safeZoneMap;
+	std::vector<std::vector<CellProperties>> map;
 	std::vector<glm::uint> textureIndex;
 	FloorType type;
 	Biome biome;
 	glm::vec2 tileSize;
 private:
 	void updateFloorRow(FloorRow& floorRow);
+	void updateMap(bool lastRow, glm::uint size);
 public:
 	void addLevel();
 	void firstInit() override;

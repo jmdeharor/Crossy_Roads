@@ -83,7 +83,7 @@ void FloorRow::setPos(vec2 position) {
 	pos = position;
 }
 
-void FloorRow::initRoad(Biome biome, vector<uint>* adjacentRow) {
+void FloorRow::initRoad(Biome biome, vector<uint>* adjacentRow, vector<CellProperties>* map) {
 	this->biome = biome;
 	safeZone = false;
 	switch (biome) {
@@ -91,7 +91,7 @@ void FloorRow::initRoad(Biome biome, vector<uint>* adjacentRow) {
 			initShipRoad(*adjacentRow);
 			break;
 		case Sea:
-			initSea();
+			initSea(map);
 			break;
 	}
 }
@@ -167,13 +167,14 @@ void FloorRow::initSafeZone(vector<CellProperties>& map) {
 
 		vec3 boundingBox = mesh->getbbSize();
 		vec3 bbCenter = mesh->getbbCenter();
-		vec3 objectSize = vec3(realTileSize*map[i].cols, height, tileSize.y*map[i].rows) / boundingBox;
-
+		vec3 objectSize = vec3(realTileSize*map[i].cols, height, 0) / boundingBox;
+		objectSize.z = objectSize.x;
+		objectSize.y = objectSize.x;
 		object.setMesh(meshId, mesh);
 		object.setScale(objectSize);
 		object.setCenterToBaseCenter();
 		float posX = offsetX + i*realTileSize;
-		object.setPos(vec3(posX + (realTileSize*(map[i].cols/2.f)) - realTileSize/2, rowHeight, pos.y - tileSize.y*(map[i].cols / 2.f) + tileSize.y/2));
+		object.setPos(vec3(posX + (realTileSize*(map[i].cols/2.f)) - realTileSize/2, rowHeight, pos.y - tileSize.y*(map[i].rows / 2.f) + tileSize.y/2));
 		object.setPlane(vec4(0, 1, 0, -rowHeight), lightDir);
 	}
 }
@@ -256,7 +257,7 @@ void FloorRow::initShipRoad(vector<uint>& adjacentRow) {
 	}
 }
 
-void FloorRow::initSea() {
+void FloorRow::initSea(vector<CellProperties>* map) {
 	furniture.clear();
 	enemies.clear();
 	platforms.resize(between(2, 4));
@@ -314,6 +315,31 @@ void FloorRow::initSea() {
 		}
 		platform.setPos(vec3(startPoint, rowHeight-0.5f, pos.y));
 	}
+
+	if (map == NULL)
+		return;
+	vector<CellProperties>& mapp = *map;
+	for (uint i = 0; i < cols; ++i) {
+		if (mapp[i].height == 0 || mapp[i].mesh == INVALID)
+			continue;
+		furniture.push_back(ShadowedObject());
+		ShadowedObject& object = furniture[furniture.size() - 1];
+		IdMesh meshId = mapp[i].mesh;
+		float height = mapp[i].height;
+
+		const Mesh* mesh = assets->getMesh(meshId);
+
+		vec3 boundingBox = mesh->getbbSize();
+		vec3 bbCenter = mesh->getbbCenter();
+		vec3 objectSize = vec3(realTileSize*mapp[i].cols, height, tileSize.y*mapp[i].rows) / boundingBox;
+
+		object.setMesh(meshId, mesh);
+		object.setScale(objectSize);
+		object.setCenterToBaseCenter();
+		float posX = offsetX + i*realTileSize;
+		object.setPos(vec3(posX + (realTileSize*(mapp[i].cols / 2.f)) - realTileSize / 2, rowHeight, pos.y - tileSize.y*(mapp[i].rows / 2.f) + tileSize.y / 2));
+		object.setPlane(vec4(0, 1, 0, -rowHeight), lightDir);
+	}
 }
 
 void FloorRow::update(int deltaTime) {
@@ -334,7 +360,7 @@ void FloorRow::update(int deltaTime) {
 			}
 			object.setPos(vec3(startPoint, rowHeight, pos.y));
 		}
-		if (rand() % 128 == 0) {
+		if (rand() % 512 == 0) {
 			object.jump();
 		}
 	}

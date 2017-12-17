@@ -55,9 +55,9 @@ public:
 
 	glm::vec2 getPos() const;
 	void setPos(glm::vec2 position);
-	void initRoad(Biome biome, std::vector<glm::uint>* adjacentRow = NULL);
+	void initRoad(Biome biome, std::vector<glm::uint>* adjacentRow = NULL, std::vector<CellProperties>* map = NULL);
 	void initShipRoad(std::vector<glm::uint>& adjacentRow);
-	void initSea();
+	void initSea(std::vector<CellProperties>* map);
 	void update(int deltaTime);
 	void groupDrawableObjects(
 		std::vector<std::vector<Object*>>& objects,
