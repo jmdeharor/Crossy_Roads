@@ -28,7 +28,7 @@ class Floor : public GameObject, public ObjectContainer {
 	std::vector<std::vector<CellProperties>> map;
 	std::vector<glm::uint> textureIndex;
 	FloorType type;
-	Biome biome;
+	BiomeType biome;
 	glm::vec2 tileSize;
 private:
 	void updateFloorRow(FloorRow& floorRow);

@@ -1,7 +1,7 @@
 #include "Camera.h"
 #include "Game.h"
 #include <GL\freeglut.h>
-#include "Pi.h"
+#include "Utils.h"
 using namespace glm;
 
 const float playerOffset = 5;

@@ -147,6 +147,15 @@
     <ClCompile Include="Plane.cpp">
       <Filter>Archivos de código fuente\FrustumCulling</Filter>
     </ClCompile>
+    <ClCompile Include="Biome.cpp">
+      <Filter>Archivos de código fuente</Filter>
+    </ClCompile>
+    <ClCompile Include="ShipBiome.cpp">
+      <Filter>Archivos de código fuente</Filter>
+    </ClCompile>
+    <ClCompile Include="SeaBiome.cpp">
+      <Filter>Archivos de código fuente</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game.h">
@@ -218,9 +227,6 @@
     <ClInclude Include="ObjectContainer.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
-    <ClInclude Include="Pi.h">
-      <Filter>Archivos de encabezado</Filter>
-    </ClInclude>
     <ClInclude Include="AABox.h">
       <Filter>Archivos de encabezado\FrustumCulling</Filter>
     </ClInclude>
@@ -256,6 +262,18 @@
     </ClInclude>
     <ClInclude Include="Plane.h">
       <Filter>Archivos de encabezado\FrustumCulling</Filter>
+    </ClInclude>
+    <ClInclude Include="Biome.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="ShipBiome.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="Utils.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="SeaBiome.h">
+      <Filter>Archivos de encabezado</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

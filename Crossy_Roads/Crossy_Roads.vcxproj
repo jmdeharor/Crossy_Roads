@@ -121,6 +121,7 @@
   <ItemGroup>
     <ClCompile Include="AABox.cpp" />
     <ClCompile Include="Assets.cpp" />
+    <ClCompile Include="Biome.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Camera\basecamera.cpp" />
     <ClCompile Include="Camera\eulercamera.cpp" />
@@ -148,9 +149,11 @@
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="QuadMesh.cpp" />
     <ClCompile Include="Scene.cpp" />
+    <ClCompile Include="SeaBiome.cpp" />
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="ShaderProgram.cpp" />
     <ClCompile Include="ShadowedObject.cpp" />
+    <ClCompile Include="ShipBiome.cpp" />
     <ClCompile Include="Sphere.cpp" />
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="TexturedObject.cpp" />
@@ -159,6 +162,7 @@
   <ItemGroup>
     <ClInclude Include="AABox.h" />
     <ClInclude Include="Assets.h" />
+    <ClInclude Include="Biome.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Camera\basecamera.h" />
     <ClInclude Include="Camera\eulercamera.h" />
@@ -179,7 +183,8 @@
     <ClInclude Include="Jumper.h" />
     <ClInclude Include="MultiCubeMesh.h" />
     <ClInclude Include="ObjectContainer.h" />
-    <ClInclude Include="Pi.h" />
+    <ClInclude Include="SeaBiome.h" />
+    <ClInclude Include="Utils.h" />
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="Object.h" />
     <ClInclude Include="Plane.h" />
@@ -189,6 +194,7 @@
     <ClInclude Include="Shader.h" />
     <ClInclude Include="ShaderProgram.h" />
     <ClInclude Include="ShadowedObject.h" />
+    <ClInclude Include="ShipBiome.h" />
     <ClInclude Include="Sphere.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="TexturedObject.h" />

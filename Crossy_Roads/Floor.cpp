@@ -1,6 +1,7 @@
 #include "Floor.h"
 #include <cmath>
 #include <glm\glm.hpp>
+#include "Utils.h"
 using namespace glm;
 
 Floor::Floor()
@@ -18,11 +19,6 @@ void Floor::firstInit() {
 	rows = 22;
 	cols = (uint)tileSize.x/(uint)tileSize.y;
 	floorRows.resize(rows);
-}
-
-inline int between(int min, int max) {
-	float num = ((float)rand() / RAND_MAX)*(max - min) + min;
-	return (int)round(num);
 }
 
 inline void updateSafeZoneMap(uint size, uint cols, vector<MeshConfig>& furniture, vector<vector<CellProperties>>& map, ivec2 restriction) {
@@ -169,14 +165,16 @@ void Floor::updateFloorRow(FloorRow& floorRow) {
 		biomeLength = between(15, 20);
 		biomeCounter = 0;
 	}
+	vector<uint> aux;
+	vector<CellProperties> aux2;
 	switch (biome) {
 	case Sea:
 		if (map.size() > 0) {
-			floorRow.initRoad(Sea, NULL, &map[map.size() - 1]);
+			floorRow.initRoad(Sea, aux, map[map.size() - 1]);
 			map.pop_back();
 		}
 		else {
-			floorRow.initRoad(Sea);
+			floorRow.initRoad(Sea, aux, aux2);
 		}
 		break;
 	case Ship:
@@ -212,7 +210,7 @@ void Floor::updateFloorRow(FloorRow& floorRow) {
 		}
 		switch (type) {
 		case Safe:
-			floorRow.initSafeZone(map[map.size() - 1]);
+			floorRow.initSafeZone(biome, map[map.size() - 1]);
 			map.pop_back();
 			break;
 		case Road:
@@ -220,7 +218,7 @@ void Floor::updateFloorRow(FloorRow& floorRow) {
 				for (uint i = 0; i < cols; ++i)
 					textureIndex[i] = 999;
 			}
-			floorRow.initRoad(Ship, &textureIndex);
+			floorRow.initRoad(biome, textureIndex, {});
 			break;
 		}
 		++counter;
@@ -254,7 +252,13 @@ void Floor::init(vec3 lightDir, const Assets& assets) {
 	railMesh = assets.getMeshId("railing_parrot");
 
 	FloorRow::initIds(assets);
-	FloorRow::setParameters(tileSize, cols, lightDir, colOffset);
+	FloorParams params;
+	params.tileSize = tileSize;
+	params.colOffset = colOffset;
+	params.lightDir = lightDir;
+	params.realTileSize = tileSize.x / cols;
+	params.cols = cols;
+	FloorRow::setParameters(params);
 
 	float realTileSize = tileSize.x / cols;
 
