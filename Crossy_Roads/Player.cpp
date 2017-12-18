@@ -158,8 +158,7 @@ float Player::getHeight() const {
 	return floor->getFloorRow(currentRowIndex)->getHeight(currentColIndex).first.y;
 }
 
-void Player::calculateSpeeds()
-{
+void Player::calculateSpeeds() {
 	vec3 playerPos = playerObject.getPos();
 	verticalSpeed = getJumpingSpeed(playerPos.y, nextPos.y, JUMP_DURATION);
 	speeds.x = (nextPos.x - playerPos.x) / JUMP_DURATION;
@@ -203,7 +202,6 @@ void Player::performRotation(char key) {
 bool Player::keepMoving() {
 	currentFrame++;
 	bool returnValue = true;
-	//playerObject.setPlane(vec4(0, 1, 0, -nextPos.y), lightDir);
 
 	speeds.y = verticalSpeed + gravity*currentFrame;
 	if (currentFrame == JUMP_DURATION) {
@@ -234,7 +232,7 @@ bool Player::collidesWithEnv(uint row, uint col) {
 	if (!rowToCheck->isSafeZone() || rowToCheck->getBiome() == Sea)
 		return false;
 	vector<CellProperties>* rowObjects = rowToCheck->getRowObjects();
-	return (*rowObjects)[col].height != 0;
+	return (*rowObjects)[col].collision;
 }
 
 Player::Player(){

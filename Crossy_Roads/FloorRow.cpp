@@ -23,24 +23,24 @@ void FloorRow::initResources(const Assets & assets) {
 }
 
 void FloorRow::initRoad(BiomeType type, vector<uint>& adjacentRow, const vector<CellProperties>& map) {
-	rowObjects = map;
+	this->map = map;
 	biomeType = type;
 	safeZone = false;
 	switch (type) {
 	case Ship:
-		initShipRoad(adjacentRow, map);
+		initShipRoad(adjacentRow);
 		break;
 	case Sea:
-		initSeaRoad(adjacentRow, map);
+		initSeaRoad(adjacentRow);
 		break;
 	}
 }
 
 void FloorRow::initSafeZone(BiomeType type, const vector<CellProperties>& map) {
-	rowObjects = map;
+	this->map = map;
 	biomeType = type;
 	safeZone = true;
-	initShipSafeZone(map);
+	initShipSafeZone();
 }
 
 void FloorRow::setParameters(const FloorParams & floorParams) {
@@ -61,6 +61,14 @@ pair<vec3, float> FloorRow::getHeight(uint col) {
 			else if (index == col - 1) myHeight.x += fp.realTileSize;
 			platformSpeed = speeds[i];
 			break;
+		}
+	}
+	if (map.size() > 0 && map[col].height > 0) {
+		if (rowHeight + map[col].verticalOffset + map[col].height > myHeight.y) {
+			myHeight.y = rowHeight + map[col].verticalOffset + map[col].height;
+			myHeight.x = offsetX + col*fp.realTileSize;
+			myHeight.z = pos.y;
+			platformSpeed = 0;
 		}
 	}
 	return make_pair(myHeight, platformSpeed);
@@ -143,7 +151,7 @@ vector<Jumper>* FloorRow::getEnemies() {
 }
 
 vector<CellProperties>* FloorRow::getRowObjects() {
-	return &rowObjects;
+	return &map;
 }
 
 vector<ShadowedObject>* FloorRow::getPlatforms()

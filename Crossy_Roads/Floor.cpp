@@ -23,7 +23,8 @@ void Floor::firstInit() {
 
 inline void updateSafeZoneMap(uint size, uint cols, vector<MeshConfig>& furniture, vector<vector<CellProperties>>& map, ivec2 restriction) {
 	CellProperties aux;
-	aux.height = 0;
+	aux.height = aux.verticalOffset = 0;
+	aux.collision = false;
 	map.resize(size, vector<CellProperties>(cols, aux));
 	vector<ivec2> indices;
 	indices.reserve(size*cols);
@@ -58,6 +59,8 @@ inline void updateSafeZoneMap(uint size, uint cols, vector<MeshConfig>& furnitur
 			for (uint j = 0; j < meshConfig.cols; ++j) {
 				CellProperties cell;
 				cell.mesh = INVALID;
+				cell.collision = true;
+				cell.verticalOffset = 0;
 				cell.height = meshConfig.height;
 				map[pos.x + i][pos.y + j] = cell;
 			}
@@ -73,7 +76,8 @@ const uint plankLength = 3;
 
 void Floor::updateMap(bool lastRow, uint size) {
 	CellProperties aux;
-	aux.height = 0;
+	aux.height = aux.verticalOffset = 0;
+	aux.collision = false;
 
 	uint prevSize = map.size();
 	map.resize(size, vector<CellProperties>(cols, aux));
@@ -88,14 +92,20 @@ void Floor::updateMap(bool lastRow, uint size) {
 	if (lastRow) {
 		aux.height = 1.5f;
 		aux.mesh = railMesh;
+		aux.collision = true;
 		aux.cols = 1;
 		aux.rows = 1;
 		for (uint j = 0; j < cols; ++j) {
-			map[plankLength - 1][j] = aux;
+			map[plankLength][j] = aux;
 		}
 
 		uint plankPos = between(cols / 2 - 3, cols / 2 + 3);
+		map[plankLength][plankPos].height = 0;
+		map[plankLength][plankPos].mesh = INVALID;
+		map[plankLength][plankPos].collision = false;
 		aux.height = 0.1f;
+		aux.verticalOffset = 5;
+		aux.collision = false;
 		aux.mesh = INVALID;
 		aux.rows = plankLength;
 		aux.cols = 1;
@@ -103,7 +113,7 @@ void Floor::updateMap(bool lastRow, uint size) {
 			map[i][plankPos] = aux;
 		}
 		map[0][plankPos].mesh = plankMesh;
-		start = plankLength - 1;
+		start = plankLength;
 	}
 	else
 		start = 0;
@@ -117,8 +127,8 @@ void Floor::updateMap(bool lastRow, uint size) {
 
 		MeshConfig& meshConfig = furniture[rand() % furniture.size()];
 
-		for (int i = 0; i < (int)size-(int)meshConfig.rows+1; ++i) {
-			for (int j = 0; j < (int)cols-(int)meshConfig.cols+1; ++j) {
+		for (int i = start; i < (int)size-(int)meshConfig.rows+1; ++i) {
+			for (int j = start; j < (int)cols-(int)meshConfig.cols+1; ++j) {
 				bool conflict = false;
 				for (uint i1 = 0; i1 < meshConfig.rows && !conflict; ++i1) {
 					for (uint j1 = 0; j1 < meshConfig.cols && !conflict; ++j1) {
@@ -139,6 +149,8 @@ void Floor::updateMap(bool lastRow, uint size) {
 			for (uint j = 0; j < meshConfig.cols; ++j) {
 				CellProperties cell;
 				cell.mesh = INVALID;
+				cell.verticalOffset = 0;
+				cell.collision = true;
 				cell.height = meshConfig.height;
 				map[pos.x+i][pos.y+j] = cell;
 			}
@@ -193,7 +205,7 @@ void Floor::updateFloorRow(FloorRow& floorRow) {
 				length = between(1, 4);
 				bool lastRow;
 				if (length >= biomeLength - biomeCounter) {
-					length = biomeLength - biomeCounter + (plankLength - 1);
+					length = biomeLength - biomeCounter + plankLength;
 					lastRow = true;
 				}
 				else if (length + 1 == biomeLength - biomeCounter) {

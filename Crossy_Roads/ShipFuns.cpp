@@ -30,8 +30,7 @@ inline pair<uint, uint> generateRandomTextureIndex(FloorResources& res, uint i, 
 	return make_pair(textureIndex, numAdjacentTiles);
 }
 
-void FloorRow::initShipRoad(vector<uint>& adjacentRow, const vector<CellProperties>& map) {
-	rowObjects.clear();
+void FloorRow::initShipRoad(vector<uint>& adjacentRow) {
 	furniture.clear();
 	platforms.clear();
 	enemies.resize(2);
@@ -91,11 +90,10 @@ void FloorRow::initShipRoad(vector<uint>& adjacentRow, const vector<CellProperti
 	}
 }
 
-void FloorRow::initShipSafeZone(const vector<CellProperties>& map) {
+void FloorRow::initShipSafeZone() {
 	platforms.clear();
 	enemies.clear();
 	speeds.clear();
-	rowObjects = map;
 	floorTiles.resize(1);
 	rowHeight = 0.2f;
 

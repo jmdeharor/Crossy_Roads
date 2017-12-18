@@ -2,12 +2,11 @@
 #include "Utils.h"
 using namespace glm;
 
-void FloorRow::initSeaRoad(std::vector<glm::uint>& adjacentRow, const std::vector<CellProperties>& map) {
+void FloorRow::initSeaRoad(vector<uint>& adjacentRow) {
 	furniture.clear();
 	enemies.clear();
 	platforms.resize(between(2, 4));
 	speeds.resize(platforms.size());
-	rowObjects.clear();
 	floorTiles.resize(fp.cols);
 	rowHeight = -5;
 
@@ -80,7 +79,7 @@ void FloorRow::initSeaRoad(std::vector<glm::uint>& adjacentRow, const std::vecto
 		object.setScale(objectSize);
 		object.setCenterToBaseCenter();
 		float posX = offsetX + i*realTileSize;
-		object.setPos(vec3(posX + (realTileSize*(map[i].cols / 2.f)) - realTileSize / 2, rowHeight, pos.y - fp.tileSize.y*(map[i].rows / 2.f) + fp.tileSize.y / 2));
+		object.setPos(vec3(posX + (realTileSize*(map[i].cols / 2.f)) - realTileSize / 2, rowHeight+map[i].verticalOffset, pos.y - fp.tileSize.y*(map[i].rows / 2.f) + fp.tileSize.y / 2));
 		object.setPlane(vec4(0, 1, 0, -rowHeight), fp.lightDir);
 	}
 }

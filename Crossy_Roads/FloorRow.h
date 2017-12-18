@@ -20,7 +20,8 @@ enum BiomeType {
 
 struct CellProperties {
 	glm::uint rows, cols;
-	float height;
+	float height, verticalOffset;
+	bool collision;
 	IdMesh mesh;
 };
 
@@ -39,7 +40,7 @@ private:
 	float rowHeight;
 	std::vector<Jumper> enemies;
 	std::vector<float> speeds;
-	std::vector<CellProperties> rowObjects;
+	std::vector<CellProperties> map;
 	std::vector<ShadowedObject> furniture;
 	std::vector<TexturedObject> floorTiles;
 	std::vector<ShadowedObject> platforms;
@@ -48,9 +49,9 @@ private:
 	static float offset;
 	static FloorResources res;
 private:
-	void initShipRoad(std::vector<glm::uint>& adjacentRow, const std::vector<CellProperties>& map);
-	void initShipSafeZone(const std::vector<CellProperties>& map);
-	void initSeaRoad(std::vector<glm::uint>& adjacentRow, const std::vector<CellProperties>& map);
+	void initShipRoad(std::vector<glm::uint>& adjacentRow);
+	void initShipSafeZone();
+	void initSeaRoad(std::vector<glm::uint>& adjacentRow);
 public:
 	glm::vec2 pos;
 public:
