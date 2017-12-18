@@ -6,7 +6,7 @@
 #include "TexturedObject.h"
 #include "ObjectContainer.h"
 #include "Jumper.h"
-#include "Biome.h"
+#include "FloorResources.h"
 
 enum FloorType {
 	Road,
@@ -18,24 +18,46 @@ enum BiomeType {
 	Sea
 };
 
+struct CellProperties {
+	glm::uint rows, cols;
+	float height;
+	IdMesh mesh;
+};
+
+struct FloorParams {
+	glm::vec2 tileSize;
+	glm::uint cols;
+	glm::uint colOffset;
+	float realTileSize;
+	glm::vec3 lightDir;
+};
+
 class FloorRow : public ObjectContainer {
 private:
 	BiomeType biomeType;
-	Biome* biome;
 	bool safeZone;
 	float rowHeight;
-	glm::vec2 pos;
-	RowVectors v;
+	std::vector<Jumper> enemies;
+	std::vector<float> speeds;
+	std::vector<CellProperties> rowObjects;
+	std::vector<ShadowedObject> furniture;
+	std::vector<TexturedObject> floorTiles;
+	std::vector<ShadowedObject> platforms;
 
 	static FloorParams fp;
 	static float offset;
+	static FloorResources res;
+private:
+	void initShipRoad(std::vector<glm::uint>& adjacentRow, const std::vector<CellProperties>& map);
+	void initShipSafeZone(const std::vector<CellProperties>& map);
+	void initSeaRoad(std::vector<glm::uint>& adjacentRow, const std::vector<CellProperties>& map);
 public:
-	static void initIds(const Assets& assets);
+	glm::vec2 pos;
+public:
+	static void initResources(const Assets& assets);
 	static void setParameters(const FloorParams& floorParams);
-	static float worldToCol(float x);
+	static glm::uint worldToCol(float x);
 
-	glm::vec2 getPos() const;
-	void setPos(glm::vec2 position);
 	void initRoad(BiomeType biome, std::vector<glm::uint>& adjacentRow, const std::vector<CellProperties>& map);
 	void initSafeZone(BiomeType type, const std::vector<CellProperties>& map);
 	void update(int deltaTime);

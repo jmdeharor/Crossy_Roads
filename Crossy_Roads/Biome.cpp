@@ -1,4 +1,4 @@
-#include "Biome.h"
+/*#include "Biome.h"
 using namespace glm;
 
 const vector<vector<string>> Biome::models = {
@@ -58,4 +58,4 @@ vector<IdMesh> Biome::enemyMeshes;
 IdTex Biome::planeWood;
 IdTex Biome::water;
 const Assets* Biome::assets;
-std::vector<glm::uint> Biome::indices;
+std::vector<glm::uint> Biome::indices;*/

@@ -1,5 +1,5 @@
 #pragma once
-#include "Biome.h"
+/*#include "Biome.h"
 
 class ShipBiome : public Biome {
 public:
@@ -8,4 +8,4 @@ public:
 	ShipBiome(RowVectors& vectors);
 	~ShipBiome();
 };
-
+*/

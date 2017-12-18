@@ -251,7 +251,7 @@ void Floor::init(vec3 lightDir, const Assets& assets) {
 	plankMesh = assets.getMeshId("plank");
 	railMesh = assets.getMeshId("railing_parrot");
 
-	FloorRow::initIds(assets);
+	FloorRow::initResources(assets);
 	FloorParams params;
 	params.tileSize = tileSize;
 	params.colOffset = colOffset;
@@ -279,17 +279,17 @@ void Floor::init(vec3 lightDir, const Assets& assets) {
 
 	updateSafeZoneMap(length, cols, furniture, map, playerIni);
 	for (uint i = 0; i < rows; ++i) {
-		floorRows[i].setPos(vec2(colOffset*realTileSize, rowOffset*tileSize.y + offsetZ + i*tileSize.y));
+		floorRows[i].pos = vec2(colOffset*realTileSize, rowOffset*tileSize.y + offsetZ + i*tileSize.y);
 		updateFloorRow(floorRows[i]);
 	}
 	lastRow = 0;
-	firstPos = floorRows[floorRows.size()-1].getPos().y;
+	firstPos = floorRows[floorRows.size()-1].pos.y;
 }
 
 void Floor::addLevel() {
 	firstPos += tileSize.y;
-	vec2 lastPos = floorRows[lastRow].getPos();
-	floorRows[lastRow].setPos(vec2(lastPos.x, firstPos));
+	vec2 lastPos = floorRows[lastRow].pos;
+	floorRows[lastRow].pos = vec2(lastPos.x, firstPos);
 	updateFloorRow(floorRows[lastRow]);
 
 	lastRow = (lastRow + 1) % rows;

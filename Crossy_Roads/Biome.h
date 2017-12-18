@@ -1,5 +1,5 @@
 #pragma once
-#include <vector>
+/*#include <vector>
 #include <glm\glm.hpp>
 #include "Assets.h"
 #include "TexturedObject.h"
@@ -52,5 +52,5 @@ public:
 	virtual void initSafeZone(const std::vector<CellProperties>& map);
 	Biome(RowVectors& vectors);
 	virtual ~Biome();
-};
+};*/
 

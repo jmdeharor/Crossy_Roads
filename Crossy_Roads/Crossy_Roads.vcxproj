@@ -134,6 +134,7 @@
     <ClCompile Include="Camera\perspcamera.cpp" />
     <ClCompile Include="CubeMesh.cpp" />
     <ClCompile Include="Floor.cpp" />
+    <ClCompile Include="FloorResources.cpp" />
     <ClCompile Include="FloorRow.cpp" />
     <ClCompile Include="FrustumG.cpp" />
     <ClCompile Include="Game.cpp" />
@@ -150,10 +151,12 @@
     <ClCompile Include="QuadMesh.cpp" />
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="SeaBiome.cpp" />
+    <ClCompile Include="SeaFuns.cpp" />
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="ShaderProgram.cpp" />
     <ClCompile Include="ShadowedObject.cpp" />
     <ClCompile Include="ShipBiome.cpp" />
+    <ClCompile Include="ShipFuns.cpp" />
     <ClCompile Include="Sphere.cpp" />
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="TexturedObject.cpp" />
@@ -175,6 +178,7 @@
     <ClInclude Include="Camera\perspcamera.h" />
     <ClInclude Include="CubeMesh.h" />
     <ClInclude Include="Floor.h" />
+    <ClInclude Include="FloorResources.h" />
     <ClInclude Include="FloorRow.h" />
     <ClInclude Include="FrustumG.h" />
     <ClInclude Include="Game.h" />

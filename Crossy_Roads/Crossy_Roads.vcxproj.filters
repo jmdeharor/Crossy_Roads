@@ -19,9 +19,6 @@
     <Filter Include="Archivos de encabezado\Camera">
       <UniqueIdentifier>{7ced8d26-7307-4364-b4ad-5a171a5ffdad}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Archivos de código fuente\Objects">
-      <UniqueIdentifier>{015563b2-b7be-4547-be19-7ce2f2b7b00c}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Archivos de código fuente\Meshes">
       <UniqueIdentifier>{d905adfd-e5f1-438f-ad46-bb6655e4f043}</UniqueIdentifier>
     </Filter>
@@ -37,6 +34,27 @@
     <Filter Include="Archivos de encabezado\Objects">
       <UniqueIdentifier>{8cddedde-0178-4442-ba03-eaf63db55abe}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Archivos de código fuente\Floor">
+      <UniqueIdentifier>{729be347-2df7-46ac-92bb-3670d8eb00e8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de código fuente\Objects">
+      <UniqueIdentifier>{015563b2-b7be-4547-be19-7ce2f2b7b00c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de código fuente\Floor\Biomes">
+      <UniqueIdentifier>{efc4e767-becb-4e1c-9d53-ddba8f1e7c94}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de encabezado\Floor">
+      <UniqueIdentifier>{950b6b6b-8420-4208-a67d-57cde499e8ab}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de encabezado\Floor\Biomes">
+      <UniqueIdentifier>{1f4b7ae6-834a-4b11-97a5-78a041451183}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de código fuente\Shaders">
+      <UniqueIdentifier>{37c9982f-ca0c-44cd-ba11-1c1b107842b8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de encabezado\Shaders">
+      <UniqueIdentifier>{92d43b69-e60a-45f4-badf-b6f452e0613b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Game.cpp">
@@ -46,12 +64,6 @@
       <Filter>Archivos de código fuente</Filter>
     </ClCompile>
     <ClCompile Include="Scene.cpp">
-      <Filter>Archivos de código fuente</Filter>
-    </ClCompile>
-    <ClCompile Include="Shader.cpp">
-      <Filter>Archivos de código fuente</Filter>
-    </ClCompile>
-    <ClCompile Include="ShaderProgram.cpp">
       <Filter>Archivos de código fuente</Filter>
     </ClCompile>
     <ClCompile Include="Texture.cpp">
@@ -86,15 +98,6 @@
     </ClCompile>
     <ClCompile Include="Camera\eulerorthocamera.cpp">
       <Filter>Archivos de código fuente\Camera</Filter>
-    </ClCompile>
-    <ClCompile Include="Sphere.cpp">
-      <Filter>Archivos de código fuente</Filter>
-    </ClCompile>
-    <ClCompile Include="Floor.cpp">
-      <Filter>Archivos de código fuente</Filter>
-    </ClCompile>
-    <ClCompile Include="FloorRow.cpp">
-      <Filter>Archivos de código fuente</Filter>
     </ClCompile>
     <ClCompile Include="Player.cpp">
       <Filter>Archivos de código fuente</Filter>
@@ -147,14 +150,38 @@
     <ClCompile Include="Plane.cpp">
       <Filter>Archivos de código fuente\FrustumCulling</Filter>
     </ClCompile>
-    <ClCompile Include="Biome.cpp">
-      <Filter>Archivos de código fuente</Filter>
+    <ClCompile Include="SeaBiome.cpp">
+      <Filter>Archivos de código fuente\Floor\Biomes</Filter>
+    </ClCompile>
+    <ClCompile Include="SeaFuns.cpp">
+      <Filter>Archivos de código fuente\Floor\Biomes</Filter>
     </ClCompile>
     <ClCompile Include="ShipBiome.cpp">
-      <Filter>Archivos de código fuente</Filter>
+      <Filter>Archivos de código fuente\Floor\Biomes</Filter>
     </ClCompile>
-    <ClCompile Include="SeaBiome.cpp">
-      <Filter>Archivos de código fuente</Filter>
+    <ClCompile Include="ShipFuns.cpp">
+      <Filter>Archivos de código fuente\Floor\Biomes</Filter>
+    </ClCompile>
+    <ClCompile Include="FloorRow.cpp">
+      <Filter>Archivos de código fuente\Floor</Filter>
+    </ClCompile>
+    <ClCompile Include="Floor.cpp">
+      <Filter>Archivos de código fuente\Floor</Filter>
+    </ClCompile>
+    <ClCompile Include="Sphere.cpp">
+      <Filter>Archivos de código fuente\Meshes</Filter>
+    </ClCompile>
+    <ClCompile Include="Shader.cpp">
+      <Filter>Archivos de código fuente\Shaders</Filter>
+    </ClCompile>
+    <ClCompile Include="ShaderProgram.cpp">
+      <Filter>Archivos de código fuente\Shaders</Filter>
+    </ClCompile>
+    <ClCompile Include="FloorResources.cpp">
+      <Filter>Archivos de código fuente\Floor</Filter>
+    </ClCompile>
+    <ClCompile Include="Biome.cpp">
+      <Filter>Archivos de código fuente\Floor\Biomes</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -162,12 +189,6 @@
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
     <ClInclude Include="Scene.h">
-      <Filter>Archivos de encabezado</Filter>
-    </ClInclude>
-    <ClInclude Include="Shader.h">
-      <Filter>Archivos de encabezado</Filter>
-    </ClInclude>
-    <ClInclude Include="ShaderProgram.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
     <ClInclude Include="Texture.h">
@@ -202,18 +223,6 @@
     </ClInclude>
     <ClInclude Include="Camera\eulerorthocamera.h">
       <Filter>Archivos de encabezado\Camera</Filter>
-    </ClInclude>
-    <ClInclude Include="Sphere.h">
-      <Filter>Archivos de encabezado</Filter>
-    </ClInclude>
-    <ClInclude Include="Floor.h">
-      <Filter>Archivos de encabezado</Filter>
-    </ClInclude>
-    <ClInclude Include="QuadMesh.h">
-      <Filter>Archivos de encabezado</Filter>
-    </ClInclude>
-    <ClInclude Include="FloorRow.h">
-      <Filter>Archivos de encabezado</Filter>
     </ClInclude>
     <ClInclude Include="Player.h">
       <Filter>Archivos de encabezado</Filter>
@@ -263,17 +272,38 @@
     <ClInclude Include="Plane.h">
       <Filter>Archivos de encabezado\FrustumCulling</Filter>
     </ClInclude>
-    <ClInclude Include="Biome.h">
-      <Filter>Archivos de encabezado</Filter>
-    </ClInclude>
-    <ClInclude Include="ShipBiome.h">
-      <Filter>Archivos de encabezado</Filter>
-    </ClInclude>
     <ClInclude Include="Utils.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
+    <ClInclude Include="ShipBiome.h">
+      <Filter>Archivos de encabezado\Floor\Biomes</Filter>
+    </ClInclude>
     <ClInclude Include="SeaBiome.h">
-      <Filter>Archivos de encabezado</Filter>
+      <Filter>Archivos de encabezado\Floor\Biomes</Filter>
+    </ClInclude>
+    <ClInclude Include="FloorRow.h">
+      <Filter>Archivos de encabezado\Floor</Filter>
+    </ClInclude>
+    <ClInclude Include="Floor.h">
+      <Filter>Archivos de encabezado\Floor</Filter>
+    </ClInclude>
+    <ClInclude Include="QuadMesh.h">
+      <Filter>Archivos de encabezado\Meshes</Filter>
+    </ClInclude>
+    <ClInclude Include="Biome.h">
+      <Filter>Archivos de encabezado\Floor\Biomes</Filter>
+    </ClInclude>
+    <ClInclude Include="Sphere.h">
+      <Filter>Archivos de encabezado\Meshes</Filter>
+    </ClInclude>
+    <ClInclude Include="ShaderProgram.h">
+      <Filter>Archivos de encabezado\Shaders</Filter>
+    </ClInclude>
+    <ClInclude Include="Shader.h">
+      <Filter>Archivos de encabezado\Shaders</Filter>
+    </ClInclude>
+    <ClInclude Include="FloorResources.h">
+      <Filter>Archivos de encabezado\Floor</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
