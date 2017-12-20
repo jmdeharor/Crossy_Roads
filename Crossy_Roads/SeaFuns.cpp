@@ -58,7 +58,7 @@ void FloorRow::initSeaRoad(vector<uint>& adjacentRow) {
 			platform.setRotationY(PI);
 			startPoint = fp.tileSize.x / 2;
 		}
-		platform.setPos(vec3(startPoint, rowHeight - 0.5f, pos.y));
+		platform.setPos(vec3(startPoint, rowHeight -0.3f, pos.y));
 	}
 
 	for (uint i = 0; i < map.size(); ++i) {

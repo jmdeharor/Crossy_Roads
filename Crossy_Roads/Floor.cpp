@@ -100,7 +100,7 @@ void Floor::updateMap(bool lastRow, uint size) {
 		}
 
 		uint plankPos = between(cols / 2 - 3, cols / 2 + 3);
-		map[plankLength][plankPos].height = 0;
+		map[plankLength][plankPos].height = 0.00001f;
 		map[plankLength][plankPos].mesh = INVALID;
 		map[plankLength][plankPos].collision = false;
 		aux.height = 0.1f;
@@ -209,8 +209,8 @@ void Floor::updateFloorRow(FloorRow& floorRow) {
 					lastRow = true;
 				}
 				else if (length + 1 == biomeLength - biomeCounter) {
-					lastRow = false;
-					++length;
+					lastRow = true;
+					length = biomeLength - biomeCounter + plankLength;
 				}
 				else
 					lastRow = false;
@@ -242,23 +242,29 @@ void Floor::updateFloorRow(FloorRow& floorRow) {
 void Floor::init(vec3 lightDir, const Assets& assets) {
 	GameObject::init();
 
-	furniture.resize(3);
+	furniture.resize(4);
 
 	MeshConfig configAux;
+	configAux.rows = 1;
+	configAux.cols = 1;
+	configAux.height = 2;
+	configAux.mesh = assets.getMeshId("box");
+	furniture[0] = configAux;
+
+	configAux.mesh = assets.getMeshId("barrel");
+	furniture[1] = configAux;
+
 	configAux.rows = 1;
 	configAux.cols = 2;
 	configAux.height = 2;
 	configAux.mesh = assets.getMeshId("cannon");
-	furniture[0] = configAux;
-
-	configAux.mesh = assets.getMeshId("cannon");
-	furniture[1] = configAux;
+	furniture[2] = configAux;
 
 	configAux.rows = 3;
 	configAux.cols = 3;
 	configAux.height = 0.5f;
 	configAux.mesh = assets.getMeshId("cubierta");
-	furniture[2] = configAux;
+	furniture[3] = configAux;
 
 	plankMesh = assets.getMeshId("plank");
 	railMesh = assets.getMeshId("railing_parrot");

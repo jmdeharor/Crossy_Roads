@@ -86,8 +86,7 @@ static void idleCallback()
 
 unsigned int seed;
 
-int main(int argc, char **argv)
-{
+int main(int argc, char **argv) {
 	seed = (unsigned int)time(NULL);
 	srand(seed);
 	// GLUT initialization
