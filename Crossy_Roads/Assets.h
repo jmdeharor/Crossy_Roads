@@ -8,13 +8,24 @@ typedef int IdMesh;
 typedef int IdTex;
 
 #define INVALID -1
+#define nGroups 4
 
-enum TextureFilter {
-	LINEAR,
-	NEAREST
+enum AssetType {
+	Enemy,
+	Platform,
+	Decoration,
+	Unique
+};
+
+struct MeshConfig {
+	glm::uint rows, cols;
+	float height;
+	IdMesh mesh;
 };
 
 class Assets {
+	std::vector<IdMesh> groups[nGroups-2];
+	std::vector<MeshConfig> decorationGroup;
 	ImportedMesh* meshes;
 	Texture* textures;
 	CubeMesh cubeMesh;
@@ -28,6 +39,8 @@ public:
 	IdTex getTextureId(const string& name) const;
 	const ImportedMesh* getMesh(IdMesh id) const;
 	const Texture* getTexture(IdTex id) const;
+	const std::vector<IdMesh>* getGroups() const;
+	const std::vector<MeshConfig>* getDecoration() const;
 	glm::uint getNumMeshes() const;
 	glm::uint getNumTextures() const;
 	void loadAssets(const string& assetsFile);

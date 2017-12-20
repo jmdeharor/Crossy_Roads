@@ -21,7 +21,7 @@ void Floor::firstInit() {
 	floorRows.resize(rows);
 }
 
-inline void updateSafeZoneMap(uint size, uint cols, vector<MeshConfig>& furniture, vector<vector<CellProperties>>& map, ivec2 restriction) {
+inline void updateSafeZoneMap(uint size, uint cols, const vector<MeshConfig>& furniture, vector<vector<CellProperties>>& map, ivec2 restriction) {
 	CellProperties aux;
 	aux.height = aux.verticalOffset = 0;
 	aux.collision = false;
@@ -33,7 +33,7 @@ inline void updateSafeZoneMap(uint size, uint cols, vector<MeshConfig>& furnitur
 
 	for (uint i = 0; i < objects; ++i) {
 
-		MeshConfig& meshConfig = furniture[rand() % furniture.size()];
+		const MeshConfig& meshConfig = furniture[rand() % furniture.size()];
 
 		for (int i = 0; i < (int)size - (int)meshConfig.rows + 1; ++i) {
 			bool rowConflict = i <= restriction.x && i + (int)meshConfig.rows >= restriction.x;
@@ -124,8 +124,7 @@ void Floor::updateMap(bool lastRow, uint size) {
 	uint objects = between(size, size*2);
 
 	for (uint i = 0; i < objects; ++i) {
-
-		MeshConfig& meshConfig = furniture[rand() % furniture.size()];
+		const MeshConfig& meshConfig = (*furniture)[rand() % furniture->size()];
 
 		for (int i = start; i < (int)size-(int)meshConfig.rows+1; ++i) {
 			for (int j = start; j < (int)cols-(int)meshConfig.cols+1; ++j) {
@@ -242,29 +241,7 @@ void Floor::updateFloorRow(FloorRow& floorRow) {
 void Floor::init(vec3 lightDir, const Assets& assets) {
 	GameObject::init();
 
-	furniture.resize(4);
-
-	MeshConfig configAux;
-	configAux.rows = 1;
-	configAux.cols = 1;
-	configAux.height = 2;
-	configAux.mesh = assets.getMeshId("box");
-	furniture[0] = configAux;
-
-	configAux.mesh = assets.getMeshId("barrel");
-	furniture[1] = configAux;
-
-	configAux.rows = 1;
-	configAux.cols = 2;
-	configAux.height = 2;
-	configAux.mesh = assets.getMeshId("cannon");
-	furniture[2] = configAux;
-
-	configAux.rows = 3;
-	configAux.cols = 3;
-	configAux.height = 0.5f;
-	configAux.mesh = assets.getMeshId("cubierta");
-	furniture[3] = configAux;
+	furniture = assets.getDecoration();
 
 	plankMesh = assets.getMeshId("plank");
 	railMesh = assets.getMeshId("railing_parrot");
@@ -295,7 +272,7 @@ void Floor::init(vec3 lightDir, const Assets& assets) {
 	playerIni.x = length - 1 - (rows / 2 - rowOffset);
 	playerIni.y = cols / 2 - colOffset;
 
-	updateSafeZoneMap(length, cols, furniture, map, playerIni);
+	updateSafeZoneMap(length, cols, *furniture, map, playerIni);
 	for (uint i = 0; i < rows; ++i) {
 		floorRows[i].pos = vec2(colOffset*realTileSize, rowOffset*tileSize.y + offsetZ + i*tileSize.y);
 		updateFloorRow(floorRows[i]);

@@ -36,6 +36,14 @@ const Texture* Assets::getTexture(IdTex id) const {
 	return &textures[id];
 }
 
+const std::vector<IdMesh>* Assets::getGroups() const {
+	return groups;
+}
+
+const std::vector<MeshConfig>* Assets::getDecoration() const {
+	return &decorationGroup;
+}
+
 uint Assets::getNumMeshes() const {
 	return nImportedMeshes;
 }
@@ -61,24 +69,52 @@ void Assets::loadAssets(const string& assetsFile) {
 	const Value& models = document["models"];
 	nImportedMeshes = models.Size();
 
+	for (uint i = 0; i < nGroups-2; ++i) {
+		groups[i].reserve(nImportedMeshes);
+	}
+	decorationGroup.reserve(nImportedMeshes);
+
 	cubeMesh.init();
 	meshes = new ImportedMesh[nImportedMeshes];
 
-	string name;
+	string name, type;
 	uint i = 0;
-	for (const Value& meshName : models.GetArray()) {
-		name.assign(meshName["names"][0].GetString());
+	for (const Value& meshProperties : models.GetArray()) {
+		name.assign(meshProperties["names"][0].GetString());
+		type.assign(meshProperties["type"].GetString());
 		meshes[i].loadFromFile("models/" + name + ".obj");
 		meshIds[name] = i;
+		if (type == "decoration") {
+			const Value& size = meshProperties["size"];
+			MeshConfig aux;
+			aux.rows = size[0].GetUint();
+			aux.cols = size[1].GetUint();
+			aux.height = meshProperties["height"].GetFloat();
+			aux.mesh = i;
+			decorationGroup.push_back(aux);
+		}
+		else if (type == "enemy") {
+			groups[Enemy].push_back(i);
+		}
+		else if (type == "platform") {
+			groups[Platform].push_back(i);
+		}
+		else if (type != "unique") {
+			int a = 3;
+		}
 		++i;
 	}
+
+	for (uint i = 0; i < nGroups - 2; ++i) {
+		groups[i].shrink_to_fit();
+	}
+	decorationGroup.shrink_to_fit();
 
 	const Value& texturesJ = document["textures"];
 	nTextures = texturesJ.Size();
 
 	textures = new Texture[nTextures];
 	i = 0;
-	string type;
 	for (const Value& texture : texturesJ.GetArray()) {
 		name.assign(texture["name"].GetString());
 		type.assign(texture["type"].GetString());

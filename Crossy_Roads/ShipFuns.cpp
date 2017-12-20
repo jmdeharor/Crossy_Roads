@@ -48,7 +48,7 @@ void FloorRow::initShipRoad(vector<uint>& adjacentRow) {
 
 	for (uint i = 0; i < enemies.size(); ++i) {
 		Jumper& enemy = enemies[i];
-		enemy.setMesh(res.enemyMeshes[i], res.assets->getMesh(res.enemyMeshes[i]));
+		enemy.setMesh(res.groups[Enemy][i], res.assets->getMesh(res.groups[Enemy][i]));
 		enemy.setScale(vec3(0.1f));
 		enemy.setCenterToBaseCenter();
 		enemy.setPlane(vec4(0, 1, 0, -rowHeight), fp.lightDir);

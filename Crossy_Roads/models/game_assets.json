@@ -3,74 +3,100 @@
     {
       "names": [
         "pirate"
-      ]
+      ],
+	  "type": "enemy"
     },
     {
       "names": [
         "pirate_2"
-      ]
+      ],
+	  "type": "enemy"
     },
     {
       "names": [
         "barrel"
-      ]
+      ],
+	  "type": "decoration",
+	  "size": [1,1],
+	  "height": 2
     },
     {
       "names": [
         "box"
-      ]
+      ],
+	  "type": "decoration",
+	  "size": [1,1],
+	  "height": 2
     },
     {
       "names": [
         "cubierta"
-      ]
+      ],
+	  "type": "decoration",
+	  "size": [3,3],
+	  "height": 0.5
     },
     {
       "names": [
         "crocodile-00",
         "crocodile-01"
-      ]
+      ],
+	  "type": "platform"
     },
     {
       "names": [
         "shark-00",
         "shark-01"
-      ]
+      ],
+	  "type": "platform"
     },
     {
       "names": [
         "plank"
-      ]
+      ],
+	  "type": "unique"
     },
     {
       "names": [
         "railing"
-      ]
+      ],
+	  "type": "unique"
     },
     {
       "names": [
         "railing_parrot"
-      ]
+      ],
+	  "type": "unique"
     },
     {
       "names": [
         "railing_rip"
-      ]
+      ],
+	  "type": "unique"
     },
     {
       "names": [
         "cannon"
-      ]
+      ],
+	  "type": "decoration",
+	  "size": [1,2],
+	  "height": 2
     },
     {
       "names": [
         "mast"
-      ]
+      ],
+	  "type": "decoration",
+	  "size": [1,1],
+	  "height": 20
     },
     {
       "names": [
         "broken_mast"
-      ]
+      ],
+	  "type": "decoration",
+	  "size": [1,1],
+	  "height": 4
     }
   ],
   "textures": [
