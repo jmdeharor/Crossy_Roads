@@ -20,7 +20,7 @@ void Camera::init(vec3 lightDir, const Player* player) {
 	cam.zFar = 100.f;
 	cam.updatePM();
 
-	this->lightDir = lightDir*25.f;
+	this->lightDir = lightDir*50.f;
 
 	lightCam.VRP = cam.VRP;
 	lightCam.OBS = cam.VRP + lightDir;

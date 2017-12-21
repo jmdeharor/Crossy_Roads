@@ -24,6 +24,8 @@ void Floor::firstInit() {
 inline void updateSafeZoneMap(uint size, uint cols, const vector<MeshConfig>& furniture, vector<vector<CellProperties>>& map, ivec2 restriction) {
 	CellProperties aux;
 	aux.height = aux.verticalOffset = 0;
+	aux.mesh = INVALID;
+	aux.occupied = false;
 	aux.collision = false;
 	map.resize(size, vector<CellProperties>(cols, aux));
 	vector<ivec2> indices;
@@ -42,7 +44,7 @@ inline void updateSafeZoneMap(uint size, uint cols, const vector<MeshConfig>& fu
 				bool conflict = rowConflict && colConflict;
 				for (uint i1 = 0; i1 < meshConfig.rows && !conflict; ++i1) {
 					for (uint j1 = 0; j1 < meshConfig.cols && !conflict; ++j1) {
-						conflict = map[i + i1][j + j1].height != 0;
+						conflict = map[i + i1][j + j1].occupied;
 					}
 				}
 				if (!conflict)
@@ -60,6 +62,7 @@ inline void updateSafeZoneMap(uint size, uint cols, const vector<MeshConfig>& fu
 				CellProperties cell;
 				cell.mesh = INVALID;
 				cell.collision = true;
+				cell.occupied = true;
 				cell.verticalOffset = 0;
 				cell.height = meshConfig.height;
 				map[pos.x + i][pos.y + j] = cell;
@@ -77,6 +80,8 @@ const uint plankLength = 3;
 void Floor::updateMap(bool lastRow, uint size) {
 	CellProperties aux;
 	aux.height = aux.verticalOffset = 0;
+	aux.mesh = INVALID;
+	aux.occupied = false;
 	aux.collision = false;
 
 	uint prevSize = map.size();
@@ -90,8 +95,10 @@ void Floor::updateMap(bool lastRow, uint size) {
 	uint start;
 
 	if (lastRow) {
+		aux.verticalOffset = 0;
 		aux.height = 1.5f;
 		aux.mesh = railMesh;
+		aux.occupied = true;
 		aux.collision = true;
 		aux.cols = 1;
 		aux.rows = 1;
@@ -100,20 +107,26 @@ void Floor::updateMap(bool lastRow, uint size) {
 		}
 
 		uint plankPos = between(cols / 2 - 3, cols / 2 + 3);
-		map[plankLength][plankPos].height = 0.00001f;
 		map[plankLength][plankPos].mesh = INVALID;
+		map[plankLength][plankPos].height = 0;
+		map[plankLength][plankPos].occupied = true;
 		map[plankLength][plankPos].collision = false;
+
 		aux.height = 0.1f;
 		aux.verticalOffset = 5;
 		aux.collision = false;
+		aux.occupied = true;
 		aux.mesh = INVALID;
-		aux.rows = plankLength;
-		aux.cols = 1;
 		for (uint i = 0; i < plankLength; ++i) {
 			map[i][plankPos] = aux;
 		}
+		map[0][plankPos].rows = plankLength;
+		map[0][plankPos].cols = 1;
 		map[0][plankPos].mesh = plankMesh;
 		start = plankLength;
+		if (plankLength + 1 < map.size()) {
+			map[plankLength + 1][plankPos].occupied = true;
+		}
 	}
 	else
 		start = 0;
@@ -131,7 +144,7 @@ void Floor::updateMap(bool lastRow, uint size) {
 				bool conflict = false;
 				for (uint i1 = 0; i1 < meshConfig.rows && !conflict; ++i1) {
 					for (uint j1 = 0; j1 < meshConfig.cols && !conflict; ++j1) {
-						conflict = map[i + i1][j + j1].height != 0;
+						conflict = map[i + i1][j + j1].occupied;
 					}
 				}
 				if (!conflict)
@@ -150,6 +163,7 @@ void Floor::updateMap(bool lastRow, uint size) {
 				cell.mesh = INVALID;
 				cell.verticalOffset = 0;
 				cell.collision = true;
+				cell.occupied = true;
 				cell.height = meshConfig.height;
 				map[pos.x+i][pos.y+j] = cell;
 			}
@@ -296,9 +310,9 @@ void Floor::update(int deltaTime) {
 	}
 }
 
-void Floor::groupDrawableObjects(std::vector<vector<Object*>>& objects, vector<vector<TexturedObject*>>& texturedObjects, const FrustumG& frustum) {
+void Floor::groupDrawableObjects(const FrustumG& frustum, RenderVectors& renderVectors) {
 	for (uint i = 0; i < rows; ++i) {
-		floorRows[i].groupDrawableObjects(objects, texturedObjects, frustum);
+		floorRows[i].groupDrawableObjects(frustum, renderVectors);
 	}
 }
 

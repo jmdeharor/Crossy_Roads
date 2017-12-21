@@ -62,7 +62,7 @@ void FloorRow::initSeaRoad(vector<uint>& adjacentRow) {
 	}
 
 	for (uint i = 0; i < map.size(); ++i) {
-		if (map[i].height == 0 || map[i].mesh == INVALID)
+		if (map[i].mesh == INVALID)
 			continue;
 		furniture.push_back(ShadowedObject());
 		ShadowedObject& object = furniture[furniture.size() - 1];

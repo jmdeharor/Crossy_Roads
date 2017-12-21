@@ -21,7 +21,7 @@ enum BiomeType {
 struct CellProperties {
 	glm::uint rows, cols;
 	float height, verticalOffset;
-	bool collision;
+	bool collision, occupied;
 	IdMesh mesh;
 };
 
@@ -63,9 +63,7 @@ public:
 	void initSafeZone(BiomeType type, const std::vector<CellProperties>& map);
 	void update(int deltaTime);
 	void groupDrawableObjects(
-		std::vector<std::vector<Object*>>& objects,
-		std::vector<std::vector<TexturedObject*>>& texturedObjects,
-		const FrustumG& frustum
+		const FrustumG& frustum, RenderVectors& renderVectors
 	) override;
 	pair<glm::vec3, float> getHeight(glm::uint col);
 	std::vector<Jumper>* getEnemies();

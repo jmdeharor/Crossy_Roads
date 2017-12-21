@@ -16,6 +16,7 @@
 #include "MultiCubeMesh.h"
 #include "Assets.h"
 #include "FrustumG.h"
+#include "ObjectContainer.h"
 
 #define CAMERA_WIDTH 640
 #define CAMERA_HEIGHT 480
@@ -48,10 +49,9 @@ private:
 	glm::uint depthVPLoc, VPLoc;
 	int playerReferenceRow, playerRow;
 
-	std::vector<std::vector<Object*>> objectsToRender;
-	std::vector<std::vector<TexturedObject*>> texturedObjects;
-
 	Assets assets;
+
+	RenderVectors renderVectors;
 
 	Player player;
 	Floor floor;

@@ -33,9 +33,7 @@ public:
 	void init(glm::vec3 lightDir, const Assets& assets);
 	void update(int deltaTime);
 	void groupDrawableObjects(
-		std::vector<std::vector<Object*>>& objects,
-		std::vector<std::vector<TexturedObject*>>& texturedObjects,
-		const FrustumG& frustum
+		const FrustumG& frustum, RenderVectors& renderVectors
 	) override;
 	FloorRow* getFloorRow(glm::uint index);
 	glm::uint getRows() const;

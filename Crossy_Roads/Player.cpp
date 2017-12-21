@@ -10,8 +10,9 @@ using namespace glm;
 void Player::firstInit() {
 }
 
-void Player::groupDrawableObjects(std::vector<std::vector<Object*>>& objects, std::vector<std::vector<TexturedObject*>>& texturedObjects, const FrustumG& frustum) {
-	objects[playerObject.meshId].push_back(&playerObject);
+void Player::groupDrawableObjects(const FrustumG& frustum, RenderVectors& renderVectors) {
+	renderVectors.objects[playerObject.meshId].push_back(&playerObject);
+	renderVectors.shadowObjects[playerObject.meshId].push_back(&playerObject);
 }
 
 void Player::jump() {

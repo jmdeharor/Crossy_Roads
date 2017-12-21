@@ -50,9 +50,7 @@ private:
 
 public:
 	void groupDrawableObjects(
-		std::vector<std::vector<Object*>>& objects,
-		std::vector<std::vector<TexturedObject*>>& texturedObjects,
-		const FrustumG& frustum
+		const FrustumG& frustum, RenderVectors& renderVectors
 	) override;
 	void jump();
 	void init(const Assets& assets, glm::vec3 lightDir, glm::vec3 offset, float jumpDistance, Floor &floor);

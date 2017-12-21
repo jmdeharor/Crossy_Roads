@@ -1,14 +1,18 @@
 #pragma once
 #include <vector>
-#include "TexturedObject.h"
 #include "FrustumG.h"
+#include "TexturedObject.h"
+
+struct RenderVectors {
+	std::vector<std::vector<Object*>> objects;
+	std::vector<std::vector<TexturedObject*>> texturedObjects;
+	std::vector<std::vector<Object*>> shadowObjects;
+};
 
 class ObjectContainer {
 public:
 	virtual void groupDrawableObjects(
-		std::vector<std::vector<Object*>>& objects,
-		std::vector<std::vector<TexturedObject*>>& texturedObjects,
-		const FrustumG& frustum
+		const FrustumG& frustum, RenderVectors& renderVectors
 	) = 0;
 	ObjectContainer();
 	~ObjectContainer();

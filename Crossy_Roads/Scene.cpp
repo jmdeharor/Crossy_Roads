@@ -18,8 +18,9 @@ Scene::~Scene() {
 void Scene::firstInit() {
 	assets.loadAssets("models/game_assets.json");
 
-	objectsToRender.resize(assets.getNumMeshes());
-	texturedObjects.resize(assets.getNumTextures());
+	renderVectors.objects.resize(assets.getNumMeshes());
+	renderVectors.texturedObjects.resize(assets.getNumTextures());
+	renderVectors.shadowObjects.resize(assets.getNumMeshes());
 
 	QueryPerformanceFrequency(&frequency);
 
@@ -170,8 +171,8 @@ void Scene::render() {
 	const mat4& viewProjection = *camera.getVPMatrix();
 	const mat4& lightViewProjection = *camera.getVPLightMatrix();
 
-	floor.groupDrawableObjects(objectsToRender, texturedObjects, camera.getFrustum());
-	player.groupDrawableObjects(objectsToRender, texturedObjects, camera.getFrustum());
+	floor.groupDrawableObjects(camera.getFrustum(), renderVectors);
+	player.groupDrawableObjects(camera.getFrustum(), renderVectors);
 
 	sceneDrawCalls = 0;
 	sceneTriangles = 0;
@@ -182,8 +183,8 @@ void Scene::render() {
 	glClear(GL_DEPTH_BUFFER_BIT);
 	shadowMapProgram.setUniformMatrix4f(depthVPLoc, lightViewProjection);
 
-	for (uint i = 0; i < objectsToRender.size(); ++i) {
-		vector<Object*>& objects = objectsToRender[i];
+	for (uint i = 0; i < renderVectors.shadowObjects.size(); ++i) {
+		vector<Object*>& objects = renderVectors.shadowObjects[i];
 		const Mesh* mesh = assets.getMesh(i);
 		mesh->setProgramParams(shadowMapProgram);
 		for (uint j = 0; j < objects.size(); ++j) {
@@ -191,6 +192,7 @@ void Scene::render() {
 			shadowMapProgram.setUniformMatrix4f(modelLoc, *object->getModel());
 			mesh->render(shadowMapProgram);
 		}
+		objects.clear();
 	}
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
@@ -206,8 +208,8 @@ void Scene::render() {
 	drawShadowProgram.setUniformMatrix4f(depthVPLoc, offsetMatrix*lightViewProjection);
 	drawShadowProgram.setUniformMatrix4f(VPLoc, viewProjection);
 
-	for (uint i = 0; i < objectsToRender.size(); ++i) {
-		vector<Object*>& objects = objectsToRender[i];
+	for (uint i = 0; i < renderVectors.objects.size(); ++i) {
+		vector<Object*>& objects = renderVectors.objects[i];
 		const ImportedMesh* mesh = assets.getMesh(i);
 		mesh->setProgramParams(drawShadowProgram);
 		mesh->useTexture();
@@ -221,8 +223,8 @@ void Scene::render() {
 
 	const Mesh* mesh = assets.getCubeMesh();
 	mesh->setProgramParams(drawShadowProgram);
-	for (uint i = 0; i < texturedObjects.size(); ++i) {
-		vector<TexturedObject*>& objects = texturedObjects[i];
+	for (uint i = 0; i < renderVectors.texturedObjects.size(); ++i) {
+		vector<TexturedObject*>& objects = renderVectors.texturedObjects[i];
 		const Texture* tex = assets.getTexture(i);
 		tex->use();
 		for (uint j = 0; j < objects.size(); ++j) {

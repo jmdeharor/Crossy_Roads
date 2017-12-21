@@ -126,23 +126,26 @@ void FloorRow::update(int deltaTime) {
 	}
 }
 
-void FloorRow::groupDrawableObjects(vector<vector<Object*>>& objects, vector<vector<TexturedObject*>>& texturedObjects, const FrustumG& frustum) {
+void FloorRow::groupDrawableObjects(const FrustumG& frustum, RenderVectors& renderVectors) {
 	for (uint i = 0; i < enemies.size(); ++i) {
 		if (enemies[i].isInsideViewFrustrum(frustum))
-			objects[enemies[i].meshId].push_back(&enemies[i]);
+			renderVectors.objects[enemies[i].meshId].push_back(&enemies[i]);
+		renderVectors.shadowObjects[enemies[i].meshId].push_back(&enemies[i]);
 	}
 	for (uint i = 0; i < floorTiles.size(); ++i) {
 		if (floorTiles[i].isInsideViewFrustrum(frustum))
-			texturedObjects[floorTiles[i].texture].push_back(&floorTiles[i]);
+			renderVectors.texturedObjects[floorTiles[i].texture].push_back(&floorTiles[i]);
 	}
 	for (uint i = 0; i < furniture.size(); ++i) {
 		if (furniture[i].isInsideViewFrustrum(frustum))
-			objects[furniture[i].meshId].push_back(&furniture[i]);
+			renderVectors.objects[furniture[i].meshId].push_back(&furniture[i]);
+		renderVectors.shadowObjects[furniture[i].meshId].push_back(&furniture[i]);
 	}
 	for (uint i = 0; i < platforms.size(); ++i) {
 		if (platforms[i].isInsideViewFrustrum(frustum)) {
-			objects[platforms[i].meshId].push_back(&platforms[i]);
+			renderVectors.objects[platforms[i].meshId].push_back(&platforms[i]);
 		}
+		renderVectors.shadowObjects[platforms[i].meshId].push_back(&platforms[i]);
 	}
 }
 
