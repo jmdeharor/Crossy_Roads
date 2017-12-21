@@ -34,6 +34,16 @@ void FloorRow::initSeaRoad(vector<uint>& adjacentRow) {
 	static vec3 crocodilebb = crocoMesh->getbbSize();
 	static vec3 crocoSize = vec3(3 * realTileSize, 1, fp.tileSize.y) / crocodilebb;
 
+	speeds[0] = generateSpeed(minSpeed, maxSpeed, int(pos.y / fp.tileSize.y) % 2);
+
+	for (uint i = 1; i < speeds.size(); ++i) {
+		speeds[i] = 0;
+	}
+
+	uint minTime = uint(1.5 * fp.realTileSize / abs(speeds[0])) + 1;
+	frameLimit = between(minTime + 100, minTime + 200);
+	frameCounter = 0;
+
 	uint nPlat = platforms.size();
 	for (uint i = 0; i < nPlat; ++i) {
 		ShadowedObject& platform = platforms[i];
@@ -41,16 +51,8 @@ void FloorRow::initSeaRoad(vector<uint>& adjacentRow) {
 		platform.setScale(crocoSize);
 		platform.setCenterToBaseCenter();
 		platform.setPlane(vec4(0, 1, 0, -rowHeight), fp.lightDir);
-		float upperLimit;
-		if (i == 0) {
-			upperLimit = 0.2f;
-		}
-		else {
-			upperLimit = abs(speeds[i - 1]);
-		}
-		speeds[i] = generateSpeed(0.1f / (i + 1), upperLimit, int(pos.y / fp.tileSize.y) % 2);
 		float startPoint;
-		if (speeds[i] >= 0) {
+		if (speeds[0] >= 0) {
 			platform.setRotationY(0);
 			startPoint = -fp.tileSize.x / 2;
 		}

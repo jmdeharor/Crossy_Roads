@@ -38,6 +38,8 @@ private:
 	BiomeType biomeType;
 	bool safeZone;
 	float rowHeight;
+	glm::uint frameCounter, frameLimit;
+
 	std::vector<Jumper> enemies;
 	std::vector<float> speeds;
 	std::vector<CellProperties> map;
@@ -46,8 +48,8 @@ private:
 	std::vector<ShadowedObject> platforms;
 
 	static FloorParams fp;
-	static float offset;
 	static FloorResources res;
+	static float offset;
 private:
 	void initShipRoad(std::vector<glm::uint>& adjacentRow);
 	void initShipSafeZone();

@@ -5,15 +5,6 @@
 #include "SeaBiome.h"
 using namespace glm;
 
-union {
-	float f;
-	struct {
-		unsigned int mantisa : 23;
-		unsigned int exponent : 8;
-		unsigned int sign : 1;
-	} parts;
-} floatCast;
-
 uint FloorRow::worldToCol(float x) {
 	return (x - offset) / fp.realTileSize;
 }
@@ -21,6 +12,7 @@ uint FloorRow::worldToCol(float x) {
 void FloorRow::initResources(const Assets & assets) {
 	res.init(assets);
 }
+
 
 void FloorRow::initRoad(BiomeType type, vector<uint>& adjacentRow, const vector<CellProperties>& map) {
 	this->map = map;
@@ -96,23 +88,23 @@ void FloorRow::update(int deltaTime) {
 			object.jump();
 		}
 	}
+	
 	for (uint i = 0; i < platforms.size(); ++i) {
 		Object& object = platforms[i];
 		object.move(speeds[i], 0, 0);
+		if (speeds[i] == 0 && speeds[i-1] != 0) {
+			if (frameCounter == frameLimit) {
+				speeds[i] = speeds[0]; 
+				uint minTime = uint(1.5 * fp.realTileSize / abs(speeds[0])) + 1;
+				frameLimit = between(minTime + 100, minTime + 200);
+				frameCounter = 0;
+			}
+			else ++frameCounter;
+		}
 		float x = object.getPos().x;
 		if (x > fp.tileSize.x / 2 || x < -fp.tileSize.x / 2) {
-			float upperLimit;
-			if (i == 0) {
-				upperLimit = 0.2f;
-			}
-			else {
-				upperLimit = abs(speeds[i - 1]);
-			}
-			floatCast.f = speeds[i];
-			speeds[i] = generateSpeed(0.15f / (i+1), upperLimit, !floatCast.parts.sign);
-
 			float startPoint;
-			if (speeds[i] >= 0) {
+			if (speeds[0] >= 0) {
 				object.setRotationY(0);
 				startPoint = -fp.tileSize.x / 2;
 			}

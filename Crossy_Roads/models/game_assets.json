@@ -95,8 +95,8 @@
         "broken_mast"
       ],
 	  "type": "decoration",
-	  "size": [1,1],
-	  "height": 4
+	  "size": [1,2],
+	  "height": 1.5
     }
   ],
   "textures": [
