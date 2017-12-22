@@ -88,6 +88,7 @@ unsigned int seed;
 
 int main(int argc, char **argv) {
 	seed = (unsigned int)time(NULL);
+	seed = 1513937522;
 	srand(seed);
 	// GLUT initialization
 	glutInit(&argc, argv);

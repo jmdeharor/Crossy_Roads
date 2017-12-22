@@ -95,11 +95,13 @@ void FloorRow::update(int deltaTime) {
 		if (speeds[i] == 0 && speeds[i-1] != 0) {
 			if (frameCounter == frameLimit) {
 				speeds[i] = speeds[0]; 
-				uint minTime = uint(1.5 * fp.realTileSize / abs(speeds[0])) + 1;
-				frameLimit = between(minTime + 100, minTime + 200);
+				uint minTime = uint(3 * fp.realTileSize / abs(speeds[0])) + 1;
+				uint maxTime = uint((fp.tileSize.x - 3 * fp.realTileSize) / abs(speeds[0]));
+				frameLimit = between(minTime + 10, maxTime*0.3f);
 				frameCounter = 0;
 			}
-			else ++frameCounter;
+			else
+				++frameCounter;
 		}
 		float x = object.getPos().x;
 		if (x > fp.tileSize.x / 2 || x < -fp.tileSize.x / 2) {
