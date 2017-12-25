@@ -55,7 +55,7 @@ private:
 	RenderVectors renderVectors;
 	WaterParticleSystem partSystem;
 	SoundManager soundManager;
-	FMOD::Sound* sound;
+	FMOD::Sound* music, *ambience;
 
 	Player player;
 	Floor floor;

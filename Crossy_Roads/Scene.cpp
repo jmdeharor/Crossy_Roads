@@ -136,11 +136,18 @@ void Scene::init() {
 
 	playerReferenceRow = playerRow = 0;
 
-	//soundManager.loadSound("sounds");
+	ambience = soundManager.loadSound("sounds/Ambiance_pirate_ship.mp3", true);
+	FMOD::Channel* channel = soundManager.playSound(ambience);
+	channel->setVolume(0.25f);
+
+	music = soundManager.loadSound("sounds/Music_Caribbean_Smugglers.mp3", true);
+	FMOD::Channel* channel2 = soundManager.playSound(music);
+	
 }
 
 void Scene::update(int deltaTime) {
 	QueryPerformanceCounter(&start);
+	soundManager.update();
 	floor.update(deltaTime);
 	camera.update(deltaTime);
 	partSystem.update();
