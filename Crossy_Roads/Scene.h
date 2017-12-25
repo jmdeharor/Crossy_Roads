@@ -17,6 +17,7 @@
 #include "Assets.h"
 #include "FrustumG.h"
 #include "ObjectContainer.h"
+#include "WaterParticles.h"
 
 #define CAMERA_WIDTH 640
 #define CAMERA_HEIGHT 480
@@ -50,8 +51,8 @@ private:
 	int playerReferenceRow, playerRow;
 
 	Assets assets;
-
 	RenderVectors renderVectors;
+	WaterParticleSystem partSystem;
 
 	Player player;
 	Floor floor;

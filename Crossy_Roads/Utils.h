@@ -17,3 +17,8 @@ inline int between(int min, int max) {
 	float num = ((float)rand() / RAND_MAX)*(max - min) + min;
 	return (int)round(num);
 }
+
+inline float between(float min, float max) {
+	float num = ((float)rand() / RAND_MAX)*(max - min) + min;
+	return num;
+}

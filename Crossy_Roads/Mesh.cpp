@@ -39,7 +39,7 @@ void Mesh::setProgramParams(ShaderProgram & program) const {
 
 #include "Scene.h"
 
-void Mesh::render(ShaderProgram& program) const {
+void Mesh::render() const {
 	//setProgramParams(program);
 	Scene::sceneTriangles += totalTriangles;
 	Scene::sceneDrawCalls += 1;

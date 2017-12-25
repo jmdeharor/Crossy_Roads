@@ -18,6 +18,9 @@ Scene::~Scene() {
 void Scene::firstInit() {
 	assets.loadAssets("models/game_assets.json");
 
+	partSystem.init(assets);
+	partSystem.g = -0.07f;
+
 	renderVectors.objects.resize(assets.getNumMeshes());
 	renderVectors.texturedObjects.resize(assets.getNumTextures());
 	renderVectors.shadowObjects.resize(assets.getNumMeshes());
@@ -138,6 +141,7 @@ void Scene::update(int deltaTime) {
 	QueryPerformanceCounter(&start);
 	floor.update(deltaTime);
 	camera.update(deltaTime);
+	partSystem.update();
 	PlayerReturn playerAction;
 	playerAction = player.update(deltaTime);
 	switch (playerAction) {
@@ -165,6 +169,9 @@ void Scene::update(int deltaTime) {
 	else if (Game::instance().getKey('n')) {
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	}
+	if (Game::instance().getKey('o')) {
+		partSystem.trigger(player.getPos());
+	}
 }
 
 void Scene::render() {
@@ -190,7 +197,7 @@ void Scene::render() {
 		for (uint j = 0; j < objects.size(); ++j) {
 			Object* object = objects[j];
 			shadowMapProgram.setUniformMatrix4f(modelLoc, *object->getModel());
-			mesh->render(shadowMapProgram);
+			mesh->render();
 		}
 		objects.clear();
 	}
@@ -216,10 +223,12 @@ void Scene::render() {
 		for (uint j = 0; j < objects.size(); ++j) {
 			Object* object = objects[j];
 			drawShadowProgram.setUniformMatrix4f(modelLoc, *object->getModel());
-			mesh->render(drawShadowProgram);
+			mesh->render();
 		}
 		objects.clear();
 	}
+
+	partSystem.render(drawShadowProgram);
 
 	const Mesh* mesh = assets.getCubeMesh();
 	mesh->setProgramParams(drawShadowProgram);
@@ -230,7 +239,7 @@ void Scene::render() {
 		for (uint j = 0; j < objects.size(); ++j) {
 			Object* object = objects[j];
 			drawShadowProgram.setUniformMatrix4f(modelLoc, *object->getModel());
-			mesh->render(drawShadowProgram);
+			mesh->render();
 		}
 		objects.clear();
 	}

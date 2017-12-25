@@ -31,7 +31,7 @@ inline void updateSafeZoneMap(uint size, uint cols, const vector<MeshConfig>& fu
 	vector<ivec2> indices;
 	indices.reserve(size*cols);
 
-	uint objects = between(size, size * 2);
+	uint objects = between((int)size, size * 2);
 
 	for (uint i = 0; i < objects; ++i) {
 
@@ -106,7 +106,7 @@ void Floor::updateMap(bool lastRow, uint size) {
 			map[plankLength][j] = aux;
 		}
 
-		uint plankPos = between(cols / 2 - 3, cols / 2 + 3);
+		uint plankPos = between((int)cols / 2 - 3, cols / 2 + 3);
 		map[plankLength][plankPos].mesh = INVALID;
 		map[plankLength][plankPos].height = 0;
 		map[plankLength][plankPos].occupied = true;
@@ -134,7 +134,7 @@ void Floor::updateMap(bool lastRow, uint size) {
 	vector<ivec2> indices;
 	indices.reserve(size*cols);
 
-	uint objects = between(size, size*2);
+	uint objects = between((int)size, size*2);
 
 	for (uint i = 0; i < objects; ++i) {
 		const MeshConfig& meshConfig = (*furniture)[rand() % furniture->size()];

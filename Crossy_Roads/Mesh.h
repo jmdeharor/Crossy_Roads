@@ -22,7 +22,7 @@ public:
 	glm::vec3 getbbSize() const;
 	float getHeight() const;
 	virtual void setProgramParams(ShaderProgram& program) const;
-	virtual void render(ShaderProgram& program) const;
+	virtual void render() const;
 	void clear();
 	virtual ~Mesh();
 };

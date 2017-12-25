@@ -36,6 +36,10 @@ const Texture* Assets::getTexture(IdTex id) const {
 	return &textures[id];
 }
 
+const Texture* Assets::getTexture(const string& name) const {
+	return &textures[textureIds.find(name)->second];
+}
+
 const std::vector<IdMesh>* Assets::getGroups() const {
 	return groups;
 }

@@ -55,6 +55,12 @@
     <Filter Include="Archivos de encabezado\Shaders">
       <UniqueIdentifier>{92d43b69-e60a-45f4-badf-b6f452e0613b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Archivos de código fuente\ParticleSystem">
+      <UniqueIdentifier>{78a51675-a47f-4d67-a031-27f0d0c94dee}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de encabezado\ParticleSystem">
+      <UniqueIdentifier>{a9e76c70-05ab-4357-89bb-44b75981f07a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Game.cpp">
@@ -183,6 +189,12 @@
     <ClCompile Include="Biome.cpp">
       <Filter>Archivos de código fuente\Floor\Biomes</Filter>
     </ClCompile>
+    <ClCompile Include="WaterParticle.cpp">
+      <Filter>Archivos de código fuente\ParticleSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="WaterParticles.cpp">
+      <Filter>Archivos de código fuente\ParticleSystem</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game.h">
@@ -304,6 +316,12 @@
     </ClInclude>
     <ClInclude Include="FloorResources.h">
       <Filter>Archivos de encabezado\Floor</Filter>
+    </ClInclude>
+    <ClInclude Include="WaterParticles.h">
+      <Filter>Archivos de encabezado\ParticleSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="WaterParticle.h">
+      <Filter>Archivos de encabezado\ParticleSystem</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

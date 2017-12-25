@@ -161,6 +161,8 @@
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="TexturedObject.cpp" />
     <ClCompile Include="Vec3.cpp" />
+    <ClCompile Include="WaterParticle.cpp" />
+    <ClCompile Include="WaterParticles.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AABox.h" />
@@ -203,6 +205,8 @@
     <ClInclude Include="Texture.h" />
     <ClInclude Include="TexturedObject.h" />
     <ClInclude Include="Vec3.h" />
+    <ClInclude Include="WaterParticle.h" />
+    <ClInclude Include="WaterParticles.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

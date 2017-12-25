@@ -1,7 +1,7 @@
 #include "CubeMesh.h"
 using namespace glm;
 #include "Scene.h"
-void CubeMesh::render(ShaderProgram & program) const {
+void CubeMesh::render() const {
 	//setProgramParams(program);
 	//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, VBOind);
 	Scene::sceneTriangles += totalTriangles;

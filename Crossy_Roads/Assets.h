@@ -39,6 +39,7 @@ public:
 	IdTex getTextureId(const string& name) const;
 	const ImportedMesh* getMesh(IdMesh id) const;
 	const Texture* getTexture(IdTex id) const;
+	const Texture* getTexture(const string& name) const;
 	const std::vector<IdMesh>* getGroups() const;
 	const std::vector<MeshConfig>* getDecoration() const;
 	glm::uint getNumMeshes() const;

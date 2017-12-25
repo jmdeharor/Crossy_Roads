@@ -5,7 +5,7 @@ class CubeMesh : public Mesh {
 protected:
 	GLuint VBOind;
 public:
-	void render(ShaderProgram& program) const override;
+	void render() const override;
 	void setProgramParams(ShaderProgram& program) const override;
 	void init();
 	CubeMesh();
