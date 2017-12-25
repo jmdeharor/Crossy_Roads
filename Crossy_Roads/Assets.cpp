@@ -56,8 +56,8 @@ uint Assets::getNumTextures() const {
 	return nTextures;
 }
 
-void Assets::loadAssets(const string& assetsFile) {
-	ifstream jsonFile(assetsFile);
+void Assets::loadAssets(const string& modelPath, const string& texturePath) {
+	ifstream jsonFile(modelPath);
 	string s((istreambuf_iterator<char>(jsonFile)), istreambuf_iterator<char>());
 	jsonFile.close();
 
@@ -113,6 +113,13 @@ void Assets::loadAssets(const string& assetsFile) {
 		groups[i].shrink_to_fit();
 	}
 	decorationGroup.shrink_to_fit();
+
+	jsonFile.open(texturePath);
+	s.assign((istreambuf_iterator<char>(jsonFile)), istreambuf_iterator<char>());
+	jsonFile.close();
+
+	document.Parse(s.c_str());
+	s.clear();
 
 	const Value& texturesJ = document["textures"];
 	nTextures = texturesJ.Size();

@@ -75,11 +75,11 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>C:\Users\juanm\OneDrive\Documentos\Crossy_Roads\libs\rapidjson;..\libs\assimp\include;../libs\Simple OpenGL Image Library\src;../libs\glm;../libs\glew-1.13.0\include;../libs\freeglut\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\libs\FMODapi\studio\inc;..\libs\rapidjson;..\libs\assimp\include;../libs\Simple OpenGL Image Library\src;../libs\glm;../libs\glew-1.13.0\include;../libs\freeglut\include;..\libs\FMODapi\lowlevel\inc</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
-      <AdditionalLibraryDirectories>..\libs\assimp\lib;../libs\Simple OpenGL Image Library\projects\VC9\Debugg;../libs\glew-1.13.0\lib\;../libs\freeglut\lib</AdditionalLibraryDirectories>
-      <AdditionalDependencies>freeglut.lib;SOIL.lib;glew32.lib;assimp-vc120-mt.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\libs\FMODapi\lowlevel\lib;..\libs\assimp\lib;../libs\Simple OpenGL Image Library\projects\VC9\Debugg;../libs\glew-1.13.0\lib\;../libs\freeglut\lib;..\libs\FMODapi\studio\lib</AdditionalLibraryDirectories>
+      <AdditionalDependencies>freeglut.lib;SOIL.lib;glew32.lib;assimp-vc120-mt.lib;fmod_vc.lib;fmodstudio_vc.lib</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -157,6 +157,7 @@
     <ClCompile Include="ShadowedObject.cpp" />
     <ClCompile Include="ShipBiome.cpp" />
     <ClCompile Include="ShipFuns.cpp" />
+    <ClCompile Include="SoundManager.cpp" />
     <ClCompile Include="Sphere.cpp" />
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="TexturedObject.cpp" />
@@ -190,6 +191,7 @@
     <ClInclude Include="MultiCubeMesh.h" />
     <ClInclude Include="ObjectContainer.h" />
     <ClInclude Include="SeaBiome.h" />
+    <ClInclude Include="SoundManager.h" />
     <ClInclude Include="Utils.h" />
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="Object.h" />

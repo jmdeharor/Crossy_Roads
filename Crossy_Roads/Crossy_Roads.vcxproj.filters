@@ -195,6 +195,9 @@
     <ClCompile Include="WaterParticles.cpp">
       <Filter>Archivos de código fuente\ParticleSystem</Filter>
     </ClCompile>
+    <ClCompile Include="SoundManager.cpp">
+      <Filter>Archivos de código fuente</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game.h">
@@ -322,6 +325,9 @@
     </ClInclude>
     <ClInclude Include="WaterParticle.h">
       <Filter>Archivos de encabezado\ParticleSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="SoundManager.h">
+      <Filter>Archivos de encabezado</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

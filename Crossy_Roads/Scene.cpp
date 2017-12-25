@@ -16,7 +16,7 @@ Scene::~Scene() {
 }
 
 void Scene::firstInit() {
-	assets.loadAssets("models/game_assets.json");
+	assets.loadAssets("assets_locations/models.json", "assets_locations/textures.json");
 
 	partSystem.init(assets);
 	partSystem.g = -0.07f;
@@ -135,6 +135,8 @@ void Scene::init() {
 	camera.updateVM();
 
 	playerReferenceRow = playerRow = 0;
+
+	//soundManager.loadSound("sounds");
 }
 
 void Scene::update(int deltaTime) {

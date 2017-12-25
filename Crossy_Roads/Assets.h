@@ -44,7 +44,7 @@ public:
 	const std::vector<MeshConfig>* getDecoration() const;
 	glm::uint getNumMeshes() const;
 	glm::uint getNumTextures() const;
-	void loadAssets(const string& assetsFile);
+	void loadAssets(const string& modelPath, const string& texturePath);
 	Assets();
 	~Assets();
 };
