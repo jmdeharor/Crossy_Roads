@@ -27,7 +27,7 @@ class Floor : public GameObject, public ObjectContainer {
 	glm::vec2 tileSize;
 private:
 	void updateFloorRow(FloorRow& floorRow);
-	void updateMap(bool lastRow, glm::uint size);
+	void updateMap(bool lastRow, glm::uint size, const std::vector<glm::ivec2>& restriction = {});
 public:
 	void addLevel();
 	void firstInit() override;

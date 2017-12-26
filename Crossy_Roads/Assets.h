@@ -20,6 +20,7 @@ struct MeshConfig {
 	glm::uint rows, cols;
 	float height;
 	IdMesh mesh;
+	bool floorEmpty;
 };
 
 class Assets {

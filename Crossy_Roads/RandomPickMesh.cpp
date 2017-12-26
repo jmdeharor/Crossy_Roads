@@ -22,7 +22,6 @@ RandomPickMesh::RandomPickMesh() : meshes(NULL), probabilities(NULL)
 {
 }
 
-
 RandomPickMesh::~RandomPickMesh() {
 	if (meshes != NULL) {
 		delete meshes;

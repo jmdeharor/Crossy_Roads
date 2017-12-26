@@ -103,6 +103,11 @@ void Assets::loadAssets(const string& modelPath, const string& texturePath) {
 		if (type == "decoration") {
 			const Value& size = meshProperties["size"];
 			MeshConfig aux;
+			if (meshProperties.HasMember("floor empty")) {
+				aux.floorEmpty = meshProperties["floor empty"].GetBool();
+			}
+			else
+				aux.floorEmpty = false;
 			aux.rows = size[0].GetUint();
 			aux.cols = size[1].GetUint();
 			aux.height = meshProperties["height"].GetFloat();
