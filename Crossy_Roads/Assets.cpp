@@ -40,6 +40,10 @@ const Texture* Assets::getTexture(const string& name) const {
 	return &textures[textureIds.find(name)->second];
 }
 
+const RandomPickMesh * Assets::getRandomMesh(const string & name) const {
+	return &randomGroup.find(name)->second;
+}
+
 const std::vector<IdMesh>* Assets::getGroups() const {
 	return groups;
 }
@@ -84,32 +88,51 @@ void Assets::loadAssets(const string& modelPath, const string& texturePath) {
 	string name, type;
 	uint i = 0;
 	for (const Value& meshProperties : models.GetArray()) {
-		name.assign(meshProperties["names"][0].GetString());
+		uint firstId = i;
+		for (const Value& nameValue : meshProperties["names"].GetArray()) {
+			name.assign(nameValue.GetString());
+			meshes[i].loadFromFile("models/" + name + ".obj");
+			meshIds[name] = i;
+			++i;
+		}
 		type.assign(meshProperties["type"].GetString());
-		meshes[i].loadFromFile("models/" + name + ".obj");
-		meshIds[name] = i;
 		if (type == "decoration") {
 			const Value& size = meshProperties["size"];
 			MeshConfig aux;
 			aux.rows = size[0].GetUint();
 			aux.cols = size[1].GetUint();
 			aux.height = meshProperties["height"].GetFloat();
-			aux.mesh = i;
+			aux.mesh = firstId;
 			decorationGroup.push_back(aux);
 		}
 		else if (type == "enemy") {
-			groups[Enemy].push_back(i);
+			groups[Enemy].push_back(firstId);
 		}
 		else if (type == "platform") {
-			groups[Platform].push_back(i);
+			groups[Platform].push_back(firstId);
+		}
+		else if (type == "random") {
+			string groupName = meshProperties["group name"].GetString();
+			const Value& probabilitiesV = meshProperties["probabilities"];
+			IdMesh* meshes = new IdMesh[probabilitiesV.Size()];
+			float* probabilities = new float[probabilitiesV.Size()];
+			uint j = 0;
+			for (const Value& prob : probabilitiesV.GetArray()) {
+				float probNum = prob.GetFloat();
+				meshes[j] = j+firstId;
+				probabilities[j] = probNum;
+				++j;
+			}
+			map<string, RandomPickMesh>::iterator it = randomGroup.insert(make_pair(groupName, RandomPickMesh())).first;
+			RandomPickMesh& randomMesh = it->second;
+			randomMesh.setMeshes(meshes, probabilities);
 		}
 		else if (type != "unique") {
 			int a = 3;
 		}
-		++i;
 	}
 
-	for (uint i = 0; i < nGroups - 2; ++i) {
+	for (uint i = 0; i < nGroups; ++i) {
 		groups[i].shrink_to_fit();
 	}
 	decorationGroup.shrink_to_fit();

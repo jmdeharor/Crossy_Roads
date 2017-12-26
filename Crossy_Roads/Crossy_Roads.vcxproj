@@ -149,6 +149,7 @@
     <ClCompile Include="Plane.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="QuadMesh.cpp" />
+    <ClCompile Include="RandomPickMesh.cpp" />
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="SeaBiome.cpp" />
     <ClCompile Include="SeaFuns.cpp" />
@@ -190,6 +191,7 @@
     <ClInclude Include="Jumper.h" />
     <ClInclude Include="MultiCubeMesh.h" />
     <ClInclude Include="ObjectContainer.h" />
+    <ClInclude Include="RandomPickMesh.h" />
     <ClInclude Include="SeaBiome.h" />
     <ClInclude Include="SoundManager.h" />
     <ClInclude Include="Utils.h" />

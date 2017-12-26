@@ -142,7 +142,6 @@ void Scene::init() {
 
 	music = soundManager.loadSound("sounds/Music_Caribbean_Smugglers.mp3", true);
 	FMOD::Channel* channel2 = soundManager.playSound(music);
-	
 }
 
 void Scene::update(int deltaTime) {

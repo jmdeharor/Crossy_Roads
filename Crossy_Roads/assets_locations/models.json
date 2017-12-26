@@ -58,21 +58,13 @@
     },
     {
       "names": [
-        "railing"
+        "railing",
+		"railing_parrot",
+		"railing_rip"
       ],
-	  "type": "unique"
-    },
-    {
-      "names": [
-        "railing_parrot"
-      ],
-	  "type": "unique"
-    },
-    {
-      "names": [
-        "railing_rip"
-      ],
-	  "type": "unique"
+	  "type": "random",
+	  "probabilities": [0.6, 0.1, 0.3]
+	  "group name": "railing"
     },
     {
       "names": [

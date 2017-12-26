@@ -11,7 +11,8 @@
 class Floor : public GameObject, public ObjectContainer {
 	glm::uint rows, cols;
 	glm::uint lastRow;
-	IdMesh plankMesh, railMesh;
+	IdMesh plankMesh;
+	RandomPickMesh railMesh;
 	float firstPos;
 	glm::uint colOffset;
 	glm::uint rowOffset;
