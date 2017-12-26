@@ -3,6 +3,7 @@
 #include "ShadowedObject.h"
 #include "ImportedMesh.h"
 #include "Floor.h"
+#include "SoundManager.h"
 
 enum Orientation {
 	FRONT,
@@ -40,6 +41,8 @@ private:
 	glm::vec3 lightDir;
 	bool upsideDown;
 	glm::vec3 nextPos;
+	SoundManager soundManager;
+	FMOD::Sound* jumpSound;
 
 	void setDirectionVector();
 	bool keepMoving();

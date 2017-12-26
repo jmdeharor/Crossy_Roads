@@ -45,11 +45,12 @@ void Player::init(const Assets& assets, vec3 lightDir, vec3 offset, float jumpDi
 	testJump = 0;
 	currentFrame = 0;
 	upsideDown = false;
+	jumpSound = soundManager.loadSound("sounds/Effect_jump.wav", false);
 }
 
 PlayerReturn Player::update(int deltaTime) {
+	soundManager.update();
 	currentColIndex = FloorRow::worldToCol(playerObject.getPos().x);
-
 	PlayerReturn ret = PlayerReturn::NOTHING;
 	if (!upsideDown && collides()) {
 		playerObject.setRotationZ(PI);
@@ -81,6 +82,7 @@ PlayerReturn Player::update(int deltaTime) {
 				nextPos = currentPos.first;
 				platformSpeed = currentPos.second;
 				calculateSpeeds();
+				FMOD::Channel* channel10 = soundManager.playSound(jumpSound);
 			}
 			aPressed = dPressed = sPressed = false;
 		}
@@ -97,6 +99,8 @@ PlayerReturn Player::update(int deltaTime) {
 				nextPos = currentPos.first;
 				platformSpeed = currentPos.second;
 				calculateSpeeds();
+				FMOD::Channel* channel10 = soundManager.playSound(jumpSound);
+
 			}
 			wPressed = dPressed = sPressed = false;
 		}
@@ -113,6 +117,8 @@ PlayerReturn Player::update(int deltaTime) {
 				nextPos = currentPos.first;
 				platformSpeed = currentPos.second;
 				calculateSpeeds();
+				FMOD::Channel* channel10 = soundManager.playSound(jumpSound);
+
 			}
 			wPressed = aPressed = sPressed = false;
 		}
@@ -131,6 +137,8 @@ PlayerReturn Player::update(int deltaTime) {
 				nextPos = currentPos.first;
 				platformSpeed = currentPos.second;
 				calculateSpeeds();
+				FMOD::Channel* channel10 = soundManager.playSound(jumpSound);
+
 			}
 			wPressed = dPressed = aPressed = false;
 		}
