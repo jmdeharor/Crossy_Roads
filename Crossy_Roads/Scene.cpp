@@ -25,6 +25,10 @@ void Scene::firstInit() {
 	renderVectors.texturedObjects.resize(assets.getNumTextures());
 	renderVectors.shadowObjects.resize(assets.getNumMeshes());
 
+	soundManager = Game::instance().getSoundManager();
+	music = soundManager->loadSound("sounds/Music_Caribbean_Smugglers.mp3", true);
+	ambience = soundManager->loadSound("sounds/Ambiance_pirate_ship.mp3", true);
+
 	QueryPerformanceFrequency(&frequency);
 
 	initShaders();
@@ -136,17 +140,14 @@ void Scene::init() {
 
 	playerReferenceRow = playerRow = 0;
 
-	ambience = soundManager.loadSound("sounds/Ambiance_pirate_ship.mp3", true);
-	FMOD::Channel* channel = soundManager.playSound(ambience);
+	FMOD::Channel* channel = soundManager->playSound(ambience);
 	channel->setVolume(0.25f);
 
-	music = soundManager.loadSound("sounds/Music_Caribbean_Smugglers.mp3", true);
-	FMOD::Channel* channel2 = soundManager.playSound(music);
+	soundManager->playSound(music);
 }
 
 void Scene::update(int deltaTime) {
 	QueryPerformanceCounter(&start);
-	soundManager.update();
 	floor.update(deltaTime);
 	camera.update(deltaTime);
 	partSystem.update();

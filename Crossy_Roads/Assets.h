@@ -4,11 +4,8 @@
 #include "CubeMesh.h"
 #include "Texture.h"
 #include <map>
+#include "SoundManager.h"
 
-typedef int IdMesh;
-typedef int IdTex;
-
-#define INVALID -1
 #define nGroups 2
 
 enum AssetType {

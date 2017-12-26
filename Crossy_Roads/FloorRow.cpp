@@ -6,7 +6,7 @@
 using namespace glm;
 
 uint FloorRow::worldToCol(float x) {
-	return (x - offset) / fp.realTileSize;
+	return uint((x - offset) / fp.realTileSize);
 }
 
 void FloorRow::initResources(const Assets & assets) {
@@ -97,7 +97,7 @@ void FloorRow::update(int deltaTime) {
 				speeds[i] = speeds[0]; 
 				uint minTime = uint(3 * fp.realTileSize / abs(speeds[0])) + 1;
 				uint maxTime = uint((fp.tileSize.x - 3 * fp.realTileSize) / abs(speeds[0]));
-				frameLimit = between(minTime + 10, maxTime*0.3f);
+				frameLimit = between(minTime + 10, int(maxTime*0.3f));
 				frameCounter = 0;
 			}
 			else

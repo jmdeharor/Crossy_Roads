@@ -3,6 +3,7 @@
 
 
 #include "Scene.h"
+#include "SoundManager.h"
 
 #define SCREEN_WIDTH 1024
 #define SCREEN_HEIGHT 768
@@ -41,7 +42,10 @@ public:
 	bool getKey(int key) const;
 	bool getSpecialKey(int key) const;
 
+	const SoundManager* getSoundManager() const;
+
 private:
+	SoundManager soundManager;
 	bool bPlay;                       // Continue to play game?
 	Scene scene;                      // Scene to render
 	bool keys[256], specialKeys[256]; // Store key states so that 

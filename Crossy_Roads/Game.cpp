@@ -12,6 +12,7 @@ void Game::init() {
 }
 
 bool Game::update(int deltaTime) {
+	soundManager.update();
 	scene.update(deltaTime);
 	
 	return bPlay;
@@ -69,6 +70,10 @@ bool Game::getKey(int key) const
 bool Game::getSpecialKey(int key) const
 {
 	return specialKeys[key];
+}
+
+const SoundManager * Game::getSoundManager() const {
+	return &soundManager;
 }
 
 

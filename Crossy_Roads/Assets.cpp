@@ -75,7 +75,11 @@ void Assets::loadAssets(const string& modelPath, const string& texturePath) {
 	}
 
 	const Value& models = document["models"];
-	nImportedMeshes = models.Size();
+	nImportedMeshes = 0;
+
+	for (const Value& meshProperties : models.GetArray()) {
+		nImportedMeshes += meshProperties["names"].Size();
+	}
 
 	for (uint i = 0; i < nGroups-2; ++i) {
 		groups[i].reserve(nImportedMeshes);
@@ -125,7 +129,7 @@ void Assets::loadAssets(const string& modelPath, const string& texturePath) {
 			}
 			map<string, RandomPickMesh>::iterator it = randomGroup.insert(make_pair(groupName, RandomPickMesh())).first;
 			RandomPickMesh& randomMesh = it->second;
-			randomMesh.setMeshes(meshes, probabilities);
+			randomMesh.setMeshes(meshes, probabilities, probabilitiesV.Size());
 		}
 		else if (type != "unique") {
 			int a = 3;

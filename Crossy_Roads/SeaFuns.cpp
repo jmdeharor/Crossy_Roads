@@ -40,7 +40,7 @@ void FloorRow::initSeaRoad(vector<uint>& adjacentRow) {
 
 	uint minTime = uint(3 * fp.realTileSize / abs(speeds[0])) + 1;
 	uint maxTime = uint((fp.tileSize.x - 3 * fp.realTileSize) / abs(speeds[0]));
-	frameLimit = between(minTime + 10, maxTime*0.3f);
+	frameLimit = between(minTime + 10, int(maxTime*0.3f));
 	frameCounter = 0;
 
 	uint nPlat = platforms.size();

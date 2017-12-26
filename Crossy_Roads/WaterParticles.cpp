@@ -40,7 +40,7 @@ void WaterParticleSystem::update() {
 			else {
 				particles[j].position.y = pos.y;
 				particles[j].state = Stopped;
-				particles[j].lifetime = particles[i].scale / 0.01f;
+				particles[j].lifetime = uint(particles[i].scale / 0.01f);
 			}
 			++j;
 			break;

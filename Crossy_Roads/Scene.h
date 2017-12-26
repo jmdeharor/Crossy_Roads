@@ -54,7 +54,7 @@ private:
 	Assets assets;
 	RenderVectors renderVectors;
 	WaterParticleSystem partSystem;
-	SoundManager soundManager;
+	const SoundManager* soundManager;
 	FMOD::Sound* music, *ambience;
 
 	Player player;

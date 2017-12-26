@@ -97,12 +97,12 @@ void Floor::updateMap(bool lastRow, uint size) {
 	if (lastRow) {
 		aux.verticalOffset = 0;
 		aux.height = 1.5f;
-		aux.mesh = railMesh;
 		aux.occupied = true;
 		aux.collision = true;
 		aux.cols = 1;
 		aux.rows = 1;
 		for (uint j = 0; j < cols; ++j) {
+			aux.mesh = railMesh->getMesh();
 			map[plankLength][j] = aux;
 		}
 
@@ -258,7 +258,7 @@ void Floor::init(vec3 lightDir, const Assets& assets) {
 	furniture = assets.getDecoration();
 
 	plankMesh = assets.getMeshId("plank");
-	railMesh = assets.getMeshId("railing_parrot");
+	railMesh = assets.getRandomMesh("railing");
 
 	FloorRow::initResources(assets);
 	FloorParams params;
