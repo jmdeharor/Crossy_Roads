@@ -8,9 +8,9 @@ Effect_coin_collect - rhodesmas from freesound.org
 Effect_gunshot - Jim Rogers
 Effect_jump - LloydEvans09 from freesound.org
 Effect_rat_squeak - Sound Effects from youtube.com
-Effect_water_splash - lostphospene from freesound.org
+Effect_water_splash - InspectorJ from freesound.org
 Effect_weird_squeak - 
-Effect_wood_container_smash_
+Effect_wood_container_smash - 
 Effect_wood_squeak_1 - Noise_Collector from freesound.org 
 Effect_wood_squeak_2 - rightpurdy from freesound.org
 Environment_crowd - DickBlox from freesound.org
