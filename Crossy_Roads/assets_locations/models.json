@@ -30,7 +30,23 @@
     },
     {
       "names": [
-        "cubierta"
+        "cubierta_2"
+      ],
+	  "type": "decoration",
+	  "size": [3,3],
+	  "height": 0.5
+    },
+	{
+      "names": [
+        "cubierta_2_doors_open"
+      ],
+	  "type": "decoration",
+	  "size": [3,3],
+	  "height": 1.5
+    },
+	{
+      "names": [
+        "cubierta_2_open"
       ],
 	  "type": "decoration",
 	  "size": [3,3],
