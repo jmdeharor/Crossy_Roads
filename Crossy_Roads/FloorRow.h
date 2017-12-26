@@ -21,8 +21,14 @@ enum BiomeType {
 struct CellProperties {
 	glm::uint rows, cols;
 	float height, verticalOffset;
-	bool collision, occupied;
+	bool collision, occupied, empty;
 	IdMesh mesh;
+	CellProperties() : 
+		mesh(INVALID), 
+		collision(false), occupied(false),  empty(false),
+		height(0), verticalOffset(0) {
+
+	}
 };
 
 struct FloorParams {

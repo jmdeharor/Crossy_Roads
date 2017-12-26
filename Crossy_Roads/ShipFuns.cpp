@@ -94,7 +94,6 @@ void FloorRow::initShipSafeZone() {
 	platforms.clear();
 	enemies.clear();
 	speeds.clear();
-	floorTiles.resize(1);
 	rowHeight = 0.2f;
 
 	static float realTileSize = fp.tileSize.x / fp.cols;
@@ -104,17 +103,12 @@ void FloorRow::initShipSafeZone() {
 	static vec3 boundingBox = cubeMesh->getbbSize();
 	static vec3 bbcenter = cubeMesh->getbbCenter();
 	static float height = cubeMesh->getHeight();
-	static vec3 floorTileSize = vec3(fp.tileSize.x, 0.2f, fp.tileSize.y) / boundingBox;
-
-	TexturedObject& tile = floorTiles[0];
-	tile.texture = res.planeWood;
-	tile.setMesh(cubeMesh);
-	tile.setScale(floorTileSize);
-	tile.setCenter(vec3(bbcenter.x, bbcenter.y + height / 2.f, bbcenter.z));
-	tile.setPos(vec3(pos.x, rowHeight, pos.y));
 
 	furniture.clear();
+	bool hasEmpty = false;
 	for (uint i = 0; i < fp.cols; ++i) {
+		if (map[i].empty)
+			hasEmpty = true;
 		if (map[i].mesh == INVALID)
 			continue;
 		furniture.push_back(ShadowedObject());
@@ -135,4 +129,33 @@ void FloorRow::initShipSafeZone() {
 		object.setPos(vec3(posX + (realTileSize*(map[i].cols / 2.f)) - realTileSize / 2, rowHeight, pos.y - fp.tileSize.y*(map[i].rows / 2.f) + fp.tileSize.y / 2));
 		object.setPlane(vec4(0, 1, 0, -rowHeight), fp.lightDir);
 	}
+
+	if (hasEmpty) {
+		static vec3 floorTileSize = vec3(fp.realTileSize, 0.2f, fp.tileSize.y) / boundingBox;
+		floorTiles.resize(fp.cols);
+
+		for (uint i = 0; i < floorTiles.size(); ++i) {
+			TexturedObject& tile = floorTiles[i];
+			if (map[i].empty)
+				tile.texture = res.water;
+			else
+				tile.texture = res.planeWood;
+			tile.setMesh(cubeMesh);
+			tile.setScale(floorTileSize);
+			tile.setCenter(vec3(bbcenter.x, bbcenter.y + height / 2.f, bbcenter.z));
+			tile.setPos(vec3(offsetX + i*fp.realTileSize, rowHeight, pos.y));
+		}
+	}
+	else {
+		static vec3 floorTileSize = vec3(fp.tileSize.x, 0.2f, fp.tileSize.y) / boundingBox;
+		floorTiles.resize(1);
+
+		TexturedObject& tile = floorTiles[0];
+		tile.texture = res.planeWood;
+		tile.setMesh(cubeMesh);
+		tile.setScale(floorTileSize);
+		tile.setCenter(vec3(bbcenter.x, bbcenter.y + height / 2.f, bbcenter.z));
+		tile.setPos(vec3(pos.x, rowHeight, pos.y));
+	}
+	
 }

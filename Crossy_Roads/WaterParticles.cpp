@@ -9,6 +9,7 @@ void WaterParticleSystem::init(const Assets & assets) {
 }
 
 void WaterParticleSystem::trigger(vec3 pos) {
+	pos.y += mesh->getbbSize().y*0.3f/2;
 	this->pos = pos;
 	uint nParticles = between(10, 20);
 	particles.resize(nParticles);
@@ -18,7 +19,7 @@ void WaterParticleSystem::trigger(vec3 pos) {
 		float vertAngle = between(0.f, PI / 2);
 
 		particles[i].position = pos;
-		particles[i].speed = vec3(cos(horzAngle)*0.3f, sin(vertAngle), sin(horzAngle)*0.3f);
+		particles[i].speed = vec3(cos(horzAngle)*0.2f, sin(vertAngle), sin(horzAngle)*0.2f);
 		particles[i].lifetime = (uint)ceil(2 * (-particles[i].speed.y / g));
 		particles[i].scale = 0.3f;
 		particles[i].state = Falling;
@@ -39,7 +40,7 @@ void WaterParticleSystem::update() {
 			else {
 				particles[j].position.y = pos.y;
 				particles[j].state = Stopped;
-				particles[j].lifetime = particles[i].scale / 0.01f;
+				particles[j].lifetime = uint(particles[i].scale / 0.01f);
 			}
 			++j;
 			break;

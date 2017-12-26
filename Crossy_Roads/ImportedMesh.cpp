@@ -16,7 +16,7 @@ void ImportedMesh::computeBoundingBox() {
 	bbox[0] = vec3(1e10f, 1e10f, 1e10f);
 	bbox[1] = vec3(-1e10f, -1e10f, -1e10f);
 
-	for (unsigned int j = 0; j < vertices.size(); j++) {
+	for (unsigned int j = 0; j < nVertices; j++) {
 		bbox[0] = min(bbox[0], vertices[j]);
 		bbox[1] = max(bbox[1], vertices[j]);
 	}
@@ -73,28 +73,30 @@ void ImportedMesh::initMesh(const aiMesh *paiMesh) {
 	const aiVector3D* pNormal;
 	const aiVector3D* pTexCoord;
 
-	vertices.reserve(paiMesh->mNumVertices * 3);
-	normals.reserve(paiMesh->mNumVertices * 3);
-	texCoords.reserve(paiMesh->mNumVertices * 2);
-	triangles.reserve(paiMesh->mNumFaces * 3);
+	vertices =  (vec3*)malloc(paiMesh->mNumVertices*sizeof(vec3));
+	normals  =   (vec3*)malloc(paiMesh->mNumVertices * sizeof(vec3));
+	texCoords = (vec2*)malloc(paiMesh->mNumVertices * sizeof(vec2));
+	triangles = (uint*)malloc(paiMesh->mNumFaces * 3 * sizeof(uint));
+	nModelVertices = paiMesh->mNumFaces * 3;
+	nVertices = paiMesh->mNumVertices;
 
 	// Init vertices properties
-	for (unsigned int i = 0; i < paiMesh->mNumVertices; i++) {
+	for (uint i = 0; i < paiMesh->mNumVertices; i++) {
 		pPos = &(paiMesh->mVertices[i]);
 		pNormal = &(paiMesh->mNormals[i]);
 		pTexCoord = paiMesh->HasTextureCoords(0) ? &(paiMesh->mTextureCoords[0][i]) : &Zero3D;
 
-		vertices.push_back(glm::vec3(pPos->x, pPos->y, pPos->z));
-		normals.push_back(glm::vec3(pNormal->x, pNormal->y, pNormal->z));
-		texCoords.push_back(glm::vec2(pTexCoord->x, pTexCoord->y));
+		vertices[i] = vec3(pPos->x, pPos->y, pPos->z);
+		normals[i] = vec3(pNormal->x, pNormal->y, pNormal->z);
+		texCoords[i] = vec2(pTexCoord->x, pTexCoord->y);
 	}
 
 	// Init faces indices
-	for (unsigned int i = 0; i < paiMesh->mNumFaces; i++) {
+	for (uint i = 0, i3 = 0; i < paiMesh->mNumFaces; i++, i3 += 3) {
 		const aiFace& Face = paiMesh->mFaces[i];
-		triangles.push_back(Face.mIndices[0]);
-		triangles.push_back(Face.mIndices[1]);
-		triangles.push_back(Face.mIndices[2]);
+		triangles[i3] = Face.mIndices[0];
+		triangles[i3 + 1] = Face.mIndices[1];
+		triangles[i3 + 2] = Face.mIndices[2];
 	}
 
 	totalTriangles = paiMesh->mNumFaces;
@@ -105,11 +107,11 @@ void ImportedMesh::prepareArrays() {
 	vec3 vertex, normal;
 	vec2 texCoord;
 
-	vector<float> vboVertices(triangles.size() * 3);
-	vector<float> vboNormals(triangles.size() * 3);
-	vector<float> vboTex(triangles.size() * 2);
+	vector<float> vboVertices(nModelVertices * 3);
+	vector<float> vboNormals(nModelVertices * 3);
+	vector<float> vboTex(nModelVertices * 2);
 
-	for (unsigned int j = 0; j < triangles.size(); j++) {
+	for (unsigned int j = 0; j < nModelVertices; j++) {
 		index = triangles[j];
 		vertex = vertices[index];
 		normal = normals[index];
@@ -133,8 +135,6 @@ void ImportedMesh::prepareArrays() {
 	glGenBuffers(1, &VBOtex);
 	glBindBuffer(GL_ARRAY_BUFFER, VBOtex);
 	glBufferData(GL_ARRAY_BUFFER, vboTex.size() * sizeof(float), &vboTex[0], GL_STATIC_DRAW);
-
-	nVertices = triangles.size();
 }
 
 bool ImportedMesh::loadFromFile(const string &filename) {
@@ -150,6 +150,9 @@ bool ImportedMesh::loadFromFile(const string &filename) {
 	}
 
 	const aiMesh* paiMesh = pScene->mMeshes[0];
+	if (filename == "models/railing_rip.obj") {
+		int a = 3;
+	}
 	initMesh(paiMesh);
 
 	if (!initMaterials(pScene, filename))
@@ -158,9 +161,10 @@ bool ImportedMesh::loadFromFile(const string &filename) {
 	computeBoundingBox();
 	prepareArrays();
 
-	vertices.clear();
-	normals.clear();
-	triangles.clear();
+	free(vertices);
+	free(normals);
+	free(texCoords);
+	free(triangles);
 
 	return true;
 }
@@ -168,8 +172,3 @@ bool ImportedMesh::loadFromFile(const string &filename) {
 void ImportedMesh::useTexture() const {
 	texture.use();
 }
-
-/*void ImportedMesh::render(ShaderProgram & shaderProgram) const {
-	texture.use();
-	Mesh::render(shaderProgram);
-}*/
