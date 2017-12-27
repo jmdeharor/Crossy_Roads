@@ -8,8 +8,9 @@ public:
 	const std::vector<IdMesh>* groups;
 	std::vector<std::vector<IdTex>> floorTextures;
 	std::vector<glm::uint> indices;
-	IdMesh planeWood, water;
+	IdTex planeWood, water;
 	IdMesh crocodile, shark;
+	const std::vector<IdTex>* waterAnimation;
 	const vector<vector<string>> models;
 
 	void init(const Assets& assets);

@@ -27,7 +27,6 @@ struct CellProperties {
 		mesh(INVALID), 
 		collision(false), occupied(false),  empty(false),
 		height(0), verticalOffset(0) {
-
 	}
 };
 
@@ -51,6 +50,7 @@ private:
 	std::vector<CellProperties> map;
 	std::vector<ShadowedObject> furniture;
 	std::vector<TexturedObject> floorTiles;
+	std::vector<AnimatedTexture> animatedFloorTiles;
 	std::vector<ShadowedObject> platforms;
 
 	static FloorParams fp;

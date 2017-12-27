@@ -267,15 +267,15 @@ uint Floor::getColOffset() const {
 	return colOffset;
 }
 
-glm::uint Floor::getRowOffset() const
-{
+uint Floor::getRowOffset() const {
 	return rowOffset;
 }
 
 uint Floor::getRows() const {
 	return rows;
 }
-glm::uint Floor::getCols() const {
+
+uint Floor::getCols() const {
 	return cols;
 }
 FloorRow* Floor::getFloorRow(uint index) {

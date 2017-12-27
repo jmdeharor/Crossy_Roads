@@ -120,6 +120,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="AABox.cpp" />
+    <ClCompile Include="AnimatedTexture.cpp" />
     <ClCompile Include="Assets.cpp" />
     <ClCompile Include="Biome.cpp" />
     <ClCompile Include="Camera.cpp" />
@@ -168,6 +169,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AABox.h" />
+    <ClInclude Include="AnimatedTexture.h" />
     <ClInclude Include="Assets.h" />
     <ClInclude Include="Biome.h" />
     <ClInclude Include="Camera.h" />

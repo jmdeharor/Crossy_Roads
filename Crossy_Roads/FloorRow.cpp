@@ -67,6 +67,9 @@ pair<vec3, float> FloorRow::getHeight(uint col) {
 }
 
 void FloorRow::update(int deltaTime) {
+	for (AnimatedTexture& animatedTexure : animatedFloorTiles) {
+		animatedTexure.update(deltaTime);
+	}
 	for (uint i = 0; i < enemies.size(); ++i) {
 		Jumper& object = enemies[i];
 		object.update();
@@ -127,8 +130,13 @@ void FloorRow::groupDrawableObjects(const FrustumG& frustum, RenderVectors& rend
 		renderVectors.shadowObjects[enemies[i].meshId].push_back(&enemies[i]);
 	}
 	for (uint i = 0; i < floorTiles.size(); ++i) {
-		if (floorTiles[i].isInsideViewFrustrum(frustum))
-			renderVectors.texturedObjects[floorTiles[i].texture].push_back(&floorTiles[i]);
+		if (floorTiles[i].isInsideViewFrustrum(frustum)) {
+			if (animatedFloorTiles.size() > 0) {
+				renderVectors.texturedObjects[animatedFloorTiles[i].getCurrentTexure()].push_back(&floorTiles[i]);
+			}
+			else
+				renderVectors.texturedObjects[floorTiles[i].texture].push_back(&floorTiles[i]);
+		}
 	}
 	for (uint i = 0; i < furniture.size(); ++i) {
 		if (furniture[i].isInsideViewFrustrum(frustum))

@@ -201,6 +201,9 @@
     <ClCompile Include="RandomPickMesh.cpp">
       <Filter>Archivos de código fuente\Meshes</Filter>
     </ClCompile>
+    <ClCompile Include="AnimatedTexture.cpp">
+      <Filter>Archivos de código fuente</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game.h">
@@ -334,6 +337,9 @@
     </ClInclude>
     <ClInclude Include="RandomPickMesh.h">
       <Filter>Archivos de encabezado\Meshes</Filter>
+    </ClInclude>
+    <ClInclude Include="AnimatedTexture.h">
+      <Filter>Archivos de encabezado</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
