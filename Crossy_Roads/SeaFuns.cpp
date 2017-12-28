@@ -8,7 +8,7 @@ void FloorRow::initSeaRoad(vector<uint>& adjacentRow) {
 	enemies.clear();
 	platforms.resize(between(2, 4));
 	speeds.resize(platforms.size());
-	floorTiles.resize(fp.cols);
+	floorTiles.clear();
 	rowHeight = -5;
 
 	float offsetX = pos.x - (fp.realTileSize*(fp.cols / 2) - (1 - fp.cols % 2)*fp.realTileSize / 2);
@@ -19,8 +19,9 @@ void FloorRow::initSeaRoad(vector<uint>& adjacentRow) {
 	static float height = cubeMesh->getHeight();
 	static vec3 floorTileSize = vec3(fp.realTileSize, 0.2f, fp.tileSize.y) / boundingBox;
 
-	for (uint i = 0; i < floorTiles.size(); ++i) {
-		TexturedObject& tile = floorTiles[i];
+	for (uint i = 0; i < animatedFloorTiles.size(); ++i) {
+		AnimTexObject& tile = animatedFloorTiles[i];
+		tile.setTextures(res.waterAnimation, 1 / (float)12 * 1000);
 		tile.setRotationY(PI / 2);
 		tile.setMesh(cubeMesh);
 		tile.setScale(floorTileSize);
@@ -28,15 +29,11 @@ void FloorRow::initSeaRoad(vector<uint>& adjacentRow) {
 		tile.setPos(vec3(offsetX + i*fp.realTileSize, rowHeight, pos.y));
 	}
 
-	for (uint i = 0; i < animatedFloorTiles.size(); ++i) {
-		animatedFloorTiles[i].setTexures(res.waterAnimation, 1 / (float)12 * 1000);
-	}
-
 	static const Mesh* sharkMesh = res.assets->getMesh(res.shark);
 	static vec3 sharkbb = sharkMesh->getbbSize();
 	static vec3 sharkSize = vec3(3 * fp.realTileSize, 1, fp.tileSize.y+1) / sharkbb;
 
-	speeds[0] = generateSpeed(minSpeed, maxSpeed, int(pos.y / fp.tileSize.y) % 2);
+	speeds[0] = generateSpeed(minSpeed, 0.2f, int(pos.y / fp.tileSize.y) % 2);
 
 	for (uint i = 1; i < speeds.size(); ++i) {
 		speeds[i] = 0;
@@ -49,11 +46,12 @@ void FloorRow::initSeaRoad(vector<uint>& adjacentRow) {
 
 	uint nPlat = platforms.size();
 	for (uint i = 0; i < nPlat; ++i) {
-		ShadowedObject& platform = platforms[i];
-		platform.setMesh(res.shark, sharkMesh);
+		AnimMeshObject& platform = platforms[i];
+		platform.setMesh(res.sharkAnimation.first, res.assets->getMesh(res.sharkAnimation.first));
+		platform.setMeshes(res.sharkAnimation.second, 1 / (float)6 * 1000);
 		platform.setScale(sharkSize);
 		platform.setCenterToBaseCenter();
-		platform.setPlane(vec4(0, 1, 0, -rowHeight), fp.lightDir);
+		//platform.setPlane(vec4(0, 1, 0, -rowHeight), fp.lightDir);
 		float startPoint;
 		if (speeds[0] >= 0) {
 			platform.setRotationY(0);

@@ -96,6 +96,7 @@ void FloorRow::initShipSafeZone() {
 	platforms.clear();
 	enemies.clear();
 	speeds.clear();
+	furniture.clear();
 	rowHeight = 0.2f;
 
 	static float realTileSize = fp.tileSize.x / fp.cols;
@@ -106,7 +107,6 @@ void FloorRow::initShipSafeZone() {
 	static vec3 bbcenter = cubeMesh->getbbCenter();
 	static float height = cubeMesh->getHeight();
 
-	furniture.clear();
 	bool hasEmpty = false;
 	for (uint i = 0; i < fp.cols; ++i) {
 		if (map[i].empty)

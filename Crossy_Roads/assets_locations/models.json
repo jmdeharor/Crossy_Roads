@@ -59,14 +59,16 @@
         "crocodile-00",
         "crocodile-01"
       ],
-	  "type": "platform"
+	  "type": "platform",
+	  "group name": "crocodile"
     },
     {
       "names": [
         "shark-00",
         "shark-01"
       ],
-	  "type": "platform"
+	  "type": "platform",
+	  "group name": "shark"
     },
     {
       "names": [

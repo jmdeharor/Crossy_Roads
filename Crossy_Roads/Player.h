@@ -29,6 +29,7 @@ private:
 	bool inMovement;
 	float speed, verticalSpeed, gravity;
 	glm::vec3 speeds;
+	float currentFloorRow;
 	float currentVerticalSpeed;
 	float jumpDistance;
 	float testJump;

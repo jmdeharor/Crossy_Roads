@@ -47,6 +47,7 @@ void Player::init(const Assets& assets, vec3 lightDir, vec3 offset, float jumpDi
 	currentFrame = 0;
 	upsideDown = false;
 	jumpSound = soundManager->loadSound("sounds/Effect_jump.wav", false);
+	currentFloorRow = playerObject.getPos().y;
 }
 
 PlayerReturn Player::update(int deltaTime) {
@@ -81,6 +82,7 @@ PlayerReturn Player::update(int deltaTime) {
 				pair<vec3, float> currentPos = floor->getFloorRow(currentRowIndex)->getHeight(currentColIndex);
 				nextPos = currentPos.first;
 				platformSpeed = currentPos.second;
+				currentFloorRow = currentPos.first.y;
 				calculateSpeeds();
 				soundManager->playSound(jumpSound);
 			}
@@ -98,6 +100,7 @@ PlayerReturn Player::update(int deltaTime) {
 				pair<vec3, float> currentPos = floor->getFloorRow(currentRowIndex)->getHeight(currentColIndex);
 				nextPos = currentPos.first;
 				platformSpeed = currentPos.second;
+				currentFloorRow = currentPos.first.y;
 				calculateSpeeds();
 				soundManager->playSound(jumpSound);
 			}
@@ -115,6 +118,7 @@ PlayerReturn Player::update(int deltaTime) {
 				pair<vec3, float> currentPos = floor->getFloorRow(currentRowIndex)->getHeight(currentColIndex);
 				nextPos = currentPos.first;
 				platformSpeed = currentPos.second;
+				currentFloorRow = currentPos.first.y;
 				calculateSpeeds();
 				soundManager->playSound(jumpSound);
 
@@ -135,6 +139,7 @@ PlayerReturn Player::update(int deltaTime) {
 				pair<vec3, float> currentPos = floor->getFloorRow(currentRowIndex)->getHeight(currentColIndex);
 				nextPos = currentPos.first;
 				platformSpeed = currentPos.second;
+				currentFloorRow = currentPos.first.y;
 				calculateSpeeds();
 				soundManager->playSound(jumpSound);
 			}
@@ -162,7 +167,7 @@ vec3 Player::getPos() const {
 }
 
 float Player::getHeight() const {
-	return floor->getFloorRow(currentRowIndex)->getHeight(currentColIndex).first.y;
+	return currentFloorRow;
 }
 
 void Player::calculateSpeeds() {

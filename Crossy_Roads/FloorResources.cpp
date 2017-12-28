@@ -23,6 +23,7 @@ void FloorResources::init(const Assets & assets) {
 	shark = assets.getMeshId("shark-00");
 	
 	waterAnimation = assets.getAnimatedTexture("water_floor");
+	sharkAnimation = assets.getAnimatedMesh("shark");
 }
 
 FloorResources::FloorResources() : 

@@ -7,6 +7,8 @@
 #include "ObjectContainer.h"
 #include "Jumper.h"
 #include "FloorResources.h"
+#include "AnimTexObject.h"
+#include "AnimMeshObject.h"
 
 enum FloorType {
 	Road,
@@ -50,8 +52,8 @@ private:
 	std::vector<CellProperties> map;
 	std::vector<ShadowedObject> furniture;
 	std::vector<TexturedObject> floorTiles;
-	std::vector<AnimatedTexture> animatedFloorTiles;
-	std::vector<ShadowedObject> platforms;
+	std::vector<AnimTexObject> animatedFloorTiles;
+	std::vector<AnimMeshObject> platforms;
 
 	static FloorParams fp;
 	static FloorResources res;
@@ -76,7 +78,7 @@ public:
 	pair<glm::vec3, float> getHeight(glm::uint col);
 	std::vector<Jumper>* getEnemies();
 	std::vector<CellProperties>* getRowObjects();
-	std::vector<ShadowedObject>* getPlatforms();
+	std::vector<AnimMeshObject>* getPlatforms();
 	bool isSafeZone() const;
 	BiomeType getBiome() const;
 	FloorRow();

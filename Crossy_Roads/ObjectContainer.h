@@ -5,7 +5,7 @@
 
 struct RenderVectors {
 	std::vector<std::vector<Object*>> objects;
-	std::vector<std::vector<TexturedObject*>> texturedObjects;
+	std::vector<std::vector<Object*>> texturedObjects;
 	std::vector<std::vector<Object*>> shadowObjects;
 };
 

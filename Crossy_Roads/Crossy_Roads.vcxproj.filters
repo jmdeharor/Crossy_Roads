@@ -156,13 +156,7 @@
     <ClCompile Include="Plane.cpp">
       <Filter>Archivos de código fuente\FrustumCulling</Filter>
     </ClCompile>
-    <ClCompile Include="SeaBiome.cpp">
-      <Filter>Archivos de código fuente\Floor\Biomes</Filter>
-    </ClCompile>
     <ClCompile Include="SeaFuns.cpp">
-      <Filter>Archivos de código fuente\Floor\Biomes</Filter>
-    </ClCompile>
-    <ClCompile Include="ShipBiome.cpp">
       <Filter>Archivos de código fuente\Floor\Biomes</Filter>
     </ClCompile>
     <ClCompile Include="ShipFuns.cpp">
@@ -186,9 +180,6 @@
     <ClCompile Include="FloorResources.cpp">
       <Filter>Archivos de código fuente\Floor</Filter>
     </ClCompile>
-    <ClCompile Include="Biome.cpp">
-      <Filter>Archivos de código fuente\Floor\Biomes</Filter>
-    </ClCompile>
     <ClCompile Include="WaterParticle.cpp">
       <Filter>Archivos de código fuente\ParticleSystem</Filter>
     </ClCompile>
@@ -201,8 +192,11 @@
     <ClCompile Include="RandomPickMesh.cpp">
       <Filter>Archivos de código fuente\Meshes</Filter>
     </ClCompile>
-    <ClCompile Include="AnimatedTexture.cpp">
-      <Filter>Archivos de código fuente</Filter>
+    <ClCompile Include="AnimTexObject.cpp">
+      <Filter>Archivos de código fuente\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="AnimMeshObject.cpp">
+      <Filter>Archivos de código fuente\Objects</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -338,8 +332,11 @@
     <ClInclude Include="RandomPickMesh.h">
       <Filter>Archivos de encabezado\Meshes</Filter>
     </ClInclude>
-    <ClInclude Include="AnimatedTexture.h">
-      <Filter>Archivos de encabezado</Filter>
+    <ClInclude Include="AnimTexObject.h">
+      <Filter>Archivos de encabezado\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="AnimMeshObject.h">
+      <Filter>Archivos de encabezado\Objects</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

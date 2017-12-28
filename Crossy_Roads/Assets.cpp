@@ -44,8 +44,12 @@ const RandomPickMesh * Assets::getRandomMesh(const string & name) const {
 	return &randomGroup.find(name)->second;
 }
 
-const vector<IdTex> * Assets::getAnimatedTexture(const string & name) const {
-	return &animatedTextureGroup.find(name)->second;
+pair<IdTex, uint> Assets::getAnimatedTexture(const string & name) const {
+	return animatedTextureGroup.find(name)->second;
+}
+
+pair<IdMesh, uint> Assets::getAnimatedMesh(const string & name) const {
+	return animatedMeshGroup.find(name)->second;
 }
 
 const std::vector<IdMesh>* Assets::getGroups() const {
@@ -97,6 +101,7 @@ void Assets::loadAssets(const string& modelPath, const string& texturePath) {
 	uint i = 0;
 	for (const Value& meshProperties : models.GetArray()) {
 		uint firstId = i;
+		const Value& namesV = meshProperties["names"];
 		for (const Value& nameValue : meshProperties["names"].GetArray()) {
 			name.assign(nameValue.GetString());
 			meshes[i].loadFromFile("models/" + name + ".obj");
@@ -122,6 +127,12 @@ void Assets::loadAssets(const string& modelPath, const string& texturePath) {
 			groups[Enemy].push_back(firstId);
 		}
 		else if (type == "platform") {
+			if (namesV.Size() > 1) {
+				map<string, pair<IdMesh, uint>>::iterator it = animatedMeshGroup.insert(make_pair(meshProperties["group name"].GetString(), pair<IdMesh, uint>())).first;
+				pair<IdMesh, uint>& animMeshes = it->second;
+				animMeshes.first = firstId;
+				animMeshes.second = namesV.Size();
+			}
 			groups[Platform].push_back(firstId);
 		}
 		else if (type == "random") {
@@ -170,12 +181,10 @@ void Assets::loadAssets(const string& modelPath, const string& texturePath) {
 		bool linear = texture["type"].GetString() == "linear";
 		const Value& namesV = texture["names"];
 		if (namesV.Size() > 1) {
-			map<string, vector<IdTex>>::iterator it = animatedTextureGroup.insert(make_pair(texture["group name"].GetString(), vector<IdTex>())).first;
-			vector<IdTex>& animTextures = it->second;
-			animTextures.resize(namesV.Size());
-			for (uint j = 0; j < animTextures.size(); ++j) {
-				animTextures[j] = j + i;
-			}
+			map<string, pair<IdTex, uint>>::iterator it = animatedTextureGroup.insert(make_pair(texture["group name"].GetString(), pair<IdTex, uint>())).first;
+			pair<IdTex, uint>& animTextures = it->second;
+			animTextures.first = i;
+			animTextures.second = namesV.Size();
 		}
 		for (const Value& texName : namesV.GetArray()) {
 			name.assign(texName.GetString());

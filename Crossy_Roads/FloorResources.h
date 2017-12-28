@@ -10,7 +10,8 @@ public:
 	std::vector<glm::uint> indices;
 	IdTex planeWood, water;
 	IdMesh crocodile, shark;
-	const std::vector<IdTex>* waterAnimation;
+	std::pair<IdTex, glm::uint> waterAnimation;
+	std::pair<IdMesh, glm::uint> sharkAnimation;
 	const vector<vector<string>> models;
 
 	void init(const Assets& assets);

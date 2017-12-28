@@ -120,9 +120,9 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="AABox.cpp" />
-    <ClCompile Include="AnimatedTexture.cpp" />
+    <ClCompile Include="AnimMeshObject.cpp" />
+    <ClCompile Include="AnimTexObject.cpp" />
     <ClCompile Include="Assets.cpp" />
-    <ClCompile Include="Biome.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Camera\basecamera.cpp" />
     <ClCompile Include="Camera\eulercamera.cpp" />
@@ -152,12 +152,10 @@
     <ClCompile Include="QuadMesh.cpp" />
     <ClCompile Include="RandomPickMesh.cpp" />
     <ClCompile Include="Scene.cpp" />
-    <ClCompile Include="SeaBiome.cpp" />
     <ClCompile Include="SeaFuns.cpp" />
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="ShaderProgram.cpp" />
     <ClCompile Include="ShadowedObject.cpp" />
-    <ClCompile Include="ShipBiome.cpp" />
     <ClCompile Include="ShipFuns.cpp" />
     <ClCompile Include="SoundManager.cpp" />
     <ClCompile Include="Sphere.cpp" />
@@ -169,7 +167,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AABox.h" />
-    <ClInclude Include="AnimatedTexture.h" />
+    <ClInclude Include="AnimMeshObject.h" />
+    <ClInclude Include="AnimTexObject.h" />
     <ClInclude Include="Assets.h" />
     <ClInclude Include="Biome.h" />
     <ClInclude Include="Camera.h" />

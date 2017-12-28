@@ -13,7 +13,6 @@ void FloorRow::initResources(const Assets & assets) {
 	res.init(assets);
 }
 
-
 void FloorRow::initRoad(BiomeType type, vector<uint>& adjacentRow, const vector<CellProperties>& map) {
 	this->map = map;
 	biomeType = type;
@@ -67,7 +66,7 @@ pair<vec3, float> FloorRow::getHeight(uint col) {
 }
 
 void FloorRow::update(int deltaTime) {
-	for (AnimatedTexture& animatedTexure : animatedFloorTiles) {
+	for (AnimTexObject& animatedTexure : animatedFloorTiles) {
 		animatedTexure.update(deltaTime);
 	}
 	for (uint i = 0; i < enemies.size(); ++i) {
@@ -93,7 +92,8 @@ void FloorRow::update(int deltaTime) {
 	}
 	
 	for (uint i = 0; i < platforms.size(); ++i) {
-		Object& object = platforms[i];
+		AnimMeshObject& object = platforms[i];
+		object.update(deltaTime);
 		object.move(speeds[i], 0, 0);
 		if (speeds[i] == 0 && speeds[i-1] != 0) {
 			if (frameCounter == frameLimit) {
@@ -131,11 +131,12 @@ void FloorRow::groupDrawableObjects(const FrustumG& frustum, RenderVectors& rend
 	}
 	for (uint i = 0; i < floorTiles.size(); ++i) {
 		if (floorTiles[i].isInsideViewFrustrum(frustum)) {
-			if (animatedFloorTiles.size() > 0) {
-				renderVectors.texturedObjects[animatedFloorTiles[i].getCurrentTexure()].push_back(&floorTiles[i]);
-			}
-			else
-				renderVectors.texturedObjects[floorTiles[i].texture].push_back(&floorTiles[i]);
+			renderVectors.texturedObjects[floorTiles[i].texture].push_back(&floorTiles[i]);
+		}
+	}
+	for (uint i = 0; i < animatedFloorTiles.size(); ++i) {
+		if (animatedFloorTiles[i].isInsideViewFrustrum(frustum)) {
+			renderVectors.texturedObjects[animatedFloorTiles[i].getTexture()].push_back(&animatedFloorTiles[i]);
 		}
 	}
 	for (uint i = 0; i < furniture.size(); ++i) {
@@ -145,9 +146,9 @@ void FloorRow::groupDrawableObjects(const FrustumG& frustum, RenderVectors& rend
 	}
 	for (uint i = 0; i < platforms.size(); ++i) {
 		if (platforms[i].isInsideViewFrustrum(frustum)) {
-			renderVectors.objects[platforms[i].meshId].push_back(&platforms[i]);
+			renderVectors.objects[platforms[i].getMesh()].push_back(&platforms[i]);
 		}
-		renderVectors.shadowObjects[platforms[i].meshId].push_back(&platforms[i]);
+		renderVectors.shadowObjects[platforms[i].getMesh()].push_back(&platforms[i]);
 	}
 }
 
@@ -159,7 +160,7 @@ vector<CellProperties>* FloorRow::getRowObjects() {
 	return &map;
 }
 
-vector<ShadowedObject>* FloorRow::getPlatforms()
+vector<AnimMeshObject>* FloorRow::getPlatforms()
 {
 	return &platforms;
 }

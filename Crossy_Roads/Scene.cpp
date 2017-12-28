@@ -242,7 +242,7 @@ void Scene::render() {
 	const Mesh* mesh = assets.getCubeMesh();
 	mesh->setProgramParams(drawShadowProgram);
 	for (uint i = 0; i < renderVectors.texturedObjects.size(); ++i) {
-		vector<TexturedObject*>& objects = renderVectors.texturedObjects[i];
+		vector<Object*>& objects = renderVectors.texturedObjects[i];
 		const Texture* tex = assets.getTexture(i);
 		tex->use();
 		for (uint j = 0; j < objects.size(); ++j) {
