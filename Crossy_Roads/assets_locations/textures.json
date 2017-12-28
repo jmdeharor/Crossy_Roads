@@ -1,124 +1,117 @@
 {
   "textures": [
     {
-      "name": "wood_3_1",
+      "names": ["wood_3_1"],
       "type": "linear"
     },
     {
-      "name": "wood_3_2",
+      "names": ["wood_3_2"],
       "type": "linear"
     },
     {
-      "name": "wood_3_3",
+      "names": ["wood_3_3"],
       "type": "linear"
     },
     {
-      "name": "wood_3_4",
+      "names": ["wood_3_4"],
       "type": "linear"
     },
     {
-      "name": "wood_3_5",
+      "names": ["wood_3_5"],
       "type": "linear"
     },
     {
-      "name": "wood_4_0",
+      "names": ["wood_4_0"],
       "type": "linear"
     },
     {
-      "name": "wood_4_1",
+      "names": ["wood_4_1"],
       "type": "linear"
     },
     {
-      "name": "wood_4_2",
+      "names": ["wood_4_2"],
       "type": "linear"
     },
     {
-      "name": "wood_4_3",
+      "names": ["wood_4_3"],
       "type": "linear"
     },
     {
-      "name": "wood_4_4",
+      "names": ["wood_4_4"],
       "type": "linear"
     },
     {
-      "name": "wood_5_0",
+      "names": ["wood_5_0"],
       "type": "linear"
     },
     {
-      "name": "wood_5_1",
+      "names": ["wood_5_1"],
       "type": "linear"
     },
     {
-      "name": "wood_5_2",
+      "names": ["wood_5_2"],
       "type": "linear"
     },
     {
-      "name": "wood_5_3",
+      "names": ["wood_5_3"],
       "type": "linear"
     },
     {
-      "name": "wood_5_4",
+      "names": ["wood_5_4"],
       "type": "linear"
     },
     {
-      "name": "wood_6_0",
+      "names": ["wood_6_0"],
       "type": "linear"
     },
     {
-      "name": "wood_6_1",
+      "names": ["wood_6_1"],
       "type": "linear"
     },
     {
-      "name": "wood_6_2",
+      "names": ["wood_6_2"],
       "type": "linear"
     },
     {
-      "name": "wood_6_3",
+      "names": ["wood_6_3"],
       "type": "linear"
     },
     {
-      "name": "wood_6_4",
+      "names": ["wood_6_4"],
       "type": "linear"
     },
     {
-      "name": "wood_7_0",
+      "names": ["wood_7_0"],
       "type": "linear"
     },
     {
-      "name": "wood_7_1",
+      "names": ["wood_7_1"],
       "type": "linear"
     },
     {
-      "name": "wood_7_2",
+      "names": ["wood_7_2"],
       "type": "linear"
     },
     {
-      "name": "wood_7_3",
+      "names": ["wood_7_3"],
       "type": "linear"
     },
     {
-      "name": "wood_7_4",
+      "names": ["wood_7_4"],
       "type": "linear"
     },
     {
-      "name": "wood_plane",
+      "names": ["wood_plane"],
       "type": "nearest"
     },
     {
-      "name": "water_plane",
+      "names": ["water_plane"],
       "type": "nearest"
     },
     {
-      "name": "water_1",
-      "type": "nearest"
-    },
-    {
-      "name": "water_2",
-      "type": "nearest"
-    },
-    {
-      "name": "water_3",
-      "type": "nearest"
+      "names": ["water_1", "water_2", "water_3"],
+      "type": "nearest",
+	  "group name": "water_floor"
     }
   ]
 }

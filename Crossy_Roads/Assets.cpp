@@ -44,6 +44,10 @@ const RandomPickMesh * Assets::getRandomMesh(const string & name) const {
 	return &randomGroup.find(name)->second;
 }
 
+const vector<IdTex> * Assets::getAnimatedTexture(const string & name) const {
+	return &animatedTextureGroup.find(name)->second;
+}
+
 const std::vector<IdMesh>* Assets::getGroups() const {
 	return groups;
 }
@@ -81,7 +85,7 @@ void Assets::loadAssets(const string& modelPath, const string& texturePath) {
 		nImportedMeshes += meshProperties["names"].Size();
 	}
 
-	for (uint i = 0; i < nGroups-2; ++i) {
+	for (uint i = 0; i < nGroups; ++i) {
 		groups[i].reserve(nImportedMeshes);
 	}
 	decorationGroup.reserve(nImportedMeshes);
@@ -154,24 +158,39 @@ void Assets::loadAssets(const string& modelPath, const string& texturePath) {
 	s.clear();
 
 	const Value& texturesJ = document["textures"];
-	nTextures = texturesJ.Size();
+	nTextures = 0;
+
+	for (const Value& texture : texturesJ.GetArray()) {
+		nTextures += texture["names"].Size();
+	}
 
 	textures = new Texture[nTextures];
 	i = 0;
 	for (const Value& texture : texturesJ.GetArray()) {
-		name.assign(texture["name"].GetString());
-		type.assign(texture["type"].GetString());
-		if (type == "linear") {
-			textures[i].loadFromFile("images/" + name + ".png", TEXTURE_PIXEL_FORMAT_RGBA, true);
+		bool linear = texture["type"].GetString() == "linear";
+		const Value& namesV = texture["names"];
+		if (namesV.Size() > 1) {
+			map<string, vector<IdTex>>::iterator it = animatedTextureGroup.insert(make_pair(texture["group name"].GetString(), vector<IdTex>())).first;
+			vector<IdTex>& animTextures = it->second;
+			animTextures.resize(namesV.Size());
+			for (uint j = 0; j < animTextures.size(); ++j) {
+				animTextures[j] = j + i;
+			}
 		}
-		else {
-			textures[i].loadFromFile("images/" + name + ".png", TEXTURE_PIXEL_FORMAT_RGBA, false);
-			textures[i].setMagFilter(GL_NEAREST);
-			textures[i].setMinFilter(GL_NEAREST);
+		for (const Value& texName : namesV.GetArray()) {
+			name.assign(texName.GetString());
+			if (linear) {
+				textures[i].loadFromFile("images/" + name + ".png", TEXTURE_PIXEL_FORMAT_RGBA, true);
+			}
+			else {
+				textures[i].loadFromFile("images/" + name + ".png", TEXTURE_PIXEL_FORMAT_RGBA, false);
+				textures[i].setMagFilter(GL_NEAREST);
+				textures[i].setMinFilter(GL_NEAREST);
+			}
+			textures[i].applyParams();
+			textureIds[name] = i;
+			++i;
 		}
-		textures[i].applyParams();
-		textureIds[name] = i;
-		++i;
 	}
 }
 

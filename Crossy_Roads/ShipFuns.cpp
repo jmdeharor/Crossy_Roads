@@ -31,6 +31,7 @@ inline pair<uint, uint> generateRandomTextureIndex(FloorResources& res, uint i, 
 }
 
 void FloorRow::initShipRoad(vector<uint>& adjacentRow) {
+	animatedFloorTiles.clear();
 	furniture.clear();
 	platforms.clear();
 	enemies.resize(2);
@@ -91,6 +92,7 @@ void FloorRow::initShipRoad(vector<uint>& adjacentRow) {
 }
 
 void FloorRow::initShipSafeZone() {
+	animatedFloorTiles.clear();
 	platforms.clear();
 	enemies.clear();
 	speeds.clear();

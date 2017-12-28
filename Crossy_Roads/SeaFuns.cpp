@@ -3,6 +3,7 @@
 using namespace glm;
 
 void FloorRow::initSeaRoad(vector<uint>& adjacentRow) {
+	animatedFloorTiles.resize(fp.cols);
 	furniture.clear();
 	enemies.clear();
 	platforms.resize(between(2, 4));
@@ -20,12 +21,15 @@ void FloorRow::initSeaRoad(vector<uint>& adjacentRow) {
 
 	for (uint i = 0; i < floorTiles.size(); ++i) {
 		TexturedObject& tile = floorTiles[i];
-		tile.texture = res.water;
 		tile.setRotationY(PI / 2);
 		tile.setMesh(cubeMesh);
 		tile.setScale(floorTileSize);
 		tile.setCenter(vec3(bbcenter.x, bbcenter.y + height / 2.f, bbcenter.z));
 		tile.setPos(vec3(offsetX + i*fp.realTileSize, rowHeight, pos.y));
+	}
+
+	for (uint i = 0; i < animatedFloorTiles.size(); ++i) {
+		animatedFloorTiles[i].setTexures(res.waterAnimation, 1 / (float)12 * 1000);
 	}
 
 	static const Mesh* sharkMesh = res.assets->getMesh(res.shark);

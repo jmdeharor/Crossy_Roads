@@ -130,7 +130,7 @@ void Floor::updateFloorRow(FloorRow& floorRow) {
 			biome = Ship;
 			break;
 		}
-		biomeLength = between(15, 20);
+		biomeLength = between(20, 40);
 		biomeCounter = 0;
 	}
 	vector<uint> aux;
@@ -218,7 +218,7 @@ void Floor::init(vec3 lightDir, const Assets& assets) {
 	textureIndex.resize(cols, 999);
 
 	biome = Ship;
-	biomeLength = between(15, 20);
+	biomeLength = between(20, 40);
 	biomeCounter = 0;
 
 	type = Safe;
@@ -267,15 +267,15 @@ uint Floor::getColOffset() const {
 	return colOffset;
 }
 
-glm::uint Floor::getRowOffset() const
-{
+uint Floor::getRowOffset() const {
 	return rowOffset;
 }
 
 uint Floor::getRows() const {
 	return rows;
 }
-glm::uint Floor::getCols() const {
+
+uint Floor::getCols() const {
 	return cols;
 }
 FloorRow* Floor::getFloorRow(uint index) {
