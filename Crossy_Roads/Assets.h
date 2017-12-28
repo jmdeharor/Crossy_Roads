@@ -6,7 +6,8 @@
 #include <map>
 #include "SoundManager.h"
 
-#define nGroups 2
+#define nGroups 3
+#define nBiomes 3
 
 enum AssetType {
 	Enemy,
@@ -16,6 +17,12 @@ enum AssetType {
 	Unique
 };
 
+enum BiomeType {
+	Ship,
+	Sea,
+	Island
+};
+
 struct MeshConfig {
 	glm::uint rows, cols;
 	float height;
@@ -23,11 +30,15 @@ struct MeshConfig {
 	bool floorEmpty;
 };
 
+inline glm::uint sub2ind(BiomeType biome, AssetType asset) {
+	return nGroups*biome + asset;
+}
+
 class Assets {
-	std::vector<IdMesh> groups[nGroups];
-	std::vector<MeshConfig> decorationGroup;
+	std::vector<IdMesh> groups[nBiomes][nGroups];
+	std::vector<MeshConfig> decorationGroup[nBiomes];
 	std::map<string, RandomPickMesh> randomGroup;
-	std::map <string, std::pair<IdTex, glm::uint >> animatedTextureGroup;
+	std::map<string, std::pair<IdTex, glm::uint>> animatedTextureGroup;
 	std::map<string, std::pair<IdTex, glm::uint>> animatedMeshGroup;
 	ImportedMesh* meshes;
 	Texture* textures;

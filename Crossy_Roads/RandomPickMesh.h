@@ -7,10 +7,10 @@ typedef int IdTex;
 
 class RandomPickMesh {
 	glm::uint size;
-	IdMesh* meshes;
+	IdMesh firstMesh;
 	float* probabilities;
 public:
-	void setMeshes(IdMesh* meshes, float* probabilities, glm::uint size);
+	void setMeshes(IdMesh firstMesh, float* probabilities, glm::uint size);
 	IdMesh getMesh() const;
 	RandomPickMesh();
 	~RandomPickMesh();

@@ -29,10 +29,6 @@ void FloorRow::initSeaRoad(vector<uint>& adjacentRow) {
 		tile.setPos(vec3(offsetX + i*fp.realTileSize, rowHeight, pos.y));
 	}
 
-	static const Mesh* sharkMesh = res.assets->getMesh(res.shark);
-	static vec3 sharkbb = sharkMesh->getbbSize();
-	static vec3 sharkSize = vec3(3 * fp.realTileSize, 1, fp.tileSize.y+1) / sharkbb;
-
 	speeds[0] = generateSpeed(minSpeed, 0.2f, int(pos.y / fp.tileSize.y) % 2);
 
 	for (uint i = 1; i < speeds.size(); ++i) {
@@ -44,12 +40,17 @@ void FloorRow::initSeaRoad(vector<uint>& adjacentRow) {
 	frameLimit = between(minTime + 10, int(maxTime*0.3f));
 	frameCounter = 0;
 
+	IdMesh platId = res.groups[sub2ind(biome, Platform)][0];
+	const Mesh* platMesh = res.assets->getMesh(platId);
+	vec3 platbb = platMesh->getbbSize();
+	vec3 platSize = vec3(3 * fp.realTileSize, 1, fp.tileSize.y + 1) / platbb;
+
 	uint nPlat = platforms.size();
 	for (uint i = 0; i < nPlat; ++i) {
 		AnimMeshObject& platform = platforms[i];
-		platform.setMesh(res.sharkAnimation.first, res.assets->getMesh(res.sharkAnimation.first));
+		platform.setMesh(platId, platMesh);
 		platform.setMeshes(res.sharkAnimation.second, 1 / (float)6 * 1000);
-		platform.setScale(sharkSize);
+		platform.setScale(platSize);
 		platform.setCenterToBaseCenter();
 		//platform.setPlane(vec4(0, 1, 0, -rowHeight), fp.lightDir);
 		float startPoint;

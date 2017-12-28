@@ -46,10 +46,11 @@ void FloorRow::initShipRoad(vector<uint>& adjacentRow) {
 	static float height = cubeMesh->getHeight();
 	vec3 floorTileSize = vec3(realTileSize, 0.1f, fp.tileSize.y) / boundingBox;
 	float offsetX = pos.x - (realTileSize*(fp.cols / 2) - (1 - fp.cols % 2)*realTileSize / 2);
-
+	
 	for (uint i = 0; i < enemies.size(); ++i) {
 		Jumper& enemy = enemies[i];
-		enemy.setMesh(res.groups[Enemy][i], res.assets->getMesh(res.groups[Enemy][i]));
+		IdMesh enemyId = res.groups[sub2ind(biome, Enemy)][i];
+		enemy.setMesh(enemyId, res.assets->getMesh(enemyId));
 		enemy.setScale(vec3(0.1f));
 		enemy.setCenterToBaseCenter();
 		enemy.setPlane(vec4(0, 1, 0, -rowHeight), fp.lightDir);

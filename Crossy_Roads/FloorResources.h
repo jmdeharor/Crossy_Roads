@@ -9,7 +9,6 @@ public:
 	std::vector<std::vector<IdTex>> floorTextures;
 	std::vector<glm::uint> indices;
 	IdTex planeWood, water;
-	IdMesh crocodile, shark;
 	std::pair<IdTex, glm::uint> waterAnimation;
 	std::pair<IdMesh, glm::uint> sharkAnimation;
 	const vector<vector<string>> models;

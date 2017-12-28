@@ -1,65 +1,65 @@
 {
   "models": [
     {
-      "names": [
-        "pirate"
-      ],
-	  "type": "enemy"
+      "names": ["pirate"],
+      "type": "enemy",
+      "biomes": [
+        "ship",
+        "island"
+      ]
     },
     {
-      "names": [
-        "pirate_2"
-      ],
-	  "type": "enemy"
+      "names": ["pirate_2"],
+      "type": "enemy",
+      "biomes": [
+        "ship",
+        "island"
+      ]
     },
     {
-      "names": [
-        "barrel"
-      ],
-	  "type": "decoration",
-	  "size": [1,1],
-	  "height": 2
+      "names": ["barrel"],
+      "type": "decoration",
+      "size": [1,1],
+      "height": 2,
+      "biomes": ["ship"]
     },
     {
-      "names": [
-        "box"
-      ],
-	  "type": "decoration",
-	  "size": [1,1],
-	  "height": 2
+      "names": ["box"],
+      "type": "decoration",
+      "size": [1,1],
+      "height": 2,
+      "biomes": ["ship"]
     },
     {
-      "names": [
-        "cubierta_2"
-      ],
-	  "type": "decoration",
-	  "size": [3,3],
-	  "height": 0.5
+      "names": ["cubierta_2"],
+      "type": "decoration",
+      "size": [3,3],
+      "height": 0.5,
+      "biomes": ["ship"]
     },
-	{
-      "names": [
-        "cubierta_2_doors_open"
-      ],
-	  "type": "decoration",
-	  "size": [3,3],
-	  "height": 1.5,
-	  "floor empty": true
+    {
+      "names": ["cubierta_2_doors_open"],
+      "type": "decoration",
+      "size": [3,3],
+      "height": 1.5,
+      "floor empty": true,
+      "biomes": ["ship"]
     },
-	{
-      "names": [
-        "cubierta_2_open"
-      ],
-	  "type": "decoration",
-	  "size": [3,3],
-	  "height": 0.5,
-	  "floor empty": true
+    {
+      "names": ["cubierta_2_open"],
+      "type": "decoration",
+      "size": [3,3],
+      "height": 0.5,
+      "floor empty": true,
+      "biomes": ["ship"]
     },
     {
       "names": [
         "crocodile-00",
         "crocodile-01"
       ],
-	  "type": "platform",
+      "type": "platform",
+      "biomes": ["island"],
 	  "group name": "crocodile"
     },
     {
@@ -67,48 +67,104 @@
         "shark-00",
         "shark-01"
       ],
-	  "type": "platform",
+      "type": "platform",
+      "biomes": ["sea"],
 	  "group name": "shark"
     },
     {
-      "names": [
-        "plank"
-      ],
-	  "type": "unique"
+      "names": ["plank"],
+      "type": "unique"
     },
     {
       "names": [
         "railing",
-		"railing_parrot",
-		"railing_rip"
+        "railing_parrot",
+        "railing_rip"
       ],
-	  "type": "random",
-	  "probabilities": [0.6, 0.1, 0.3],
-	  "group name": "railing"
+      "type": "random",
+      "probabilities": [
+        0.6,
+        0.1,
+        0.3
+      ],
+      "group name": "railing"
     },
     {
-      "names": [
-        "cannon"
-      ],
-	  "type": "decoration",
-	  "size": [1,2],
-	  "height": 2
+      "names": ["cannon"],
+      "type": "decoration",
+      "size": [1,2],
+      "height": 2,
+      "biomes": ["ship"]
     },
     {
-      "names": [
-        "mast"
-      ],
-	  "type": "decoration",
-	  "size": [1,1],
-	  "height": 20
+      "names": ["mast"],
+      "type": "decoration",
+      "size": [1,1],
+      "height": 20,
+      "biomes": ["ship"]
     },
     {
-      "names": [
-        "broken_mast"
-      ],
-	  "type": "decoration",
-	  "size": [1,2],
-	  "height": 1.5
+      "names": ["broken_mast"],
+      "type": "decoration",
+      "size": [1,2],
+      "height": 1.5,
+      "biomes": ["ship"]
+    },
+    {
+      "names": ["monkey_sitting"],
+      "type": "decoration",
+      "size": [1,1],
+      "height": 1,
+      "biomes": ["island"]
+    },
+    {
+      "names": ["palm_tree_00"],
+      "type": "decoration",
+      "size": [1,1],
+      "height": 4,
+      "biomes": ["island"]
+    },
+    {
+      "names": ["rock_1"],
+      "type": "decoration",
+      "size": [1,1],
+      "height": 1,
+      "biomes": ["island"]
+    },
+    {
+      "names": ["rock-02"],
+      "type": "decoration",
+      "size": [1,1],
+      "height": 1,
+      "biomes": ["island"]
+    },
+    {
+      "names": ["rock-03"],
+      "type": "decoration",
+      "size": [1,1],
+      "height": 1,
+      "biomes": ["island"]
+    },
+    {
+      "names": ["rock-04"],
+      "type": "decoration",
+      "size": [1,1],
+      "height": 1,
+      "biomes": ["island"]
+    },
+    {
+      "names": ["rock-05"],
+      "type": "decoration",
+      "size": [1,1],
+      "height": 1,
+      "biomes": ["island"]
+    },
+    {
+      "names": ["rock-06"],
+      "type": "decoration",
+      "size": [1,1],
+      "height": 1,
+      "biomes": ["island"]
     }
   ]
 }

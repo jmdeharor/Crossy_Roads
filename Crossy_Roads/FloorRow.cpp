@@ -15,7 +15,7 @@ void FloorRow::initResources(const Assets & assets) {
 
 void FloorRow::initRoad(BiomeType type, vector<uint>& adjacentRow, const vector<CellProperties>& map) {
 	this->map = map;
-	biomeType = type;
+	biome = type;
 	safeZone = false;
 	switch (type) {
 	case Ship:
@@ -29,7 +29,7 @@ void FloorRow::initRoad(BiomeType type, vector<uint>& adjacentRow, const vector<
 
 void FloorRow::initSafeZone(BiomeType type, const vector<CellProperties>& map) {
 	this->map = map;
-	biomeType = type;
+	biome = type;
 	safeZone = true;
 	initShipSafeZone();
 }
@@ -169,7 +169,7 @@ bool FloorRow::isSafeZone() const {
 	return safeZone;
 }
 BiomeType FloorRow::getBiome() const {
-	return biomeType;
+	return biome;
 }
 
 FloorRow::FloorRow() {

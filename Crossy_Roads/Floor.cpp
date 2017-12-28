@@ -82,7 +82,7 @@ void Floor::updateMap(bool lastRow, uint size, const vector<ivec2>& restrictions
 	uint objects = between((int)size, size*2);
 
 	for (uint i = 0; i < objects; ++i) {
-		const MeshConfig& meshConfig = (*furniture)[rand() % furniture->size()];
+		const MeshConfig& meshConfig = furniture[biome][rand() % furniture[biome].size()];
 
 		for (int i = start; i < (int)size-(int)meshConfig.rows+1; ++i) {
 			for (int j = start; j < (int)cols-(int)meshConfig.cols+1; ++j) {

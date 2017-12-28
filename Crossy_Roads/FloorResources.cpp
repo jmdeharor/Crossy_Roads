@@ -19,8 +19,6 @@ void FloorResources::init(const Assets & assets) {
 	}
 	planeWood = assets.getTextureId("wood_plane");
 	water = assets.getTextureId("water_3");
-	crocodile = assets.getMeshId("crocodile-00");
-	shark = assets.getMeshId("shark-00");
 	
 	waterAnimation = assets.getAnimatedTexture("water_floor");
 	sharkAnimation = assets.getAnimatedMesh("shark");

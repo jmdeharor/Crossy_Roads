@@ -15,11 +15,6 @@ enum FloorType {
 	Safe
 };
 
-enum BiomeType {
-	Ship,
-	Sea
-};
-
 struct CellProperties {
 	glm::uint rows, cols;
 	float height, verticalOffset;
@@ -42,7 +37,7 @@ struct FloorParams {
 
 class FloorRow : public ObjectContainer {
 private:
-	BiomeType biomeType;
+	BiomeType biome;
 	bool safeZone;
 	float rowHeight;
 	glm::uint frameCounter, frameLimit;

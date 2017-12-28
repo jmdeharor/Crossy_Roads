@@ -53,11 +53,11 @@ pair<IdMesh, uint> Assets::getAnimatedMesh(const string & name) const {
 }
 
 const std::vector<IdMesh>* Assets::getGroups() const {
-	return groups;
+	return &groups[0][0];
 }
 
 const std::vector<MeshConfig>* Assets::getDecoration() const {
-	return &decorationGroup;
+	return decorationGroup;
 }
 
 uint Assets::getNumMeshes() const {
@@ -66,6 +66,16 @@ uint Assets::getNumMeshes() const {
 
 uint Assets::getNumTextures() const {
 	return nTextures;
+}
+
+inline BiomeType biomeString2enum(const string& biomeString) {
+	if (biomeString == "sea")
+		return Sea;
+	else if (biomeString == "ship")
+		return Ship;
+	else if (biomeString == "island")
+		return Island;
+	int a = 3;
 }
 
 void Assets::loadAssets(const string& modelPath, const string& texturePath) {
@@ -89,10 +99,12 @@ void Assets::loadAssets(const string& modelPath, const string& texturePath) {
 		nImportedMeshes += meshProperties["names"].Size();
 	}
 
-	for (uint i = 0; i < nGroups; ++i) {
-		groups[i].reserve(nImportedMeshes);
+	for (uint i = 0; i < nBiomes; ++i) {
+		for (uint j = 0; j < nGroups; ++j) {
+			groups[i][j].reserve(nImportedMeshes);
+		}
+		decorationGroup[i].reserve(nImportedMeshes);
 	}
-	decorationGroup.reserve(nImportedMeshes);
 
 	cubeMesh.init();
 	meshes = new ImportedMesh[nImportedMeshes];
@@ -108,8 +120,11 @@ void Assets::loadAssets(const string& modelPath, const string& texturePath) {
 			meshIds[name] = i;
 			++i;
 		}
+
 		type.assign(meshProperties["type"].GetString());
+
 		if (type == "decoration") {
+			const Value& biomeV = meshProperties["biomes"];
 			const Value& size = meshProperties["size"];
 			MeshConfig aux;
 			if (meshProperties.HasMember("floor empty")) {
@@ -121,45 +136,53 @@ void Assets::loadAssets(const string& modelPath, const string& texturePath) {
 			aux.cols = size[1].GetUint();
 			aux.height = meshProperties["height"].GetFloat();
 			aux.mesh = firstId;
-			decorationGroup.push_back(aux);
+			for (const Value& biomeName : biomeV.GetArray()) {
+				decorationGroup[biomeString2enum(biomeName.GetString())].push_back(aux);
+			}
 		}
 		else if (type == "enemy") {
-			groups[Enemy].push_back(firstId);
+			const Value& biomeV = meshProperties["biomes"];
+			for (const Value& biomeName : biomeV.GetArray()) {
+				groups[biomeString2enum(biomeName.GetString())][Enemy].push_back(firstId);
+			}
 		}
 		else if (type == "platform") {
+			const Value& biomeV = meshProperties["biomes"];
 			if (namesV.Size() > 1) {
 				map<string, pair<IdMesh, uint>>::iterator it = animatedMeshGroup.insert(make_pair(meshProperties["group name"].GetString(), pair<IdMesh, uint>())).first;
 				pair<IdMesh, uint>& animMeshes = it->second;
 				animMeshes.first = firstId;
 				animMeshes.second = namesV.Size();
 			}
-			groups[Platform].push_back(firstId);
+			for (const Value& biomeName : biomeV.GetArray()) {
+				groups[biomeString2enum(biomeName.GetString())][Platform].push_back(firstId);
+			}
 		}
 		else if (type == "random") {
 			string groupName = meshProperties["group name"].GetString();
 			const Value& probabilitiesV = meshProperties["probabilities"];
-			IdMesh* meshes = new IdMesh[probabilitiesV.Size()];
 			float* probabilities = new float[probabilitiesV.Size()];
 			uint j = 0;
 			for (const Value& prob : probabilitiesV.GetArray()) {
 				float probNum = prob.GetFloat();
-				meshes[j] = j+firstId;
 				probabilities[j] = probNum;
 				++j;
 			}
 			map<string, RandomPickMesh>::iterator it = randomGroup.insert(make_pair(groupName, RandomPickMesh())).first;
 			RandomPickMesh& randomMesh = it->second;
-			randomMesh.setMeshes(meshes, probabilities, probabilitiesV.Size());
+			randomMesh.setMeshes(firstId, probabilities, probabilitiesV.Size());
 		}
 		else if (type != "unique") {
 			int a = 3;
 		}
 	}
 
-	for (uint i = 0; i < nGroups; ++i) {
-		groups[i].shrink_to_fit();
+	for (uint i = 0; i < nBiomes; ++i) {
+		for (uint j = 0; j < nGroups; ++j) {
+			groups[i][j].shrink_to_fit();
+		}
+		decorationGroup[i].shrink_to_fit();
 	}
-	decorationGroup.shrink_to_fit();
 
 	jsonFile.open(texturePath);
 	s.assign((istreambuf_iterator<char>(jsonFile)), istreambuf_iterator<char>());
