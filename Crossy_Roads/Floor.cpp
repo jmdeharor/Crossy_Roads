@@ -27,6 +27,22 @@ void Floor::firstInit() {
 	playableUpperLimit = 20; //Left
 }
 
+inline void setMapObstacle(ivec2 pos, const MeshConfig& meshConfig, vector<vector<CellProperties>>& map) {
+	CellProperties cell;
+	cell.collision = true;
+	cell.occupied = true;
+	cell.empty = meshConfig.floorEmpty;
+	cell.height = meshConfig.height;
+	for (uint i = 0; i < meshConfig.rows; ++i) {
+		for (uint j = 0; j < meshConfig.cols; ++j) {
+			map[pos.x + i][pos.y + j] = cell;
+		}
+	}
+	map[pos.x][pos.y].mesh = meshConfig.mesh;
+	map[pos.x][pos.y].rows = meshConfig.rows;
+	map[pos.x][pos.y].cols = meshConfig.cols;
+}
+
 const uint plankLength = 3;
 
 void Floor::updateMap(bool lastRow, uint size, const vector<ivec2>& restrictions) {
@@ -91,21 +107,7 @@ void Floor::updateMap(bool lastRow, uint size, const vector<ivec2>& restrictions
 				decoration.push_back(j);
 		}
 		const MeshConfig& meshConfig = furniture[biome][decoration[rand()%decoration.size()]];
-		uint posx = i;
-		uint posy = playableLowerLimit - meshConfig.cols;
-		CellProperties cell;
-		cell.collision = true;
-		cell.occupied = true;
-		cell.empty = meshConfig.floorEmpty;
-		cell.height = meshConfig.height;
-		for (uint i = 0; i < meshConfig.rows; ++i) {
-			for (uint j = 0; j < meshConfig.cols; ++j) {
-				map[posx + i][posy + j] = cell;
-			}
-		}
-		map[posx][posy].mesh = meshConfig.mesh;
-		map[posx][posy].rows = meshConfig.rows;
-		map[posx][posy].cols = meshConfig.cols;
+		setMapObstacle(ivec2(i, playableLowerLimit - meshConfig.cols), meshConfig, map);
 		i += meshConfig.rows;
 		decoration.clear();
 	}
@@ -116,21 +118,7 @@ void Floor::updateMap(bool lastRow, uint size, const vector<ivec2>& restrictions
 				decoration.push_back(j);
 		}
 		const MeshConfig& meshConfig = furniture[biome][decoration[rand() % decoration.size()]];
-		uint posx = i;
-		uint posy = playableUpperLimit;
-		CellProperties cell;
-		cell.collision = true;
-		cell.occupied = true;
-		cell.empty = meshConfig.floorEmpty;
-		cell.height = meshConfig.height;
-		for (uint i = 0; i < meshConfig.rows; ++i) {
-			for (uint j = 0; j < meshConfig.cols; ++j) {
-				map[posx + i][posy + j] = cell;
-			}
-		}
-		map[posx][posy].mesh = meshConfig.mesh;
-		map[posx][posy].rows = meshConfig.rows;
-		map[posx][posy].cols = meshConfig.cols;
+		setMapObstacle(ivec2(i, playableUpperLimit), meshConfig, map);
 		i += meshConfig.rows;
 		decoration.clear();
 	}
@@ -160,19 +148,7 @@ void Floor::updateMap(bool lastRow, uint size, const vector<ivec2>& restrictions
 
 		uint index = rand() % indices.size();
 		ivec2 pos = indices[index];
-		CellProperties cell;
-		cell.collision = true;
-		cell.occupied = true;
-		cell.empty = meshConfig.floorEmpty;
-		cell.height = meshConfig.height;
-		for (uint i = 0; i < meshConfig.rows; ++i) {
-			for (uint j = 0; j < meshConfig.cols; ++j) {
-				map[pos.x+i][pos.y+j] = cell;
-			}
-		}
-		map[pos.x][pos.y].mesh = meshConfig.mesh;
-		map[pos.x][pos.y].rows = meshConfig.rows;
-		map[pos.x][pos.y].cols = meshConfig.cols;
+		setMapObstacle(pos, meshConfig, map);
 		indices.clear();
 	}
 }
