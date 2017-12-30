@@ -28,6 +28,8 @@ struct CellProperties {
 };
 
 struct FloorParams {
+	float lowerLimit; //Right
+	float upperLimit; //Left
 	glm::vec2 tileSize;
 	glm::uint cols;
 	glm::uint colOffset;

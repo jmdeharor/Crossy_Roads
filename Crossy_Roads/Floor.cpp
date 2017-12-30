@@ -14,7 +14,7 @@ Floor::~Floor()
 
 void Floor::firstInit() {
 	//colOffset = 1;
-	colOffset = 3;
+	colOffset = 2;
 	rowOffset = 4;
 	//tileSize = vec2(54, 2);
 	//rows = 22;
@@ -252,6 +252,8 @@ void Floor::init(vec3 lightDir, const Assets& assets) {
 	params.colOffset = colOffset;
 	params.lightDir = lightDir;
 	params.realTileSize = tileSize.x / cols;
+	params.lowerLimit = -tileSize.x / 2 + colOffset*params.realTileSize;
+	params.upperLimit = tileSize.x / 2 + colOffset*params.realTileSize;
 	params.cols = cols;
 	FloorRow::setParameters(params);
 

@@ -67,11 +67,11 @@ void FloorRow::initSeaRoad(const FloorRow& prevRow) {
 		float startPoint;
 		if (speeds[0] >= 0) {
 			platform.setRotationY(0);
-			startPoint = -fp.tileSize.x / 2;
+			startPoint = fp.lowerLimit;
 		}
 		else {
 			platform.setRotationY(PI);
-			startPoint = fp.tileSize.x / 2;
+			startPoint = fp.upperLimit;
 		}
 		platform.setPos(vec3(startPoint, rowHeight -0.3f, pos.y));
 	}

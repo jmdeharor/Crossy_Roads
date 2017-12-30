@@ -95,16 +95,16 @@ void FloorRow::update(int deltaTime) {
 		Jumper& object = enemies[i];
 		object.update();
 		float x = object.getPos().x;
-		if (x > fp.tileSize.x / 2 || x < -fp.tileSize.x/2) {
+		if (x > fp.upperLimit || x < fp.lowerLimit) {
 			object.horizontalSpeed = generateSpeed();
 			float startPoint;
 			if (object.horizontalSpeed >= 0) {
 				object.setRotationY(PI/2);
-				startPoint = -fp.tileSize.x / 2;
+				startPoint = fp.lowerLimit;
 			}
 			else {
 				object.setRotationY(-PI/2);
-				startPoint = fp.tileSize.x / 2;
+				startPoint = fp.upperLimit;
 			}
 			object.setPos(vec3(startPoint, rowHeight, pos.y));
 		}
@@ -129,15 +129,15 @@ void FloorRow::update(int deltaTime) {
 				++frameCounter;
 		}
 		float x = object.getPos().x;
-		if (x > fp.tileSize.x / 2 || x < -fp.tileSize.x / 2) {
+		if (x > fp.upperLimit || x < fp.lowerLimit) {
 			float startPoint;
 			if (speeds[0] >= 0) {
 				object.setRotationY(0);
-				startPoint = -fp.tileSize.x / 2;
+				startPoint = fp.lowerLimit;
 			}
 			else {
 				object.setRotationY(PI);
-				startPoint = fp.tileSize.x / 2;
+				startPoint = fp.upperLimit;
 			}
 			vec3 prevPos = object.getPos();
 			object.setPos(vec3(startPoint, prevPos.y, pos.y));

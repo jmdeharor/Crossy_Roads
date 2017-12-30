@@ -12,6 +12,7 @@ public:
 	std::pair<IdTex, glm::uint> waterAnimation;
 	std::pair<IdMesh, glm::uint> sharkAnimation;
 	const vector<vector<string>> models;
+	float rangeLeft, rangeRight;
 
 	void init(const Assets& assets);
 	FloorResources();
