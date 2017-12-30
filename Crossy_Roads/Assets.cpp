@@ -199,6 +199,7 @@ void Assets::loadAssets(const string& modelPath, const string& texturePath) {
 	}
 
 	textures = new Texture[nTextures];
+	string extension;
 	i = 0;
 	for (const Value& texture : texturesJ.GetArray()) {
 		bool linear = texture["type"].GetString() == "linear";
@@ -209,13 +210,15 @@ void Assets::loadAssets(const string& modelPath, const string& texturePath) {
 			animTextures.first = i;
 			animTextures.second = namesV.Size();
 		}
+		bool hasExtension = texture.HasMember("extension");
+		extension.assign(hasExtension ? texture["extension"].GetString() : "png");
 		for (const Value& texName : namesV.GetArray()) {
 			name.assign(texName.GetString());
 			if (linear) {
-				textures[i].loadFromFile("images/" + name + ".png", TEXTURE_PIXEL_FORMAT_RGBA, true);
+				textures[i].loadFromFile("images/" + name + "." + extension, TEXTURE_PIXEL_FORMAT_RGBA, true);
 			}
 			else {
-				textures[i].loadFromFile("images/" + name + ".png", TEXTURE_PIXEL_FORMAT_RGBA, false);
+				textures[i].loadFromFile("images/" + name + "." + extension, TEXTURE_PIXEL_FORMAT_RGBA, false);
 				textures[i].setMagFilter(GL_NEAREST);
 				textures[i].setMinFilter(GL_NEAREST);
 			}

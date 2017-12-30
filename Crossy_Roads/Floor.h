@@ -11,6 +11,7 @@
 class Floor : public GameObject, public ObjectContainer {
 	glm::uint rows, cols;
 	glm::uint lastRow;
+	glm::uint playableLowerLimit, playableUpperLimit;
 	IdMesh plankMesh;
 	const RandomPickMesh* railMesh;
 	float firstPos;

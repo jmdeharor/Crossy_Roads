@@ -22,7 +22,7 @@ void FloorResources::init(const Assets & assets) {
 	
 	waterAnimation = assets.getAnimatedTexture("water_floor");
 	sharkAnimation = assets.getAnimatedMesh("shark");
-	islandRoad = assets.getTextureId("dirt_plane");
+	islandRoad = assets.getTextureId("dirt_minecraft");
 	islandSafe = assets.getTextureId("grass_plane");
 }
 

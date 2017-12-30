@@ -18,10 +18,13 @@ void Floor::firstInit() {
 	rowOffset = 4;
 	//tileSize = vec2(54, 2);
 	//rows = 22;
-	tileSize = vec2(62, 2);
 	rows = 30;
-	cols = (uint)tileSize.x/(uint)tileSize.y;
+	cols = 31;
+	float singleTileSize = 2;
+	tileSize = vec2(cols*singleTileSize, singleTileSize);
 	floorRows.resize(rows);
+	playableLowerLimit = 6; //Right
+	playableUpperLimit = 20; //Left
 }
 
 const uint plankLength = 3;
@@ -71,13 +74,66 @@ void Floor::updateMap(bool lastRow, uint size, const vector<ivec2>& restrictions
 		map[0][plankPos].rows = plankLength;
 		map[0][plankPos].cols = 1;
 		map[0][plankPos].mesh = plankMesh;
-		start = plankLength;
-		if (plankLength + 1 < map.size()) {
-			map[plankLength + 1][plankPos].occupied = true;
+		start = plankLength+1;
+		if (start < map.size()) {
+			map[start][plankPos].occupied = true;
 		}
 	}
 	else
 		start = 0;
+
+	vector<uint> decoration;
+	decoration.reserve(furniture[biome].size());
+	uint i = start;
+	while (i < size) {
+		for (uint j = 0; j < furniture[biome].size(); ++j) {
+			if (i + furniture[biome][j].rows <= size)
+				decoration.push_back(j);
+		}
+		const MeshConfig& meshConfig = furniture[biome][decoration[rand()%decoration.size()]];
+		uint posx = i;
+		uint posy = playableLowerLimit - meshConfig.cols;
+		CellProperties cell;
+		cell.collision = true;
+		cell.occupied = true;
+		cell.empty = meshConfig.floorEmpty;
+		cell.height = meshConfig.height;
+		for (uint i = 0; i < meshConfig.rows; ++i) {
+			for (uint j = 0; j < meshConfig.cols; ++j) {
+				map[posx + i][posy + j] = cell;
+			}
+		}
+		map[posx][posy].mesh = meshConfig.mesh;
+		map[posx][posy].rows = meshConfig.rows;
+		map[posx][posy].cols = meshConfig.cols;
+		i += meshConfig.rows;
+		decoration.clear();
+	}
+	i = start;
+	while (i < size) {
+		for (uint j = 0; j < furniture[biome].size(); ++j) {
+			if (i + furniture[biome][j].rows <= size)
+				decoration.push_back(j);
+		}
+		const MeshConfig& meshConfig = furniture[biome][decoration[rand() % decoration.size()]];
+		uint posx = i;
+		uint posy = playableUpperLimit;
+		CellProperties cell;
+		cell.collision = true;
+		cell.occupied = true;
+		cell.empty = meshConfig.floorEmpty;
+		cell.height = meshConfig.height;
+		for (uint i = 0; i < meshConfig.rows; ++i) {
+			for (uint j = 0; j < meshConfig.cols; ++j) {
+				map[posx + i][posy + j] = cell;
+			}
+		}
+		map[posx][posy].mesh = meshConfig.mesh;
+		map[posx][posy].rows = meshConfig.rows;
+		map[posx][posy].cols = meshConfig.cols;
+		i += meshConfig.rows;
+		decoration.clear();
+	}
 
 	vector<ivec2> indices;
 	indices.reserve(size*cols);
@@ -88,7 +144,7 @@ void Floor::updateMap(bool lastRow, uint size, const vector<ivec2>& restrictions
 		const MeshConfig& meshConfig = furniture[biome][rand() % furniture[biome].size()];
 
 		for (int i = start; i < (int)size-(int)meshConfig.rows+1; ++i) {
-			for (int j = start; j < (int)cols-(int)meshConfig.cols+1; ++j) {
+			for (int j = playableLowerLimit; j <= (int)playableUpperLimit-(int)meshConfig.cols+1; ++j) {
 				bool conflict = false;
 				for (uint i1 = 0; i1 < meshConfig.rows && !conflict; ++i1) {
 					for (uint j1 = 0; j1 < meshConfig.cols && !conflict; ++j1) {

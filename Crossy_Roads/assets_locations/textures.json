@@ -114,7 +114,8 @@
 	  "group name": "water_floor"
     },
 	{
-	  "names": ["dirt_plane"],
+	  "names": ["dirt_minecraft"],
+	  "extension": "jpg",
 	  "type": "nearest"
 	},
 	{
