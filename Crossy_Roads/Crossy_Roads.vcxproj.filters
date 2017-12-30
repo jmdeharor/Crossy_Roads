@@ -198,6 +198,9 @@
     <ClCompile Include="AnimMeshObject.cpp">
       <Filter>Archivos de código fuente\Objects</Filter>
     </ClCompile>
+    <ClCompile Include="IslandFuns.cpp">
+      <Filter>Archivos de código fuente\Floor\Biomes</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game.h">

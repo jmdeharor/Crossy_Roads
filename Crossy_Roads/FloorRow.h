@@ -55,22 +55,26 @@ private:
 	static float offset;
 private:
 	void initShipRoad(std::vector<glm::uint>& adjacentRow);
-	void initShipSafeZone();
-	void initSeaRoad(std::vector<glm::uint>& adjacentRow);
+	void initShipSafeZone(const FloorRow& prevRow);
+	void initSeaRoad(const FloorRow& prevRow);
+	void initIslandRoad();
+	void initIslandSafeZone(const FloorRow& prevRow);
 public:
 	glm::vec2 pos;
 public:
 	static void initResources(const Assets& assets);
 	static void setParameters(const FloorParams& floorParams);
 	static glm::uint worldToCol(float x);
-
-	void initRoad(BiomeType biome, std::vector<glm::uint>& adjacentRow, const std::vector<CellProperties>& map);
-	void initSafeZone(BiomeType type, const std::vector<CellProperties>& map);
+	
+	void initAttributes(BiomeType biome, bool safeZone, float rowHeight);
+	void initRoad(BiomeType biome, std::vector<glm::uint>& adjacentRow, const std::vector<CellProperties>& map, const FloorRow& prevRow);
+	void initSafeZone(BiomeType biome, const std::vector<CellProperties>& map, const FloorRow& prevRow);
 	void update(int deltaTime);
 	void groupDrawableObjects(
 		const FrustumG& frustum, RenderVectors& renderVectors
 	) override;
-	pair<glm::vec3, float> getHeight(glm::uint col);
+	pair<glm::vec3, float> getNextPos(glm::uint col);
+	float getRowHeight() const;
 	std::vector<Jumper>* getEnemies();
 	std::vector<CellProperties>* getRowObjects();
 	std::vector<AnimMeshObject>* getPlatforms();

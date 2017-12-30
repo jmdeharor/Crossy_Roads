@@ -13,25 +13,43 @@ void FloorRow::initResources(const Assets & assets) {
 	res.init(assets);
 }
 
-void FloorRow::initRoad(BiomeType type, vector<uint>& adjacentRow, const vector<CellProperties>& map) {
+void FloorRow::initAttributes(BiomeType biome, bool safeZone, float rowHeight) {
+	this->biome = biome;
+	this->safeZone = safeZone;
+	this->rowHeight = rowHeight;
+}
+
+void FloorRow::initRoad(BiomeType type, vector<uint>& adjacentRow, const vector<CellProperties>& map, const FloorRow& prevRow) {
 	this->map = map;
 	biome = type;
 	safeZone = false;
+	if (prevRow.safeZone) rowHeight = prevRow.rowHeight - 0.2f;
+	else rowHeight = prevRow.rowHeight;
 	switch (type) {
 	case Ship:
 		initShipRoad(adjacentRow);
 		break;
 	case Sea:
-		initSeaRoad(adjacentRow);
+		initSeaRoad(prevRow);
+		break;
+	case Island:
+		initIslandRoad();
 		break;
 	}
 }
 
-void FloorRow::initSafeZone(BiomeType type, const vector<CellProperties>& map) {
+void FloorRow::initSafeZone(BiomeType type, const vector<CellProperties>& map, const FloorRow& prevRow) {
 	this->map = map;
 	biome = type;
 	safeZone = true;
-	initShipSafeZone();
+	switch (biome) {
+	case Ship:
+		initShipSafeZone(prevRow);
+		break;
+	case Island:
+		initIslandSafeZone(prevRow);
+		break;
+	}
 }
 
 void FloorRow::setParameters(const FloorParams & floorParams) {
@@ -39,7 +57,7 @@ void FloorRow::setParameters(const FloorParams & floorParams) {
 	offset = -fp.tileSize.x / 2 + fp.colOffset*fp.realTileSize;
 }
 
-pair<vec3, float> FloorRow::getHeight(uint col) {
+pair<vec3, float> FloorRow::getNextPos(uint col) {
 	float offsetX = pos.x - (fp.realTileSize*(fp.cols / 2) - (1 - fp.cols % 2)*fp.realTileSize / 2);
 	vec3 myHeight = vec3(offsetX + col*fp.realTileSize, rowHeight, pos.y);
 	float platformSpeed = 0;
@@ -63,6 +81,10 @@ pair<vec3, float> FloorRow::getHeight(uint col) {
 		}
 	}
 	return make_pair(myHeight, platformSpeed);
+}
+
+float FloorRow::getRowHeight() const {
+	return rowHeight;
 }
 
 void FloorRow::update(int deltaTime) {

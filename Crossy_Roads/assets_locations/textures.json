@@ -112,6 +112,14 @@
       "names": ["water_1", "water_2", "water_3"],
       "type": "nearest",
 	  "group name": "water_floor"
-    }
+    },
+	{
+	  "names": ["dirt_plane"],
+	  "type": "nearest"
+	},
+	{
+	  "names": ["grass_plane"],
+	  "type": "nearest"
+	}
   ]
 }

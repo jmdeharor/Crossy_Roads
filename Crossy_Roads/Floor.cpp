@@ -119,7 +119,12 @@ void Floor::updateMap(bool lastRow, uint size, const vector<ivec2>& restrictions
 }
 
 void Floor::updateFloorRow(FloorRow& floorRow) {
+	uint prevRowI = (int)lastRow - 1 < 0 ? rows - 1 : lastRow - 1;
+	const FloorRow& prevRow = floorRows[prevRowI];
 	if (biomeCounter == biomeLength) {
+		float randomF;
+		static const float shipProb = 0.7f;
+		
 		switch (biome) {
 		case Ship:
 			biome = Sea;
@@ -127,7 +132,18 @@ void Floor::updateFloorRow(FloorRow& floorRow) {
 		case Sea:
 			type = Road;
 			counter = length = 0;
-			biome = Ship;
+			
+			randomF = rand() / RAND_MAX;
+
+			//if (randomF < shipProb)
+				//biome = Ship;
+			//else
+				biome = Island;
+			break;
+		case Island:
+			type = Road;
+			counter = length = 0;
+			biome = Sea;
 			break;
 		}
 		biomeLength = between(20, 40);
@@ -138,12 +154,38 @@ void Floor::updateFloorRow(FloorRow& floorRow) {
 	switch (biome) {
 	case Sea:
 		if (map.size() > 0) {
-			floorRow.initRoad(Sea, aux, map[map.size() - 1]);
+			floorRow.initRoad(biome, aux, map[map.size() - 1], prevRow);
 			map.pop_back();
 		}
 		else {
-			floorRow.initRoad(Sea, aux, aux2);
+			floorRow.initRoad(biome, aux, aux2, prevRow);
 		}
+		break;
+	case Island:
+		if (counter == length) {
+			switch (type) {
+			case Safe:
+				length = between(3, 10);
+				type = Road;
+				break;
+			case Road:
+				length = between(1, 4);
+				updateMap(false, length);
+				type = Safe;
+				break;
+			}
+			counter = 0;
+		}
+		switch (type) {
+		case Safe:
+			floorRow.initSafeZone(biome, map[map.size() - 1], prevRow);
+			map.pop_back();
+			break;
+		case Road:
+			floorRow.initRoad(biome, textureIndex, {}, prevRow);
+			break;
+		}
+		++counter;
 		break;
 	case Ship:
 		bool transition = false;
@@ -178,7 +220,7 @@ void Floor::updateFloorRow(FloorRow& floorRow) {
 		}
 		switch (type) {
 		case Safe:
-			floorRow.initSafeZone(biome, map[map.size() - 1]);
+			floorRow.initSafeZone(biome, map[map.size() - 1], prevRow);
 			map.pop_back();
 			break;
 		case Road:
@@ -186,7 +228,7 @@ void Floor::updateFloorRow(FloorRow& floorRow) {
 				for (uint i = 0; i < cols; ++i)
 					textureIndex[i] = 999;
 			}
-			floorRow.initRoad(biome, textureIndex, {});
+			floorRow.initRoad(biome, textureIndex, {}, prevRow);
 			break;
 		}
 		++counter;
@@ -224,6 +266,7 @@ void Floor::init(vec3 lightDir, const Assets& assets) {
 	type = Safe;
 	length = rows/2 - rowOffset + between(2, 5);
 	counter = 0;
+	floorRows[rows - 1].initAttributes(Ship, false, 0);
 
 	ivec2 playerIni;
 	playerIni.x = length - 1 - (rows / 2 - rowOffset);

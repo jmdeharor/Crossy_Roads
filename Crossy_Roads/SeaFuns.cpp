@@ -2,14 +2,25 @@
 #include "Utils.h"
 using namespace glm;
 
-void FloorRow::initSeaRoad(vector<uint>& adjacentRow) {
+void FloorRow::initSeaRoad(const FloorRow& prevRow) {
 	animatedFloorTiles.resize(fp.cols);
 	furniture.clear();
 	enemies.clear();
 	platforms.resize(between(2, 4));
 	speeds.resize(platforms.size());
 	floorTiles.clear();
-	rowHeight = -5;
+	switch (prevRow.biome) {
+	case Ship:
+		rowHeight = prevRow.rowHeight - 5;
+		break;
+	case Sea:
+		rowHeight = prevRow.rowHeight;
+		break;
+	case Island:
+		if (prevRow.safeZone) rowHeight = prevRow.rowHeight - 0.2f;
+		else rowHeight = prevRow.rowHeight;
+		break;
+	}
 
 	float offsetX = pos.x - (fp.realTileSize*(fp.cols / 2) - (1 - fp.cols % 2)*fp.realTileSize / 2);
 

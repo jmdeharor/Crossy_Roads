@@ -27,7 +27,7 @@ void Player::init(const Assets& assets, vec3 lightDir, vec3 offset, float jumpDi
 
 	currentRowIndex = floor.getRows() / 2 - floor.getRowOffset();
 	currentColIndex = floor.getCols() / 2 - floor.getColOffset();
-	vec3 rowHeight = floor.getFloorRow(currentRowIndex)->getHeight(currentColIndex).first;
+	vec3 rowHeight = floor.getFloorRow(currentRowIndex)->getNextPos(currentColIndex).first;
 
 	IdMesh pirateId = assets.getMeshId("pirate_2");
 	playerObject.setMesh(pirateId, assets.getMesh(pirateId));
@@ -79,7 +79,7 @@ PlayerReturn Player::update(int deltaTime) {
 				inMovement = true;
 				uint previousRowIndex = currentRowIndex;
 				currentRowIndex = nextRow;
-				pair<vec3, float> currentPos = floor->getFloorRow(currentRowIndex)->getHeight(currentColIndex);
+				pair<vec3, float> currentPos = floor->getFloorRow(currentRowIndex)->getNextPos(currentColIndex);
 				nextPos = currentPos.first;
 				platformSpeed = currentPos.second;
 				currentFloorRow = currentPos.first.y;
@@ -97,7 +97,7 @@ PlayerReturn Player::update(int deltaTime) {
 				setDirectionVector();
 				inMovement = true;
 				currentColIndex += 1;
-				pair<vec3, float> currentPos = floor->getFloorRow(currentRowIndex)->getHeight(currentColIndex);
+				pair<vec3, float> currentPos = floor->getFloorRow(currentRowIndex)->getNextPos(currentColIndex);
 				nextPos = currentPos.first;
 				platformSpeed = currentPos.second;
 				currentFloorRow = currentPos.first.y;
@@ -115,7 +115,7 @@ PlayerReturn Player::update(int deltaTime) {
 				setDirectionVector();
 				inMovement = true;
 				currentColIndex -= 1;
-				pair<vec3, float> currentPos = floor->getFloorRow(currentRowIndex)->getHeight(currentColIndex);
+				pair<vec3, float> currentPos = floor->getFloorRow(currentRowIndex)->getNextPos(currentColIndex);
 				nextPos = currentPos.first;
 				platformSpeed = currentPos.second;
 				currentFloorRow = currentPos.first.y;
@@ -136,7 +136,7 @@ PlayerReturn Player::update(int deltaTime) {
 				inMovement = true;
 				uint previousRowIndex = currentRowIndex;
 				currentRowIndex = nextRow;
-				pair<vec3, float> currentPos = floor->getFloorRow(currentRowIndex)->getHeight(currentColIndex);
+				pair<vec3, float> currentPos = floor->getFloorRow(currentRowIndex)->getNextPos(currentColIndex);
 				nextPos = currentPos.first;
 				platformSpeed = currentPos.second;
 				currentFloorRow = currentPos.first.y;
