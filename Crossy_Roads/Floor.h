@@ -26,7 +26,7 @@ class Floor : public GameObject, public ObjectContainer {
 	BiomeType biome;
 	glm::vec2 tileSize;
 private:
-	void updateFloorRow(FloorRow& floorRow);
+	void updateFloorRow(FloorRow& floorRow, const FloorRow& prevRow);
 	void updateMap(bool lastRow, glm::uint size, const std::vector<glm::ivec2>& restriction = {});
 public:
 	void addLevel();

@@ -13,10 +13,13 @@ Floor::~Floor()
 }
 
 void Floor::firstInit() {
-	colOffset = 1;
+	//colOffset = 1;
+	colOffset = 3;
 	rowOffset = 4;
-	tileSize = vec2(54, 2);
-	rows = 22;
+	//tileSize = vec2(54, 2);
+	//rows = 22;
+	tileSize = vec2(62, 2);
+	rows = 30;
 	cols = (uint)tileSize.x/(uint)tileSize.y;
 	floorRows.resize(rows);
 }
@@ -118,9 +121,7 @@ void Floor::updateMap(bool lastRow, uint size, const vector<ivec2>& restrictions
 	}
 }
 
-void Floor::updateFloorRow(FloorRow& floorRow) {
-	uint prevRowI = (int)lastRow - 1 < 0 ? rows - 1 : lastRow - 1;
-	const FloorRow& prevRow = floorRows[prevRowI];
+void Floor::updateFloorRow(FloorRow& floorRow, const FloorRow& prevRow) {
 	if (biomeCounter == biomeLength) {
 		float randomF;
 		static const float shipProb = 0.7f;
@@ -275,7 +276,7 @@ void Floor::init(vec3 lightDir, const Assets& assets) {
 	updateMap(false, length, { playerIni });
 	for (uint i = 0; i < rows; ++i) {
 		floorRows[i].pos = vec2(colOffset*realTileSize, rowOffset*tileSize.y + offsetZ + i*tileSize.y);
-		updateFloorRow(floorRows[i]);
+		updateFloorRow(floorRows[i], floorRows[i > 0 ? i-1 : rows-1]);
 	}
 	lastRow = 0;
 	firstPos = floorRows[floorRows.size()-1].pos.y;
@@ -285,7 +286,8 @@ void Floor::addLevel() {
 	firstPos += tileSize.y;
 	vec2 lastPos = floorRows[lastRow].pos;
 	floorRows[lastRow].pos = vec2(lastPos.x, firstPos);
-	updateFloorRow(floorRows[lastRow]);
+	uint prevRowI = (int)lastRow - 1 < 0 ? rows - 1 : lastRow - 1;
+	updateFloorRow(floorRows[lastRow], floorRows[prevRowI]);
 
 	lastRow = (lastRow + 1) % rows;
 }
