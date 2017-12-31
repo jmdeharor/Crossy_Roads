@@ -114,12 +114,13 @@
 	  "group name": "water_floor"
     },
 	{
-	  "names": ["dirt_minecraft"],
+	  "names": ["sand_texture_2"],
 	  "extension": "jpg",
 	  "type": "nearest"
 	},
 	{
-	  "names": ["grass_plane"],
+	  "names": ["grass_texture"],
+	  "extension": "jpg",
 	  "type": "nearest"
 	}
   ]
