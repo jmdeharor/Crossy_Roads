@@ -19,6 +19,7 @@
 #include "ObjectContainer.h"
 #include "WaterParticles.h"
 #include "SoundManager.h"
+#include "Text.h"
 
 #define CAMERA_WIDTH 640
 #define CAMERA_HEIGHT 480
@@ -56,6 +57,8 @@ private:
 	WaterParticleSystem partSystem;
 	const SoundManager* soundManager;
 	FMOD::Sound* music, *ambience;
+
+	Text textScore;
 
 	Player player;
 	Floor floor;

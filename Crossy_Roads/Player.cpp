@@ -25,6 +25,8 @@ void Player::init(const Assets& assets, vec3 lightDir, vec3 offset, float jumpDi
 	this->floor = &floor;
 	this->jumpDistance = jumpDistance;
 
+	currentPosScore = score = 0;
+
 	currentRowIndex = floor.getRows() / 2 - floor.getRowOffset();
 	currentColIndex = floor.getCols() / 2 - floor.getColOffset();
 	vec3 rowHeight = floor.getFloorRow(currentRowIndex)->getNextPos(currentColIndex).first;
@@ -85,6 +87,8 @@ PlayerReturn Player::update(int deltaTime) {
 				currentFloorRow = currentPos.first.y;
 				calculateSpeeds();
 				soundManager->playSound(jumpSound);
+				currentPosScore += 1;
+				score = max(currentPosScore, score);
 			}
 			aPressed = dPressed = sPressed = false;
 		}
@@ -142,6 +146,7 @@ PlayerReturn Player::update(int deltaTime) {
 				currentFloorRow = currentPos.first.y;
 				calculateSpeeds();
 				soundManager->playSound(jumpSound);
+				currentPosScore -= 1;
 			}
 			wPressed = dPressed = aPressed = false;
 		}
@@ -245,6 +250,10 @@ bool Player::collidesWithEnv(uint row, uint col) {
 		return false;
 	vector<CellProperties>* rowObjects = rowToCheck->getRowObjects();
 	return (*rowObjects)[col].collision;
+}
+
+int Player::getScore() {
+	return score;
 }
 
 Player::Player(){

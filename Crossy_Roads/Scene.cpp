@@ -122,6 +122,7 @@ const uint cols = 5;
 
 void Scene::init() {
 	GameObject::init();
+	textScore.init("fonts/PiratesWriters.ttf");
 
 	lightDir = normalize(vec3(1,1,0));
 
@@ -252,6 +253,8 @@ void Scene::render() {
 		}
 		objects.clear();
 	}
+
+	textScore.render(to_string(player.getScore()), vec2(SCREEN_WIDTH-50, 70), 32, vec4(1, 1, 1, 1));
 
 	/*texProgram.use();
 	texProgram.setUniformMatrix4f(projectionLoc, *camera.getProjectionMatrix());

@@ -24,6 +24,8 @@ class Player : public GameObject, public ObjectContainer {
 	ShadowedObject playerObject;
 	void firstInit() override;
 private:
+	int currentPosScore;
+	int score;
 	float platformSpeed;
 	bool wPressed, aPressed, sPressed, dPressed, bPressed;
 	bool inMovement;
@@ -62,6 +64,7 @@ public:
 	glm::vec3 getPos() const;
 	float getHeight() const;
 	void calculateSpeeds();
+	int getScore();
 	Player();
 	~Player();
 };

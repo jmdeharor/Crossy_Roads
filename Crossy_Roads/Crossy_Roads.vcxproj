@@ -75,11 +75,11 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>..\libs\FMODapi\studio\inc;..\libs\rapidjson;..\libs\assimp\include;../libs\Simple OpenGL Image Library\src;../libs\glm;../libs\glew-1.13.0\include;../libs\freeglut\include;..\libs\FMODapi\lowlevel\inc</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\Carlos\Desktop\Crossy_Roads\libs\freetype-2.3.5-1-bin\include\freetype2;C:\Users\Carlos\Desktop\Crossy_Roads\libs\freetype-2.3.5-1-bin\include\freetype2\freetype;C:\Users\Carlos\Desktop\Crossy_Roads\libs\freetype-2.3.5-1-bin\include\freetype2\freetype\config;C:\Users\Carlos\Desktop\Crossy_Roads\libs\freetype-2.3.5-1-bin\include;..\libs\FMODapi\studio\inc;..\libs\rapidjson;..\libs\assimp\include;../libs\Simple OpenGL Image Library\src;../libs\glm;../libs\glew-1.13.0\include;../libs\freeglut\include;..\libs\FMODapi\lowlevel\inc</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
-      <AdditionalLibraryDirectories>..\libs\FMODapi\lowlevel\lib;..\libs\assimp\lib;../libs\Simple OpenGL Image Library\projects\VC9\Debugg;../libs\glew-1.13.0\lib\;../libs\freeglut\lib;..\libs\FMODapi\studio\lib</AdditionalLibraryDirectories>
-      <AdditionalDependencies>freeglut.lib;SOIL.lib;glew32.lib;assimp-vc120-mt.lib;fmod_vc.lib;fmodstudio_vc.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:\Users\Carlos\Desktop\Crossy_Roads\libs\freetype-2.3.5-1-bin\lib;..\libs\FMODapi\lowlevel\lib;..\libs\assimp\lib;../libs\Simple OpenGL Image Library\projects\VC9\Debugg;../libs\glew-1.13.0\lib\;../libs\freeglut\lib;..\libs\FMODapi\studio\lib</AdditionalLibraryDirectories>
+      <AdditionalDependencies>freetype.lib;freeglut.lib;SOIL.lib;glew32.lib;assimp-vc120-mt.lib;fmod_vc.lib;fmodstudio_vc.lib</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -160,8 +160,10 @@
     <ClCompile Include="ShipFuns.cpp" />
     <ClCompile Include="SoundManager.cpp" />
     <ClCompile Include="Sphere.cpp" />
+    <ClCompile Include="Text.cpp" />
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="TexturedObject.cpp" />
+    <ClCompile Include="TexturedQuad.cpp" />
     <ClCompile Include="Vec3.cpp" />
     <ClCompile Include="WaterParticle.cpp" />
     <ClCompile Include="WaterParticles.cpp" />
@@ -196,6 +198,8 @@
     <ClInclude Include="RandomPickMesh.h" />
     <ClInclude Include="SeaBiome.h" />
     <ClInclude Include="SoundManager.h" />
+    <ClInclude Include="Text.h" />
+    <ClInclude Include="TexturedQuad.h" />
     <ClInclude Include="Utils.h" />
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="Object.h" />
