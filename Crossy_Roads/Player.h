@@ -63,6 +63,7 @@ public:
 	PlayerReturn update(int deltaTime);
 	glm::vec3 getPos() const;
 	float getHeight() const;
+	const Object* getObject() const;
 	void calculateSpeeds();
 	int getScore();
 	Player();

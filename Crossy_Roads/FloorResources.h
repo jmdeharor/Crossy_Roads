@@ -1,6 +1,7 @@
 #pragma once
 #include "Assets.h"
-#include <vector>
+
+class Player;
 
 class FloorResources {
 public:
@@ -13,8 +14,9 @@ public:
 	std::pair<IdMesh, glm::uint> sharkAnimation;
 	const vector<vector<string>> models;
 	float rangeLeft, rangeRight;
+	const Player* player;
 
-	void init(const Assets& assets);
+	void init(const Assets& assets, const Player* player);
 	FloorResources();
 	~FloorResources();
 };

@@ -1,10 +1,10 @@
 #include "FloorRow.h"
+#include "Player.h"
 #include "Utils.h"
 using namespace glm;
 
 void FloorRow::initIslandRoad() {
 	animatedFloorTiles.clear();
-	furniture.clear();
 	platforms.clear();
 	enemies.resize(res.groups[sub2ind(biome, Enemy)].size());
 	speeds.resize(enemies.size());
@@ -55,7 +55,6 @@ void FloorRow::initIslandSafeZone(const FloorRow& prevRow) {
 	platforms.clear();
 	enemies.clear();
 	speeds.clear();
-	furniture.clear();
 	switch (prevRow.biome) {
 	case Ship:
 		break;
@@ -85,6 +84,17 @@ void FloorRow::initIslandSafeZone(const FloorRow& prevRow) {
 		float height = map[i].height;
 
 		const Mesh* mesh = res.assets->getMesh(meshId);
+		Stalker stalker;
+		switch (res.assets->getBehavior(meshId)) {
+		case MeshBehavior::Stalker:
+			stalker.origin = &object;
+			stalker.direction = vec2(0,1);
+			stalker.objective = res.player->getObject();
+			stalkers.push_back(stalker);
+			break;
+		case MeshBehavior::None:
+			break;
+		}
 
 		vec3 boundingBox = mesh->getbbSize();
 		vec3 bbCenter = mesh->getbbCenter();

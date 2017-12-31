@@ -4,7 +4,6 @@ using namespace glm;
 
 void FloorRow::initSeaRoad(const FloorRow& prevRow) {
 	animatedFloorTiles.resize(fp.cols);
-	furniture.clear();
 	enemies.clear();
 	platforms.resize(between(2, 4));
 	speeds.resize(platforms.size());

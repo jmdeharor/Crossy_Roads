@@ -32,7 +32,6 @@ inline pair<uint, uint> generateRandomTextureIndex(FloorResources& res, uint i, 
 
 void FloorRow::initShipRoad(vector<uint>& adjacentRow) {
 	animatedFloorTiles.clear();
-	furniture.clear();
 	platforms.clear();
 	enemies.resize(res.groups[sub2ind(biome, Enemy)].size());
 	speeds.resize(enemies.size());
@@ -97,7 +96,6 @@ void FloorRow::initShipSafeZone(const FloorRow& prevRow) {
 	platforms.clear();
 	enemies.clear();
 	speeds.clear();
-	furniture.clear();
 	switch (prevRow.biome) {
 	case Ship:
 		if (prevRow.safeZone) rowHeight = prevRow.rowHeight;

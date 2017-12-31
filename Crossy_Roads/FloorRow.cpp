@@ -9,8 +9,8 @@ uint FloorRow::worldToCol(float x) {
 	return uint((x - offset) / fp.realTileSize);
 }
 
-void FloorRow::initResources(const Assets & assets) {
-	res.init(assets);
+void FloorRow::initResources(const Assets & assets, const Player* player) {
+	res.init(assets, player);
 }
 
 void FloorRow::initAttributes(BiomeType biome, bool safeZone, float rowHeight) {
@@ -25,6 +25,8 @@ void FloorRow::initRoad(BiomeType type, vector<uint>& adjacentRow, const vector<
 	safeZone = false;
 	if (prevRow.safeZone) rowHeight = prevRow.rowHeight - 0.2f;
 	else rowHeight = prevRow.rowHeight;
+	furniture.clear();
+	stalkers.clear();
 	switch (type) {
 	case Ship:
 		initShipRoad(adjacentRow);
@@ -42,6 +44,8 @@ void FloorRow::initSafeZone(BiomeType type, const vector<CellProperties>& map, c
 	this->map = map;
 	biome = type;
 	safeZone = true;
+	furniture.clear();
+	stalkers.clear();
 	switch (biome) {
 	case Ship:
 		initShipSafeZone(prevRow);
@@ -88,6 +92,9 @@ float FloorRow::getRowHeight() const {
 }
 
 void FloorRow::update(int deltaTime) {
+	for (Stalker& stalker : stalkers) {
+		stalker.update(deltaTime);
+	}
 	for (AnimTexObject& animatedTexure : animatedFloorTiles) {
 		animatedTexure.update(deltaTime);
 	}

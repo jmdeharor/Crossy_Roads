@@ -133,7 +133,7 @@ void Scene::init() {
 	texProgram.use();
 	texProgram.setUniform3f("lightDir", lightDir.x, lightDir.y, lightDir.z);
 
-	floor.init(lightDir, assets);
+	floor.init(lightDir, assets, &player);
 	player.init(assets, lightDir, vec3(0), floor.getTileSize().y, floor);
 	camera.init(lightDir, &player);
 	
@@ -202,6 +202,8 @@ void Scene::render() {
 
 	for (uint i = 0; i < renderVectors.shadowObjects.size(); ++i) {
 		vector<Object*>& objects = renderVectors.shadowObjects[i];
+		if (objects.empty())
+			continue;
 		const Mesh* mesh = assets.getMesh(i);
 		mesh->setProgramParams(shadowMapProgram);
 		for (uint j = 0; j < objects.size(); ++j) {
@@ -227,6 +229,8 @@ void Scene::render() {
 
 	for (uint i = 0; i < renderVectors.objects.size(); ++i) {
 		vector<Object*>& objects = renderVectors.objects[i];
+		if (objects.empty())
+			continue;
 		const ImportedMesh* mesh = assets.getMesh(i);
 		mesh->setProgramParams(drawShadowProgram);
 		mesh->useTexture();
@@ -244,6 +248,8 @@ void Scene::render() {
 	mesh->setProgramParams(drawShadowProgram);
 	for (uint i = 0; i < renderVectors.texturedObjects.size(); ++i) {
 		vector<Object*>& objects = renderVectors.texturedObjects[i];
+		if (objects.empty())
+			continue;
 		const Texture* tex = assets.getTexture(i);
 		tex->use();
 		for (uint j = 0; j < objects.size(); ++j) {

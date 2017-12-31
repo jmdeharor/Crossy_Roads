@@ -32,7 +32,7 @@ private:
 public:
 	void addLevel();
 	void firstInit() override;
-	void init(glm::vec3 lightDir, const Assets& assets);
+	void init(glm::vec3 lightDir, const Assets& assets, const Player* player);
 	void update(int deltaTime);
 	void groupDrawableObjects(
 		const FrustumG& frustum, RenderVectors& renderVectors

@@ -167,3 +167,7 @@ glm::vec3 Object::getPos() const {
 float Object::getHeight() const {
 	return mesh->getHeight()*scale.y;
 }
+
+vec2 Object::getHorizontalPlanePos() const {
+	return vec2(pos.x, pos.z);
+}

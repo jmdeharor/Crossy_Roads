@@ -60,6 +60,10 @@ const std::vector<MeshConfigConstructor*>* Assets::getDecoration() const {
 	return decorationGroup;
 }
 
+MeshBehavior Assets::getBehavior(IdMesh mesh) const {
+	return behaviors[mesh];
+}
+
 uint Assets::getNumMeshes() const {
 	return nImportedMeshes;
 }
@@ -75,6 +79,14 @@ inline BiomeType biomeString2enum(const string& biomeString) {
 		return Ship;
 	else if (biomeString == "island")
 		return Island;
+	int a = 3;
+}
+
+inline MeshBehavior behaviorString2enum(const string& behaviorString) {
+	if (behaviorString == "stalker")
+		return MeshBehavior::Stalker;
+	else if (behaviorString == "None")
+		return MeshBehavior::None;
 	int a = 3;
 }
 
@@ -108,6 +120,7 @@ void Assets::loadAssets(const string& modelPath, const string& texturePath) {
 
 	cubeMesh.init();
 	meshes = new ImportedMesh[nImportedMeshes];
+	behaviors = new MeshBehavior[nImportedMeshes];
 
 	string name, type;
 	uint i = 0;
@@ -120,29 +133,56 @@ void Assets::loadAssets(const string& modelPath, const string& texturePath) {
 			meshIds[name] = i;
 			++i;
 		}
-
+		uint nMeshes = namesV.Size();
 		type.assign(meshProperties["type"].GetString());
+		if (meshProperties.HasMember("behavior")) {
+			behaviors[firstId] = behaviorString2enum(meshProperties["behavior"].GetString());
+		}
+		else
+			behaviors[firstId] = MeshBehavior::None;
 
 		if (type == "decoration") {
 			const Value& biomeV = meshProperties["biomes"];
 			const Value& size = meshProperties["size"];
 			MeshConfigConstructor* constructor;
-			if (namesV.Size() > 1) {
+			if (nMeshes > 1) {
 				RandomMeshConfig* randomMeshConfig = new RandomMeshConfig();
 				randomMeshConfig->rows = size[0].GetUint();
 				randomMeshConfig->cols = size[1].GetUint();
+
 				const Value& heightsV = meshProperties["height"];
-				float* heights = new float[heightsV.Size()];
-				const Value& emptiesV = meshProperties["floor empty"];
-				bool* empty = new bool[emptiesV.Size()];
-				const Value& probabilitiesV = meshProperties["probabilities"];
-				float* probabilities = new float[probabilitiesV.Size()];
-				for (uint i = 0; i < heightsV.Size(); ++i) {
-					heights[i] = heightsV[i].GetFloat();
-					empty[i] = emptiesV[i].GetBool();
-					probabilities[i] = probabilitiesV[i].GetFloat();
+				float* heights = new float[nMeshes];
+				if (heightsV.IsArray()) {
+					for (uint i = 0; i < nMeshes; ++i)
+						heights[i] = heightsV[i].GetFloat();
 				}
-				randomMeshConfig->setProbabilities(probabilities, probabilitiesV.Size());
+				else {
+					float height = heightsV.GetFloat();
+					for (uint i = 0; i < nMeshes; ++i)
+						heights[i] = height;
+				}
+
+				bool* empty = new bool[nMeshes];
+				if (meshProperties.HasMember("floor empty")) {
+					const Value& emptiesV = meshProperties["floor empty"];
+					for (uint i = 0; i < nMeshes; ++i)
+						empty[i] = emptiesV[i].GetBool();
+				}
+				else
+					memset(empty, false, nMeshes);
+				
+				const Value& probabilitiesV = meshProperties["probabilities"];
+				float* probabilities = new float[nMeshes];
+				if (probabilitiesV.IsArray()) {
+					for (uint i = 0; i < nMeshes; ++i)
+						probabilities[i] = probabilitiesV[i].GetFloat();
+				}
+				else {
+					float probability = 1.f / nMeshes;
+					for (uint i = 0; i < nMeshes; ++i)
+						probabilities[i] = probability;
+				}
+				randomMeshConfig->setProbabilities(probabilities, nMeshes);
 				randomMeshConfig->firstMesh = firstId;
 				randomMeshConfig->heights = heights;
 				randomMeshConfig->empty = empty;
