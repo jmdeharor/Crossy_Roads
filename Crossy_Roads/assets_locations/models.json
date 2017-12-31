@@ -107,7 +107,7 @@
       ],
       "type": "random",
 	  "size": [1,1],
-      "height": [1.5, 1.2, 1.5],
+      "height": [1.5, 2.1, 1.5],
 	  "floor empty": [false, false, false],
       "probabilities": [
         0.6,
