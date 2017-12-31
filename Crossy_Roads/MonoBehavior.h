@@ -1,11 +1,11 @@
 #pragma once
 #include "Object.h"
 
-class Behavior {
+class MonoBehavior {
 public:
 	Object* origin;
 	virtual void update(int deltaTime) = 0;
-	Behavior();
-	virtual ~Behavior();
+	MonoBehavior();
+	virtual ~MonoBehavior();
 };
 

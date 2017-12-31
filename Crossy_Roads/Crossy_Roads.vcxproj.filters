@@ -210,7 +210,7 @@
     <ClCompile Include="Stalker.cpp">
       <Filter>Archivos de código fuente</Filter>
     </ClCompile>
-    <ClCompile Include="Behavior.cpp">
+    <ClCompile Include="MonoBehavior.cpp">
       <Filter>Archivos de código fuente</Filter>
     </ClCompile>
   </ItemGroup>
@@ -362,7 +362,7 @@
     <ClInclude Include="Stalker.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
-    <ClInclude Include="Behavior.h">
+    <ClInclude Include="MonoBehavior.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
   </ItemGroup>

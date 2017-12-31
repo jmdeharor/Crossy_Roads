@@ -69,6 +69,7 @@ public:
 	static void setParameters(const FloorParams& floorParams);
 	static glm::uint worldToCol(float x);
 	
+	void firstInit();
 	void initAttributes(BiomeType biome, bool safeZone, float rowHeight);
 	void initRoad(BiomeType biome, std::vector<glm::uint>& adjacentRow, const std::vector<CellProperties>& map, const FloorRow& prevRow);
 	void initSafeZone(BiomeType biome, const std::vector<CellProperties>& map, const FloorRow& prevRow);

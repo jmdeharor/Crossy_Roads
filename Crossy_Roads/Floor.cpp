@@ -310,6 +310,7 @@ void Floor::init(vec3 lightDir, const Assets& assets, const Player* player) {
 
 	updateMap(false, length, { playerIni });
 	for (uint i = 0; i < rows; ++i) {
+		floorRows[i].firstInit();
 		floorRows[i].pos = vec2(colOffset*realTileSize, rowOffset*tileSize.y + offsetZ + i*tileSize.y);
 		updateFloorRow(floorRows[i], floorRows[i > 0 ? i-1 : rows-1]);
 	}

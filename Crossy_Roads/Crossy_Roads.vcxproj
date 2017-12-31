@@ -123,7 +123,7 @@
     <ClCompile Include="AnimMeshObject.cpp" />
     <ClCompile Include="AnimTexObject.cpp" />
     <ClCompile Include="Assets.cpp" />
-    <ClCompile Include="Behavior.cpp" />
+    <ClCompile Include="MonoBehavior.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Camera\basecamera.cpp" />
     <ClCompile Include="Camera\eulercamera.cpp" />
@@ -175,7 +175,7 @@
     <ClInclude Include="AnimMeshObject.h" />
     <ClInclude Include="AnimTexObject.h" />
     <ClInclude Include="Assets.h" />
-    <ClInclude Include="Behavior.h" />
+    <ClInclude Include="MonoBehavior.h" />
     <ClInclude Include="Biome.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Camera\basecamera.h" />

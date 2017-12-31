@@ -137,7 +137,7 @@ void Object::updateModel() {
 Object::Object() : 
 	pos(vec3(0)), rot(vec3(0)), scale(vec3(1)),
 	center(vec3(0)), model(mat4(1)), meshId(INVALID),
-	modified(true) {
+	modified(true), mesh(NULL), name("N") {
 }
 
 void Object::setMesh(uint meshId, const Mesh* mesh) {
@@ -170,4 +170,8 @@ float Object::getHeight() const {
 
 vec2 Object::getHorizontalPlanePos() const {
 	return vec2(pos.x, pos.z);
+}
+
+vec3 Object::getRotation() const {
+	return rot;
 }

@@ -13,6 +13,10 @@ void FloorRow::initResources(const Assets & assets, const Player* player) {
 	res.init(assets, player);
 }
 
+void FloorRow::firstInit() {
+	furniture.reserve(fp.cols);
+}
+
 void FloorRow::initAttributes(BiomeType biome, bool safeZone, float rowHeight) {
 	this->biome = biome;
 	this->safeZone = safeZone;
@@ -169,8 +173,12 @@ void FloorRow::groupDrawableObjects(const FrustumG& frustum, RenderVectors& rend
 		}
 	}
 	for (uint i = 0; i < furniture.size(); ++i) {
-		if (furniture[i].isInsideViewFrustrum(frustum))
+		if (furniture[i].isInsideViewFrustrum(frustum)) {
+			if (furniture[i].meshId == 23 && furniture[i].getRotation().y == 0) {
+				int a = 3;
+			}
 			renderVectors.objects[furniture[i].meshId].push_back(&furniture[i]);
+		}
 		renderVectors.shadowObjects[furniture[i].meshId].push_back(&furniture[i]);
 	}
 	for (uint i = 0; i < platforms.size(); ++i) {

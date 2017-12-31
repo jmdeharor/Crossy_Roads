@@ -1,7 +1,7 @@
 #pragma once
-#include "Behavior.h"
+#include "MonoBehavior.h"
 
-class Stalker : public Behavior {
+class Stalker : public MonoBehavior {
 public:
 	const Object* objective;
 	glm::vec2 direction;

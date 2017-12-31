@@ -75,37 +75,39 @@ void FloorRow::initIslandSafeZone(const FloorRow& prevRow) {
 	static vec3 bbcenter = cubeMesh->getbbCenter();
 	static float height = cubeMesh->getHeight();
 
-	for (uint i = 0; i < fp.cols; ++i) {
+	for (uint i = 0; i < map.size(); ++i) {
 		if (map[i].mesh == INVALID)
 			continue;
-		furniture.push_back(ShadowedObject());
-		ShadowedObject& object = furniture[furniture.size() - 1];
+		ShadowedObject object;
 		IdMesh meshId = map[i].mesh;
 		float height = map[i].height;
 
 		const Mesh* mesh = res.assets->getMesh(meshId);
-		Stalker stalker;
-		switch (res.assets->getBehavior(meshId)) {
-		case MeshBehavior::Stalker:
-			stalker.origin = &object;
-			stalker.direction = vec2(0,1);
-			stalker.objective = res.player->getObject();
-			stalkers.push_back(stalker);
-			break;
-		case MeshBehavior::None:
-			break;
-		}
 
 		vec3 boundingBox = mesh->getbbSize();
 		vec3 bbCenter = mesh->getbbCenter();
 		vec3 objectSize = vec3(realTileSize*map[i].cols, height, 0) / boundingBox;
 		objectSize.z = objectSize.x;
+		object.name = "Island furniture " + to_string(i);
 		object.setMesh(meshId, mesh);
 		object.setScale(objectSize);
 		object.setCenterToBaseCenter();
 		float posX = offsetX + i*realTileSize;
 		object.setPos(vec3(posX + (realTileSize*(map[i].cols / 2.f)) - realTileSize / 2, rowHeight, pos.y - fp.tileSize.y*(map[i].rows / 2.f) + fp.tileSize.y / 2));
 		object.setPlane(vec4(0, 1, 0, -rowHeight), fp.lightDir);
+		furniture.push_back(object);
+
+		Stalker stalker;
+		switch (res.assets->getBehavior(meshId)) {
+		case MeshBehavior::Stalker:
+			stalker.origin = &furniture[furniture.size()-1];
+			stalker.direction = vec2(-1, 0);
+			stalker.objective = res.player->getObject();
+			stalkers.push_back(stalker);
+			break;
+		case MeshBehavior::None:
+			break;
+		}
 	}
 	
 	static vec3 floorTileSize = vec3(fp.realTileSize, 0.2f, fp.tileSize.y) / boundingBox;
