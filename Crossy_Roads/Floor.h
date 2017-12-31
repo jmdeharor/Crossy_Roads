@@ -13,13 +13,13 @@ class Floor : public GameObject, public ObjectContainer {
 	glm::uint lastRow;
 	glm::uint playableLowerLimit, playableUpperLimit;
 	IdMesh plankMesh;
-	const RandomPickMesh* railMesh;
+	const RandomMeshConfig* railMesh;
 	float firstPos;
 	glm::uint colOffset;
 	glm::uint rowOffset;
 	glm::uint counter, biomeCounter;
 	glm::uint length, biomeLength;
-	const std::vector<MeshConfig>* furniture;
+	const std::vector<MeshConfigConstructor*>* furniture;
 	std::vector<FloorRow> floorRows;
 	std::vector<std::vector<CellProperties>> map;
 	std::vector<glm::uint> textureIndex;

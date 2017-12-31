@@ -189,9 +189,6 @@
     <ClCompile Include="SoundManager.cpp">
       <Filter>Archivos de código fuente</Filter>
     </ClCompile>
-    <ClCompile Include="RandomPickMesh.cpp">
-      <Filter>Archivos de código fuente\Meshes</Filter>
-    </ClCompile>
     <ClCompile Include="AnimTexObject.cpp">
       <Filter>Archivos de código fuente\Objects</Filter>
     </ClCompile>
@@ -200,6 +197,9 @@
     </ClCompile>
     <ClCompile Include="IslandFuns.cpp">
       <Filter>Archivos de código fuente\Floor\Biomes</Filter>
+    </ClCompile>
+    <ClCompile Include="RandomPicker.cpp">
+      <Filter>Archivos de código fuente</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -332,14 +332,14 @@
     <ClInclude Include="SoundManager.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
-    <ClInclude Include="RandomPickMesh.h">
-      <Filter>Archivos de encabezado\Meshes</Filter>
-    </ClInclude>
     <ClInclude Include="AnimTexObject.h">
       <Filter>Archivos de encabezado\Objects</Filter>
     </ClInclude>
     <ClInclude Include="AnimMeshObject.h">
       <Filter>Archivos de encabezado\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="RandomPicker.h">
+      <Filter>Archivos de encabezado</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

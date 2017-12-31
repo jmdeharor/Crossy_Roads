@@ -63,13 +63,14 @@ void Floor::updateMap(bool lastRow, uint size, const vector<ivec2>& restrictions
 	uint start;
 
 	if (lastRow) {
-		aux.height = 1.5f;
 		aux.occupied = true;
 		aux.collision = true;
-		aux.cols = 1;
-		aux.rows = 1;
 		for (uint j = 0; j < cols; ++j) {
-			aux.mesh = railMesh->getMesh();
+			MeshConfig config = railMesh->getMeshConfig();
+			aux.height = config.height;
+			aux.rows = config.rows;
+			aux.cols = config.cols;
+			aux.mesh = config.mesh;
 			map[plankLength][j] = aux;
 		}
 
@@ -103,10 +104,10 @@ void Floor::updateMap(bool lastRow, uint size, const vector<ivec2>& restrictions
 	uint i = start;
 	while (i < size) {
 		for (uint j = 0; j < furniture[biome].size(); ++j) {
-			if (i + furniture[biome][j].rows <= size)
+			if (i + furniture[biome][j]->getMeshConfig().rows <= size)
 				decoration.push_back(j);
 		}
-		const MeshConfig& meshConfig = furniture[biome][decoration[rand()%decoration.size()]];
+		MeshConfig meshConfig = furniture[biome][decoration[rand()%decoration.size()]]->getMeshConfig();
 		setMapObstacle(ivec2(i, playableLowerLimit - meshConfig.cols), meshConfig, map);
 		i += meshConfig.rows;
 		decoration.clear();
@@ -114,10 +115,10 @@ void Floor::updateMap(bool lastRow, uint size, const vector<ivec2>& restrictions
 	i = start;
 	while (i < size) {
 		for (uint j = 0; j < furniture[biome].size(); ++j) {
-			if (i + furniture[biome][j].rows <= size)
+			if (i + furniture[biome][j]->getMeshConfig().rows <= size)
 				decoration.push_back(j);
 		}
-		const MeshConfig& meshConfig = furniture[biome][decoration[rand() % decoration.size()]];
+		MeshConfig meshConfig = furniture[biome][decoration[rand() % decoration.size()]]->getMeshConfig();
 		setMapObstacle(ivec2(i, playableUpperLimit), meshConfig, map);
 		i += meshConfig.rows;
 		decoration.clear();
@@ -129,7 +130,7 @@ void Floor::updateMap(bool lastRow, uint size, const vector<ivec2>& restrictions
 	uint objects = between((int)size, size*2);
 
 	for (uint i = 0; i < objects; ++i) {
-		const MeshConfig& meshConfig = furniture[biome][rand() % furniture[biome].size()];
+		MeshConfig meshConfig = furniture[biome][rand() % furniture[biome].size()]->getMeshConfig();
 
 		for (int i = start; i < (int)size-(int)meshConfig.rows+1; ++i) {
 			for (int j = playableLowerLimit; j <= (int)playableUpperLimit-(int)meshConfig.cols+1; ++j) {

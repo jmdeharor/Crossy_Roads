@@ -6,7 +6,7 @@ void FloorRow::initIslandRoad() {
 	animatedFloorTiles.clear();
 	furniture.clear();
 	platforms.clear();
-	enemies.resize(2);
+	enemies.resize(res.groups[sub2ind(biome, Enemy)].size());
 	speeds.resize(enemies.size());
 	floorTiles.resize(fp.cols);
 
@@ -22,7 +22,7 @@ void FloorRow::initIslandRoad() {
 		Jumper& enemy = enemies[i];
 		IdMesh enemyId = res.groups[sub2ind(biome, Enemy)][i];
 		enemy.setMesh(enemyId, res.assets->getMesh(enemyId));
-		enemy.setScale(vec3(0.1f));
+		enemy.setScale(vec3(0.05f));
 		enemy.setCenterToBaseCenter();
 		enemy.setPlane(vec4(0, 1, 0, -rowHeight), fp.lightDir);
 		enemy.horizontalSpeed = generateSpeed();
