@@ -4,15 +4,48 @@
       "names": ["pirate"],
       "type": "enemy",
       "biomes": [
-        "ship",
-        "island"
+        "ship"
       ]
     },
     {
       "names": ["pirate_2"],
       "type": "enemy",
       "biomes": [
-        "ship",
+        "ship"
+      ]
+    },
+	{
+      "names": ["native_01"],
+      "type": "enemy",
+      "biomes": [
+        "island"
+      ]
+    },
+	{
+      "names": ["native_02"],
+      "type": "enemy",
+      "biomes": [
+        "island"
+      ]
+    },
+	{
+      "names": ["native_03"],
+      "type": "enemy",
+      "biomes": [
+        "island"
+      ]
+    },
+	{
+      "names": ["native_04"],
+      "type": "enemy",
+      "biomes": [
+        "island"
+      ]
+    },
+	{
+      "names": ["native_05"],
+      "type": "enemy",
+      "biomes": [
         "island"
       ]
     },
@@ -31,26 +64,17 @@
       "biomes": ["ship"]
     },
     {
-      "names": ["cubierta_2"],
+      "names": [
+	    "cubierta_2",
+		"cubierta_2_doors_open",
+		"cubierta_2_open"
+	  ],
       "type": "decoration",
+	  "group type": "random",
       "size": [3,3],
-      "height": 0.5,
-      "biomes": ["ship"]
-    },
-    {
-      "names": ["cubierta_2_doors_open"],
-      "type": "decoration",
-      "size": [3,3],
-      "height": 1.5,
-      "floor empty": true,
-      "biomes": ["ship"]
-    },
-    {
-      "names": ["cubierta_2_open"],
-      "type": "decoration",
-      "size": [3,3],
-      "height": 0.5,
-      "floor empty": true,
+      "height": [0.5, 1.5, 0.5],
+	  "floor empty": [false, true, true],
+	  "probabilities": [0.9, 0.05, 0.05],
       "biomes": ["ship"]
     },
     {
@@ -82,6 +106,9 @@
         "railing_rip"
       ],
       "type": "random",
+	  "size": [1,1],
+      "height": [1.5, 2.1, 1.5],
+	  "floor empty": [false, false, false],
       "probabilities": [
         0.6,
         0.1,

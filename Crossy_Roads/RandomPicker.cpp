@@ -1,28 +1,28 @@
-#include "RandomPickMesh.h"
+#include "RandomPicker.h"
 using namespace glm;
 
-void RandomPickMesh::setMeshes(IdMesh firstMesh, float * probabilities, uint size) {
-	this->firstMesh = firstMesh;
+void RandomPicker::setProbabilities(const float * probabilities, uint size) {
 	this->probabilities = probabilities;
+	this->size = size;
 }
 
-IdMesh RandomPickMesh::getMesh() const {
+uint RandomPicker::getIndex() const {
 	float pick = rand() / (float)(RAND_MAX+1);
 	float prob = 0;
 	for (uint i = 0; i < size; ++i) {
 		if (pick >= prob && pick < prob + probabilities[i]) {
-			return firstMesh + i;
+			return i;
 		}
 		prob += probabilities[i];
 	}
-	return INVALID;
+	return 0;
 }
 
-RandomPickMesh::RandomPickMesh() : probabilities(NULL)
+RandomPicker::RandomPicker() : probabilities(NULL)
 {
 }
 
-RandomPickMesh::~RandomPickMesh() {
+RandomPicker::~RandomPicker() {
 	if (probabilities != NULL) {
 		delete probabilities;
 	}

@@ -189,9 +189,6 @@
     <ClCompile Include="SoundManager.cpp">
       <Filter>Archivos de código fuente</Filter>
     </ClCompile>
-    <ClCompile Include="RandomPickMesh.cpp">
-      <Filter>Archivos de código fuente\Meshes</Filter>
-    </ClCompile>
     <ClCompile Include="AnimTexObject.cpp">
       <Filter>Archivos de código fuente\Objects</Filter>
     </ClCompile>
@@ -205,6 +202,9 @@
       <Filter>Archivos de código fuente</Filter>
     </ClCompile>
     <ClCompile Include="TexturedQuad.cpp">
+		<Filter>Archivos de código fuente</Filter>
+    </ClCompile>
+    <ClCompile Include="RandomPicker.cpp">
       <Filter>Archivos de código fuente</Filter>
     </ClCompile>
   </ItemGroup>
@@ -338,9 +338,6 @@
     <ClInclude Include="SoundManager.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
-    <ClInclude Include="RandomPickMesh.h">
-      <Filter>Archivos de encabezado\Meshes</Filter>
-    </ClInclude>
     <ClInclude Include="AnimTexObject.h">
       <Filter>Archivos de encabezado\Objects</Filter>
     </ClInclude>
@@ -351,6 +348,9 @@
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
     <ClInclude Include="TexturedQuad.h">
+		<Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="RandomPicker.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
   </ItemGroup>

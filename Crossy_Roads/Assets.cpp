@@ -40,7 +40,7 @@ const Texture* Assets::getTexture(const string& name) const {
 	return &textures[textureIds.find(name)->second];
 }
 
-const RandomPickMesh * Assets::getRandomMesh(const string & name) const {
+const RandomMeshConfig * Assets::getRandomMesh(const string & name) const {
 	return &randomGroup.find(name)->second;
 }
 
@@ -56,7 +56,7 @@ const std::vector<IdMesh>* Assets::getGroups() const {
 	return &groups[0][0];
 }
 
-const std::vector<MeshConfig>* Assets::getDecoration() const {
+const std::vector<MeshConfigConstructor*>* Assets::getDecoration() const {
 	return decorationGroup;
 }
 
@@ -114,7 +114,7 @@ void Assets::loadAssets(const string& modelPath, const string& texturePath) {
 	for (const Value& meshProperties : models.GetArray()) {
 		uint firstId = i;
 		const Value& namesV = meshProperties["names"];
-		for (const Value& nameValue : meshProperties["names"].GetArray()) {
+		for (const Value& nameValue : namesV.GetArray()) {
 			name.assign(nameValue.GetString());
 			meshes[i].loadFromFile("models/" + name + ".obj");
 			meshIds[name] = i;
@@ -126,18 +126,44 @@ void Assets::loadAssets(const string& modelPath, const string& texturePath) {
 		if (type == "decoration") {
 			const Value& biomeV = meshProperties["biomes"];
 			const Value& size = meshProperties["size"];
-			MeshConfig aux;
-			if (meshProperties.HasMember("floor empty")) {
-				aux.floorEmpty = meshProperties["floor empty"].GetBool();
+			MeshConfigConstructor* constructor;
+			if (namesV.Size() > 1) {
+				RandomMeshConfig* randomMeshConfig = new RandomMeshConfig();
+				randomMeshConfig->rows = size[0].GetUint();
+				randomMeshConfig->cols = size[1].GetUint();
+				const Value& heightsV = meshProperties["height"];
+				float* heights = new float[heightsV.Size()];
+				const Value& emptiesV = meshProperties["floor empty"];
+				bool* empty = new bool[emptiesV.Size()];
+				const Value& probabilitiesV = meshProperties["probabilities"];
+				float* probabilities = new float[probabilitiesV.Size()];
+				for (uint i = 0; i < heightsV.Size(); ++i) {
+					heights[i] = heightsV[i].GetFloat();
+					empty[i] = emptiesV[i].GetBool();
+					probabilities[i] = probabilitiesV[i].GetFloat();
+				}
+				randomMeshConfig->setProbabilities(probabilities, probabilitiesV.Size());
+				randomMeshConfig->firstMesh = firstId;
+				randomMeshConfig->heights = heights;
+				randomMeshConfig->empty = empty;
+				constructor = randomMeshConfig;
 			}
-			else
-				aux.floorEmpty = false;
-			aux.rows = size[0].GetUint();
-			aux.cols = size[1].GetUint();
-			aux.height = meshProperties["height"].GetFloat();
-			aux.mesh = firstId;
+			else {
+				MeshConfig aux;
+				if (meshProperties.HasMember("floor empty")) {
+					aux.floorEmpty = meshProperties["floor empty"].GetBool();
+				}
+				else
+					aux.floorEmpty = false;
+				aux.rows = size[0].GetUint();
+				aux.cols = size[1].GetUint();
+				aux.height = meshProperties["height"].GetFloat();
+				aux.mesh = firstId;
+				constructor = new BasicMeshConfig();
+				((BasicMeshConfig*)constructor)->meshConfig = aux;
+			}
 			for (const Value& biomeName : biomeV.GetArray()) {
-				decorationGroup[biomeString2enum(biomeName.GetString())].push_back(aux);
+				decorationGroup[biomeString2enum(biomeName.GetString())].push_back(constructor);
 			}
 		}
 		else if (type == "enemy") {
@@ -160,17 +186,26 @@ void Assets::loadAssets(const string& modelPath, const string& texturePath) {
 		}
 		else if (type == "random") {
 			string groupName = meshProperties["group name"].GetString();
+			map<string, RandomMeshConfig>::iterator it = randomGroup.insert(make_pair(groupName, RandomMeshConfig())).first;
+			RandomMeshConfig& randomMesh = it->second;
+			const Value& size = meshProperties["size"];
+			randomMesh.rows = size[0].GetUint();
+			randomMesh.cols = size[1].GetUint();
+			const Value& heightsV = meshProperties["height"];
+			float* heights = new float[heightsV.Size()];
+			const Value& emptiesV = meshProperties["floor empty"];
+			bool* empty = new bool[emptiesV.Size()];
 			const Value& probabilitiesV = meshProperties["probabilities"];
 			float* probabilities = new float[probabilitiesV.Size()];
-			uint j = 0;
-			for (const Value& prob : probabilitiesV.GetArray()) {
-				float probNum = prob.GetFloat();
-				probabilities[j] = probNum;
-				++j;
+			for (uint i = 0; i < heightsV.Size(); ++i) {
+				heights[i] = heightsV[i].GetFloat();
+				empty[i] = emptiesV[i].GetBool();
+				probabilities[i] = probabilitiesV[i].GetFloat();
 			}
-			map<string, RandomPickMesh>::iterator it = randomGroup.insert(make_pair(groupName, RandomPickMesh())).first;
-			RandomPickMesh& randomMesh = it->second;
-			randomMesh.setMeshes(firstId, probabilities, probabilitiesV.Size());
+			randomMesh.setProbabilities(probabilities, probabilitiesV.Size());
+			randomMesh.firstMesh = firstId;
+			randomMesh.heights = heights;
+			randomMesh.empty = empty;
 		}
 		else if (type != "unique") {
 			int a = 3;

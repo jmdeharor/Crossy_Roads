@@ -6,7 +6,7 @@ void FloorRow::initIslandRoad() {
 	animatedFloorTiles.clear();
 	furniture.clear();
 	platforms.clear();
-	enemies.resize(2);
+	enemies.resize(res.groups[sub2ind(biome, Enemy)].size());
 	speeds.resize(enemies.size());
 	floorTiles.resize(fp.cols);
 
@@ -22,7 +22,7 @@ void FloorRow::initIslandRoad() {
 		Jumper& enemy = enemies[i];
 		IdMesh enemyId = res.groups[sub2ind(biome, Enemy)][i];
 		enemy.setMesh(enemyId, res.assets->getMesh(enemyId));
-		enemy.setScale(vec3(0.1f));
+		enemy.setScale(vec3(0.05f));
 		enemy.setCenterToBaseCenter();
 		enemy.setPlane(vec4(0, 1, 0, -rowHeight), fp.lightDir);
 		enemy.horizontalSpeed = generateSpeed();
@@ -51,6 +51,7 @@ void FloorRow::initIslandRoad() {
 
 void FloorRow::initIslandSafeZone(const FloorRow& prevRow) {
 	animatedFloorTiles.clear();
+	floorTiles.resize(fp.cols);
 	platforms.clear();
 	enemies.clear();
 	speeds.clear();
@@ -97,14 +98,16 @@ void FloorRow::initIslandSafeZone(const FloorRow& prevRow) {
 		object.setPlane(vec4(0, 1, 0, -rowHeight), fp.lightDir);
 	}
 	
-	static vec3 floorTileSize = vec3(fp.tileSize.x, 0.2f, fp.tileSize.y) / boundingBox;
-	floorTiles.resize(1);
+	static vec3 floorTileSize = vec3(fp.realTileSize, 0.2f, fp.tileSize.y) / boundingBox;
 
-	TexturedObject& tile = floorTiles[0];
-	tile.texture = res.islandSafe;
-	tile.setMesh(cubeMesh);
-	tile.setScale(floorTileSize);
-	tile.setCenter(vec3(bbcenter.x, bbcenter.y + height / 2.f, bbcenter.z));
-	tile.setPos(vec3(pos.x, rowHeight, pos.y));
+	for (uint i = 0; i < floorTiles.size(); ++i) {
+		TexturedObject& tile = floorTiles[i];
+		tile.texture = res.islandSafe;
+		tile.setMesh(cubeMesh);
+		tile.setScale(floorTileSize);
+		tile.setRotationY(PI / 2);
+		tile.setCenter(vec3(bbcenter.x, bbcenter.y + height / 2.f, bbcenter.z));
+		tile.setPos(vec3(offsetX + i*realTileSize, rowHeight, pos.y));
+	}
 
 }

@@ -1,6 +1,6 @@
 #pragma once
 #include "ImportedMesh.h"
-#include "RandomPickMesh.h"
+#include "RandomPicker.h"
 #include "CubeMesh.h"
 #include "Texture.h"
 #include <map>
@@ -25,9 +25,49 @@ enum BiomeType {
 
 struct MeshConfig {
 	glm::uint rows, cols;
-	float height;
 	IdMesh mesh;
+	float height;
 	bool floorEmpty;
+};
+
+class MeshConfigConstructor {
+public:
+	virtual MeshConfig getMeshConfig() const = 0;
+	virtual ~MeshConfigConstructor() {};
+};
+
+class BasicMeshConfig : public MeshConfigConstructor {
+public:
+	MeshConfig meshConfig;
+	MeshConfig getMeshConfig() const override {
+		return meshConfig;
+	}
+};
+
+class RandomMeshConfig : public MeshConfigConstructor {
+	RandomPicker randomPicker;
+public:
+	IdMesh firstMesh;
+	float* heights;
+	bool* empty;
+	glm::uint rows, cols;
+	void setProbabilities(const float* probabilities, glm::uint size) {
+		randomPicker.setProbabilities(probabilities, size);
+	}
+	MeshConfig getMeshConfig() const override {
+		glm::uint index = randomPicker.getIndex();
+		MeshConfig meshConfig;
+		meshConfig.mesh = firstMesh + index;
+		meshConfig.height = heights[index];
+		meshConfig.floorEmpty = empty[index];
+		meshConfig.rows = rows;
+		meshConfig.cols = cols;
+		return meshConfig;
+	}
+	~RandomMeshConfig() {
+		delete heights;
+		delete empty;
+	}
 };
 
 inline glm::uint sub2ind(BiomeType biome, AssetType asset) {
@@ -36,8 +76,8 @@ inline glm::uint sub2ind(BiomeType biome, AssetType asset) {
 
 class Assets {
 	std::vector<IdMesh> groups[nBiomes][nGroups];
-	std::vector<MeshConfig> decorationGroup[nBiomes];
-	std::map<string, RandomPickMesh> randomGroup;
+	std::vector<MeshConfigConstructor*> decorationGroup[nBiomes];
+	std::map<string, RandomMeshConfig> randomGroup;
 	std::map<string, std::pair<IdTex, glm::uint>> animatedTextureGroup;
 	std::map<string, std::pair<IdTex, glm::uint>> animatedMeshGroup;
 	ImportedMesh* meshes;
@@ -54,11 +94,11 @@ public:
 	const ImportedMesh* getMesh(IdMesh id) const;
 	const Texture* getTexture(IdTex id) const;
 	const Texture* getTexture(const string& name) const;
-	const RandomPickMesh* getRandomMesh(const string& name) const;
+	const RandomMeshConfig* getRandomMesh(const string& name) const;
 	std::pair<IdTex, glm::uint> getAnimatedTexture(const string& name) const;
 	std::pair<IdMesh, glm::uint> getAnimatedMesh(const string& name) const;
 	const std::vector<IdMesh>* getGroups() const;
-	const std::vector<MeshConfig>* getDecoration() const;
+	const std::vector<MeshConfigConstructor*>* getDecoration() const;
 	glm::uint getNumMeshes() const;
 	glm::uint getNumTextures() const;
 	void loadAssets(const string& modelPath, const string& texturePath);

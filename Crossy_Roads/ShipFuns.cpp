@@ -34,7 +34,7 @@ void FloorRow::initShipRoad(vector<uint>& adjacentRow) {
 	animatedFloorTiles.clear();
 	furniture.clear();
 	platforms.clear();
-	enemies.resize(2);
+	enemies.resize(res.groups[sub2ind(biome, Enemy)].size());
 	speeds.resize(enemies.size());
 	floorTiles.resize(fp.cols);
 
