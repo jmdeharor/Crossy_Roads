@@ -23,6 +23,11 @@ enum BiomeType {
 	Island
 };
 
+enum class MeshBehavior {
+	Stalker,
+	None
+};
+
 struct MeshConfig {
 	glm::uint rows, cols;
 	IdMesh mesh;
@@ -33,6 +38,8 @@ struct MeshConfig {
 class MeshConfigConstructor {
 public:
 	virtual MeshConfig getMeshConfig() const = 0;
+	virtual glm::uint getRows() const = 0;
+	virtual glm::uint getCols() const = 0;
 	virtual ~MeshConfigConstructor() {};
 };
 
@@ -41,6 +48,12 @@ public:
 	MeshConfig meshConfig;
 	MeshConfig getMeshConfig() const override {
 		return meshConfig;
+	}
+	glm::uint getRows() const override {
+		return meshConfig.rows;
+	}
+	glm::uint getCols() const override {
+		return meshConfig.cols;
 	}
 };
 
@@ -64,6 +77,12 @@ public:
 		meshConfig.cols = cols;
 		return meshConfig;
 	}
+	glm::uint getRows() const override {
+		return rows;
+	}
+	glm::uint getCols() const override {
+		return cols;
+	}
 	~RandomMeshConfig() {
 		delete heights;
 		delete empty;
@@ -82,6 +101,7 @@ class Assets {
 	std::map<string, std::pair<IdTex, glm::uint>> animatedMeshGroup;
 	ImportedMesh* meshes;
 	Texture* textures;
+	MeshBehavior* behaviors;
 	CubeMesh cubeMesh;
 	glm::uint nImportedMeshes;
 	glm::uint nTextures;
@@ -99,6 +119,7 @@ public:
 	std::pair<IdMesh, glm::uint> getAnimatedMesh(const string& name) const;
 	const std::vector<IdMesh>* getGroups() const;
 	const std::vector<MeshConfigConstructor*>* getDecoration() const;
+	MeshBehavior getBehavior(IdMesh mesh) const;
 	glm::uint getNumMeshes() const;
 	glm::uint getNumTextures() const;
 	void loadAssets(const string& modelPath, const string& texturePath);

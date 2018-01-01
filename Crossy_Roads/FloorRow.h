@@ -9,6 +9,7 @@
 #include "FloorResources.h"
 #include "AnimTexObject.h"
 #include "AnimMeshObject.h"
+#include "Stalker.h"
 
 enum FloorType {
 	Road,
@@ -43,7 +44,7 @@ private:
 	bool safeZone;
 	float rowHeight;
 	glm::uint frameCounter, frameLimit;
-
+	std::vector<Stalker> stalkers;
 	std::vector<Jumper> enemies;
 	std::vector<float> speeds;
 	std::vector<CellProperties> map;
@@ -64,10 +65,11 @@ private:
 public:
 	glm::vec2 pos;
 public:
-	static void initResources(const Assets& assets);
+	static void initResources(const Assets& assets, const Player* player);
 	static void setParameters(const FloorParams& floorParams);
 	static glm::uint worldToCol(float x);
 	
+	void firstInit();
 	void initAttributes(BiomeType biome, bool safeZone, float rowHeight);
 	void initRoad(BiomeType biome, std::vector<glm::uint>& adjacentRow, const std::vector<CellProperties>& map, const FloorRow& prevRow);
 	void initSafeZone(BiomeType biome, const std::vector<CellProperties>& map, const FloorRow& prevRow);

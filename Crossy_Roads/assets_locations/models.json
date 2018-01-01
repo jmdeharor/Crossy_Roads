@@ -74,7 +74,7 @@
       "size": [3,3],
       "height": [0.5, 1.5, 0.5],
 	  "floor empty": [false, true, true],
-	  "probabilities": [0.9, 0.05, 0.05],
+	  "probabilities": [0.8, 0.1, 0.1],
       "biomes": ["ship"]
     },
     {
@@ -142,55 +142,30 @@
       "type": "decoration",
       "size": [1,1],
       "height": 1,
-      "biomes": ["island"]
+      "biomes": ["island"],
+	  "behavior": "stalker"
     },
     {
       "names": ["palm_tree_00"],
       "type": "decoration",
-      "size": [1,1],
-      "height": 4,
+      "size": [2,2],
+      "height": 6,
       "biomes": ["island"]
     },
     {
-      "names": ["rock_1"],
+      "names": [
+	    "rock_1",
+	    "rock-02",
+		"rock-03",
+		"rock-04",
+		"rock-05",
+		"rock-06"
+	  ],
       "type": "decoration",
+	  "group type": "random",
       "size": [1,1],
       "height": 1,
-      "biomes": ["island"]
-    },
-    {
-      "names": ["rock-02"],
-      "type": "decoration",
-      "size": [1,1],
-      "height": 1,
-      "biomes": ["island"]
-    },
-    {
-      "names": ["rock-03"],
-      "type": "decoration",
-      "size": [1,1],
-      "height": 1,
-      "biomes": ["island"]
-    },
-    {
-      "names": ["rock-04"],
-      "type": "decoration",
-      "size": [1,1],
-      "height": 1,
-      "biomes": ["island"]
-    },
-    {
-      "names": ["rock-05"],
-      "type": "decoration",
-      "size": [1,1],
-      "height": 1,
-      "biomes": ["island"]
-    },
-    {
-      "names": ["rock-06"],
-      "type": "decoration",
-      "size": [1,1],
-      "height": 1,
+	  "probabilities": "equal",
       "biomes": ["island"]
     }
   ]

@@ -4,7 +4,6 @@ using namespace glm;
 
 void FloorRow::initSeaRoad(const FloorRow& prevRow) {
 	animatedFloorTiles.resize(fp.cols);
-	furniture.clear();
 	enemies.clear();
 	platforms.resize(between(2, 4));
 	speeds.resize(platforms.size());
@@ -79,8 +78,7 @@ void FloorRow::initSeaRoad(const FloorRow& prevRow) {
 	for (uint i = 0; i < map.size(); ++i) {
 		if (map[i].mesh == INVALID)
 			continue;
-		furniture.push_back(ShadowedObject());
-		ShadowedObject& object = furniture[furniture.size() - 1];
+		ShadowedObject object;
 		IdMesh meshId = map[i].mesh;
 		float height = map[i].height;
 
@@ -90,11 +88,13 @@ void FloorRow::initSeaRoad(const FloorRow& prevRow) {
 		vec3 bbCenter = mesh->getbbCenter();
 		vec3 objectSize = vec3(fp.realTileSize*map[i].cols, height, fp.tileSize.y*map[i].rows) / boundingBox;
 
+		object.name = "Sea furniture " + to_string(i);
 		object.setMesh(meshId, mesh);
 		object.setScale(objectSize);
 		object.setCenterToBaseCenter();
 		float posX = offsetX + i*fp.realTileSize;
 		object.setPos(vec3(posX + (fp.realTileSize*(map[i].cols / 2.f)) - fp.realTileSize / 2, rowHeight+map[i].verticalOffset, pos.y - fp.tileSize.y*(map[i].rows / 2.f) + fp.tileSize.y / 2));
 		object.setPlane(vec4(0, 1, 0, -rowHeight), fp.lightDir);
+		furniture.push_back(object);
 	}
 }

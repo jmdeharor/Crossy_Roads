@@ -175,6 +175,11 @@ float Player::getHeight() const {
 	return currentFloorRow;
 }
 
+const Object * Player::getObject() const
+{
+	return &playerObject;
+}
+
 void Player::calculateSpeeds() {
 	vec3 playerPos = playerObject.getPos();
 	verticalSpeed = getJumpingSpeed(playerPos.y, nextPos.y, JUMP_DURATION);

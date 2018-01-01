@@ -1,7 +1,8 @@
 #include "FloorResources.h"
 using namespace glm;
 
-void FloorResources::init(const Assets & assets) {
+void FloorResources::init(const Assets & assets, const Player* player) {
+	this->player = player;
 	this->assets = &assets;
 	groups = assets.getGroups();
 

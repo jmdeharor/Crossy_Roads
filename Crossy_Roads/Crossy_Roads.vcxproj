@@ -75,10 +75,10 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>C:\Users\Carlos\Desktop\Crossy_Roads\libs\freetype-2.3.5-1-bin\include\freetype2;C:\Users\Carlos\Desktop\Crossy_Roads\libs\freetype-2.3.5-1-bin\include\freetype2\freetype;C:\Users\Carlos\Desktop\Crossy_Roads\libs\freetype-2.3.5-1-bin\include\freetype2\freetype\config;C:\Users\Carlos\Desktop\Crossy_Roads\libs\freetype-2.3.5-1-bin\include;..\libs\FMODapi\studio\inc;..\libs\rapidjson;..\libs\assimp\include;../libs\Simple OpenGL Image Library\src;../libs\glm;../libs\glew-1.13.0\include;../libs\freeglut\include;..\libs\FMODapi\lowlevel\inc</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\libs\freetype-2.3.5-1-bin\include\freetype2;..\libs\freetype-2.3.5-1-bin\include\freetype2\freetype;..\libs\freetype-2.3.5-1-bin\include\freetype2\freetype\config;..\libs\freetype-2.3.5-1-bin\include;..\libs\FMODapi\studio\inc;..\libs\rapidjson;..\libs\assimp\include;../libs\Simple OpenGL Image Library\src;../libs\glm;../libs\glew-1.13.0\include;../libs\freeglut\include;..\libs\FMODapi\lowlevel\inc</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
-      <AdditionalLibraryDirectories>C:\Users\Carlos\Desktop\Crossy_Roads\libs\freetype-2.3.5-1-bin\lib;..\libs\FMODapi\lowlevel\lib;..\libs\assimp\lib;../libs\Simple OpenGL Image Library\projects\VC9\Debugg;../libs\glew-1.13.0\lib\;../libs\freeglut\lib;..\libs\FMODapi\studio\lib</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>..\libs\freetype-2.3.5-1-bin\lib;..\libs\FMODapi\lowlevel\lib;..\libs\assimp\lib;../libs\Simple OpenGL Image Library\projects\VC9\Debugg;../libs\glew-1.13.0\lib\;../libs\freeglut\lib;..\libs\FMODapi\studio\lib</AdditionalLibraryDirectories>
       <AdditionalDependencies>freetype.lib;freeglut.lib;SOIL.lib;glew32.lib;assimp-vc120-mt.lib;fmod_vc.lib;fmodstudio_vc.lib</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
@@ -96,13 +96,13 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>..\libs\assimp\include;../libs\Simple OpenGL Image Library\src;../libs\glm;../libs\glew-1.13.0\include;../libs\freeglut\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\libs\freetype-2.3.5-1-bin\include\freetype2;..\libs\freetype-2.3.5-1-bin\include\freetype2\freetype;..\libs\freetype-2.3.5-1-bin\include\freetype2\freetype\config;..\libs\freetype-2.3.5-1-bin\include;..\libs\FMODapi\studio\inc;..\libs\rapidjson;..\libs\assimp\include;../libs\Simple OpenGL Image Library\src;../libs\glm;../libs\glew-1.13.0\include;../libs\freeglut\include;..\libs\FMODapi\lowlevel\inc</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalLibraryDirectories>..\libs\assimp\lib;../libs\Simple OpenGL Image Library\projects\VC9\Debugg;../libs\glew-1.13.0\lib\;../libs\freeglut\lib</AdditionalLibraryDirectories>
-      <AdditionalDependencies>freeglut.lib;SOIL.lib;glew32.lib;assimp-vc120-mt.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\libs\freetype-2.3.5-1-bin\lib;..\libs\FMODapi\lowlevel\lib;..\libs\assimp\lib;../libs\Simple OpenGL Image Library\projects\VC9\Debugg;../libs\glew-1.13.0\lib\;../libs\freeglut\lib;..\libs\FMODapi\studio\lib</AdditionalLibraryDirectories>
+      <AdditionalDependencies>freetype.lib;freeglut.lib;SOIL.lib;glew32.lib;assimp-vc120-mt.lib;fmod_vc.lib;fmodstudio_vc.lib</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -123,6 +123,7 @@
     <ClCompile Include="AnimMeshObject.cpp" />
     <ClCompile Include="AnimTexObject.cpp" />
     <ClCompile Include="Assets.cpp" />
+    <ClCompile Include="MonoBehavior.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Camera\basecamera.cpp" />
     <ClCompile Include="Camera\eulercamera.cpp" />
@@ -160,6 +161,7 @@
     <ClCompile Include="ShipFuns.cpp" />
     <ClCompile Include="SoundManager.cpp" />
     <ClCompile Include="Sphere.cpp" />
+    <ClCompile Include="Stalker.cpp" />
     <ClCompile Include="Text.cpp" />
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="TexturedObject.cpp" />
@@ -173,6 +175,7 @@
     <ClInclude Include="AnimMeshObject.h" />
     <ClInclude Include="AnimTexObject.h" />
     <ClInclude Include="Assets.h" />
+    <ClInclude Include="MonoBehavior.h" />
     <ClInclude Include="Biome.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Camera\basecamera.h" />
@@ -198,6 +201,7 @@
     <ClInclude Include="RandomPicker.h" />
     <ClInclude Include="SeaBiome.h" />
     <ClInclude Include="SoundManager.h" />
+    <ClInclude Include="Stalker.h" />
     <ClInclude Include="Text.h" />
     <ClInclude Include="TexturedQuad.h" />
     <ClInclude Include="Utils.h" />

@@ -99,12 +99,12 @@ void Floor::updateMap(bool lastRow, uint size, const vector<ivec2>& restrictions
 	else
 		start = 0;
 
-	vector<uint> decoration;
+	static vector<uint> decoration;
 	decoration.reserve(furniture[biome].size());
 	uint i = start;
 	while (i < size) {
 		for (uint j = 0; j < furniture[biome].size(); ++j) {
-			if (i + furniture[biome][j]->getMeshConfig().rows <= size)
+			if (i + furniture[biome][j]->getRows() <= size)
 				decoration.push_back(j);
 		}
 		MeshConfig meshConfig = furniture[biome][decoration[rand()%decoration.size()]]->getMeshConfig();
@@ -115,7 +115,7 @@ void Floor::updateMap(bool lastRow, uint size, const vector<ivec2>& restrictions
 	i = start;
 	while (i < size) {
 		for (uint j = 0; j < furniture[biome].size(); ++j) {
-			if (i + furniture[biome][j]->getMeshConfig().rows <= size)
+			if (i + furniture[biome][j]->getRows() <= size)
 				decoration.push_back(j);
 		}
 		MeshConfig meshConfig = furniture[biome][decoration[rand() % decoration.size()]]->getMeshConfig();
@@ -271,7 +271,7 @@ void Floor::updateFloorRow(FloorRow& floorRow, const FloorRow& prevRow) {
 	++biomeCounter;
 }
 
-void Floor::init(vec3 lightDir, const Assets& assets) {
+void Floor::init(vec3 lightDir, const Assets& assets, const Player* player) {
 	GameObject::init();
 
 	furniture = assets.getDecoration();
@@ -279,7 +279,7 @@ void Floor::init(vec3 lightDir, const Assets& assets) {
 	plankMesh = assets.getMeshId("plank");
 	railMesh = assets.getRandomMesh("railing");
 
-	FloorRow::initResources(assets);
+	FloorRow::initResources(assets, player);
 	FloorParams params;
 	params.tileSize = tileSize;
 	params.colOffset = colOffset;
@@ -310,6 +310,7 @@ void Floor::init(vec3 lightDir, const Assets& assets) {
 
 	updateMap(false, length, { playerIni });
 	for (uint i = 0; i < rows; ++i) {
+		floorRows[i].firstInit();
 		floorRows[i].pos = vec2(colOffset*realTileSize, rowOffset*tileSize.y + offsetZ + i*tileSize.y);
 		updateFloorRow(floorRows[i], floorRows[i > 0 ? i-1 : rows-1]);
 	}
