@@ -1,6 +1,7 @@
 #include <GL/glew.h>
 #include <GL/glut.h>
 #include "Game.h"
+#include <iostream>
 
 void Game::init() {
 	bPlay = true;
@@ -9,11 +10,13 @@ void Game::init() {
 	glClearStencil(0);
 	glViewport(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 	scene.init();
+	menu.init();
 }
 
 bool Game::update(int deltaTime) {
 	soundManager.update();
 	scene.update(deltaTime);
+	menu.update(deltaTime);
 	
 	return bPlay;
 }
@@ -21,6 +24,7 @@ bool Game::update(int deltaTime) {
 void Game::render() {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 	scene.render();
+	menu.render();
 }
 
 void Game::keyPressed(int key)
@@ -47,6 +51,8 @@ void Game::specialKeyReleased(int key)
 
 void Game::mouseMove(int x, int y)
 {
+	menu.mouseMove(x, y);
+	std::cout << "Position: " << x << " " << "y" << endl;
 }
 
 void Game::mousePress(int button)

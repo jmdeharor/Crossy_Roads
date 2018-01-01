@@ -31,7 +31,7 @@ void FloorRow::initSeaRoad(const FloorRow& prevRow) {
 
 	for (uint i = 0; i < animatedFloorTiles.size(); ++i) {
 		AnimTexObject& tile = animatedFloorTiles[i];
-		tile.setTextures(res.waterAnimation, 1 / (float)12 * 1000);
+		tile.setTextures(res.waterAnimation, 1 / (float)6 * 1000);
 		tile.setRotationY(PI / 2);
 		tile.setMesh(cubeMesh);
 		tile.setScale(floorTileSize);
