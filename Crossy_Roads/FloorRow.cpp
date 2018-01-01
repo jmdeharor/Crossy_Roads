@@ -102,12 +102,24 @@ void FloorRow::update(int deltaTime) {
 	for (AnimTexObject& animatedTexure : animatedFloorTiles) {
 		animatedTexure.update(deltaTime);
 	}
+	bool someZero = false;
 	for (uint i = 0; i < enemies.size(); ++i) {
 		Jumper& object = enemies[i];
 		object.update();
+		if (object.horizontalSpeed == 0 && enemies[i - 1].horizontalSpeed != 0) {
+			someZero = true;
+			if (frameCounter == frameLimit) {
+				object.horizontalSpeed = enemies[0].horizontalSpeed;
+				uint minTime = uint(fp.realTileSize / abs(enemies[0].horizontalSpeed)) + 1;
+				uint maxTime = uint((fp.tileSize.x - fp.realTileSize) / abs(enemies[0].horizontalSpeed));
+				frameLimit = between(minTime + 10, int(maxTime*0.4f));
+				frameCounter = 0;
+			}
+			else
+				++frameCounter;
+		}
 		float x = object.getPos().x;
 		if (x > fp.upperLimit || x < fp.lowerLimit) {
-			object.horizontalSpeed = generateSpeed();
 			float startPoint;
 			if (object.horizontalSpeed >= 0) {
 				object.setRotationY(PI/2);
@@ -119,8 +131,10 @@ void FloorRow::update(int deltaTime) {
 			}
 			object.setPos(vec3(startPoint, rowHeight, pos.y));
 		}
-		if (rand() % 512 == 0) {
-			object.jump();
+	}
+	if (!someZero && rand() % 512 == 0) {
+		for (uint i = 0; i < enemies.size(); ++i) {
+			enemies[i].jump();
 		}
 	}
 	

@@ -61,7 +61,7 @@ const std::vector<MeshConfigConstructor*>* Assets::getDecoration() const {
 }
 
 MeshBehavior Assets::getBehavior(IdMesh mesh) const {
-	return behaviors[mesh];
+	return behaviours[mesh];
 }
 
 uint Assets::getNumMeshes() const {
@@ -120,7 +120,7 @@ void Assets::loadAssets(const string& modelPath, const string& texturePath) {
 
 	cubeMesh.init();
 	meshes = new ImportedMesh[nImportedMeshes];
-	behaviors = new MeshBehavior[nImportedMeshes];
+	behaviours = new MeshBehavior[nImportedMeshes];
 
 	string name, type;
 	uint i = 0;
@@ -135,11 +135,11 @@ void Assets::loadAssets(const string& modelPath, const string& texturePath) {
 		}
 		uint nMeshes = namesV.Size();
 		type.assign(meshProperties["type"].GetString());
-		if (meshProperties.HasMember("behavior")) {
-			behaviors[firstId] = behaviorString2enum(meshProperties["behavior"].GetString());
+		if (meshProperties.HasMember("behaviour")) {
+			behaviours[firstId] = behaviorString2enum(meshProperties["behaviour"].GetString());
 		}
 		else
-			behaviors[firstId] = MeshBehavior::None;
+			behaviours[firstId] = MeshBehavior::None;
 
 		if (type == "decoration") {
 			const Value& biomeV = meshProperties["biomes"];

@@ -157,30 +157,32 @@ void Floor::updateMap(bool lastRow, uint size, const vector<ivec2>& restrictions
 void Floor::updateFloorRow(FloorRow& floorRow, const FloorRow& prevRow) {
 	if (biomeCounter == biomeLength) {
 		float randomF;
-		static const float shipProb = 0.7f;
+		static const float shipProb = 0.5f;
 		
 		switch (biome) {
 		case Ship:
+			biomeLength = between(10, 30);
 			biome = Sea;
 			break;
 		case Sea:
+			biomeLength = between(20, 40);
 			type = Road;
 			counter = length = 0;
 			
-			randomF = rand() / RAND_MAX;
+			randomF = rand() / (float)RAND_MAX;
 
-			//if (randomF < shipProb)
-				//biome = Ship;
-			//else
+			if (randomF < shipProb)
+				biome = Ship;
+			else
 				biome = Island;
 			break;
 		case Island:
+			biomeLength = between(10, 30);
 			type = Road;
 			counter = length = 0;
 			biome = Sea;
 			break;
 		}
-		biomeLength = between(20, 40);
 		biomeCounter = 0;
 	}
 	vector<uint> aux;
@@ -200,10 +202,19 @@ void Floor::updateFloorRow(FloorRow& floorRow, const FloorRow& prevRow) {
 			switch (type) {
 			case Safe:
 				length = between(3, 10);
+				if (length >= biomeLength - biomeCounter) {
+					length = biomeLength - biomeCounter - 1;
+				}
 				type = Road;
 				break;
 			case Road:
 				length = between(1, 4);
+				if (length >= biomeLength - biomeCounter) {
+					length = biomeLength - biomeCounter;
+				}
+				else if (length + 1 == biomeLength - biomeCounter) {
+					length = biomeLength - biomeCounter;
+				}
 				updateMap(false, length);
 				type = Safe;
 				break;

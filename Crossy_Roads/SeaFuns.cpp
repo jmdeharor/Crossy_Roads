@@ -40,7 +40,7 @@ void FloorRow::initSeaRoad(const FloorRow& prevRow) {
 	}
 
 	speeds[0] = generateSpeed(minSpeed, 0.2f, int(pos.y / fp.tileSize.y) % 2);
-
+	
 	for (uint i = 1; i < speeds.size(); ++i) {
 		speeds[i] = 0;
 	}

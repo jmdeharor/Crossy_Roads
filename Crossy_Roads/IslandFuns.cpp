@@ -6,7 +6,7 @@ using namespace glm;
 void FloorRow::initIslandRoad() {
 	animatedFloorTiles.clear();
 	platforms.clear();
-	enemies.resize(res.groups[sub2ind(biome, Enemy)].size());
+	enemies.resize(between(1,3));
 	speeds.resize(enemies.size());
 	floorTiles.resize(fp.cols);
 
@@ -18,14 +18,24 @@ void FloorRow::initIslandRoad() {
 	vec3 floorTileSize = vec3(realTileSize, 0.1f, fp.tileSize.y) / boundingBox;
 	float offsetX = pos.x - (realTileSize*(fp.cols / 2) - (1 - fp.cols % 2)*realTileSize / 2);
 
+	enemies[0].horizontalSpeed = generateSpeed();
+
+	for (uint i = 1; i < enemies.size(); ++i) {
+		enemies[i].horizontalSpeed = 0;
+	}
+
+	uint minTime = uint(fp.realTileSize / abs(enemies[0].horizontalSpeed)) + 1;
+	uint maxTime = uint((fp.tileSize.x - fp.realTileSize) / abs(enemies[0].horizontalSpeed));
+	frameLimit = between(minTime + 10, int(maxTime*0.4f));
+	frameCounter = 0;
+
 	for (uint i = 0; i < enemies.size(); ++i) {
 		Jumper& enemy = enemies[i];
-		IdMesh enemyId = res.groups[sub2ind(biome, Enemy)][i];
+		IdMesh enemyId = res.groups[sub2ind(biome, Enemy)][rand() % res.groups[sub2ind(biome, Enemy)].size()];
 		enemy.setMesh(enemyId, res.assets->getMesh(enemyId));
 		enemy.setScale(vec3(0.05f));
 		enemy.setCenterToBaseCenter();
 		enemy.setPlane(vec4(0, 1, 0, -rowHeight), fp.lightDir);
-		enemy.horizontalSpeed = generateSpeed();
 		float startPoint;
 		if (enemy.horizontalSpeed >= 0) {
 			enemy.setRotationY(PI / 2);

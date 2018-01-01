@@ -101,7 +101,7 @@ class Assets {
 	std::map<string, std::pair<IdTex, glm::uint>> animatedMeshGroup;
 	ImportedMesh* meshes;
 	Texture* textures;
-	MeshBehavior* behaviors;
+	MeshBehavior* behaviours;
 	CubeMesh cubeMesh;
 	glm::uint nImportedMeshes;
 	glm::uint nTextures;

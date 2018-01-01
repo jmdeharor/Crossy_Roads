@@ -14,8 +14,8 @@ inline float generateSpeed(float minSpeed, float maxSpeed, bool sign) {
 }
 
 inline int between(int min, int max) {
-	float num = ((float)rand() / RAND_MAX)*(max - min) + min;
-	return (int)round(num);
+	float num = ((float)rand() / (RAND_MAX+1))*(max+1 - min) + min;
+	return (int)floor(num);
 }
 
 inline float between(float min, float max) {
