@@ -3,6 +3,7 @@
 
 
 #include "Scene.h"
+#include "Menu.h"
 #include "SoundManager.h"
 
 #define SCREEN_WIDTH 1024
@@ -48,6 +49,7 @@ private:
 	SoundManager soundManager;
 	bool bPlay;                       // Continue to play game?
 	Scene scene;                      // Scene to render
+	Menu menu;
 	bool keys[256], specialKeys[256]; // Store key states so that 
 	                                  // we can have access at any time
 
