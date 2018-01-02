@@ -18,8 +18,8 @@ Scene::~Scene() {
 }
 
 void Scene::firstInit() {
-	//assets.loadAssets("assets_locations/models.json", "assets_locations/textures.json");
-	assets.loadAssets("binaryAssets.notxt");
+	assets.loadAssets("assets_locations/models.json", "assets_locations/textures.json");
+	//assets.loadAssets("binaryAssets.notxt");
 
 	partSystem.init(assets);
 	partSystem.g = -0.07f;
@@ -35,9 +35,7 @@ void Scene::firstInit() {
 	QueryPerformanceFrequency(&frequency);
 
 	initShaders();
-	//glEnable(GL_CULL_FACE);
 	glEnable(GL_TEXTURE_2D);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glStencilFunc(GL_EQUAL, 0, 1);
 	glStencilOp(GL_KEEP, GL_KEEP, GL_INCR);
 

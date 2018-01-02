@@ -169,7 +169,6 @@ void Shop::update(int deltaTime) {
 }
 
 void Shop::render() {
-	glEnable(GL_BLEND);
 	glm::mat4 modelview;
 	shaderProgram.use();
 	glm::mat4 projection = ortho(0.f, float(SCREEN_WIDTH - 1), float(SCREEN_HEIGHT - 1), 0.f);
@@ -178,7 +177,6 @@ void Shop::render() {
 	modelview = glm::mat4(1.0f);
 	shaderProgram.setUniformMatrix4f("modelview", modelview);
 	shaderProgram.setUniform2f("texCoordDispl", 0.f, 0.f);
-	//char1Price.render("abc", char1->getPosition(), 64, vec4(1, 1, 1, 1));
 	shopBackground->render();
 	char1->render();
 	char2->render();
@@ -197,15 +195,14 @@ void Shop::render() {
 	char6Price.render("600", vec2(char6->getPosition().x - 48, char6->getPosition().y + char6->getSize().y), 64, vec4(0, 0, 0, 1));
 	char7Price.render("700", vec2(char7->getPosition().x - 48, char7->getPosition().y + char7->getSize().y), 64, vec4(0, 0, 0, 1));
 	char8Price.render("800", vec2(char8->getPosition().x - 48, char8->getPosition().y + char8->getSize().y), 64, vec4(0, 0, 0, 1));
-	glDisable(GL_BLEND);
 }
 
 void initTexture(Texture& texture, string path) {
 	texture.loadFromFile(path, TEXTURE_PIXEL_FORMAT_RGBA, true);
-	texture.setWrapS(GL_CLAMP_TO_EDGE);
-	texture.setWrapT(GL_CLAMP_TO_EDGE);
-	texture.setMinFilter(GL_NEAREST);
-	texture.setMagFilter(GL_NEAREST);
+	texture.wrapS = GL_CLAMP_TO_EDGE;
+	texture.wrapT = GL_CLAMP_TO_EDGE;
+	texture.minFilter = GL_NEAREST;
+	texture.magFilter = GL_NEAREST;
 }
 
 void Shop::initTextures() {

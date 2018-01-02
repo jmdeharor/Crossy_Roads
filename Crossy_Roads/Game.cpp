@@ -8,7 +8,6 @@ void Game::init() {
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	bPlay = true;
 	glClearColor(0.f, 1.f, 1.f, 1.0f);
-	glEnable(GL_DEPTH_TEST);
 	glClearStencil(0);
 	glViewport(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 	scene.init();
@@ -16,10 +15,10 @@ void Game::init() {
 	shop.init();
 	currentState = GameState::MENU;
 	mouseCursorTexture.loadFromFile("images/cursor.png", TEXTURE_PIXEL_FORMAT_RGBA, true);
-	mouseCursorTexture.setWrapS(GL_CLAMP_TO_EDGE);
-	mouseCursorTexture.setWrapT(GL_CLAMP_TO_EDGE);
-	mouseCursorTexture.setMinFilter(GL_NEAREST);
-	mouseCursorTexture.setMagFilter(GL_NEAREST);
+	mouseCursorTexture.wrapS = GL_CLAMP_TO_EDGE;
+	mouseCursorTexture.wrapT = GL_CLAMP_TO_EDGE;
+	mouseCursorTexture.minFilter = GL_NEAREST;
+	mouseCursorTexture.magFilter = GL_NEAREST;
 	mouseCursor = Sprite::createSprite(glm::vec2(32, 32), glm::vec2(1), &mouseCursorTexture, &shaderProgram);
 }
 
@@ -43,21 +42,28 @@ bool Game::update(int deltaTime) {
 void Game::render() {
 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
-	if(currentState == GameState::MENU || currentState == GameState::PLAYING)
-		scene.render();
-	if(currentState == GameState::MENU)
-		menu.render();
-	if (currentState == GameState::SHOP) {
-		glDisable(GL_DEPTH_TEST);
-		shop.render();
+	if (currentState == GameState::MENU || currentState == GameState::PLAYING) {
 		glEnable(GL_DEPTH_TEST);
+		scene.render();
+		glDisable(GL_DEPTH_TEST);
 	}
 	glEnable(GL_BLEND);
-	glDisable(GL_DEPTH_TEST);
+	if(currentState == GameState::MENU)
+		menu.render();
+	else if (currentState == GameState::SHOP) {
+		shop.render();
+		glEnable(GL_BLEND);
+	}
+	glm::mat4 modelview;
+	shaderProgram.use();
+	glm::mat4 projection = glm::ortho(0.f, float(SCREEN_WIDTH - 1), float(SCREEN_HEIGHT - 1), 0.f);
+	shaderProgram.setUniformMatrix4f("projection", projection);
+	shaderProgram.setUniform4f("color", 1.0f, 1.0f, 1.0f, 1.0f);
+	modelview = glm::mat4(1.0f);
+	shaderProgram.setUniformMatrix4f("modelview", modelview);
+	shaderProgram.setUniform2f("texCoordDispl", 0.f, 0.f);
 	mouseCursor->render();
-	glEnable(GL_DEPTH_TEST);
 	glDisable(GL_BLEND);
-
 }
 
 void Game::keyPressed(int key)

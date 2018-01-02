@@ -92,7 +92,6 @@ void Menu::update(int deltaTime) {
 }
 
 void Menu::render() {
-	glEnable(GL_BLEND);
 	glm::mat4 modelview;
 	shaderProgram.use();
 	glm::mat4 projection = ortho(0.f, float(SCREEN_WIDTH - 1), float(SCREEN_HEIGHT - 1), 0.f);
@@ -104,7 +103,6 @@ void Menu::render() {
 	menuLogo->render();
 	menuHighScore->render();
 	menuShop->render();
-	glDisable(GL_BLEND);
 }
 
 void Menu::initTextures() {
@@ -121,22 +119,22 @@ void Menu::initTextures() {
 	menuHighScoreTexture.magFilter = GL_NEAREST;
 
 	menuHighScorePressedTexture.loadFromFile("images/button_highscores_pressed.png", TEXTURE_PIXEL_FORMAT_RGBA, true);
-	menuHighScorePressedTexture.setWrapS(GL_CLAMP_TO_EDGE);
-	menuHighScorePressedTexture.setWrapT(GL_CLAMP_TO_EDGE);
-	menuHighScorePressedTexture.setMinFilter(GL_NEAREST);
-	menuHighScorePressedTexture.setMagFilter(GL_NEAREST);
+	menuHighScorePressedTexture.wrapS = GL_CLAMP_TO_EDGE;
+	menuHighScorePressedTexture.wrapT = GL_CLAMP_TO_EDGE;
+	menuHighScorePressedTexture.minFilter = GL_NEAREST;
+	menuHighScorePressedTexture.magFilter = GL_NEAREST;
 
 	menuShopTexture.loadFromFile("images/button_shop.png", TEXTURE_PIXEL_FORMAT_RGBA, true);
-	menuShopTexture.setWrapS(GL_CLAMP_TO_EDGE);
-	menuShopTexture.setWrapT(GL_CLAMP_TO_EDGE);
-	menuShopTexture.setMinFilter(GL_NEAREST);
-	menuShopTexture.setMagFilter(GL_NEAREST);
+	menuShopTexture.wrapS = GL_CLAMP_TO_EDGE;
+	menuShopTexture.wrapT = GL_CLAMP_TO_EDGE;
+	menuShopTexture.minFilter = GL_NEAREST;
+	menuShopTexture.magFilter = GL_NEAREST;
 
 	menuShopPressedTexture.loadFromFile("images/button_shop_pressed.png", TEXTURE_PIXEL_FORMAT_RGBA, true);
-	menuShopPressedTexture.setWrapS(GL_CLAMP_TO_EDGE);
-	menuShopPressedTexture.setWrapT(GL_CLAMP_TO_EDGE);
-	menuShopPressedTexture.setMinFilter(GL_NEAREST);
-	menuShopPressedTexture.setMagFilter(GL_NEAREST);
+	menuShopPressedTexture.wrapS = GL_CLAMP_TO_EDGE;
+	menuShopPressedTexture.wrapT = GL_CLAMP_TO_EDGE;
+	menuShopPressedTexture.minFilter = GL_NEAREST;
+	menuShopPressedTexture.magFilter = GL_NEAREST;
 }
 
 void Menu::initShaders() {

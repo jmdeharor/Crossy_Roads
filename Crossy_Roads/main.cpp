@@ -3,14 +3,13 @@
 #include <ctime>
 #include <iostream>
 #include "Game.h"
+#include <Windows.h>
 using namespace std;
 
 //Remove console (only works in Visual Studio)
 //#pragma comment(linker, "/subsystem:\"windows\" /entry:\"mainCRTStartup\"")
 
-
 #define TIME_PER_FRAME 1000.f / 60.f // Approx. 60 fps
-
 
 static int prevTime;
 static Game game; // This object represents our whole game
@@ -91,6 +90,7 @@ static void idleCallback()
 unsigned int seed;
 
 int main(int argc, char **argv) {
+
 	seed = (unsigned int)time(NULL);
 	srand(seed);
 	// GLUT initialization
@@ -111,6 +111,7 @@ int main(int argc, char **argv) {
 	glutPassiveMotionFunc(passiveMotionCallback);
 	glutReshapeFunc(windowReshapeFunc);
 
+	glutSetCursor(GLUT_CURSOR_NONE);
 	// GLEW will take care of OpenGL extension functions
 	glewExperimental = GL_TRUE;
 	glewInit();
