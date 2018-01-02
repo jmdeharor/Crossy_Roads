@@ -108,7 +108,6 @@
       "type": "random",
 	  "size": [1,1],
       "height": [1.5, 2.1, 1.5],
-	  "floor empty": [false, false, false],
       "probabilities": [
         0.6,
         0.1,
@@ -148,7 +147,12 @@
     {
       "names": ["palm_tree_00"],
       "type": "decoration",
-      "size": [2,2],
+      "size": [3,3],
+	  "collision map": [
+	    false,false,false,
+		false,true ,false,
+		false,false,false
+	  ],
       "height": 6,
       "biomes": ["island"]
     },

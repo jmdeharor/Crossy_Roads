@@ -170,6 +170,16 @@ void Assets::loadAssets(const string& modelPath, const string& texturePath) {
 				}
 				else
 					memset(empty, false, nMeshes);
+
+				bool* collisionMap = new bool[randomMeshConfig->rows*randomMeshConfig->cols];
+				if (meshProperties.HasMember("collision map")) {
+					const Value& collisionMapV = meshProperties["collision map"];
+					for (uint i = 0; i < collisionMapV.Size(); ++i) {
+						collisionMap[i] = collisionMapV[i].GetBool();
+					}
+				}
+				else
+					memset(collisionMap, true, randomMeshConfig->rows*randomMeshConfig->cols);
 				
 				const Value& probabilitiesV = meshProperties["probabilities"];
 				float* probabilities = new float[nMeshes];
@@ -186,6 +196,8 @@ void Assets::loadAssets(const string& modelPath, const string& texturePath) {
 				randomMeshConfig->firstMesh = firstId;
 				randomMeshConfig->heights = heights;
 				randomMeshConfig->empty = empty;
+				randomMeshConfig->collisionMap = collisionMap;
+				randomMeshConfig->canJump = false;
 				constructor = randomMeshConfig;
 			}
 			else {
@@ -199,6 +211,18 @@ void Assets::loadAssets(const string& modelPath, const string& texturePath) {
 				aux.cols = size[1].GetUint();
 				aux.height = meshProperties["height"].GetFloat();
 				aux.mesh = firstId;
+
+				bool* collisionMap = new bool[aux.rows*aux.cols];
+				if (meshProperties.HasMember("collision map")) {
+					const Value& collisionMapV = meshProperties["collision map"];
+					for (uint i = 0; i < collisionMapV.Size(); ++i) {
+						collisionMap[i] = collisionMapV[i].GetBool();
+					}
+				}
+				else
+					memset(collisionMap, true, aux.rows*aux.cols);
+				aux.collisionMap = collisionMap;
+				aux.canJump = false;
 				constructor = new BasicMeshConfig();
 				((BasicMeshConfig*)constructor)->meshConfig = aux;
 			}
@@ -233,15 +257,32 @@ void Assets::loadAssets(const string& modelPath, const string& texturePath) {
 			randomMesh.cols = size[1].GetUint();
 			const Value& heightsV = meshProperties["height"];
 			float* heights = new float[heightsV.Size()];
-			const Value& emptiesV = meshProperties["floor empty"];
-			bool* empty = new bool[emptiesV.Size()];
+			bool* empty = new bool[nMeshes];
+			if (meshProperties.HasMember("floor empty")) {
+				const Value& emptiesV = meshProperties["floor empty"];
+				for (uint i = 0; i < nMeshes; ++i) {
+					empty[i] = emptiesV[i].GetBool();
+				}
+			}
+			else
+				memset(empty, false, nMeshes);
 			const Value& probabilitiesV = meshProperties["probabilities"];
 			float* probabilities = new float[probabilitiesV.Size()];
 			for (uint i = 0; i < heightsV.Size(); ++i) {
 				heights[i] = heightsV[i].GetFloat();
-				empty[i] = emptiesV[i].GetBool();
 				probabilities[i] = probabilitiesV[i].GetFloat();
 			}
+
+			bool* collisionMap = new bool[randomMesh.rows*randomMesh.cols];
+			if (meshProperties.HasMember("collision map")) {
+				const Value& collisionMapV = meshProperties["collision map"];
+				for (uint i = 0; i < collisionMapV.Size(); ++i) {
+					collisionMap[i] = collisionMapV[i].GetBool();
+				}
+			}
+			else
+				memset(collisionMap, true, randomMesh.rows*randomMesh.cols);
+			randomMesh.collisionMap = collisionMap;
 			randomMesh.setProbabilities(probabilities, probabilitiesV.Size());
 			randomMesh.firstMesh = firstId;
 			randomMesh.heights = heights;

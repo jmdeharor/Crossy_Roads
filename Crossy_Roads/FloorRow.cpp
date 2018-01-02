@@ -80,7 +80,7 @@ pair<vec3, float> FloorRow::getNextPos(uint col) {
 			break;
 		}
 	}
-	if (map.size() > 0 && map[col].height > 0) {
+	if (map.size() > 0 && map[col].canJump && map[col].height > 0) {
 		if (rowHeight + map[col].verticalOffset + map[col].height > myHeight.y) {
 			myHeight.y = rowHeight + map[col].verticalOffset + map[col].height;
 			myHeight.x = offsetX + col*fp.realTileSize;
@@ -188,9 +188,6 @@ void FloorRow::groupDrawableObjects(const FrustumG& frustum, RenderVectors& rend
 	}
 	for (uint i = 0; i < furniture.size(); ++i) {
 		if (furniture[i].isInsideViewFrustrum(frustum)) {
-			if (furniture[i].meshId == 23 && furniture[i].getRotation().y == 0) {
-				int a = 3;
-			}
 			renderVectors.objects[furniture[i].meshId].push_back(&furniture[i]);
 		}
 		renderVectors.shadowObjects[furniture[i].meshId].push_back(&furniture[i]);
