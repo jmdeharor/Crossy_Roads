@@ -5,6 +5,8 @@
 #include "Texture.h"
 #include <map>
 #include "SoundManager.h"
+#include "BasicMeshConfig.h"
+#include "RandomMeshConfig.h"
 
 #define nGroups 3
 #define nBiomes 3
@@ -26,76 +28,6 @@ enum BiomeType {
 enum class MeshBehavior {
 	Stalker,
 	None
-};
-
-struct MeshConfig {
-	glm::uint rows, cols;
-	IdMesh mesh;
-	float height;
-	bool floorEmpty;
-	bool* collisionMap;
-	bool canJump;
-};
-
-class MeshConfigConstructor {
-public:
-	virtual MeshConfig getMeshConfig() const = 0;
-	virtual glm::uint getRows() const = 0;
-	virtual glm::uint getCols() const = 0;
-	virtual ~MeshConfigConstructor() {};
-};
-
-class BasicMeshConfig : public MeshConfigConstructor {
-public:
-	MeshConfig meshConfig;
-	MeshConfig getMeshConfig() const override {
-		return meshConfig;
-	}
-	glm::uint getRows() const override {
-		return meshConfig.rows;
-	}
-	glm::uint getCols() const override {
-		return meshConfig.cols;
-	}
-	~BasicMeshConfig() {
-		delete meshConfig.collisionMap;
-	}
-};
-
-class RandomMeshConfig : public MeshConfigConstructor {
-	RandomPicker randomPicker;
-public:
-	IdMesh firstMesh;
-	float* heights;
-	bool* empty, *collisionMap;
-	glm::uint rows, cols;
-	bool canJump;
-	void setProbabilities(const float* probabilities, glm::uint size) {
-		randomPicker.setProbabilities(probabilities, size);
-	}
-	MeshConfig getMeshConfig() const override {
-		glm::uint index = randomPicker.getIndex();
-		MeshConfig meshConfig;
-		meshConfig.mesh = firstMesh + index;
-		meshConfig.height = heights[index];
-		meshConfig.floorEmpty = empty[index];
-		meshConfig.rows = rows;
-		meshConfig.cols = cols;
-		meshConfig.collisionMap = collisionMap;
-		meshConfig.canJump = canJump;
-		return meshConfig;
-	}
-	glm::uint getRows() const override {
-		return rows;
-	}
-	glm::uint getCols() const override {
-		return cols;
-	}
-	~RandomMeshConfig() {
-		delete heights;
-		delete empty;
-		delete collisionMap;
-	}
 };
 
 inline glm::uint sub2ind(BiomeType biome, AssetType asset) {
@@ -132,6 +64,7 @@ public:
 	glm::uint getNumMeshes() const;
 	glm::uint getNumTextures() const;
 	void loadAssets(const string& modelPath, const string& texturePath);
+	void loadAssets(const string& binaryPath);
 	Assets();
 	~Assets();
 };

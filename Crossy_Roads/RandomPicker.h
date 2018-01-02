@@ -1,9 +1,5 @@
 #pragma once
 #include <glm\glm.hpp>
-typedef int IdMesh;
-typedef int IdTex;
-
-#define INVALID -1
 
 class RandomPicker {
 	glm::uint size;
@@ -11,6 +7,8 @@ class RandomPicker {
 public:
 	void setProbabilities(const float* probabilities, glm::uint size);
 	glm::uint getIndex() const;
+	glm::uint getSize() const;
+	const float* getProbabilities() const;
 	RandomPicker();
 	~RandomPicker();
 };

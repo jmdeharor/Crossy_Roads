@@ -18,6 +18,14 @@ uint RandomPicker::getIndex() const {
 	return 0;
 }
 
+glm::uint RandomPicker::getSize() const {
+	return size;
+}
+
+const float * RandomPicker::getProbabilities() const {
+	return probabilities;
+}
+
 RandomPicker::RandomPicker() : probabilities(NULL)
 {
 }

@@ -63,22 +63,22 @@ void Menu::render() {
 
 void Menu::initTextures() {
 	menuLogoTexture.loadFromFile("images/logo.png", TEXTURE_PIXEL_FORMAT_RGBA, true);
-	menuLogoTexture.setWrapS(GL_CLAMP_TO_EDGE);
-	menuLogoTexture.setWrapT(GL_CLAMP_TO_EDGE);
-	menuLogoTexture.setMinFilter(GL_NEAREST);
-	menuLogoTexture.setMagFilter(GL_NEAREST);
+	menuLogoTexture.wrapS = GL_CLAMP_TO_EDGE;
+	menuLogoTexture.wrapT = GL_CLAMP_TO_EDGE;
+	menuLogoTexture.minFilter = GL_NEAREST;
+	menuLogoTexture.magFilter = GL_NEAREST;
 
 	menuHighScoreTexture.loadFromFile("images/button_highscores.png", TEXTURE_PIXEL_FORMAT_RGBA, true);
-	menuHighScoreTexture.setWrapS(GL_CLAMP_TO_EDGE);
-	menuHighScoreTexture.setWrapT(GL_CLAMP_TO_EDGE);
-	menuHighScoreTexture.setMinFilter(GL_NEAREST);
-	menuHighScoreTexture.setMagFilter(GL_NEAREST);
+	menuHighScoreTexture.wrapS = GL_CLAMP_TO_EDGE;
+	menuHighScoreTexture.wrapT = GL_CLAMP_TO_EDGE;
+	menuHighScoreTexture.minFilter = GL_NEAREST;
+	menuHighScoreTexture.magFilter = GL_NEAREST;
 
 	menuHighScorePressedTexture.loadFromFile("images/button_highscores_pressed.png", TEXTURE_PIXEL_FORMAT_RGBA, true);
-	menuHighScorePressedTexture.setWrapS(GL_CLAMP_TO_EDGE);
-	menuHighScorePressedTexture.setWrapT(GL_CLAMP_TO_EDGE);
-	menuHighScorePressedTexture.setMinFilter(GL_NEAREST);
-	menuHighScorePressedTexture.setMagFilter(GL_NEAREST);
+	menuHighScorePressedTexture.wrapS = GL_CLAMP_TO_EDGE;
+	menuHighScorePressedTexture.wrapT = GL_CLAMP_TO_EDGE;
+	menuHighScorePressedTexture.minFilter = GL_NEAREST;
+	menuHighScorePressedTexture.magFilter = GL_NEAREST;
 }
 
 void Menu::initShaders() {

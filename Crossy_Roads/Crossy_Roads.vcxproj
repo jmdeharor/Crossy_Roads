@@ -123,6 +123,8 @@
     <ClCompile Include="AnimMeshObject.cpp" />
     <ClCompile Include="AnimTexObject.cpp" />
     <ClCompile Include="Assets.cpp" />
+    <ClCompile Include="BasicMeshConfig.cpp" />
+    <ClCompile Include="MeshConfigConstructor.cpp" />
     <ClCompile Include="MonoBehaviour.cpp" />
     <ClCompile Include="Menu.cpp" />
     <ClCompile Include="Camera.cpp" />
@@ -153,6 +155,7 @@
     <ClCompile Include="Plane.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="QuadMesh.cpp" />
+    <ClCompile Include="RandomMeshConfig.cpp" />
     <ClCompile Include="RandomPicker.cpp" />
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="SeaFuns.cpp" />
@@ -178,7 +181,9 @@
     <ClInclude Include="AnimMeshObject.h" />
     <ClInclude Include="AnimTexObject.h" />
     <ClInclude Include="Assets.h" />
+    <ClInclude Include="BasicMeshConfig.h" />
     <ClInclude Include="Menu.h" />
+    <ClInclude Include="MeshConfigConstructor.h" />
     <ClInclude Include="MonoBehaviour.h" />
     <ClInclude Include="Biome.h" />
     <ClInclude Include="Camera.h" />
@@ -202,6 +207,7 @@
     <ClInclude Include="Jumper.h" />
     <ClInclude Include="MultiCubeMesh.h" />
     <ClInclude Include="ObjectContainer.h" />
+    <ClInclude Include="RandomMeshConfig.h" />
     <ClInclude Include="RandomPicker.h" />
     <ClInclude Include="SeaBiome.h" />
     <ClInclude Include="SoundManager.h" />
