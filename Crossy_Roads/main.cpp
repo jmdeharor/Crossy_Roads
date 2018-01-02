@@ -59,9 +59,9 @@ static void passiveMotionCallback(int x, int y)
 static void mouseCallback(int button, int state, int x, int y)
 {
 	if(state == GLUT_DOWN)
-		Game::instance().mousePress(button);
+		Game::instance().mousePress(button,x,y);
 	else if(state == GLUT_UP)
-		Game::instance().mouseRelease(button);
+		Game::instance().mouseRelease(button,x,y);
 }
 
 

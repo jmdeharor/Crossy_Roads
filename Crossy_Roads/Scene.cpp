@@ -4,6 +4,8 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include "Scene.h"
 #include "Game.h"
+#include <GL/glut.h>
+
 using namespace glm;
 
 #define SHADOW_MAP_W 2048
@@ -154,7 +156,9 @@ void Scene::update(int deltaTime) {
 	camera.update(deltaTime);
 	partSystem.update();
 	PlayerReturn playerAction;
-	playerAction = player.update(deltaTime);
+	if(Game::instance().getCurrentState() == GameState::PLAYING)
+		playerAction = player.update(deltaTime);
+	else playerAction = PlayerReturn::NOTHING;
 	switch (playerAction) {
 	case PlayerReturn::NOTHING:
 		break;
@@ -170,6 +174,9 @@ void Scene::update(int deltaTime) {
 		break;
 	default:
 		break;
+	}
+	if (Game::instance().getSpecialKey(GLUT_KEY_F1)) {
+		Game::instance().setCurrentState(GameState::MENU);
 	}
 	if (Game::instance().getKey('p')) {
 		int a = 3;

@@ -30,6 +30,9 @@ void Menu::firstInit() {
 	initTextures();
 	menuLogo = Sprite::createSprite(vec2(694, 294), vec2(1), &menuLogoTexture, &shaderProgram);
 	menuHighScore = Sprite::createSprite(vec2(94,94), vec2(1), &menuHighScoreTexture, &shaderProgram);
+	menuShop = Sprite::createSprite(vec2(94, 94), vec2(1), &menuShopTexture, &shaderProgram);
+
+
 }
 
 
@@ -38,14 +41,53 @@ void Menu::init() {
 		initiated = true;
 		firstInit();
 	}
-	else
-		menuLogo->setTexture(&menuLogoTexture);
+	click = false;
 	menuLogo->setPosition(vec2(SCREEN_WIDTH / (float)2, SCREEN_HEIGHT / (float)2));
 	menuHighScore->setPosition(vec2(SCREEN_WIDTH - 100, SCREEN_HEIGHT - 100));
+	menuShop->setPosition(vec2(100, SCREEN_HEIGHT - 100));
+}
+
+bool highScoreButton(int x, int y) {
+	return x >= SCREEN_WIDTH - (100 + 47 + 10) && x <= SCREEN_WIDTH - (100 - 47 - 10) && y >= SCREEN_HEIGHT - (100 + 47 + 10) && y <= SCREEN_HEIGHT - (100 - 47 - 10);
+}
+
+bool shopButton(int x, int y) {
+	return x >= (100 - 47 - 10) && x <= (100 + 47 + 10) && y >= SCREEN_HEIGHT - (100 + 47 + 10) && y <= SCREEN_HEIGHT - (100 - 47 - 10);
+}
+
+void performClickAction(int x, int y) {
+	if (highScoreButton(x, y)) {
+		//Open HighScore
+	}
+	else if (shopButton(x, y)) {
+		//Open Shop
+	}
+	else {
+		//Disable menu
+		Game::instance().setCurrentState(GameState::PLAYING);
+	}
 }
 
 void Menu::update(int deltaTime) {
 	currentTime += deltaTime;
+	if (Game::instance().getCurrentState() == GameState::MENU) {
+		if (click && !Game::instance().getLeftButtonPressed()) {
+			performClickAction(Game::instance().getXPressed(), Game::instance().getYPressed());
+			click = false;
+		}
+		if (Game::instance().getLeftButtonPressed()) click = true;
+		int x = Game::instance().getX();
+		int y = Game::instance().getY();
+		if (highScoreButton(x, y))
+			menuHighScore->setTexture(&menuHighScorePressedTexture);
+		else if (shopButton(x, y))
+			menuShop->setTexture(&menuShopPressedTexture);
+		else {
+			menuHighScore->setTexture(&menuHighScoreTexture);
+			menuShop->setTexture(&menuShopTexture);
+		}
+	}
+
 }
 
 void Menu::render() {
@@ -59,6 +101,7 @@ void Menu::render() {
 	shaderProgram.setUniform2f("texCoordDispl", 0.f, 0.f);
 	menuLogo->render();
 	menuHighScore->render();
+	menuShop->render();
 }
 
 void Menu::initTextures() {
@@ -75,10 +118,22 @@ void Menu::initTextures() {
 	menuHighScoreTexture.magFilter = GL_NEAREST;
 
 	menuHighScorePressedTexture.loadFromFile("images/button_highscores_pressed.png", TEXTURE_PIXEL_FORMAT_RGBA, true);
-	menuHighScorePressedTexture.wrapS = GL_CLAMP_TO_EDGE;
-	menuHighScorePressedTexture.wrapT = GL_CLAMP_TO_EDGE;
-	menuHighScorePressedTexture.minFilter = GL_NEAREST;
-	menuHighScorePressedTexture.magFilter = GL_NEAREST;
+	menuHighScorePressedTexture.setWrapS(GL_CLAMP_TO_EDGE);
+	menuHighScorePressedTexture.setWrapT(GL_CLAMP_TO_EDGE);
+	menuHighScorePressedTexture.setMinFilter(GL_NEAREST);
+	menuHighScorePressedTexture.setMagFilter(GL_NEAREST);
+
+	menuShopTexture.loadFromFile("images/button_shop.png", TEXTURE_PIXEL_FORMAT_RGBA, true);
+	menuShopTexture.setWrapS(GL_CLAMP_TO_EDGE);
+	menuShopTexture.setWrapT(GL_CLAMP_TO_EDGE);
+	menuShopTexture.setMinFilter(GL_NEAREST);
+	menuShopTexture.setMagFilter(GL_NEAREST);
+
+	menuShopPressedTexture.loadFromFile("images/button_shop_pressed.png", TEXTURE_PIXEL_FORMAT_RGBA, true);
+	menuShopPressedTexture.setWrapS(GL_CLAMP_TO_EDGE);
+	menuShopPressedTexture.setWrapT(GL_CLAMP_TO_EDGE);
+	menuShopPressedTexture.setMinFilter(GL_NEAREST);
+	menuShopPressedTexture.setMagFilter(GL_NEAREST);
 }
 
 void Menu::initShaders() {
