@@ -2,9 +2,9 @@
 #include <stdio.h>
 #include <fmod_errors.h>
 
-FMOD::Sound * SoundManager::loadSound(const std::string & file, bool loop) const {
+FMOD::Sound * SoundManager::loadSound(const std::string & file, FMOD_MODE mode) const {
 	FMOD::Sound* pSound;
-	lowLevelSystem->createSound(file.c_str(), loop ? FMOD_LOOP_NORMAL:FMOD_DEFAULT, nullptr, &pSound);
+	lowLevelSystem->createSound(file.c_str(), mode, nullptr, &pSound);
 	return pSound;
 }
 

@@ -31,7 +31,7 @@ const int jumpingFrames = 5;
 void Shop::firstInit() {
 
 	soundManager = Game::instance().getSoundManager();
-	clickSound = soundManager->loadSound("sounds/Effect_click.wav", false);
+	clickSound = soundManager->loadSound("sounds/Effect_click.wav", FMOD_DEFAULT);
 
 	initShaders();
 	initTextures();

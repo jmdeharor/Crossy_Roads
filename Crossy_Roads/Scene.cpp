@@ -18,8 +18,8 @@ Scene::~Scene() {
 }
 
 void Scene::firstInit() {
-	assets.loadAssets("assets_locations/models.json", "assets_locations/textures.json");
-	//assets.loadAssets("binaryAssets.notxt");
+	//assets.loadAssets("assets_locations/models.json", "assets_locations/textures.json");
+	assets.loadAssets("binaryAssets.notxt");
 
 	partSystem.init(assets);
 	partSystem.g = -0.07f;
@@ -29,8 +29,8 @@ void Scene::firstInit() {
 	renderVectors.shadowObjects.resize(assets.getNumMeshes());
 
 	soundManager = Game::instance().getSoundManager();
-	music = soundManager->loadSound("sounds/Music_Caribbean_Smugglers.mp3", true);
-	ambience = soundManager->loadSound("sounds/Ambiance_pirate_ship.mp3", true);
+	music = soundManager->loadSound("sounds/Music_Caribbean_Smugglers.mp3", FMOD_LOOP_NORMAL | FMOD_CREATESTREAM);
+	ambience = soundManager->loadSound("sounds/Ambiance_pirate_ship.mp3", FMOD_LOOP_NORMAL | FMOD_CREATESTREAM);
 
 	QueryPerformanceFrequency(&frequency);
 

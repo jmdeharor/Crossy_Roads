@@ -39,11 +39,11 @@ void FloorRow::initIslandRoad() {
 		float startPoint;
 		if (enemy.horizontalSpeed >= 0) {
 			enemy.setRotationY(PI / 2);
-			startPoint = -fp.tileSize.x / 2 + ((float)rand() / RAND_MAX) * fp.tileSize.x;
+			startPoint = fp.lowerLimit;
 		}
 		else {
 			enemy.setRotationY(-PI / 2);
-			startPoint = fp.tileSize.x / 2 - ((float)rand() / RAND_MAX) * fp.tileSize.x;
+			startPoint = fp.upperLimit;
 		}
 		enemy.setPos(vec3(startPoint, rowHeight, pos.y));
 	}

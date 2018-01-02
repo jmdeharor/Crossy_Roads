@@ -48,7 +48,7 @@ void Player::init(const Assets& assets, vec3 lightDir, vec3 offset, float jumpDi
 	testJump = 0;
 	currentFrame = 0;
 	upsideDown = false;
-	jumpSound = soundManager->loadSound("sounds/Effect_jump.wav", false);
+	jumpSound = soundManager->loadSound("sounds/Effect_jump.wav", FMOD_DEFAULT);
 	currentFloorRow = playerObject.getPos().y;
 }
 
