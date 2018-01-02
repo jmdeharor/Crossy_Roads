@@ -2,6 +2,7 @@
 #include "Mesh.h"
 #include "Texture.h"
 #include <assimp/scene.h>
+#include <fstream>
 
 class ImportedMesh : public Mesh {
 	Texture texture;
@@ -11,12 +12,14 @@ class ImportedMesh : public Mesh {
 	glm::uint* triangles;
 	glm::uint nModelVertices;
 
-	void prepareArrays();
+	void prepareArrays(std::ifstream& input);
+	void prepareArrays(std::ofstream& output);
 	void computeBoundingBox();
 	void initMesh(const aiMesh *paiMesh);
-	bool initMaterials(const aiScene *pScene, const string &filename);
+	bool initMaterials(const aiScene *pScene, const string &filename, string& texturePath);
 public:
 	bool loadFromFile(const string &filename);
+	bool loadFromBinary(const string& filename);
 	void useTexture() const;
 	ImportedMesh();
 	~ImportedMesh();

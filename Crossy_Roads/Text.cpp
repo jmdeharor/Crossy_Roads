@@ -225,6 +225,6 @@ void Text::createTextureAtlas()
 		}
 	}
 	textureAtlas.generateMipmap();
-	textureAtlas.setWrapS(GL_CLAMP_TO_EDGE);
-	textureAtlas.setWrapT(GL_CLAMP_TO_EDGE);
+	textureAtlas.wrapS = GL_CLAMP_TO_EDGE;
+	textureAtlas.wrapT = GL_CLAMP_TO_EDGE;
 }

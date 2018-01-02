@@ -2,6 +2,7 @@
 #include <assimp\Importer.hpp>
 #include <iostream>
 #include <assimp/postprocess.h>
+#include <fstream>
 using namespace glm;
 
 ImportedMesh::ImportedMesh()
@@ -26,7 +27,7 @@ void ImportedMesh::computeBoundingBox() {
 	center = (bbox[0] + bbox[1]) / 2.f;
 }
 
-bool ImportedMesh::initMaterials(const aiScene *pScene, const string &filename) {
+bool ImportedMesh::initMaterials(const aiScene *pScene, const string &filename, string& texturePath) {
 	bool retCode = true;
 	const aiMaterial* pMaterial;
 	string::size_type SlashIndex = filename.find_last_of("/");
@@ -51,13 +52,13 @@ bool ImportedMesh::initMaterials(const aiScene *pScene, const string &filename) 
 				string sFullPath = dir + "/" + Path.data;
 				char fullPath[200];
 				strcpy_s(fullPath, sFullPath.c_str());
-
+				texturePath.assign(fullPath);
 				if (!texture.loadFromFile(fullPath, TEXTURE_PIXEL_FORMAT_RGB, false)) {
 					cerr << "Error loading texture '" << fullPath << "'" << endl;
 					return false;
 				}
-				texture.setMagFilter(GL_NEAREST);
-				texture.setMinFilter(GL_NEAREST);
+				texture.magFilter = GL_NEAREST;
+				texture.minFilter = GL_NEAREST;
 				texture.applyParams();
 				break;
 			}
@@ -102,24 +103,27 @@ void ImportedMesh::initMesh(const aiMesh *paiMesh) {
 	totalTriangles = paiMesh->mNumFaces;
 }
 
-void ImportedMesh::prepareArrays() {
+void ImportedMesh::prepareArrays(ifstream& input) {
 	unsigned int index;
 	vec3 vertex, normal;
 	vec2 texCoord;
 
-	vector<float> vboVertices(nModelVertices * 3);
-	vector<float> vboNormals(nModelVertices * 3);
-	vector<float> vboTex(nModelVertices * 2);
+	vector<float> vboVertices;
+	vector<float> vboNormals;
+	vector<float> vboTex;
 
-	for (unsigned int j = 0; j < nModelVertices; j++) {
-		index = triangles[j];
-		vertex = vertices[index];
-		normal = normals[index];
-		texCoord = texCoords[index];
-		vboVertices[j * 3] = vertex.x; vboVertices[j * 3 + 1] = vertex.y; vboVertices[j * 3 + 2] = vertex.z;
-		vboNormals[j * 3] = normal.x; vboNormals[j * 3 + 1] = normal.y; vboNormals[j * 3 + 2] = normal.z;
-		vboTex[j * 2] = texCoord.x; vboTex[j * 2 + 1] = texCoord.y;
-	}
+	uint size;
+	input.read((char*)&size, sizeof(uint));
+	vboVertices.resize(size);
+	input.read((char*)&vboVertices[0], sizeof(float)*size);
+	
+	input.read((char*)&size, sizeof(uint));
+	vboNormals.resize(size);
+	input.read((char*)&vboNormals[0], sizeof(float)*size);
+
+	input.read((char*)&size, sizeof(uint));
+	vboTex.resize(size);
+	input.read((char*)&vboTex[0], sizeof(float)*size);
 
 	glGenVertexArrays(1, &VAO);
 	glBindVertexArray(VAO);
@@ -137,36 +141,133 @@ void ImportedMesh::prepareArrays() {
 	glBufferData(GL_ARRAY_BUFFER, vboTex.size() * sizeof(float), &vboTex[0], GL_STATIC_DRAW);
 }
 
-bool ImportedMesh::loadFromFile(const string &filename) {
+void ImportedMesh::prepareArrays(ofstream& output) {
+	unsigned int index;
+	vec3 vertex, normal;
+	vec2 texCoord;
+
+	vector<float> vboVertices;
+	vector<float> vboNormals;
+	vector<float> vboTex;
+
+	vboVertices.resize(nModelVertices * 3);
+	vboNormals.resize(nModelVertices * 3);
+	vboTex.resize(nModelVertices * 2);
+
+	for (unsigned int j = 0; j < nModelVertices; j++) {
+		index = triangles[j];
+		vertex = vertices[index];
+		normal = normals[index];
+		texCoord = texCoords[index];
+		vboVertices[j * 3] = vertex.x; vboVertices[j * 3 + 1] = vertex.y; vboVertices[j * 3 + 2] = vertex.z;
+		vboNormals[j * 3] = normal.x; vboNormals[j * 3 + 1] = normal.y; vboNormals[j * 3 + 2] = normal.z;
+		vboTex[j * 2] = texCoord.x; vboTex[j * 2 + 1] = texCoord.y;
+	}
+
+	uint size = vboVertices.size();
+	output.write((const char*)&size, sizeof(uint));
+	output.write((const char*)&vboVertices[0], sizeof(float)*size);
+	size = vboNormals.size();
+	output.write((const char*)&size, sizeof(uint));
+	output.write((const char*)&vboNormals[0], sizeof(float)*size);
+	size = vboTex.size();
+	output.write((const char*)&size, sizeof(uint));
+	output.write((const char*)&vboTex[0], sizeof(float)*size);
+	
+	glGenVertexArrays(1, &VAO);
+	glBindVertexArray(VAO);
+
+	glGenBuffers(1, &VBOvert);
+	glBindBuffer(GL_ARRAY_BUFFER, VBOvert);
+	glBufferData(GL_ARRAY_BUFFER, vboVertices.size() * sizeof(float), &vboVertices[0], GL_STATIC_DRAW);
+
+	glGenBuffers(1, &VBOnorm);
+	glBindBuffer(GL_ARRAY_BUFFER, VBOnorm);
+	glBufferData(GL_ARRAY_BUFFER, vboNormals.size() * sizeof(float), &vboNormals[0], GL_STATIC_DRAW);
+
+	glGenBuffers(1, &VBOtex);
+	glBindBuffer(GL_ARRAY_BUFFER, VBOtex);
+	glBufferData(GL_ARRAY_BUFFER, vboTex.size() * sizeof(float), &vboTex[0], GL_STATIC_DRAW);
+}
+
+bool ImportedMesh::loadFromFile(const string& fileName) {
+	ofstream output(fileName + ".objBin", ofstream::binary);
 	renderMode = GL_TRIANGLES;
 	bool retCode = false;
 	Assimp::Importer Importer;
 	const aiScene *pScene;
 
-	pScene = Importer.ReadFile(filename.c_str(), aiProcess_Triangulate | aiProcess_GenSmoothNormals | aiProcess_FlipUVs);
+	string fullFileName = fileName + ".obj";
+	pScene = Importer.ReadFile(fullFileName.c_str(), aiProcess_Triangulate | aiProcess_GenSmoothNormals | aiProcess_FlipUVs);
 	if (!pScene) {
-		cerr << "Error parsing '" << filename << "': '" << Importer.GetErrorString() << endl;
+		cerr << "Error parsing '" << fullFileName << "': '" << Importer.GetErrorString() << endl;
 		return false;
 	}
 
 	const aiMesh* paiMesh = pScene->mMeshes[0];
-	if (filename == "models/railing_rip.obj") {
-		int a = 3;
-	}
 	initMesh(paiMesh);
 
-	if (!initMaterials(pScene, filename))
+	string texturePath;
+	if (!initMaterials(pScene, fullFileName, texturePath))
 		return false;
 
+	output.write((const char*)&nVertices, sizeof(uint));
+	output.write((const char*)&totalTriangles, sizeof(uint));
+
+	uint length = texturePath.length();
+	output.write((const char*)&length, sizeof(uint));
+	output.write(texturePath.c_str(), length);
+
 	computeBoundingBox();
-	prepareArrays();
+
+	output.write((const char*)bbox, sizeof(bbox));
+	output.write((const char*)&height, sizeof(height));
+	output.write((const char*)&center, sizeof(center));
+
+	prepareArrays(output);
 
 	free(vertices);
 	free(normals);
 	free(texCoords);
 	free(triangles);
 
+	output.close();
+
 	return true;
+}
+
+bool ImportedMesh::loadFromBinary(const string & filename) {
+	if (filename == "models/cubierta_2_open") {
+		int a = 3;
+	}
+	ifstream input(filename + ".objBin", ifstream::binary);
+
+	input.read((char*)&nVertices, sizeof(uint));
+	input.read((char*)&totalTriangles, sizeof(uint));
+
+	uint length;
+	input.read((char*)&length, sizeof(uint));
+	char* c_std = new char[length];
+	input.read(c_std, length);
+	string fullPath(c_std, length);
+
+	if (!texture.loadFromFile(fullPath, TEXTURE_PIXEL_FORMAT_RGB, false)) {
+		cerr << "Error loading texture '" << fullPath << "'" << endl;
+		return false;
+	}
+	texture.magFilter = GL_NEAREST;
+	texture.minFilter = GL_NEAREST;
+	texture.applyParams();
+
+	input.read((char*)bbox, sizeof(bbox));
+	input.read((char*)&height, sizeof(height));
+	input.read((char*)&center, sizeof(center));
+	
+	prepareArrays(input);
+
+	input.close();
+
+	return false;
 }
 
 void ImportedMesh::useTexture() const {

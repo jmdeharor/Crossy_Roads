@@ -18,7 +18,8 @@ Scene::~Scene() {
 }
 
 void Scene::firstInit() {
-	assets.loadAssets("assets_locations/models.json", "assets_locations/textures.json");
+	//assets.loadAssets("assets_locations/models.json", "assets_locations/textures.json");
+	assets.loadAssets("binaryAssets.notxt");
 
 	partSystem.init(assets);
 	partSystem.g = -0.07f;

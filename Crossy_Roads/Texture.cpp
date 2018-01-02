@@ -20,8 +20,8 @@ Texture::~Texture() {
 }
 
 
-bool Texture::loadFromFile(const string &filename, PixelFormat format, bool mipmap)
-{
+bool Texture::loadFromFile(const string &filename, PixelFormat format, bool mipmap) {
+	this->mipmap = mipmap;
 	unsigned char *image = NULL;
 	
 	switch(format)
@@ -88,26 +88,6 @@ void Texture::generateMipmap()
 	glPixelStorei(GL_UNPACK_ALIGNMENT, 4);
 }
 
-void Texture::setWrapS(GLint value)
-{
-	wrapS = value;
-}
-
-void Texture::setWrapT(GLint value)
-{
-	wrapT = value;
-}
-
-void Texture::setMinFilter(GLint value)
-{
-	minFilter = value;
-}
-
-void Texture::setMagFilter(GLint value)
-{
-	magFilter = value;
-}
-
 void Texture::applyParams() const {
 	use();
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, wrapS);
@@ -121,4 +101,6 @@ void Texture::use() const {
 	glBindTexture(GL_TEXTURE_2D, texId);
 }
 
-
+bool Texture::hasMipmap() const {
+	return mipmap;
+}

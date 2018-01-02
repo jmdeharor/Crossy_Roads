@@ -124,13 +124,15 @@ void Assets::loadAssets(const string& modelPath, const string& texturePath) {
 
 	string name, type;
 	uint i = 0;
+	vector<string> idMeshNames(nImportedMeshes);
 	for (const Value& meshProperties : models.GetArray()) {
 		uint firstId = i;
 		const Value& namesV = meshProperties["names"];
 		for (const Value& nameValue : namesV.GetArray()) {
 			name.assign(nameValue.GetString());
-			meshes[i].loadFromFile("models/" + name + ".obj");
+			meshes[i].loadFromFile("models/" + name);
 			meshIds[name] = i;
+			idMeshNames[i] = name;
 			++i;
 		}
 		uint nMeshes = namesV.Size();
@@ -315,8 +317,10 @@ void Assets::loadAssets(const string& modelPath, const string& texturePath) {
 	}
 
 	textures = new Texture[nTextures];
-	string extension;
+	string extension, fullName;
 	i = 0;
+	vector<string> idTexNames(nTextures);
+	vector<string> idTexFullNames(nTextures);
 	for (const Value& texture : texturesJ.GetArray()) {
 		bool linear = texture["type"].GetString() == "linear";
 		const Value& namesV = texture["names"];
@@ -330,19 +334,225 @@ void Assets::loadAssets(const string& modelPath, const string& texturePath) {
 		extension.assign(hasExtension ? texture["extension"].GetString() : "png");
 		for (const Value& texName : namesV.GetArray()) {
 			name.assign(texName.GetString());
+			fullName.assign("images/" + name + "." + extension);
 			if (linear) {
-				textures[i].loadFromFile("images/" + name + "." + extension, TEXTURE_PIXEL_FORMAT_RGBA, true);
+				textures[i].loadFromFile(fullName, TEXTURE_PIXEL_FORMAT_RGBA, true);
 			}
 			else {
-				textures[i].loadFromFile("images/" + name + "." + extension, TEXTURE_PIXEL_FORMAT_RGBA, false);
-				textures[i].setMagFilter(GL_NEAREST);
-				textures[i].setMinFilter(GL_NEAREST);
+				textures[i].loadFromFile(fullName, TEXTURE_PIXEL_FORMAT_RGBA, false);
+				textures[i].magFilter = GL_NEAREST;
+				textures[i].minFilter = GL_NEAREST;
 			}
 			textures[i].applyParams();
 			textureIds[name] = i;
+			idTexNames[i] = name;
+			idTexFullNames[i] = fullName;
 			++i;
 		}
 	}
+
+	ofstream output("binaryAssets.notxt", ofstream::binary);
+	uint size = idMeshNames.size();
+	output.write((const char*)&size, sizeof(uint));
+	for (uint i = 0; i < idMeshNames.size(); ++i) {
+		uint length = idMeshNames[i].length();
+		output.write((const char*)&length, sizeof(uint));
+		output.write(idMeshNames[i].c_str(), length);
+	}
+	output.write((const char*)behaviours, sizeof(MeshBehavior)*size);
+
+	size = idTexNames.size();
+	output.write((const char*)&size, sizeof(uint));
+	for (uint i = 0; i < idTexNames.size(); ++i) {
+		uint length = idTexNames[i].length();
+		output.write((const char*)&length, sizeof(uint));
+		output.write(idTexNames[i].c_str(), length);
+
+		string fullName = idTexFullNames[i];
+		length = fullName.length();
+		output.write((const char*)&length, sizeof(uint));
+		output.write(fullName.c_str(), length);
+
+		output.write((const char*)&textures[i].wrapT, sizeof(GLint));
+		output.write((const char*)&textures[i].wrapS, sizeof(GLint));
+		output.write((const char*)&textures[i].magFilter, sizeof(GLint));
+		output.write((const char*)&textures[i].minFilter, sizeof(GLint));
+		bool mipmap = textures[i].hasMipmap();
+		output.write((const char*)&mipmap, sizeof(bool));
+	}
+
+	for (uint i = 0; i < nBiomes; ++i) {
+		for (uint j = 0; j < nGroups; ++j) {
+			uint size = groups[i][j].size();
+			output.write((const char*)&size, sizeof(uint));
+			if (size == 0)
+				continue;
+			output.write((const char*)&groups[i][j][0], sizeof(IdMesh)*size);
+		}
+	}
+
+	for (uint i = 0; i < nBiomes; ++i) {
+		vector<MeshConfigConstructor*>& decorG = decorationGroup[i];
+		uint size = decorG.size();
+		output.write((const char*)&size, sizeof(uint));
+		for (uint j = 0; j < decorG.size(); ++j) {
+			MeshConfigConstructor* constructor = decorG[j];
+			constructor->store(output);
+		}
+	}
+
+	size = randomGroup.size();
+	output.write((const char*)&size, sizeof(uint));
+	for (pair<const string, RandomMeshConfig>& p : randomGroup) {
+		uint length = p.first.length();
+		output.write((const char*)&length, sizeof(uint));
+		output.write(p.first.c_str(), length);
+		p.second.store(output);
+	}
+
+	size = animatedTextureGroup.size();
+	output.write((const char*)&size, sizeof(uint));
+	for (pair <const string, pair<IdTex, uint>>& p : animatedTextureGroup) {
+		uint length = p.first.length();
+		output.write((const char*)&length, sizeof(uint));
+		output.write(p.first.c_str(), length);
+		output.write((const char*)&p.second, sizeof(pair<IdTex, uint>));
+	}
+
+	size = animatedMeshGroup.size();
+	output.write((const char*)&size, sizeof(uint));
+	for (pair <const string, pair<IdTex, uint>>& p : animatedMeshGroup) {
+		uint length = p.first.length();
+		output.write((const char*)&length, sizeof(uint));
+		output.write(p.first.c_str(), length);
+		output.write((const char*)&p.second, sizeof(pair<IdTex, uint>));
+	}
+
+	output.close();
+}
+
+void Assets::loadAssets(const string & binaryPath) {
+	cubeMesh.init();
+	ifstream input(binaryPath, ifstream::binary);
+
+	input.read((char*)&nImportedMeshes, sizeof(uint));
+	meshes = new ImportedMesh[nImportedMeshes];
+	for (uint i = 0; i < nImportedMeshes; ++i) {
+		uint length;
+		input.read((char*)&length, sizeof(uint));
+		char* c_str = new char[length];
+		input.read(c_str, length);
+		string name(c_str, length);
+		delete c_str;
+		meshes[i].loadFromBinary("models/" + name);
+		meshIds[name] = i;
+	}
+	behaviours = new MeshBehavior[nImportedMeshes];
+	input.read((char*)behaviours, sizeof(MeshBehavior)*nImportedMeshes);
+
+	input.read((char*)&nTextures, sizeof(uint));
+	textures = new Texture[nTextures];
+	for (uint i = 0; i < nTextures; ++i) {
+		uint length;
+		input.read((char*)&length, sizeof(uint));
+		char* c_str = new char[length];
+		input.read(c_str, length);
+		string name(c_str, length);
+		delete c_str;
+
+		input.read((char*)&length, sizeof(uint));
+		c_str = new char[length];
+		input.read(c_str, length);
+		string fullName(c_str, length);
+		delete c_str;
+
+		input.read((char*)&textures[i].wrapT, sizeof(GLint));
+		input.read((char*)&textures[i].wrapS, sizeof(GLint));
+		input.read((char*)&textures[i].magFilter, sizeof(GLint));
+		input.read((char*)&textures[i].minFilter, sizeof(GLint));
+		bool mipmap;
+		input.read((char*)&mipmap, sizeof(bool));
+
+		textures[i].loadFromFile(fullName, TEXTURE_PIXEL_FORMAT_RGBA, mipmap);
+		textures[i].applyParams();
+		textureIds[name] = i;
+	}
+
+	for (uint i = 0; i < nBiomes; ++i) {
+		for (uint j = 0; j < nGroups; ++j) {
+			uint size;
+			input.read((char*)&size, sizeof(uint));
+			if (size == 0)
+				continue;
+			groups[i][j].resize(size);
+			input.read((char*)&groups[i][j][0], sizeof(IdMesh)*size);
+		}
+	}
+
+	for (uint i = 0; i < nBiomes; ++i) {
+		uint size;
+		input.read((char*)&size, sizeof(uint));
+		decorationGroup[i].resize(size);
+		for (uint j = 0; j < size; ++j) {
+			MeshConfigConstructor* constructor;
+			MeshConfigConstructorType type;
+			input.read((char*)&type, sizeof(MeshConfigConstructorType));
+			if (type == MeshConfigConstructorType::Basic) {
+				constructor = new BasicMeshConfig();
+			}
+			else {
+				constructor = new RandomMeshConfig();
+			}
+			constructor->load(input);
+			decorationGroup[i][j] = constructor;
+		}
+	}
+
+	uint size;
+	input.read((char*)&size, sizeof(uint));
+	for (uint i = 0; i < size; ++i) {
+		uint length;
+		input.read((char*)&length, sizeof(uint));
+		char* c_str = new char[length];
+		input.read(c_str, length);
+		string groupName(c_str, length);
+		delete c_str;
+
+		MeshConfigConstructorType type;
+		input.read((char*)&type, sizeof(MeshConfigConstructorType));
+
+		map<string, RandomMeshConfig>::iterator it = randomGroup.insert(make_pair(groupName, RandomMeshConfig())).first;
+		RandomMeshConfig& randomMesh = it->second;
+		randomMesh.load(input);
+	}
+
+	input.read((char*)&size, sizeof(uint));
+	for (uint i = 0; i < size; ++i) {
+		uint length;
+		input.read((char*)&length, sizeof(uint));
+		char* c_str = new char[length];
+		input.read(c_str, length);
+		string name(c_str, length);
+		delete c_str;
+		pair<IdTex, uint> p;
+		input.read((char*)&p, sizeof(pair<IdTex, uint>));
+		animatedTextureGroup.insert(make_pair(name, p));
+	}
+
+	input.read((char*)&size, sizeof(uint));
+	for (uint i = 0; i < size; ++i) {
+		uint length;
+		input.read((char*)&length, sizeof(uint));
+		char* c_str = new char[length];
+		input.read(c_str, length);
+		string name(c_str, length);
+		delete c_str;
+		pair<IdTex, uint> p;
+		input.read((char*)&p, sizeof(pair<IdTex, uint>));
+		animatedMeshGroup.insert(make_pair(name, p));
+	}
+
+	input.close();
 }
 
 Assets::Assets() : meshes(NULL), textures(NULL) {

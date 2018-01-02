@@ -29,11 +29,6 @@ public:
 	void createEmptyTexture(int width, int height);
 	void loadSubtextureFromGlyphBuffer(unsigned char *buffer, int x, int y, int width, int height);
 	void generateMipmap();
-	
-	void setWrapS(GLint value);
-	void setWrapT(GLint value);
-	void setMinFilter(GLint value);
-	void setMagFilter(GLint value);
 
 	void applyParams() const;
 	
@@ -42,10 +37,14 @@ public:
 	int width() const { return widthTex; }
 	int height() const { return heightTex; }
 
-private:
-	int widthTex, heightTex;
-	GLuint texId;
+	bool hasMipmap() const;
+
 	GLint wrapS, wrapT, minFilter, magFilter;
+private:
+	string extension;
+	int widthTex, heightTex;
+	bool mipmap;
+	GLuint texId;
 
 };
 
