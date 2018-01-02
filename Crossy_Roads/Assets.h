@@ -33,6 +33,8 @@ struct MeshConfig {
 	IdMesh mesh;
 	float height;
 	bool floorEmpty;
+	bool* collisionMap;
+	bool canJump;
 };
 
 class MeshConfigConstructor {
@@ -55,6 +57,9 @@ public:
 	glm::uint getCols() const override {
 		return meshConfig.cols;
 	}
+	~BasicMeshConfig() {
+		delete meshConfig.collisionMap;
+	}
 };
 
 class RandomMeshConfig : public MeshConfigConstructor {
@@ -62,8 +67,9 @@ class RandomMeshConfig : public MeshConfigConstructor {
 public:
 	IdMesh firstMesh;
 	float* heights;
-	bool* empty;
+	bool* empty, *collisionMap;
 	glm::uint rows, cols;
+	bool canJump;
 	void setProbabilities(const float* probabilities, glm::uint size) {
 		randomPicker.setProbabilities(probabilities, size);
 	}
@@ -75,6 +81,8 @@ public:
 		meshConfig.floorEmpty = empty[index];
 		meshConfig.rows = rows;
 		meshConfig.cols = cols;
+		meshConfig.collisionMap = collisionMap;
+		meshConfig.canJump = canJump;
 		return meshConfig;
 	}
 	glm::uint getRows() const override {
@@ -86,6 +94,7 @@ public:
 	~RandomMeshConfig() {
 		delete heights;
 		delete empty;
+		delete collisionMap;
 	}
 };
 

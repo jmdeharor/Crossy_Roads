@@ -20,10 +20,11 @@ struct CellProperties {
 	glm::uint rows, cols;
 	float height, verticalOffset;
 	bool collision, occupied, empty;
+	bool canJump;
 	IdMesh mesh;
 	CellProperties() : 
 		mesh(INVALID), 
-		collision(false), occupied(false),  empty(false),
+		canJump(false), collision(false), occupied(false),  empty(false),
 		height(0), verticalOffset(0) {
 	}
 };

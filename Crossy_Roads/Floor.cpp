@@ -29,12 +29,12 @@ void Floor::firstInit() {
 
 inline void setMapObstacle(ivec2 pos, const MeshConfig& meshConfig, vector<vector<CellProperties>>& map) {
 	CellProperties cell;
-	cell.collision = true;
 	cell.occupied = true;
 	cell.empty = meshConfig.floorEmpty;
 	cell.height = meshConfig.height;
 	for (uint i = 0; i < meshConfig.rows; ++i) {
 		for (uint j = 0; j < meshConfig.cols; ++j) {
+			cell.collision = meshConfig.collisionMap[i*meshConfig.cols + j];
 			map[pos.x + i][pos.y + j] = cell;
 		}
 	}
@@ -74,7 +74,7 @@ void Floor::updateMap(bool lastRow, uint size, const vector<ivec2>& restrictions
 			map[plankLength][j] = aux;
 		}
 
-		uint plankPos = between((int)cols / 2 - 3, cols / 2 + 3);
+		uint plankPos = between((int)playableLowerLimit+2, playableUpperLimit-2);
 		map[plankLength][plankPos].mesh = INVALID;
 		map[plankLength][plankPos].height = 0;
 		map[plankLength][plankPos].occupied = true;
@@ -84,6 +84,7 @@ void Floor::updateMap(bool lastRow, uint size, const vector<ivec2>& restrictions
 		aux.verticalOffset = 5;
 		aux.collision = false;
 		aux.occupied = true;
+		aux.canJump = true;
 		aux.mesh = INVALID;
 		for (uint i = 0; i < plankLength; ++i) {
 			map[i][plankPos] = aux;
