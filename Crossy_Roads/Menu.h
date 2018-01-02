@@ -18,18 +18,13 @@ public:
 	void init();
 	void render();
 	void update(int deltatime);
-	void keyPressed(int key);
-	void keyReleased(int key);
-	void specialKeyPressed(int key);
-	void specialKeyReleased(int key);
-	void mouseMove(int x, int y);
-	void mousePress(int button);
-	void mouseRelease(int button);
+
 
 private:
 	void firstInit();
 	void initTextures();
 	void initShaders();
+	void performClickAction(int x, int y);
 
 private:
 	bool initiated;

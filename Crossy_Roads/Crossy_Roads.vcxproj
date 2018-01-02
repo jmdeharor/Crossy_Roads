@@ -160,6 +160,7 @@
     <ClCompile Include="ShaderProgram.cpp" />
     <ClCompile Include="ShadowedObject.cpp" />
     <ClCompile Include="ShipFuns.cpp" />
+    <ClCompile Include="Shop.cpp" />
     <ClCompile Include="SoundManager.cpp" />
     <ClCompile Include="Sphere.cpp" />
     <ClCompile Include="Sprite.cpp" />
@@ -204,6 +205,7 @@
     <ClInclude Include="ObjectContainer.h" />
     <ClInclude Include="RandomPicker.h" />
     <ClInclude Include="SeaBiome.h" />
+    <ClInclude Include="Shop.h" />
     <ClInclude Include="SoundManager.h" />
     <ClInclude Include="Sprite.h" />
     <ClInclude Include="Stalker.h" />

@@ -55,12 +55,13 @@ bool shopButton(int x, int y) {
 	return x >= (100 - 47 - 10) && x <= (100 + 47 + 10) && y >= SCREEN_HEIGHT - (100 + 47 + 10) && y <= SCREEN_HEIGHT - (100 - 47 - 10);
 }
 
-void performClickAction(int x, int y) {
+void Menu::performClickAction(int x, int y) {
 	if (highScoreButton(x, y)) {
 		//Open HighScore
 	}
 	else if (shopButton(x, y)) {
 		//Open Shop
+		Game::instance().setCurrentState(GameState::SHOP);
 	}
 	else {
 		//Disable menu
@@ -91,6 +92,7 @@ void Menu::update(int deltaTime) {
 }
 
 void Menu::render() {
+	glEnable(GL_BLEND);
 	glm::mat4 modelview;
 	shaderProgram.use();
 	glm::mat4 projection = ortho(0.f, float(SCREEN_WIDTH - 1), float(SCREEN_HEIGHT - 1), 0.f);
@@ -102,6 +104,7 @@ void Menu::render() {
 	menuLogo->render();
 	menuHighScore->render();
 	menuShop->render();
+	glDisable(GL_BLEND);
 }
 
 void Menu::initTextures() {
@@ -163,36 +166,4 @@ void Menu::initShaders() {
 	shaderProgram.bindFragmentOutput("outColor");
 	vShader.free();
 	fShader.free();
-}
-
-void Menu::keyPressed(int key)
-{
-}
-
-void Menu::keyReleased(int key)
-{
-}
-
-void Menu::specialKeyPressed(int key)
-{
-}
-
-void Menu::specialKeyReleased(int key)
-{
-}
-
-void Menu::mouseMove(int x, int y)
-{
-	if (x >= SCREEN_WIDTH - (100 + 47 + 10) && x <= SCREEN_WIDTH - (100 - 47 - 10) && y >= SCREEN_HEIGHT - (100 + 47 + 10) && y <= SCREEN_HEIGHT - (100 - 47 - 10))
-		menuHighScore->setTexture(&menuHighScorePressedTexture);
-	else
-		menuHighScore->setTexture(&menuHighScoreTexture);
-}
-
-void Menu::mousePress(int button)
-{
-}
-
-void Menu::mouseRelease(int button)
-{
 }

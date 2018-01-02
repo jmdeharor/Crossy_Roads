@@ -1,10 +1,15 @@
 #ifndef _GAME_INCLUDE
 #define _GAME_INCLUDE
 
-
+#include <glm/glm.hpp>
 #include "Scene.h"
 #include "Menu.h"
+#include "Shop.h"
 #include "SoundManager.h"
+#include "Sprite.h"
+#include "Texture.h"
+#include "ShaderProgram.h"
+
 
 #define SCREEN_WIDTH 1024
 #define SCREEN_HEIGHT 768
@@ -14,7 +19,8 @@
 
 enum class GameState {
 	MENU,
-	PLAYING
+	PLAYING,
+	SHOP
 };
 
 class Game
@@ -62,11 +68,18 @@ private:
 	bool bPlay;                       // Continue to play game?
 	Scene scene;                      // Scene to render
 	Menu menu;
+	Shop shop;
 	bool keys[256], specialKeys[256]; // Store key states so that 
 	                                  // we can have access at any time
 	int x, y, xPressed, yPressed, xReleased, yReleased;
 	bool mouseLeftPressed;
 	GameState currentState;
+	Sprite* mouseCursor;
+	Texture mouseCursorTexture;
+	ShaderProgram shaderProgram;
+	void initShaders();
+
+
 };
 
 
