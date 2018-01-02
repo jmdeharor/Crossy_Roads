@@ -33,11 +33,15 @@ private:
 
 private:
 	bool initiated;
+	bool click;
 	Sprite* menuLogo;
 	Sprite* menuHighScore;
+	Sprite* menuShop;
 	Texture menuLogoTexture;
 	Texture menuHighScoreTexture;
 	Texture menuHighScorePressedTexture;
+	Texture menuShopTexture;
+	Texture menuShopPressedTexture;
 	ShaderProgram shaderProgram;
 	float currentTime;
 

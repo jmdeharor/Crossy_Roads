@@ -12,6 +12,11 @@
 // Game is a singleton (a class with a single instance) that represents our whole application
 
 
+enum class GameState {
+	MENU,
+	PLAYING
+};
+
 class Game
 {
 
@@ -36,12 +41,19 @@ public:
 	void specialKeyPressed(int key);
 	void specialKeyReleased(int key);
 	void mouseMove(int x, int y);
-	void mousePress(int button);
-	void mouseRelease(int button);
+	void mousePress(int button, int x, int y);
+	void mouseRelease(int button, int x, int y);
 	void windowResize(int w, int h);
-	
+	int getX();
+	int getY();
+	int getXPressed();
+	int getYPressed();
 	bool getKey(int key) const;
 	bool getSpecialKey(int key) const;
+	bool getLeftButtonPressed();
+
+	GameState getCurrentState();
+	void setCurrentState(GameState newState);
 
 	const SoundManager* getSoundManager() const;
 
@@ -52,7 +64,9 @@ private:
 	Menu menu;
 	bool keys[256], specialKeys[256]; // Store key states so that 
 	                                  // we can have access at any time
-
+	int x, y, xPressed, yPressed, xReleased, yReleased;
+	bool mouseLeftPressed;
+	GameState currentState;
 };
 
 

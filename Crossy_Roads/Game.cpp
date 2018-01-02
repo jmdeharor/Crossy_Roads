@@ -11,6 +11,15 @@ void Game::init() {
 	glViewport(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 	scene.init();
 	menu.init();
+	currentState = GameState::MENU;
+}
+
+GameState Game::getCurrentState() {
+	return currentState;
+}
+
+void Game::setCurrentState(GameState newState) {
+	currentState = newState;
 }
 
 bool Game::update(int deltaTime) {
@@ -24,7 +33,8 @@ bool Game::update(int deltaTime) {
 void Game::render() {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 	scene.render();
-	menu.render();
+	if(currentState == GameState::MENU)
+		menu.render();
 }
 
 void Game::keyPressed(int key)
@@ -51,16 +61,26 @@ void Game::specialKeyReleased(int key)
 
 void Game::mouseMove(int x, int y)
 {
-	menu.mouseMove(x, y);
-	std::cout << "Position: " << x << " " << "y" << endl;
+	this->x = x;
+	this->y = y;
 }
 
-void Game::mousePress(int button)
+void Game::mousePress(int button, int x, int y)
 {
+	if (button == GLUT_LEFT_BUTTON && !mouseLeftPressed) {
+		xPressed = x;
+		yPressed = y;
+		mouseLeftPressed = true;
+	}
 }
 
-void Game::mouseRelease(int button)
+void Game::mouseRelease(int button, int x, int y)
 {
+	mouseLeftPressed = false;
+}
+
+bool Game::getLeftButtonPressed() {
+	return mouseLeftPressed;
 }
 
 void Game::windowResize(int w, int h) {
@@ -76,6 +96,22 @@ bool Game::getKey(int key) const
 bool Game::getSpecialKey(int key) const
 {
 	return specialKeys[key];
+}
+
+int Game::getX() {
+	return x;
+}
+
+int Game::getY() {
+	return y;
+}
+
+int Game::getXPressed() {
+	return xPressed;
+}
+
+int Game::getYPressed() {
+	return yPressed;
 }
 
 const SoundManager * Game::getSoundManager() const {
