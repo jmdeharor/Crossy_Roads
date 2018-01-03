@@ -8,10 +8,37 @@ void Object::setPos(vec3 pos) {
 	this->pos = pos;
 }
 
+void Object::setX(float x) {
+	pos.x = x;
+}
+
+void Object::setY(float y) {
+	pos.y = y;
+}
+
+void Object::setZ(float z) {
+	pos.z = z;
+}
+
 void Object::move(float x, float y, float z) {
 	modified = true;
 	pos.x += x;
 	pos.y += y;
+	pos.z += z;
+}
+
+void Object::moveX(float x) {
+	modified = true;
+	pos.x += x;
+}
+
+void Object::moveY(float y) {
+	modified = true;
+	pos.y += y;
+}
+
+void Object::moveZ(float z) {
+	modified = true;
 	pos.z += z;
 }
 
@@ -162,6 +189,21 @@ Object::~Object()
 
 glm::vec3 Object::getPos() const {
 	return pos;
+}
+
+float Object::getX() const
+{
+	return pos.x;
+}
+
+float Object::getY() const
+{
+	return pos.y;
+}
+
+float Object::getZ() const
+{
+	return pos.z;
 }
 
 float Object::getHeight() const {

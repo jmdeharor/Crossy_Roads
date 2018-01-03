@@ -51,14 +51,14 @@
     },
     {
       "names": ["barrel"],
-      "type": "decoration",
+      "type": ["decoration", "border"],
       "size": [1,1],
       "height": 2,
       "biomes": ["ship"]
     },
     {
       "names": ["box"],
-      "type": "decoration",
+      "type": ["decoration", "border"],
       "size": [1,1],
       "height": 2,
       "biomes": ["ship"]
@@ -69,8 +69,7 @@
 		"cubierta_2_doors_open",
 		"cubierta_2_open"
 	  ],
-      "type": "decoration",
-	  "group type": "random",
+      "type": ["decoration", "border"],
       "size": [3,3],
       "height": [0.5, 1.5, 0.5],
 	  "floor empty": [false, true, true],
@@ -97,7 +96,8 @@
     },
     {
       "names": ["plank"],
-      "type": "unique"
+      "type": "unique",
+	  "biomes": []
     },
     {
       "names": [
@@ -105,7 +105,7 @@
         "railing_parrot",
         "railing_rip"
       ],
-      "type": "random",
+      "type": "unique",
 	  "size": [1,1],
       "height": [1.5, 2.1, 1.5],
       "probabilities": [
@@ -113,11 +113,12 @@
         0.1,
         0.3
       ],
-      "group name": "railing"
+      "group name": "railing",
+	  "biomes": []
     },
     {
       "names": ["cannon"],
-      "type": "decoration",
+      "type": ["decoration", "border"],
       "size": [1,2],
       "height": 2,
       "biomes": ["ship"]
@@ -129,16 +130,25 @@
       "height": 20,
       "biomes": ["ship"]
     },
+	{
+      "names": ["coin"],
+      "type": "decoration",
+      "size": [1,1],
+	  "collision map": [false],
+      "height": 0.1,
+      "biomes": ["ship", "island"],
+	  "behaviour": "coin"
+    },
     {
       "names": ["broken_mast"],
-      "type": "decoration",
+      "type": ["decoration", "border"],
       "size": [1,2],
       "height": 1.5,
       "biomes": ["ship"]
     },
     {
       "names": ["monkey_sitting"],
-      "type": "decoration",
+      "type": ["decoration", "border"],
       "size": [1,1],
       "height": 1,
       "biomes": ["island"],
@@ -165,8 +175,7 @@
 		"rock-05",
 		"rock-06"
 	  ],
-      "type": "decoration",
-	  "group type": "random",
+      "type": ["decoration", "border"],
       "size": [1,1],
       "height": 1,
 	  "probabilities": "equal",

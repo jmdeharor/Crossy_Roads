@@ -124,6 +124,7 @@
     <ClCompile Include="AnimTexObject.cpp" />
     <ClCompile Include="Assets.cpp" />
     <ClCompile Include="BasicMeshConfig.cpp" />
+    <ClCompile Include="Coin.cpp" />
     <ClCompile Include="MeshConfigConstructor.cpp" />
     <ClCompile Include="MonoBehaviour.cpp" />
     <ClCompile Include="Menu.cpp" />
@@ -183,6 +184,7 @@
     <ClInclude Include="AnimTexObject.h" />
     <ClInclude Include="Assets.h" />
     <ClInclude Include="BasicMeshConfig.h" />
+    <ClInclude Include="Coin.h" />
     <ClInclude Include="Menu.h" />
     <ClInclude Include="MeshConfigConstructor.h" />
     <ClInclude Include="MonoBehaviour.h" />

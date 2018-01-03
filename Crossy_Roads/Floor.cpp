@@ -312,10 +312,10 @@ void Floor::updateFloorRow(FloorRow& floorRow, const FloorRow& prevRow) {
 void Floor::init(vec3 lightDir, const Assets& assets, const Player* player) {
 	GameObject::init();
 
-	furniture = assets.getDecoration();
+	furniture = assets.getMeshConfigGroups();
 
 	plankMesh = assets.getMeshId("plank");
-	railMesh = assets.getRandomMesh("railing");
+	railMesh = (const RandomMeshConfig*)assets.getMeshConfigId("railing");
 
 	FloorRow::initResources(assets, player);
 	FloorParams params;

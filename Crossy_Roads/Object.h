@@ -25,7 +25,13 @@ public:
 	void setCenterToBaseCenter();
 	void updateModel();
 	void setPos(glm::vec3 pos);
+	void setX(float x);
+	void setY(float y);
+	void setZ(float z);
 	void move(float x, float y, float z);
+	void moveX(float x);
+	void moveY(float y);
+	void moveZ(float z);
 	void move(glm::vec3 movement);
 	void rotateX(float angle);
 	void rotateY(float angle);
@@ -38,6 +44,9 @@ public:
 	void setMesh(glm::uint meshId, const Mesh* mesh);
 	void setMesh(const Mesh* mesh);
 	glm::vec3 getPos() const;
+	float getX() const;
+	float getY() const;
+	float getZ() const;
 	float getHeight() const;
 	glm::vec2 getHorizontalPlanePos() const;
 	glm::vec3 getRotation() const;
