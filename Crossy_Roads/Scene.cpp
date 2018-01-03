@@ -18,6 +18,7 @@ Scene::~Scene() {
 }
 
 void Scene::firstInit() {
+	textScore.init("fonts/PiratesWriters.ttf");
 	//assets.loadAssets("assets_locations/models.json", "assets_locations/textures.json");
 	assets.loadAssets("binaryAssets.notxt");
 
@@ -123,7 +124,6 @@ const uint cols = 5;
 
 void Scene::init() {
 	GameObject::init();
-	textScore.init("fonts/PiratesWriters.ttf");
 
 	lightDir = normalize(vec3(1,1,0));
 
