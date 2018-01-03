@@ -9,7 +9,6 @@
 #include "SoundManager.h"
 #include "Text.h"
 
-
 class Shop {
 
 public:
@@ -48,19 +47,17 @@ private:
 	Sprite* backArrow;
 	Texture backArrowTex;
 	Texture shopBackgroundTexture;
-	Texture char1Tex, char2Tex, char3Tex, char4Tex, char5Tex, char6Tex, char7Tex, char8Tex;
-	Texture char1TexLock, char2TexLock, char3TexLock, char4TexLock;
-	Texture char5TexLock, char6TexLock, char7TexLock, char8TexLock;
-	Texture char1TexLockHL, char2TexLockHL, char3TexLockHL, char4TexLockHL;
-	Texture char5TexLockHL, char6TexLockHL, char7TexLockHL, char8TexLockHL;
-	Text char1Price, char2Price, char3Price, char4Price;
-	Text char5Price, char6Price, char7Price, char8Price;
-	bool char1Locked, char2Locked, char3Locked, char4Locked, char5Locked, char6Locked, char7Locked, char8Locked;
+	std::vector<Texture> charTexs;
+	std::vector<Texture> charTexsLocked;
+	std::vector<Texture> charTexsLockedHL;
+	std::vector<bool> locked;
+	std::vector<Sprite*> chars;
+	std::vector<Text> charTexts;
+	std::vector<string> prices;
+
 
 	ShaderProgram shaderProgram;
 	float currentTime;
-
-
 
 };
 

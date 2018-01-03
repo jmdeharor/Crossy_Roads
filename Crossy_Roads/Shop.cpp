@@ -5,6 +5,7 @@
 #include <cmath>
 #include <GL/glut.h>
 #include "SoundManager.h"
+#include <fstream>
 
 using namespace glm;
 
@@ -32,19 +33,30 @@ void Shop::firstInit() {
 
 	soundManager = Game::instance().getSoundManager();
 	clickSound = soundManager->loadSound("sounds/Effect_click.wav", FMOD_DEFAULT);
-
+	charTexs.resize(8);
+	charTexsLocked.resize(8);
+	charTexsLockedHL.resize(8);
+	locked.resize(8, true);
+	ifstream reader ("data/shop_info.txt",ifstream::in);
+	for (int i = 0; i < 8; ++i) {
+		int aux;
+		reader >> aux;
+		locked[i] = (bool)aux;
+	}
+	reader.close();
+	chars.resize(8);
+	charTexts.resize(8);
+	prices.resize(8);
 	initShaders();
 	initTextures();
 	initTexts();
 	shopBackground = Sprite::createSprite(vec2(1024, 768), vec2(1), &shopBackgroundTexture, &shaderProgram);
-	char1 = Sprite::createSprite(vec2(125, 125), vec2(1), &char1TexLock, &shaderProgram);
-	char2 = Sprite::createSprite(vec2(125, 125), vec2(1), &char2TexLock, &shaderProgram);
-	char3 = Sprite::createSprite(vec2(125, 125), vec2(1), &char3TexLock, &shaderProgram);
-	char4 = Sprite::createSprite(vec2(125, 125), vec2(1), &char4TexLock, &shaderProgram);
-	char5 = Sprite::createSprite(vec2(125, 125), vec2(1), &char5TexLock, &shaderProgram);
-	char6 = Sprite::createSprite(vec2(125, 125), vec2(1), &char6TexLock, &shaderProgram);
-	char7 = Sprite::createSprite(vec2(125, 125), vec2(1), &char7TexLock, &shaderProgram);
-	char8 = Sprite::createSprite(vec2(125, 125), vec2(1), &char8TexLock, &shaderProgram);
+	for (int i = 0; i < 8; ++i) {
+		if(locked[i])
+			chars[i] = Sprite::createSprite(vec2(125, 125), vec2(1), &charTexsLocked[i], &shaderProgram);
+		else
+			chars[i] = Sprite::createSprite(vec2(125, 125), vec2(1), &charTexs[i], &shaderProgram);
+	}
 	backArrow = Sprite::createSprite(vec2(80, 60), vec2(1), &backArrowTex, &shaderProgram);
 }
 
@@ -54,24 +66,16 @@ void Shop::init() {
 		initiated = true;
 		firstInit();
 	}
-	char1Locked = true;
-	char2Locked = true;
-	char3Locked = true;
-	char4Locked = true;
-	char5Locked = true;
-	char6Locked = true;
-	char7Locked = true;
-	char8Locked = true;
 	click = false;
 	shopBackground->setPosition(vec2(SCREEN_WIDTH / (float)2, SCREEN_HEIGHT / (float)2));
-	char1->setPosition(vec2(SCREEN_WIDTH / (float)5 * 1, SCREEN_HEIGHT / (float)3 * 1));
-	char2->setPosition(vec2(SCREEN_WIDTH / (float)5 * 2, SCREEN_HEIGHT / (float)3 * 1));
-	char3->setPosition(vec2(SCREEN_WIDTH / (float)5 * 3, SCREEN_HEIGHT / (float)3 * 1));
-	char4->setPosition(vec2(SCREEN_WIDTH / (float)5 * 4, SCREEN_HEIGHT / (float)3 * 1));
-	char5->setPosition(vec2(SCREEN_WIDTH / (float)5 * 1, SCREEN_HEIGHT / (float)3 * 2));
-	char6->setPosition(vec2(SCREEN_WIDTH / (float)5 * 2, SCREEN_HEIGHT / (float)3 * 2));
-	char7->setPosition(vec2(SCREEN_WIDTH / (float)5 * 3, SCREEN_HEIGHT / (float)3 * 2));
-	char8->setPosition(vec2(SCREEN_WIDTH / (float)5 * 4, SCREEN_HEIGHT / (float)3 * 2));
+	chars[0]->setPosition(vec2(SCREEN_WIDTH / (float)5 * 1, SCREEN_HEIGHT / (float)3 * 1));
+	chars[1]->setPosition(vec2(SCREEN_WIDTH / (float)5 * 2, SCREEN_HEIGHT / (float)3 * 1));
+	chars[2]->setPosition(vec2(SCREEN_WIDTH / (float)5 * 3, SCREEN_HEIGHT / (float)3 * 1));
+	chars[3]->setPosition(vec2(SCREEN_WIDTH / (float)5 * 4, SCREEN_HEIGHT / (float)3 * 1));
+	chars[4]->setPosition(vec2(SCREEN_WIDTH / (float)5 * 1, SCREEN_HEIGHT / (float)3 * 2));
+	chars[5]->setPosition(vec2(SCREEN_WIDTH / (float)5 * 2, SCREEN_HEIGHT / (float)3 * 2));
+	chars[6]->setPosition(vec2(SCREEN_WIDTH / (float)5 * 3, SCREEN_HEIGHT / (float)3 * 2));
+	chars[7]->setPosition(vec2(SCREEN_WIDTH / (float)5 * 4, SCREEN_HEIGHT / (float)3 * 2));
 	backArrow->setPosition(vec2(SCREEN_WIDTH - 100, 100));
 
 }
@@ -91,38 +95,31 @@ void Shop::performClickAction(int x, int y) {
 		FMOD::Channel* channel = soundManager->playSound(clickSound);
 		channel->setVolume(2);
 		Game::instance().setCurrentState(GameState::MENU);
+		
 	}
-	if (isButton(char1, x, y)) {
-		char1->setTexture(&char1Tex);
-		char1Locked = false;
-	}
-	if (isButton(char2, x, y)) {
-		char2->setTexture(&char2Tex);
-		char2Locked = false;
-	}
-	if (isButton(char3, x, y)) {
-		char3->setTexture(&char3Tex);
-		char3Locked = false;
-	}
-	if (isButton(char4, x, y)) {
-		char4->setTexture(&char4Tex);
-		char4Locked = false;
-	}
-	if (isButton(char5, x, y)) {
-		char5->setTexture(&char5Tex);
-		char5Locked = false;
-	}
-	if (isButton(char6, x, y)) {
-		char6->setTexture(&char6Tex);
-		char6Locked = false;
-	}
-	if (isButton(char7, x, y)) {
-		char7->setTexture(&char7Tex);
-		char7Locked = false;
-	}
-	if (isButton(char8, x, y)) {
-		char8->setTexture(&char8Tex);
-		char8Locked = false;
+	for (int i = 0; i < 8; ++i) {
+		if (isButton(chars[i], x, y) && locked[i]) {
+			if (atoi(prices[i].c_str()) <= Game::instance().getCoins()) {
+				chars[i]->setTexture(&charTexs[i]);
+				locked[i] = false;
+				Game::instance().setCoins(Game::instance().getCoins() - atoi(prices[i].c_str()));
+				prices[i] = "Hired";
+				ofstream writer("data/shop_info.txt", ofstream::out);
+				for (int i = 0; i < 8; ++i) {
+					writer << (int)locked[i] << " ";
+				}
+				writer.close();
+				ofstream writer2("data/coin_info.txt", ofstream::out);
+				writer2 << Game::instance().getCoins();
+				writer2.close();
+
+				//play unlock sound
+			}
+			else {
+				//play no money sound and display message
+			}
+
+		}
 	}
 }
 
@@ -136,34 +133,18 @@ void Shop::update(int deltaTime) {
 		if (Game::instance().getLeftButtonPressed()) click = true;
 		int x = Game::instance().getX();
 		int y = Game::instance().getY();
-		if (isButton(char1, x, y) && char1Locked)
-			char1->setTexture(&char1TexLockHL);
-		else if (isButton(char2, x, y) && char2Locked)
-			char2->setTexture(&char2TexLockHL);
-		else if (isButton(char3, x, y) && char3Locked)
-			char3->setTexture(&char3TexLockHL);
-		else if (isButton(char4, x, y) && char4Locked)
-			char4->setTexture(&char4TexLockHL);
-		else if (isButton(char5, x, y) && char5Locked)
-			char5->setTexture(&char5TexLockHL);
-		else if (isButton(char6, x, y) && char6Locked)
-			char6->setTexture(&char6TexLockHL);
-		else if (isButton(char7, x, y) && char7Locked)
-			char7->setTexture(&char7TexLockHL);
-		else if (isButton(char8, x, y) && char8Locked)
-			char8->setTexture(&char8TexLockHL);
-		else {
-			if (char1Locked) char1->setTexture(&char1TexLock);
-			if (char2Locked) char2->setTexture(&char2TexLock);
-			if (char3Locked) char3->setTexture(&char3TexLock);
-			if (char4Locked) char4->setTexture(&char4TexLock);
-			if (char5Locked) char5->setTexture(&char5TexLock);
-			if (char6Locked) char6->setTexture(&char6TexLock);
-			if (char7Locked) char7->setTexture(&char7TexLock);
-			if (char8Locked) char8->setTexture(&char8TexLock);
+		bool onButton = false;
+		for (int i = 0; i < 8; ++i) {
+			if (isButton(chars[i], x, y) && locked[i]) {
+				chars[i]->setTexture(&charTexsLockedHL[i]);
+				onButton = true;
+			}
 		}
-
-
+		if (!onButton) {
+			for (int i = 0; i < 8; ++i) {
+				if (locked[i]) chars[i]->setTexture(&charTexsLocked[i]);
+			}
+		}
 	}
 
 }
@@ -178,23 +159,18 @@ void Shop::render() {
 	shaderProgram.setUniformMatrix4f("modelview", modelview);
 	shaderProgram.setUniform2f("texCoordDispl", 0.f, 0.f);
 	shopBackground->render();
-	char1->render();
-	char2->render();
-	char3->render();
-	char4->render();
-	char5->render();
-	char6->render();
-	char7->render();
-	char8->render();
+	for (int i = 0; i < 8; ++i) {
+		chars[i]->render();
+	}
 	backArrow->render();
-	char1Price.render("100", vec2(char1->getPosition().x - 48, char1->getPosition().y + char1->getSize().y), 64, vec4(0, 0, 0, 1));
-	char2Price.render("200", vec2(char2->getPosition().x - 48, char2->getPosition().y + char2->getSize().y), 64, vec4(0, 0, 0, 1));
-	char3Price.render("300", vec2(char3->getPosition().x - 48, char3->getPosition().y + char3->getSize().y), 64, vec4(0, 0, 0, 1));
-	char4Price.render("400", vec2(char4->getPosition().x - 48, char4->getPosition().y + char4->getSize().y), 64, vec4(0, 0, 0, 1));
-	char5Price.render("500", vec2(char5->getPosition().x - 48, char5->getPosition().y + char5->getSize().y), 64, vec4(0, 0, 0, 1));
-	char6Price.render("600", vec2(char6->getPosition().x - 48, char6->getPosition().y + char6->getSize().y), 64, vec4(0, 0, 0, 1));
-	char7Price.render("700", vec2(char7->getPosition().x - 48, char7->getPosition().y + char7->getSize().y), 64, vec4(0, 0, 0, 1));
-	char8Price.render("800", vec2(char8->getPosition().x - 48, char8->getPosition().y + char8->getSize().y), 64, vec4(0, 0, 0, 1));
+	charTexts[0].render(prices[0], vec2(chars[0]->getPosition().x - 48, chars[0]->getPosition().y + chars[0]->getSize().y), 64, vec4(0, 0, 0, 1));
+	charTexts[1].render(prices[1], vec2(chars[1]->getPosition().x - 48, chars[1]->getPosition().y + chars[1]->getSize().y), 64, vec4(0, 0, 0, 1));
+	charTexts[2].render(prices[2], vec2(chars[2]->getPosition().x - 48, chars[2]->getPosition().y + chars[2]->getSize().y), 64, vec4(0, 0, 0, 1));
+	charTexts[3].render(prices[3], vec2(chars[3]->getPosition().x - 48, chars[3]->getPosition().y + chars[3]->getSize().y), 64, vec4(0, 0, 0, 1));
+	charTexts[4].render(prices[4], vec2(chars[4]->getPosition().x - 48, chars[4]->getPosition().y + chars[4]->getSize().y), 64, vec4(0, 0, 0, 1));
+	charTexts[5].render(prices[5], vec2(chars[5]->getPosition().x - 48, chars[5]->getPosition().y + chars[5]->getSize().y), 64, vec4(0, 0, 0, 1));
+	charTexts[6].render(prices[6], vec2(chars[6]->getPosition().x - 48, chars[6]->getPosition().y + chars[6]->getSize().y), 64, vec4(0, 0, 0, 1));
+	charTexts[7].render(prices[7], vec2(chars[7]->getPosition().x - 48, chars[7]->getPosition().y + chars[7]->getSize().y), 64, vec4(0, 0, 0, 1));
 }
 
 void initTexture(Texture& texture, string path) {
@@ -207,43 +183,21 @@ void initTexture(Texture& texture, string path) {
 
 void Shop::initTextures() {
 	initTexture(shopBackgroundTexture, "images/shop_2.png");
-	initTexture(char1TexLock, "images/placeholder_locked.png");
-	initTexture(char2TexLock, "images/placeholder_locked.png");
-	initTexture(char3TexLock, "images/placeholder_locked.png");
-	initTexture(char4TexLock, "images/placeholder_locked.png");
-	initTexture(char5TexLock, "images/placeholder_locked.png");
-	initTexture(char6TexLock, "images/placeholder_locked.png");
-	initTexture(char7TexLock, "images/placeholder_locked.png");
-	initTexture(char8TexLock, "images/placeholder_locked.png");
-	initTexture(char1Tex, "images/placeholder_unlocked.png");
-	initTexture(char2Tex, "images/placeholder_unlocked.png");
-	initTexture(char3Tex, "images/placeholder_unlocked.png");
-	initTexture(char4Tex, "images/placeholder_unlocked.png");
-	initTexture(char5Tex, "images/placeholder_unlocked.png");
-	initTexture(char6Tex, "images/placeholder_unlocked.png");
-	initTexture(char7Tex, "images/placeholder_unlocked.png");
-	initTexture(char8Tex, "images/placeholder_unlocked.png");
-	initTexture(char1TexLockHL, "images/placeholder_locked_highlighted.png");
-	initTexture(char2TexLockHL, "images/placeholder_locked_highlighted.png");
-	initTexture(char3TexLockHL, "images/placeholder_locked_highlighted.png");
-	initTexture(char4TexLockHL, "images/placeholder_locked_highlighted.png");
-	initTexture(char5TexLockHL, "images/placeholder_locked_highlighted.png");
-	initTexture(char6TexLockHL, "images/placeholder_locked_highlighted.png");
-	initTexture(char7TexLockHL, "images/placeholder_locked_highlighted.png");
-	initTexture(char8TexLockHL, "images/placeholder_locked_highlighted.png");
+	for (int i = 0; i < 8; ++i) {
+		initTexture(charTexsLocked[i], "images/char_locked_" + to_string(i) + ".png");
+		initTexture(charTexs[i], "images/char_unlocked_" + to_string(i) + ".png");
+		initTexture(charTexsLockedHL[i], "images/placeholder_locked_highlighted.png");
+	}
 	initTexture(backArrowTex, "images/back_arrow.png");
 }
-
 void Shop::initTexts() {
-	char1Price.init("fonts/treamd.ttf");
-	char2Price.init("fonts/treamd.ttf");
-	char3Price.init("fonts/treamd.ttf");
-	char4Price.init("fonts/treamd.ttf");
-	char5Price.init("fonts/treamd.ttf");
-	char6Price.init("fonts/treamd.ttf");
-	char7Price.init("fonts/treamd.ttf");
-	char8Price.init("fonts/treamd.ttf");
-
+	for (int i = 0; i < 8; ++i) {
+		charTexts[i].init("fonts/treamd.ttf");
+		if (locked[i])
+			prices[i] = to_string((i + 1) * 100);
+		else
+			prices[i] = "Hired";
+	}
 }
 
 void Shop::initShaders() {

@@ -4,6 +4,8 @@
 #include <iostream>
 
 void Game::init() {
+	//TODO: Initialize coins from file
+	coins = 10000000;
 	initShaders();
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	bPlay = true;
@@ -145,6 +147,14 @@ int Game::getYPressed() {
 
 const SoundManager * Game::getSoundManager() const {
 	return &soundManager;
+}
+
+int Game::getCoins() {
+	return coins;
+}
+
+void Game::setCoins(int newCoins) {
+	coins = newCoins;
 }
 
 void Game::initShaders() {

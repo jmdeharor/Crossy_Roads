@@ -57,6 +57,8 @@ public:
 	bool getKey(int key) const;
 	bool getSpecialKey(int key) const;
 	bool getLeftButtonPressed();
+	int getCoins();
+	void setCoins(int newCoins);
 
 	GameState getCurrentState();
 	void setCurrentState(GameState newState);
@@ -71,6 +73,7 @@ private:
 	Shop shop;
 	bool keys[256], specialKeys[256]; // Store key states so that 
 	                                  // we can have access at any time
+	int coins;
 	int x, y, xPressed, yPressed, xReleased, yReleased;
 	bool mouseLeftPressed;
 	GameState currentState;
