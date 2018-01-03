@@ -32,15 +32,14 @@ void main() {
 	vec3 N = normalize(fragNormal);
 	vec2 st = shadowCoord.st;
 	float trueDepth = shadowCoord.z;
-	//float storedDepth = sampleShadow();
-	float storedDepth = texture(shadowMap, vec3(st, trueDepth-0.0009));
+	float diffuse = max(0, dot(N,lightDir));
+	vec4 color = texture(tex, fragTexCoord);
 	if (st.s < 0 || st.s > 1 || st.t < 0 || st.t > 1) {
-		outColor = vec4(1,0,0,0);
+		outColor = mix(0.5, 1, diffuse)*color;
 	}
 	else {
-		float diffuse = max(0, dot(N,lightDir));
+		float storedDepth = texture(shadowMap, vec3(st, trueDepth-0.0009));
 		float finalFactor = min(diffuse, storedDepth);
-		vec4 color = texture(tex, fragTexCoord);
 		outColor = mix(0.5, 1, finalFactor)*color;
 	}
 }
