@@ -131,11 +131,11 @@
       "biomes": ["ship"]
     },
 	{
-      "names": ["coin_rotated"],
+      "names": ["coin"],
       "type": "decoration",
       "size": [1,1],
 	  "collision map": [false],
-      "height": 0.1,
+      "height": 1,
       "biomes": ["ship", "island"],
 	  "behaviour": "coin"
     },
