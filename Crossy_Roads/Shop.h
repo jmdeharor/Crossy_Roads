@@ -54,7 +54,7 @@ private:
 	std::vector<Sprite*> chars;
 	std::vector<Text> charTexts;
 	std::vector<string> prices;
-
+	Text noCoins;
 
 	ShaderProgram shaderProgram;
 	float currentTime;

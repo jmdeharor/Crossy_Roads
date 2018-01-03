@@ -116,6 +116,8 @@ void Shop::performClickAction(int x, int y) {
 				//play unlock sound
 			}
 			else {
+				chars[i]->setTexture(&charTexs[i]);
+				noCoins.render("Not enough dobloons!", vec2(SCREEN_WIDTH / 2.f, SCREEN_HEIGHT / 2.f), 32, vec4(1, 0, 0, 1));
 				//play no money sound and display message
 			}
 
@@ -198,6 +200,7 @@ void Shop::initTexts() {
 		else
 			prices[i] = "Hired";
 	}
+	noCoins.init("fonts/treamd.ttf");
 }
 
 void Shop::initShaders() {

@@ -5,7 +5,7 @@
 
 void Game::init() {
 	//TODO: Initialize coins from file
-	coins = 10000000;
+	coins = 0;
 	initShaders();
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	bPlay = true;
