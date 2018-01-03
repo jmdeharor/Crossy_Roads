@@ -131,7 +131,7 @@
       "biomes": ["ship"]
     },
 	{
-      "names": ["coin_rotated"],
+      "names": ["coin_rotated_3"],
       "type": "decoration",
       "size": [1,1],
 	  "collision map": [false],

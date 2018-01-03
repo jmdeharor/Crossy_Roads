@@ -186,7 +186,7 @@ void Shop::initTextures() {
 	for (int i = 0; i < 8; ++i) {
 		initTexture(charTexsLocked[i], "images/char_locked_" + to_string(i) + ".png");
 		initTexture(charTexs[i], "images/char_unlocked_" + to_string(i) + ".png");
-		initTexture(charTexsLockedHL[i], "images/placeholder_locked_highlighted.png");
+		initTexture(charTexsLockedHL[i], "images/char_locked_highlighted_" + to_string(i) +".png");
 	}
 	initTexture(backArrowTex, "images/back_arrow.png");
 }
