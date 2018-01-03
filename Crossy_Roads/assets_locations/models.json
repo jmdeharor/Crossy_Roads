@@ -135,7 +135,7 @@
       "type": "decoration",
       "size": [1,1],
 	  "collision map": [false],
-      "height": 1,
+      "height": 1.7,
       "biomes": ["ship", "island"],
 	  "behaviour": "coin"
     },
