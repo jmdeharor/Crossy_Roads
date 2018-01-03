@@ -61,6 +61,12 @@
     <Filter Include="Archivos de encabezado\ParticleSystem">
       <UniqueIdentifier>{a9e76c70-05ab-4357-89bb-44b75981f07a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Archivos de código fuente\MonoBehaviour">
+      <UniqueIdentifier>{84affbe1-e701-4816-b744-6d794217ce6e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de encabezado\MonoBehaviour">
+      <UniqueIdentifier>{b241dad7-31a5-4378-ac6e-b7b813e45710}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Game.cpp">
@@ -207,12 +213,6 @@
     <ClCompile Include="RandomPicker.cpp">
       <Filter>Archivos de código fuente</Filter>
     </ClCompile>
-    <ClCompile Include="Stalker.cpp">
-      <Filter>Archivos de código fuente</Filter>
-    </ClCompile>
-    <ClCompile Include="MonoBehaviour.cpp">
-      <Filter>Archivos de código fuente</Filter>
-    </ClCompile>
     <ClCompile Include="Menu.cpp">
       <Filter>Archivos de código fuente</Filter>
     </ClCompile>
@@ -230,6 +230,15 @@
     </ClCompile>
     <ClCompile Include="Shop.cpp">
       <Filter>Archivos de código fuente</Filter>
+    </ClCompile>
+    <ClCompile Include="Stalker.cpp">
+      <Filter>Archivos de código fuente\MonoBehaviour</Filter>
+    </ClCompile>
+    <ClCompile Include="MonoBehaviour.cpp">
+      <Filter>Archivos de código fuente\MonoBehaviour</Filter>
+    </ClCompile>
+    <ClCompile Include="Coin.cpp">
+      <Filter>Archivos de código fuente\MonoBehaviour</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -377,12 +386,6 @@
     <ClInclude Include="RandomPicker.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
-    <ClInclude Include="Stalker.h">
-      <Filter>Archivos de encabezado</Filter>
-    </ClInclude>
-    <ClInclude Include="MonoBehaviour.h">
-      <Filter>Archivos de encabezado</Filter>
-    </ClInclude>
     <ClInclude Include="Menu.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
@@ -403,6 +406,15 @@
     </ClInclude>
     <ClInclude Include="Shop.h">
       <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="MonoBehaviour.h">
+      <Filter>Archivos de encabezado\MonoBehaviour</Filter>
+    </ClInclude>
+    <ClInclude Include="Stalker.h">
+      <Filter>Archivos de encabezado\MonoBehaviour</Filter>
+    </ClInclude>
+    <ClInclude Include="Coin.h">
+      <Filter>Archivos de encabezado\MonoBehaviour</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

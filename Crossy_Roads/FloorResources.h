@@ -6,7 +6,7 @@ class Player;
 class FloorResources {
 public:
 	const Assets* assets;
-	const std::vector<IdMesh>* groups;
+	const std::vector<IdMesh>* meshGroups;
 	std::vector<std::vector<IdTex>> floorTextures;
 	std::vector<glm::uint> indices;
 	IdTex planeWood, water, islandRoad, islandSafe;

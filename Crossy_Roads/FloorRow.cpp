@@ -30,7 +30,10 @@ void FloorRow::initRoad(BiomeType type, vector<uint>& adjacentRow, const vector<
 	if (prevRow.safeZone) rowHeight = prevRow.rowHeight - 0.2f;
 	else rowHeight = prevRow.rowHeight;
 	furniture.clear();
-	stalkers.clear();
+	for (uint i = 0; i < behaviours.size(); ++i) {
+		delete behaviours[i];
+	}
+	behaviours.clear();
 	switch (type) {
 	case Ship:
 		initShipRoad(adjacentRow);
@@ -49,7 +52,10 @@ void FloorRow::initSafeZone(BiomeType type, const vector<CellProperties>& map, c
 	biome = type;
 	safeZone = true;
 	furniture.clear();
-	stalkers.clear();
+	for (uint i = 0; i < behaviours.size(); ++i) {
+		delete behaviours[i];
+	}
+	behaviours.clear();
 	switch (biome) {
 	case Ship:
 		initShipSafeZone(prevRow);
@@ -96,8 +102,8 @@ float FloorRow::getRowHeight() const {
 }
 
 void FloorRow::update(int deltaTime) {
-	for (Stalker& stalker : stalkers) {
-		stalker.update(deltaTime);
+	for (MonoBehaviour* behaviour : behaviours) {
+		behaviour->update(deltaTime);
 	}
 	for (AnimTexObject& animatedTexure : animatedFloorTiles) {
 		animatedTexure.update(deltaTime);

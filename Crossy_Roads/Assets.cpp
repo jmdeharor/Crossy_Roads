@@ -12,7 +12,7 @@ const CubeMesh * Assets::getCubeMesh() const {
 	return &cubeMesh;
 }
 
-int Assets::getMeshId(const string & name) const {
+IdMesh Assets::getMeshId(const string & name) const {
 	Iterator it = meshIds.find(name);
 	if (it == meshIds.end()) {
 		int a = 3;
@@ -40,8 +40,8 @@ const Texture* Assets::getTexture(const string& name) const {
 	return &textures[textureIds.find(name)->second];
 }
 
-const RandomMeshConfig * Assets::getRandomMesh(const string & name) const {
-	return &randomGroup.find(name)->second;
+const MeshConfigConstructor * Assets::getMeshConfigId(const string & name) const {
+	return meshConfigIds.find(name)->second;
 }
 
 pair<IdTex, uint> Assets::getAnimatedTexture(const string & name) const {
@@ -52,15 +52,15 @@ pair<IdMesh, uint> Assets::getAnimatedMesh(const string & name) const {
 	return animatedMeshGroup.find(name)->second;
 }
 
-const std::vector<IdMesh>* Assets::getGroups() const {
-	return &groups[0][0];
+const vector<IdMesh>* Assets::getGroups() const {
+	return &meshGroups[0][0];
 }
 
-const std::vector<MeshConfigConstructor*>* Assets::getDecoration() const {
-	return decorationGroup;
+const vector<MeshConfigConstructor*>* Assets::getMeshConfigGroups() const {
+	return &meshConfigGroups[0][0];
 }
 
-MeshBehavior Assets::getBehavior(IdMesh mesh) const {
+MonoBehaviourType Assets::getBehavior(IdMesh mesh) const {
 	return behaviours[mesh];
 }
 
@@ -82,11 +82,37 @@ inline BiomeType biomeString2enum(const string& biomeString) {
 	int a = 3;
 }
 
-inline MeshBehavior behaviorString2enum(const string& behaviorString) {
-	if (behaviorString == "stalker")
-		return MeshBehavior::Stalker;
-	else if (behaviorString == "None")
-		return MeshBehavior::None;
+inline MeshConfigGroup meshConfigString2enum(const string& meshConfigString) {
+	if (meshConfigString == "decoration") {
+		return MeshConfigGroup::Decoration;
+	}
+	else if (meshConfigString == "border") {
+		return MeshConfigGroup::Border;
+	}
+	else if (meshConfigString == "unique")
+		return MeshConfigGroup::Unique;
+	int a = 3;
+}
+
+inline MeshGroup meshString2enum(const string& meshString) {
+	if (meshString == "enemy") {
+		return MeshGroup::Enemy;
+	}
+	else if (meshString == "platform") {
+		return MeshGroup::Platform;
+	}
+	else if (meshString == "unique")
+		return MeshGroup::Unique;
+	int a = 3;
+}
+
+inline MonoBehaviourType behaviorString2enum(const string& behaviourString) {
+	if (behaviourString == "stalker")
+		return MonoBehaviourType::Stalker;
+	else if (behaviourString == "coin")
+		return MonoBehaviourType::Coin;
+	else if (behaviourString == "None")
+		return MonoBehaviourType::None;
 	int a = 3;
 }
 
@@ -106,24 +132,37 @@ void Assets::loadAssets(const string& modelPath, const string& texturePath) {
 
 	const Value& models = document["models"];
 	nImportedMeshes = 0;
+	nbasicMeshConfigs = 0;
+	nRandomMeshConfigs = 0;
 
 	for (const Value& meshProperties : models.GetArray()) {
-		nImportedMeshes += meshProperties["names"].Size();
+		uint size = meshProperties["names"].Size();
+		nImportedMeshes += size;
+		if (meshProperties.HasMember("size")) {
+			if (size > 1)
+				++nRandomMeshConfigs;
+			else
+				++nbasicMeshConfigs;
+		}
 	}
 
 	for (uint i = 0; i < nBiomes; ++i) {
-		for (uint j = 0; j < nGroups; ++j) {
-			groups[i][j].reserve(nImportedMeshes);
+		for (uint j = 0; j < nMeshGroups; ++j) {
+			meshGroups[i][j].reserve(nImportedMeshes);
 		}
-		decorationGroup[i].reserve(nImportedMeshes);
+		for (uint j = 0; j < nMeshConfigGroups; ++j) {
+			meshConfigGroups[i][j].reserve(nRandomMeshConfigs + nbasicMeshConfigs);
+		}
 	}
 
 	cubeMesh.init();
 	meshes = new ImportedMesh[nImportedMeshes];
-	behaviours = new MeshBehavior[nImportedMeshes];
+	behaviours = new MonoBehaviourType[nImportedMeshes];
+	randomMeshConfigs = new RandomMeshConfig[nRandomMeshConfigs];
+	basicMeshConfigs = new BasicMeshConfig[nbasicMeshConfigs];
 
 	string name, type;
-	uint i = 0;
+	uint i = 0, iBasicConfig = 0, iRandomConfig = 0;
 	vector<string> idMeshNames(nImportedMeshes);
 	for (const Value& meshProperties : models.GetArray()) {
 		uint firstId = i;
@@ -136,21 +175,24 @@ void Assets::loadAssets(const string& modelPath, const string& texturePath) {
 			++i;
 		}
 		uint nMeshes = namesV.Size();
-		type.assign(meshProperties["type"].GetString());
+		
 		if (meshProperties.HasMember("behaviour")) {
 			behaviours[firstId] = behaviorString2enum(meshProperties["behaviour"].GetString());
 		}
 		else
-			behaviours[firstId] = MeshBehavior::None;
+			behaviours[firstId] = MonoBehaviourType::None;
+		const Value& biomesV = meshProperties["biomes"];
+		const Value& typesV = meshProperties["type"];
 
-		if (type == "decoration") {
-			const Value& biomeV = meshProperties["biomes"];
+		if (meshProperties.HasMember("size")) {
 			const Value& size = meshProperties["size"];
 			MeshConfigConstructor* constructor;
 			if (nMeshes > 1) {
-				RandomMeshConfig* randomMeshConfig = new RandomMeshConfig();
-				randomMeshConfig->rows = size[0].GetUint();
-				randomMeshConfig->cols = size[1].GetUint();
+				RandomMeshConfig& randomMeshConfig = randomMeshConfigs[iRandomConfig];
+				constructor = &randomMeshConfig;
+				++iRandomConfig;
+				randomMeshConfig.rows = size[0].GetUint();
+				randomMeshConfig.cols = size[1].GetUint();
 
 				const Value& heightsV = meshProperties["height"];
 				float* heights = new float[nMeshes];
@@ -173,7 +215,7 @@ void Assets::loadAssets(const string& modelPath, const string& texturePath) {
 				else
 					memset(empty, false, nMeshes);
 
-				bool* collisionMap = new bool[randomMeshConfig->rows*randomMeshConfig->cols];
+				bool* collisionMap = new bool[randomMeshConfig.rows*randomMeshConfig.cols];
 				if (meshProperties.HasMember("collision map")) {
 					const Value& collisionMapV = meshProperties["collision map"];
 					for (uint i = 0; i < collisionMapV.Size(); ++i) {
@@ -181,8 +223,8 @@ void Assets::loadAssets(const string& modelPath, const string& texturePath) {
 					}
 				}
 				else
-					memset(collisionMap, true, randomMeshConfig->rows*randomMeshConfig->cols);
-				
+					memset(collisionMap, true, randomMeshConfig.rows*randomMeshConfig.cols);
+
 				const Value& probabilitiesV = meshProperties["probabilities"];
 				float* probabilities = new float[nMeshes];
 				if (probabilitiesV.IsArray()) {
@@ -194,13 +236,12 @@ void Assets::loadAssets(const string& modelPath, const string& texturePath) {
 					for (uint i = 0; i < nMeshes; ++i)
 						probabilities[i] = probability;
 				}
-				randomMeshConfig->setProbabilities(probabilities, nMeshes);
-				randomMeshConfig->firstMesh = firstId;
-				randomMeshConfig->heights = heights;
-				randomMeshConfig->empty = empty;
-				randomMeshConfig->collisionMap = collisionMap;
-				randomMeshConfig->canJump = false;
-				constructor = randomMeshConfig;
+				randomMeshConfig.setProbabilities(probabilities, nMeshes);
+				randomMeshConfig.firstMesh = firstId;
+				randomMeshConfig.heights = heights;
+				randomMeshConfig.empty = empty;
+				randomMeshConfig.collisionMap = collisionMap;
+				randomMeshConfig.canJump = false;
 			}
 			else {
 				MeshConfig aux;
@@ -225,81 +266,64 @@ void Assets::loadAssets(const string& modelPath, const string& texturePath) {
 					memset(collisionMap, true, aux.rows*aux.cols);
 				aux.collisionMap = collisionMap;
 				aux.canJump = false;
-				constructor = new BasicMeshConfig();
-				((BasicMeshConfig*)constructor)->meshConfig = aux;
+				basicMeshConfigs[iBasicConfig].meshConfig = aux;
+				constructor = &basicMeshConfigs[iBasicConfig];
+				++iBasicConfig;
 			}
-			for (const Value& biomeName : biomeV.GetArray()) {
-				decorationGroup[biomeString2enum(biomeName.GetString())].push_back(constructor);
+			if (meshProperties.HasMember("group name")) {
+				meshConfigIds[meshProperties["group name"].GetString()] = constructor;
+			}
+			
+			if (typesV.IsArray()) {
+				for (const Value& biome : biomesV.GetArray()) {
+					BiomeType biomeType = biomeString2enum(biome.GetString());
+					for (const Value& typeV : typesV.GetArray()) {
+						MeshConfigGroup group = meshConfigString2enum(typeV.GetString());
+						meshConfigGroups[(int)biomeType][(int)group].push_back(constructor);
+					}
+				}
+			}
+			else {
+				MeshConfigGroup group = meshConfigString2enum(typesV.GetString());
+				for (const Value& biome : biomesV.GetArray()) {
+					BiomeType biomeType = biomeString2enum(biome.GetString());
+					meshConfigGroups[(int)biomeType][(int)group].push_back(constructor);
+				}
 			}
 		}
-		else if (type == "enemy") {
-			const Value& biomeV = meshProperties["biomes"];
-			for (const Value& biomeName : biomeV.GetArray()) {
-				groups[biomeString2enum(biomeName.GetString())][Enemy].push_back(firstId);
-			}
-		}
-		else if (type == "platform") {
-			const Value& biomeV = meshProperties["biomes"];
+		else {
 			if (namesV.Size() > 1) {
 				map<string, pair<IdMesh, uint>>::iterator it = animatedMeshGroup.insert(make_pair(meshProperties["group name"].GetString(), pair<IdMesh, uint>())).first;
 				pair<IdMesh, uint>& animMeshes = it->second;
 				animMeshes.first = firstId;
 				animMeshes.second = namesV.Size();
 			}
-			for (const Value& biomeName : biomeV.GetArray()) {
-				groups[biomeString2enum(biomeName.GetString())][Platform].push_back(firstId);
-			}
-		}
-		else if (type == "random") {
-			string groupName = meshProperties["group name"].GetString();
-			map<string, RandomMeshConfig>::iterator it = randomGroup.insert(make_pair(groupName, RandomMeshConfig())).first;
-			RandomMeshConfig& randomMesh = it->second;
-			const Value& size = meshProperties["size"];
-			randomMesh.rows = size[0].GetUint();
-			randomMesh.cols = size[1].GetUint();
-			const Value& heightsV = meshProperties["height"];
-			float* heights = new float[heightsV.Size()];
-			bool* empty = new bool[nMeshes];
-			if (meshProperties.HasMember("floor empty")) {
-				const Value& emptiesV = meshProperties["floor empty"];
-				for (uint i = 0; i < nMeshes; ++i) {
-					empty[i] = emptiesV[i].GetBool();
+			if (typesV.IsArray()) {
+				for (const Value& biome : biomesV.GetArray()) {
+					BiomeType biomeType = biomeString2enum(biome.GetString());
+					for (const Value& typeV : typesV.GetArray()) {
+						MeshGroup group = meshString2enum(typeV.GetString());
+						meshGroups[(int)biomeType][(int)group].push_back(firstId);
+					}
 				}
 			}
-			else
-				memset(empty, false, nMeshes);
-			const Value& probabilitiesV = meshProperties["probabilities"];
-			float* probabilities = new float[probabilitiesV.Size()];
-			for (uint i = 0; i < heightsV.Size(); ++i) {
-				heights[i] = heightsV[i].GetFloat();
-				probabilities[i] = probabilitiesV[i].GetFloat();
-			}
-
-			bool* collisionMap = new bool[randomMesh.rows*randomMesh.cols];
-			if (meshProperties.HasMember("collision map")) {
-				const Value& collisionMapV = meshProperties["collision map"];
-				for (uint i = 0; i < collisionMapV.Size(); ++i) {
-					collisionMap[i] = collisionMapV[i].GetBool();
+			else {
+				MeshGroup group = meshString2enum(typesV.GetString());
+				for (const Value& biome : biomesV.GetArray()) {
+					BiomeType biomeType = biomeString2enum(biome.GetString());
+					meshGroups[(int)biomeType][(int)group].push_back(firstId);
 				}
 			}
-			else
-				memset(collisionMap, true, randomMesh.rows*randomMesh.cols);
-			randomMesh.collisionMap = collisionMap;
-			randomMesh.setProbabilities(probabilities, probabilitiesV.Size());
-			randomMesh.firstMesh = firstId;
-			randomMesh.heights = heights;
-			randomMesh.empty = empty;
-		}
-		else if (type != "unique") {
-			int a = 3;
 		}
 	}
 
 	for (uint i = 0; i < nBiomes; ++i) {
-		for (uint j = 0; j < nGroups; ++j) {
-			groups[i][j].shrink_to_fit();
+		for (uint j = 0; j < nMeshGroups; ++j) {
+			meshGroups[i][j].shrink_to_fit();
 		}
-		decorationGroup[i].shrink_to_fit();
+		for (uint j = 0; j < nMeshConfigGroups; ++j) {
+			meshConfigGroups[i][j].shrink_to_fit();
+		}
 	}
 
 	jsonFile.open(texturePath);
@@ -359,7 +383,7 @@ void Assets::loadAssets(const string& modelPath, const string& texturePath) {
 		output.write((const char*)&length, sizeof(uint));
 		output.write(idMeshNames[i].c_str(), length);
 	}
-	output.write((const char*)behaviours, sizeof(MeshBehavior)*size);
+	output.write((const char*)behaviours, sizeof(MonoBehaviourType)*size);
 
 	size = idTexNames.size();
 	output.write((const char*)&size, sizeof(uint));
@@ -381,33 +405,68 @@ void Assets::loadAssets(const string& modelPath, const string& texturePath) {
 		output.write((const char*)&mipmap, sizeof(bool));
 	}
 
+	output.write((const char*)&nbasicMeshConfigs, sizeof(nbasicMeshConfigs));
+	for (uint i = 0; i < nbasicMeshConfigs; ++i) {
+		basicMeshConfigs[i].store(output);
+	}
+
+	output.write((const char*)&nRandomMeshConfigs, sizeof(nRandomMeshConfigs));
+	for (uint i = 0; i < nRandomMeshConfigs; ++i) {
+		randomMeshConfigs[i].store(output);
+	}
+
 	for (uint i = 0; i < nBiomes; ++i) {
-		for (uint j = 0; j < nGroups; ++j) {
-			uint size = groups[i][j].size();
+		for (uint j = 0; j < nMeshGroups; ++j) {
+			uint size = meshGroups[i][j].size();
 			output.write((const char*)&size, sizeof(uint));
 			if (size == 0)
 				continue;
-			output.write((const char*)&groups[i][j][0], sizeof(IdMesh)*size);
+			output.write((const char*)&meshGroups[i][j][0], sizeof(IdMesh)*size);
 		}
 	}
 
 	for (uint i = 0; i < nBiomes; ++i) {
-		vector<MeshConfigConstructor*>& decorG = decorationGroup[i];
-		uint size = decorG.size();
-		output.write((const char*)&size, sizeof(uint));
-		for (uint j = 0; j < decorG.size(); ++j) {
-			MeshConfigConstructor* constructor = decorG[j];
-			constructor->store(output);
+		for (uint j = 0; j < nMeshConfigGroups; ++j) {
+			vector<MeshConfigConstructor*>& decorG = meshConfigGroups[i][j];
+			uint size = decorG.size();
+			output.write((const char*)&size, sizeof(uint));
+			for (uint j = 0; j < decorG.size(); ++j) {
+				MeshConfigConstructor* constructor = decorG[j];
+				MeshConfigConstructorType type;
+				uint index;
+				if (dynamic_cast<BasicMeshConfig*>(constructor)) {
+					type = MeshConfigConstructorType::Basic;
+					index = ((uint)constructor - (uint)basicMeshConfigs)/sizeof(BasicMeshConfig);
+				}
+				else {
+					type = MeshConfigConstructorType::Random;
+					index = ((uint)constructor - (uint)randomMeshConfigs) / sizeof(RandomMeshConfig);
+				}
+				output.write((const char*)&type, sizeof(MeshConfigConstructorType));
+				output.write((const char*)&index, sizeof(uint));
+			}
 		}
 	}
 
-	size = randomGroup.size();
+	size = meshConfigIds.size();
 	output.write((const char*)&size, sizeof(uint));
-	for (pair<const string, RandomMeshConfig>& p : randomGroup) {
+	for (pair<const string, MeshConfigConstructor*>& p : meshConfigIds) {
 		uint length = p.first.length();
 		output.write((const char*)&length, sizeof(uint));
 		output.write(p.first.c_str(), length);
-		p.second.store(output);
+		MeshConfigConstructor* constructor = p.second;
+		MeshConfigConstructorType type;
+		uint index;
+		if (dynamic_cast<BasicMeshConfig*>(constructor)) {
+			type = MeshConfigConstructorType::Basic;
+			index = ((uint)constructor - (uint)basicMeshConfigs) / sizeof(BasicMeshConfig);
+		}
+		else {
+			type = MeshConfigConstructorType::Random;
+			index = ((uint)constructor - (uint)randomMeshConfigs) / sizeof(RandomMeshConfig);
+		}
+		output.write((const char*)&type, sizeof(MeshConfigConstructorType));
+		output.write((const char*)&index, sizeof(uint));
 	}
 
 	size = animatedTextureGroup.size();
@@ -447,8 +506,8 @@ void Assets::loadAssets(const string & binaryPath) {
 		meshes[i].loadFromBinary("models/" + name);
 		meshIds[name] = i;
 	}
-	behaviours = new MeshBehavior[nImportedMeshes];
-	input.read((char*)behaviours, sizeof(MeshBehavior)*nImportedMeshes);
+	behaviours = new MonoBehaviourType[nImportedMeshes];
+	input.read((char*)behaviours, sizeof(MonoBehaviourType)*nImportedMeshes);
 
 	input.read((char*)&nTextures, sizeof(uint));
 	textures = new Texture[nTextures];
@@ -478,33 +537,53 @@ void Assets::loadAssets(const string & binaryPath) {
 		textureIds[name] = i;
 	}
 
+	input.read((char*)&nbasicMeshConfigs, sizeof(nbasicMeshConfigs));
+	basicMeshConfigs = new BasicMeshConfig[nbasicMeshConfigs];
+	for (uint i = 0; i < nbasicMeshConfigs; ++i) {
+		MeshConfigConstructorType type;
+		input.read((char*)&type, sizeof(MeshConfigConstructorType));
+		basicMeshConfigs[i].load(input);
+	}
+
+	input.read((char*)&nRandomMeshConfigs, sizeof(nRandomMeshConfigs));
+	randomMeshConfigs = new RandomMeshConfig[nRandomMeshConfigs];
+	for (uint i = 0; i < nRandomMeshConfigs; ++i) {
+		MeshConfigConstructorType type;
+		input.read((char*)&type, sizeof(MeshConfigConstructorType));
+		randomMeshConfigs[i].load(input);
+	}
+
 	for (uint i = 0; i < nBiomes; ++i) {
-		for (uint j = 0; j < nGroups; ++j) {
+		for (uint j = 0; j < nMeshGroups; ++j) {
 			uint size;
 			input.read((char*)&size, sizeof(uint));
 			if (size == 0)
 				continue;
-			groups[i][j].resize(size);
-			input.read((char*)&groups[i][j][0], sizeof(IdMesh)*size);
+			meshGroups[i][j].resize(size);
+			input.read((char*)&meshGroups[i][j][0], sizeof(IdMesh)*size);
 		}
 	}
 
 	for (uint i = 0; i < nBiomes; ++i) {
-		uint size;
-		input.read((char*)&size, sizeof(uint));
-		decorationGroup[i].resize(size);
-		for (uint j = 0; j < size; ++j) {
-			MeshConfigConstructor* constructor;
-			MeshConfigConstructorType type;
-			input.read((char*)&type, sizeof(MeshConfigConstructorType));
-			if (type == MeshConfigConstructorType::Basic) {
-				constructor = new BasicMeshConfig();
+		for (uint j = 0; j < nMeshConfigGroups; ++j) {
+			vector<MeshConfigConstructor*>& decorG = meshConfigGroups[i][j];
+			uint size;
+			input.read((char*)&size, sizeof(uint));
+			decorG.resize(size);
+			for (uint k = 0; k < size; ++k) {
+				MeshConfigConstructorType type;
+				uint index;
+				input.read((char*)&type, sizeof(MeshConfigConstructorType));
+				input.read((char*)&index, sizeof(uint));
+				switch (type) {
+				case MeshConfigConstructorType::Basic:
+					decorG[k] = &basicMeshConfigs[index];
+					break;
+				case MeshConfigConstructorType::Random:
+					decorG[k] = &randomMeshConfigs[index];
+					break;
+				}
 			}
-			else {
-				constructor = new RandomMeshConfig();
-			}
-			constructor->load(input);
-			decorationGroup[i][j] = constructor;
 		}
 	}
 
@@ -519,11 +598,19 @@ void Assets::loadAssets(const string & binaryPath) {
 		delete c_str;
 
 		MeshConfigConstructorType type;
+		MeshConfigConstructor* constructor;
+		uint index;
 		input.read((char*)&type, sizeof(MeshConfigConstructorType));
-
-		map<string, RandomMeshConfig>::iterator it = randomGroup.insert(make_pair(groupName, RandomMeshConfig())).first;
-		RandomMeshConfig& randomMesh = it->second;
-		randomMesh.load(input);
+		input.read((char*)&index, sizeof(uint));
+		switch (type) {
+		case MeshConfigConstructorType::Basic:
+			constructor = &basicMeshConfigs[index];
+			break;
+		case MeshConfigConstructorType::Random:
+			constructor = &randomMeshConfigs[index];
+			break;
+		}
+		map<string, MeshConfigConstructor*>::iterator it = meshConfigIds.insert(make_pair(groupName, constructor)).first;
 	}
 
 	input.read((char*)&size, sizeof(uint));

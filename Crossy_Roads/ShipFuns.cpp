@@ -1,5 +1,8 @@
 #include "FloorRow.h"
 #include "Utils.h"
+#include "Coin.h"
+#include "Stalker.h"
+#include "Player.h"
 using namespace glm;
 
 inline bool applyConstraints(uint meshIndex, uint numAdjacents, vector<uint>& adjacentRow, uint position) {
@@ -58,7 +61,7 @@ void FloorRow::initShipRoad(vector<uint>& adjacentRow) {
 
 	for (uint i = 0; i < enemies.size(); ++i) {
 		Jumper& enemy = enemies[i];
-		IdMesh enemyId = res.groups[sub2ind(biome, Enemy)][rand()% res.groups[sub2ind(biome, Enemy)].size()];
+		IdMesh enemyId = res.meshGroups[sub2ind(biome, MeshGroup::Enemy)][rand()% res.meshGroups[sub2ind(biome, MeshGroup::Enemy)].size()];
 		enemy.setMesh(enemyId, res.assets->getMesh(enemyId));
 		enemy.setScale(vec3(0.1f));
 		enemy.setCenterToBaseCenter();
@@ -149,6 +152,26 @@ void FloorRow::initShipSafeZone(const FloorRow& prevRow) {
 		object.setPos(vec3(posX + (realTileSize*(map[i].cols / 2.f)) - realTileSize / 2, rowHeight, pos.y - fp.tileSize.y*(map[i].rows / 2.f) + fp.tileSize.y / 2));
 		object.setPlane(vec4(0, 1, 0, -rowHeight), fp.lightDir);
 		furniture.push_back(object);
+
+		Stalker* stalker;
+		Coin* coin;
+		switch (res.assets->getBehavior(meshId)) {
+		case MonoBehaviourType::Stalker:
+			stalker = new Stalker();
+			stalker->origin = &furniture[furniture.size() - 1];
+			stalker->direction = vec2(-1, 0);
+			stalker->objective = res.player->getObject();
+			behaviours.push_back(stalker);
+			break;
+		case MonoBehaviourType::Coin:
+			coin = new Coin();
+			coin->origin = &furniture[furniture.size() - 1];
+			coin->start();
+			behaviours.push_back(coin);
+			break;
+		case MonoBehaviourType::None:
+			break;
+		}
 	}
 
 	if (hasEmpty) {
@@ -178,5 +201,4 @@ void FloorRow::initShipSafeZone(const FloorRow& prevRow) {
 		tile.setCenter(vec3(bbcenter.x, bbcenter.y + height / 2.f, bbcenter.z));
 		tile.setPos(vec3(pos.x, rowHeight, pos.y));
 	}
-	
 }

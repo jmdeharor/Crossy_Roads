@@ -9,7 +9,7 @@
 #include "FloorResources.h"
 #include "AnimTexObject.h"
 #include "AnimMeshObject.h"
-#include "Stalker.h"
+#include "MonoBehaviour.h"
 
 enum FloorType {
 	Road,
@@ -45,7 +45,7 @@ private:
 	bool safeZone;
 	float rowHeight;
 	glm::uint frameCounter, frameLimit;
-	std::vector<Stalker> stalkers;
+	std::vector<MonoBehaviour*> behaviours;
 	std::vector<Jumper> enemies;
 	std::vector<float> speeds;
 	std::vector<CellProperties> map;
