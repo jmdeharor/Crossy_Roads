@@ -31,6 +31,7 @@ const int jumpingFrames = 5;
 
 void Shop::firstInit() {
 
+	noCoinsBool = false;
 	soundManager = Game::instance().getSoundManager();
 	clickSound = soundManager->loadSound("sounds/Effect_click.wav", FMOD_DEFAULT);
 	charTexs.resize(8);
@@ -91,6 +92,7 @@ bool Shop::isButton(Sprite* sprite, int x, int y) {
 }
 
 void Shop::performClickAction(int x, int y) {
+	noCoinsBool = false;
 	if (isButton(backArrow, x, y)) {
 		FMOD::Channel* channel = soundManager->playSound(clickSound);
 		channel->setVolume(2);
@@ -117,7 +119,7 @@ void Shop::performClickAction(int x, int y) {
 			}
 			else {
 				chars[i]->setTexture(&charTexs[i]);
-				noCoins.render("Not enough dobloons!", vec2(SCREEN_WIDTH / 2.f, SCREEN_HEIGHT / 2.f), 32, vec4(1, 0, 0, 1));
+				noCoinsBool = true;
 				//play no money sound and display message
 			}
 
@@ -173,6 +175,10 @@ void Shop::render() {
 	charTexts[5].render(prices[5], vec2(chars[5]->getPosition().x - 48, chars[5]->getPosition().y + chars[5]->getSize().y), 64, vec4(0, 0, 0, 1));
 	charTexts[6].render(prices[6], vec2(chars[6]->getPosition().x - 48, chars[6]->getPosition().y + chars[6]->getSize().y), 64, vec4(0, 0, 0, 1));
 	charTexts[7].render(prices[7], vec2(chars[7]->getPosition().x - 48, chars[7]->getPosition().y + chars[7]->getSize().y), 64, vec4(0, 0, 0, 1));
+	if (noCoinsBool) {
+		vec2 size = noCoins.getQuadSize("Not enough dobloons, ye scurvy baboon!", 32);
+		noCoins.render("Not enough dobloons, ye scurvy baboon!", vec2(SCREEN_WIDTH / 2.f - size.x / 2.f, SCREEN_HEIGHT / 2.f + 50), 32, vec4(1, 0, 0, 1));
+	}
 }
 
 void initTexture(Texture& texture, string path) {

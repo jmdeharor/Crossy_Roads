@@ -55,6 +55,7 @@ private:
 	std::vector<Text> charTexts;
 	std::vector<string> prices;
 	Text noCoins;
+	bool noCoinsBool;
 
 	ShaderProgram shaderProgram;
 	float currentTime;
