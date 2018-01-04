@@ -24,6 +24,10 @@
 #define CAMERA_WIDTH 640
 #define CAMERA_HEIGHT 480
 
+enum class SceneReturn {
+	EndGame,
+	Nothing
+};
 
 // Scene contains all the entities of our game.
 // It is responsible for updating and render them.
@@ -38,10 +42,11 @@ public:
 	~Scene();
 
 	void init();
-	void update(int deltaTime);
+	SceneReturn update(int deltaTime);
 	void render();
 	void resize(int w, int h);
 
+	bool playerControl;
 private:
 	void firstInit() override;
 	void initShaders();

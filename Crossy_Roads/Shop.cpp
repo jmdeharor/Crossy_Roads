@@ -128,40 +128,32 @@ void Shop::performClickAction(int x, int y) {
 }
 
 void Shop::update(int deltaTime) {
-	currentTime += deltaTime;
-	if (Game::instance().getCurrentState() == GameState::SHOP) {
-		if (click && !Game::instance().getLeftButtonPressed()) {
-			performClickAction(Game::instance().getXPressed(), Game::instance().getYPressed());
-			click = false;
-		}
-		if (Game::instance().getLeftButtonPressed()) click = true;
-		int x = Game::instance().getX();
-		int y = Game::instance().getY();
-		bool onButton = false;
-		for (int i = 0; i < 8; ++i) {
-			if (isButton(chars[i], x, y) && locked[i]) {
-				chars[i]->setTexture(&charTexsLockedHL[i]);
-				onButton = true;
-			}
-		}
-		if (!onButton) {
-			for (int i = 0; i < 8; ++i) {
-				if (locked[i]) chars[i]->setTexture(&charTexsLocked[i]);
-			}
+	if (click && !Game::instance().getLeftButtonPressed()) {
+		performClickAction(Game::instance().getXPressed(), Game::instance().getYPressed());
+		click = false;
+	}
+	if (Game::instance().getLeftButtonPressed()) click = true;
+	int x = Game::instance().getX();
+	int y = Game::instance().getY();
+	bool onButton = false;
+	for (int i = 0; i < 8; ++i) {
+		if (isButton(chars[i], x, y) && locked[i]) {
+			chars[i]->setTexture(&charTexsLockedHL[i]);
+			onButton = true;
 		}
 	}
-
+	if (!onButton) {
+		for (int i = 0; i < 8; ++i) {
+			if (locked[i]) chars[i]->setTexture(&charTexsLocked[i]);
+		}
+	}
 }
 
 void Shop::render() {
-	glm::mat4 modelview;
 	shaderProgram.use();
 	glm::mat4 projection = ortho(0.f, float(SCREEN_WIDTH - 1), float(SCREEN_HEIGHT - 1), 0.f);
 	shaderProgram.setUniformMatrix4f("projection", projection);
 	shaderProgram.setUniform4f("color", 1.0f, 1.0f, 1.0f, 1.0f);
-	modelview = glm::mat4(1.0f);
-	shaderProgram.setUniformMatrix4f("modelview", modelview);
-	shaderProgram.setUniform2f("texCoordDispl", 0.f, 0.f);
 	shopBackground->render();
 	for (int i = 0; i < 8; ++i) {
 		chars[i]->render();

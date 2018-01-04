@@ -39,6 +39,7 @@ void FloorRow::initShipRoad(vector<uint>& adjacentRow) {
 	enemies.resize(between(1, 3));
 	speeds.resize(enemies.size());
 	floorTiles.resize(fp.cols);
+	theFloorIsLava = false;
 
 	static float realTileSize = fp.tileSize.x / fp.cols;
 	const static Mesh* cubeMesh = res.assets->getCubeMesh();
@@ -119,6 +120,7 @@ void FloorRow::initShipSafeZone(const FloorRow& prevRow) {
 	case Island:
 		break;
 	}
+	theFloorIsLava = false;
 
 	static float realTileSize = fp.tileSize.x / fp.cols;
 	float offsetX = pos.x - (realTileSize*(fp.cols / 2) - (1 - fp.cols % 2)*fp.realTileSize / 2);

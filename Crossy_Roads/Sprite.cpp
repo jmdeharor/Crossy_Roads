@@ -69,6 +69,7 @@ void Sprite::update(int deltaTime)
 }
 
 void Sprite::setSizeSprite(vec2 sizeSprite) {
+	size = sizeSprite;
 	float x = size.x / 2;
 	float y = size.y / 2;
 	float vertices[24] = { -x, -y, 0.f, 0.f,
@@ -198,6 +199,10 @@ glm::vec2 Sprite::getPosition() {
 glm::vec2 Sprite::getSize()
 {
 	return size;
+}
+
+bool Sprite::inside(int x, int y) const {
+	return x <= position.x+(size.x/2) && x >= position.x-(size.x/2) && y <= position.y+(size.y/2) && y >= position.y-(size.y/2);
 }
 
 int Sprite::animRepeats()

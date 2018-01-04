@@ -7,8 +7,8 @@ void Coin::start() {
 }
 
 void Coin::update(int deltaTime) {
-	if (abs(player->getX()-origin->getX()) < 0.01f &&
-		abs(player->getZ()-origin->getZ()) < 0.01f) {
+	if (player->getX() == origin->getX() &&
+		player->getZ() == origin->getZ()) {
 		Game::instance().coins += 1;
 		origin->destroy();
 		return;

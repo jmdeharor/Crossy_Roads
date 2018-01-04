@@ -126,6 +126,7 @@
     <ClCompile Include="BasicMeshConfig.cpp" />
     <ClCompile Include="BehaviourObject.cpp" />
     <ClCompile Include="Coin.cpp" />
+    <ClCompile Include="EndGameView.cpp" />
     <ClCompile Include="MeshConfigConstructor.cpp" />
     <ClCompile Include="MonoBehaviour.cpp" />
     <ClCompile Include="Menu.cpp" />
@@ -187,6 +188,7 @@
     <ClInclude Include="BasicMeshConfig.h" />
     <ClInclude Include="BehaviourObject.h" />
     <ClInclude Include="Coin.h" />
+    <ClInclude Include="EndGameView.h" />
     <ClInclude Include="Menu.h" />
     <ClInclude Include="MeshConfigConstructor.h" />
     <ClInclude Include="MonoBehaviour.h" />

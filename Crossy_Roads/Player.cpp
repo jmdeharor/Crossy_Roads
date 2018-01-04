@@ -16,13 +16,11 @@ void Player::groupDrawableObjects(const FrustumG& frustum, RenderVectors& render
 	renderVectors.shadowObjects[playerObject.meshId].push_back(&playerObject);
 }
 
-void Player::jump() {
-}
-
-void Player::init(const Assets& assets, vec3 lightDir, vec3 offset, float jumpDistance, Floor &floor) {
+void Player::init(const Assets& assets, vec3 lightDir, vec3 offset, float jumpDistance, Floor& floor, WaterParticleSystem* particleSystem) {
 	GameObject::init();
 	this->lightDir = lightDir;
 	this->floor = &floor;
+	this->particleSystem = particleSystem;
 	this->jumpDistance = jumpDistance;
 
 	currentPosScore = score = 0;
@@ -58,13 +56,18 @@ PlayerReturn Player::update(int deltaTime) {
 	if (!upsideDown && collides()) {
 		playerObject.setRotationZ(PI);
 		upsideDown = true;
-		return ret;
+		return PlayerReturn::DEAD;
 	}
 	if (inMovement) {
 		if (!keepMoving()) {
 			currentFrame = 0;
 			inMovement = false;
 			currentColIndex = FloorRow::worldToCol(playerObject.getPos().x);
+			FloorRow* floorRow = floor->getFloorRow(currentRowIndex);
+			if (floorRow->getRowHeight() == playerObject.getY() && floorRow->isTheFloorLava()) {
+				particleSystem->trigger(playerObject.getPos());
+				return PlayerReturn::DEAD;
+			}
 		}
 	}
 	else {
@@ -125,7 +128,6 @@ PlayerReturn Player::update(int deltaTime) {
 				currentFloorRow = currentPos.first.y;
 				calculateSpeeds();
 				soundManager->playSound(jumpSound);
-
 			}
 			wPressed = aPressed = sPressed = false;
 		}
@@ -223,15 +225,17 @@ void Player::performRotation(char key) {
 
 bool Player::keepMoving() {
 	currentFrame++;
-	bool returnValue = true;
+	bool returnValue;
 
-	speeds.y = verticalSpeed + gravity*currentFrame;
 	if (currentFrame == JUMP_DURATION) {
-		speeds.y =  -(playerObject.getPos().y - nextPos.y);
+		playerObject.setPos(nextPos);
 		returnValue = false;
 	}
-	
-	playerObject.move(speeds);
+	else {
+		returnValue = true;
+		speeds.y = verticalSpeed + gravity*currentFrame;
+		playerObject.move(speeds);
+	}
 	return returnValue;
 }
 

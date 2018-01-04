@@ -3,6 +3,7 @@
 #include "ShadowedObject.h"
 #include "ImportedMesh.h"
 #include "Floor.h"
+#include "WaterParticles.h"
 #include "SoundManager.h"
 
 enum Orientation {
@@ -17,6 +18,7 @@ enum class PlayerReturn {
 	MOVE_BACK,
 	MOVE_LEFT,
 	MOVE_RIGHT,
+	DEAD,
 	NOTHING
 };
 
@@ -24,6 +26,7 @@ class Player : public GameObject, public ObjectContainer {
 	ShadowedObject playerObject;
 	void firstInit() override;
 private:
+	WaterParticleSystem* particleSystem;
 	int currentPosScore;
 	int score;
 	float platformSpeed;
@@ -58,8 +61,7 @@ public:
 	void groupDrawableObjects(
 		const FrustumG& frustum, RenderVectors& renderVectors
 	) override;
-	void jump();
-	void init(const Assets& assets, glm::vec3 lightDir, glm::vec3 offset, float jumpDistance, Floor &floor);
+	void init(const Assets& assets, glm::vec3 lightDir, glm::vec3 offset, float jumpDistance, Floor& floor, WaterParticleSystem* particleSystem);
 	PlayerReturn update(int deltaTime);
 	glm::vec3 getPos() const;
 	float getHeight() const;

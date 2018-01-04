@@ -11,6 +11,7 @@ void FloorRow::initIslandRoad() {
 	enemies.resize(between(1,3));
 	speeds.resize(enemies.size());
 	floorTiles.resize(fp.cols);
+	theFloorIsLava = false;
 
 	static float realTileSize = fp.tileSize.x / fp.cols;
 	const static Mesh* cubeMesh = res.assets->getCubeMesh();
@@ -78,6 +79,7 @@ void FloorRow::initIslandSafeZone(const FloorRow& prevRow) {
 		else rowHeight = prevRow.rowHeight + 0.2f;
 		break;
 	}
+	theFloorIsLava = false;
 
 	static float realTileSize = fp.tileSize.x / fp.cols;
 	float offsetX = pos.x - (realTileSize*(fp.cols / 2) - (1 - fp.cols % 2)*fp.realTileSize / 2);

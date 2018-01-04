@@ -42,6 +42,7 @@ class FloorRow : public ObjectContainer {
 private:
 	BiomeType biome;
 	bool safeZone;
+	bool theFloorIsLava;
 	float rowHeight;
 	glm::uint frameCounter, frameLimit;
 	std::vector<Jumper> enemies;
@@ -82,6 +83,7 @@ public:
 	std::vector<CellProperties>* getRowObjects();
 	std::vector<AnimMeshObject>* getPlatforms();
 	bool isSafeZone() const;
+	bool isTheFloorLava() const;
 	BiomeType getBiome() const;
 	FloorRow();
 	~FloorRow();

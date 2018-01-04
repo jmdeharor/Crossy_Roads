@@ -20,6 +20,7 @@ void FloorRow::initSeaRoad(const FloorRow& prevRow) {
 		else rowHeight = prevRow.rowHeight;
 		break;
 	}
+	theFloorIsLava = true;
 
 	float offsetX = pos.x - (fp.realTileSize*(fp.cols / 2) - (1 - fp.cols % 2)*fp.realTileSize / 2);
 

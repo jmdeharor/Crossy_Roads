@@ -9,6 +9,7 @@
 #include "Sprite.h"
 #include "Texture.h"
 #include "ShaderProgram.h"
+#include "EndGameView.h"
 
 
 #define SCREEN_WIDTH 1024
@@ -20,6 +21,7 @@
 enum class GameState {
 	MENU,
 	PLAYING,
+	ENDGAME,
 	SHOP
 };
 
@@ -73,6 +75,7 @@ private:
 	Scene scene;                      // Scene to render
 	Menu menu;
 	Shop shop;
+	EndGameView endGameView;
 	bool keys[256], specialKeys[256]; // Store key states so that 
 	                                  // we can have access at any time
 	int x, y, xPressed, yPressed, xReleased, yReleased;

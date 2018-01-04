@@ -2,6 +2,7 @@
 #include <GL/glut.h>
 #include "Game.h"
 #include <iostream>
+using namespace glm;
 
 void Game::init() {
 	//TODO: Initialize coins from file
@@ -15,13 +16,15 @@ void Game::init() {
 	scene.init();
 	menu.init();
 	shop.init();
+	endGameView.init();
+	scene.playerControl = false;
 	currentState = GameState::MENU;
 	mouseCursorTexture.loadFromFile("images/cursor.png", TEXTURE_PIXEL_FORMAT_RGBA, true);
 	mouseCursorTexture.wrapS = GL_CLAMP_TO_EDGE;
 	mouseCursorTexture.wrapT = GL_CLAMP_TO_EDGE;
 	mouseCursorTexture.minFilter = GL_NEAREST;
 	mouseCursorTexture.magFilter = GL_NEAREST;
-	mouseCursor = Sprite::createSprite(glm::vec2(32, 32), glm::vec2(1), &mouseCursorTexture, &shaderProgram);
+	mouseCursor = Sprite::createSprite(vec2(32, 32), vec2(1), &mouseCursorTexture, &shaderProgram);
 }
 
 GameState Game::getCurrentState() {
@@ -33,37 +36,89 @@ void Game::setCurrentState(GameState newState) {
 }
 
 bool Game::update(int deltaTime) {
-	mouseCursor->setPosition(glm::vec2(x, y));
+	mouseCursor->setPosition(vec2(x, y));
 	soundManager.update();
-	scene.update(deltaTime);
-	menu.update(deltaTime);
-	shop.update(deltaTime);
+
+	SceneReturn sceneRet;
+	MenuReturn menuRet;
+	EndGameViewReturn endRet;
+	switch (currentState) {
+	case GameState::PLAYING:
+		sceneRet = scene.update(deltaTime);
+		if (sceneRet == SceneReturn::EndGame) {
+			scene.playerControl = false;
+			currentState = GameState::ENDGAME;
+		}
+		else if (getSpecialKey(GLUT_KEY_F1)) {
+			scene.playerControl = false;
+			currentState = GameState::MENU;
+		}
+		break;
+	case GameState::MENU:
+		scene.update(deltaTime);
+		menuRet = menu.update(deltaTime);
+		switch (menuRet) {
+		case MenuReturn::Exit:
+			scene.playerControl = true;
+			currentState = GameState::PLAYING;
+			break;
+		case MenuReturn::Shop:
+			currentState = GameState::SHOP;
+			break;
+		}
+		break;
+	case GameState::SHOP:
+		shop.update(deltaTime);
+		break;
+	case GameState::ENDGAME:
+		scene.update(deltaTime);
+		endRet = endGameView.update(deltaTime);
+		if (endRet == EndGameViewReturn::BackToMenu) {
+			currentState = GameState::MENU;
+		}
+		break;
+	}
 	return bPlay;
 }
 
 void Game::render() {
 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
-	if (currentState == GameState::MENU || currentState == GameState::PLAYING) {
+
+	switch (currentState) {
+	case GameState::PLAYING:
 		glEnable(GL_DEPTH_TEST);
 		scene.render();
 		glDisable(GL_DEPTH_TEST);
+		break;
+	case GameState::MENU:
+		glEnable(GL_DEPTH_TEST);
+		scene.render();
+		glDisable(GL_DEPTH_TEST);
+		glEnable(GL_BLEND);
+		menu.render();
+		glDisable(GL_BLEND);
+		break;
+	case GameState::SHOP:
+		glEnable(GL_BLEND);
+		shop.render();
+		glDisable(GL_BLEND);
+		break;
+	case GameState::ENDGAME:
+		glEnable(GL_DEPTH_TEST);
+		scene.render();
+		glDisable(GL_DEPTH_TEST);
+		glEnable(GL_BLEND);
+		endGameView.render();
+		glDisable(GL_BLEND);
+		break;
 	}
 	glEnable(GL_BLEND);
-	if(currentState == GameState::MENU)
-		menu.render();
-	else if (currentState == GameState::SHOP) {
-		shop.render();
-		glEnable(GL_BLEND);
-	}
-	glm::mat4 modelview;
+	mat4 modelview;
 	shaderProgram.use();
-	glm::mat4 projection = glm::ortho(0.f, float(SCREEN_WIDTH - 1), float(SCREEN_HEIGHT - 1), 0.f);
+	mat4 projection = ortho(0.f, float(SCREEN_WIDTH - 1), float(SCREEN_HEIGHT - 1), 0.f);
 	shaderProgram.setUniformMatrix4f("projection", projection);
 	shaderProgram.setUniform4f("color", 1.0f, 1.0f, 1.0f, 1.0f);
-	modelview = glm::mat4(1.0f);
-	shaderProgram.setUniformMatrix4f("modelview", modelview);
-	shaderProgram.setUniform2f("texCoordDispl", 0.f, 0.f);
 	mouseCursor->render();
 	glDisable(GL_BLEND);
 }

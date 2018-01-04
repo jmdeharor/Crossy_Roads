@@ -50,6 +50,7 @@ public:
 	void setPosition(const glm::vec2 &pos);
 	glm::vec2 getPosition();
 	glm::vec2 getSize();
+	bool inside(int x, int y) const;
 	int animRepeats();
 	void setRotationAngle(float angle, Axis axis);
 	float getRotationAngle();

@@ -230,6 +230,9 @@ vector<AnimMeshObject>* FloorRow::getPlatforms()
 bool FloorRow::isSafeZone() const {
 	return safeZone;
 }
+bool FloorRow::isTheFloorLava() const {
+	return theFloorIsLava;
+}
 BiomeType FloorRow::getBiome() const {
 	return biome;
 }

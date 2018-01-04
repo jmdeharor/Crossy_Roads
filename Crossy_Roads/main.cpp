@@ -45,8 +45,8 @@ static void specialUpCallback(int key, int x, int y)
 
 // Same for changes in mouse cursor position
 
-static void motionCallback(int x, int y)
-{
+static void motionCallback(int x, int y) {
+	Game::instance().mouseMove(x, y);
 }
 
 static void passiveMotionCallback(int x, int y)

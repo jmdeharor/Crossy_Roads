@@ -241,6 +241,9 @@
       <Filter>Archivos de código fuente\MonoBehaviour</Filter>
     </ClCompile>
     <ClCompile Include="BehaviourObject.cpp">
+      <Filter>Archivos de código fuente\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="EndGameView.cpp">
       <Filter>Archivos de código fuente</Filter>
     </ClCompile>
   </ItemGroup>
@@ -420,6 +423,9 @@
       <Filter>Archivos de encabezado\MonoBehaviour</Filter>
     </ClInclude>
     <ClInclude Include="BehaviourObject.h">
+      <Filter>Archivos de encabezado\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="EndGameView.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
   </ItemGroup>

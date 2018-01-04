@@ -8,6 +8,12 @@
 #include "Texture.h"
 #include "SoundManager.h"
 
+enum class MenuReturn {
+	Exit,
+	Shop,
+	Nothing
+};
+
 
 class Menu {
 
@@ -17,14 +23,14 @@ public:
 
 	void init();
 	void render();
-	void update(int deltatime);
+	MenuReturn update(int deltatime);
 
 
 private:
 	void firstInit();
 	void initTextures();
 	void initShaders();
-	void performClickAction(int x, int y);
+	MenuReturn performClickAction(int x, int y);
 
 private:
 	bool initiated;
@@ -38,10 +44,6 @@ private:
 	Texture menuShopTexture;
 	Texture menuShopPressedTexture;
 	ShaderProgram shaderProgram;
-	float currentTime;
-
-
-	
 };
 
 

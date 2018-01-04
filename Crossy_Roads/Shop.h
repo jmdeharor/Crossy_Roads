@@ -58,8 +58,6 @@ private:
 	bool noCoinsBool;
 
 	ShaderProgram shaderProgram;
-	float currentTime;
-
 };
 
 

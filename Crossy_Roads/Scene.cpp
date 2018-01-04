@@ -135,7 +135,7 @@ void Scene::init() {
 	texProgram.setUniform3f("lightDir", lightDir.x, lightDir.y, lightDir.z);
 
 	floor.init(lightDir, assets, &player);
-	player.init(assets, lightDir, vec3(0), floor.getTileSize().y, floor);
+	player.init(assets, lightDir, vec3(0), floor.getTileSize().y, floor, &partSystem);
 	camera.init(lightDir, &player);
 	
 	camera.updateVM();
@@ -148,15 +148,16 @@ void Scene::init() {
 	soundManager->playSound(music);
 }
 
-void Scene::update(int deltaTime) {
+SceneReturn Scene::update(int deltaTime) {
 	QueryPerformanceCounter(&start);
 	floor.update(deltaTime);
 	camera.update(deltaTime);
 	partSystem.update();
 	PlayerReturn playerAction;
-	if(Game::instance().getCurrentState() == GameState::PLAYING)
+	if(playerControl)
 		playerAction = player.update(deltaTime);
 	else playerAction = PlayerReturn::NOTHING;
+
 	switch (playerAction) {
 	case PlayerReturn::NOTHING:
 		break;
@@ -170,11 +171,11 @@ void Scene::update(int deltaTime) {
 	case PlayerReturn::MOVE_BACK:
 		playerRow = playerRow - 1;
 		break;
+	case PlayerReturn::DEAD:
+		return SceneReturn::EndGame;
+		break;
 	default:
 		break;
-	}
-	if (Game::instance().getSpecialKey(GLUT_KEY_F1)) {
-		Game::instance().setCurrentState(GameState::MENU);
 	}
 	if (Game::instance().getKey('p')) {
 		int a = 3;
@@ -188,6 +189,7 @@ void Scene::update(int deltaTime) {
 	if (Game::instance().getKey('o')) {
 		partSystem.trigger(player.getPos());
 	}
+	return SceneReturn::Nothing;
 }
 
 void Scene::render() {

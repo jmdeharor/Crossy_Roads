@@ -31,8 +31,6 @@ void Menu::firstInit() {
 	menuLogo = Sprite::createSprite(vec2(694, 294), vec2(1), &menuLogoTexture, &shaderProgram);
 	menuHighScore = Sprite::createSprite(vec2(94,94), vec2(1), &menuHighScoreTexture, &shaderProgram);
 	menuShop = Sprite::createSprite(vec2(94, 94), vec2(1), &menuShopTexture, &shaderProgram);
-
-
 }
 
 
@@ -55,40 +53,39 @@ bool shopButton(int x, int y) {
 	return x >= (100 - 47 - 10) && x <= (100 + 47 + 10) && y >= SCREEN_HEIGHT - (100 + 47 + 10) && y <= SCREEN_HEIGHT - (100 - 47 - 10);
 }
 
-void Menu::performClickAction(int x, int y) {
+MenuReturn Menu::performClickAction(int x, int y) {
 	if (highScoreButton(x, y)) {
 		//Open HighScore
+		return MenuReturn::Nothing;
 	}
 	else if (shopButton(x, y)) {
 		//Open Shop
-		Game::instance().setCurrentState(GameState::SHOP);
+		return MenuReturn::Shop;
 	}
 	else {
 		//Disable menu
-		Game::instance().setCurrentState(GameState::PLAYING);
+		return MenuReturn::Exit;
 	}
 }
 
-void Menu::update(int deltaTime) {
-	currentTime += deltaTime;
-	if (Game::instance().getCurrentState() == GameState::MENU) {
-		if (click && !Game::instance().getLeftButtonPressed()) {
-			performClickAction(Game::instance().getXPressed(), Game::instance().getYPressed());
-			click = false;
-		}
-		if (Game::instance().getLeftButtonPressed()) click = true;
-		int x = Game::instance().getX();
-		int y = Game::instance().getY();
-		if (highScoreButton(x, y))
-			menuHighScore->setTexture(&menuHighScorePressedTexture);
-		else if (shopButton(x, y))
-			menuShop->setTexture(&menuShopPressedTexture);
-		else {
-			menuHighScore->setTexture(&menuHighScoreTexture);
-			menuShop->setTexture(&menuShopTexture);
-		}
+MenuReturn Menu::update(int deltaTime) {
+	MenuReturn ret = MenuReturn::Nothing;
+	if (click && !Game::instance().getLeftButtonPressed()) {
+		ret = performClickAction(Game::instance().getXPressed(), Game::instance().getYPressed());
+		click = false;
 	}
-
+	if (Game::instance().getLeftButtonPressed()) click = true;
+	int x = Game::instance().getX();
+	int y = Game::instance().getY();
+	if (highScoreButton(x, y))
+		menuHighScore->setTexture(&menuHighScorePressedTexture);
+	else if (shopButton(x, y))
+		menuShop->setTexture(&menuShopPressedTexture);
+	else {
+		menuHighScore->setTexture(&menuHighScoreTexture);
+		menuShop->setTexture(&menuShopTexture);
+	}
+	return ret;
 }
 
 void Menu::render() {
