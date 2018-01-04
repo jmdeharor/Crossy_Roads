@@ -35,9 +35,9 @@
 	{
       "names": ["native_02"],
       "type": "enemy",
-	  "sclale": 0.05,
+	  "scale": 0.05,
       "biomes": [
-        "island"
+        "island",
       ]
     },
 	{

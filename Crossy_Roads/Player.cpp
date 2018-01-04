@@ -47,6 +47,7 @@ void Player::init(const Assets& assets, vec3 lightDir, vec3 offset, float jumpDi
 	currentFrame = 0;
 	upsideDown = false;
 	jumpSound = soundManager->loadSound("sounds/Effect_jump.wav", FMOD_DEFAULT);
+	waterSplashSound = soundManager->loadSound("sounds/Effect_water_splash.wav", FMOD_CREATESTREAM);
 	currentFloorRow = playerObject.getPos().y;
 }
 
@@ -64,10 +65,11 @@ PlayerReturn Player::update(int deltaTime) {
 			inMovement = false;
 			currentColIndex = FloorRow::worldToCol(playerObject.getPos().x);
 			FloorRow* floorRow = floor->getFloorRow(currentRowIndex);
-			if (floorRow->getRowHeight() == playerObject.getY() && floorRow->isTheFloorLava()) {
+			/*if (floorRow->getRowHeight() == playerObject.getY() && floorRow->isTheFloorLava()) {
 				particleSystem->trigger(playerObject.getPos());
+				soundManager->playSound(waterSplashSound);
 				return PlayerReturn::DEAD;
-			}
+			}*/
 		}
 	}
 	else {

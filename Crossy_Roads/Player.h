@@ -47,7 +47,7 @@ private:
 	glm::vec3 lightDir;
 	bool upsideDown;
 	glm::vec3 nextPos;
-	FMOD::Sound* jumpSound;
+	FMOD::Sound* jumpSound, *waterSplashSound;
 	const SoundManager* soundManager;
 
 	void setDirectionVector();

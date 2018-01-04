@@ -33,6 +33,9 @@ int Assets::getTextureId(const string & name) const {
 }
 
 const ImportedMesh * Assets::getMesh(IdMesh id) const {
+	if (id < 0 || id >= nImportedMeshes) {
+		int a = 3;
+	}
 	return &meshes[id];
 }
 

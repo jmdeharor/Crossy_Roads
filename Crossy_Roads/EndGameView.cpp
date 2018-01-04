@@ -32,6 +32,7 @@ void EndGameView::init() {
 	message->setPosition(vec2(SCREEN_WIDTH / 2.f, SCREEN_HEIGHT / 2.f));
 	buttonReturn->setPosition(vec2(SCREEN_WIDTH / 2.f - 100, SCREEN_HEIGHT / 2.f + 200));
 	buttonSave->setPosition(vec2(SCREEN_WIDTH / 2.f + 100, SCREEN_HEIGHT / 2.f + 200));
+	buttonPressed = true;
 }
 
 EndGameViewReturn EndGameView::update(int deltaTime) {
@@ -39,10 +40,10 @@ EndGameViewReturn EndGameView::update(int deltaTime) {
 		buttonPressed = true;
 	}
 	else if (buttonPressed) {
+		buttonPressed = false;
 		if (buttonReturn->inside(game->getXPressed(), game->getYPressed())) {
 			return EndGameViewReturn::BackToMenu;
 		}
-		buttonPressed = false;
 	}
 	return EndGameViewReturn::Nothing;
 }
@@ -58,7 +59,7 @@ void EndGameView::render() {
 	buttonReturn->render();
 }
 
-EndGameView::EndGameView() : buttonPressed(false)
+EndGameView::EndGameView()
 {
 }
 

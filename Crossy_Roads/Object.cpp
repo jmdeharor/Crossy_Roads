@@ -132,6 +132,7 @@ bool Object::collidesWith(Object& otherObject) {
 		updateModel();
 	if (otherObject.modified)
 		otherObject.updateModel();
+
 	vec3 mins1 = getMin();
 	vec3 maxs1 = getMax();
 	vec3 mins2 = otherObject.getMin();
