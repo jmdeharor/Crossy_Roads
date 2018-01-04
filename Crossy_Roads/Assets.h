@@ -8,13 +8,14 @@
 #include "BasicMeshConfig.h"
 #include "RandomMeshConfig.h"
 
-#define nMeshGroups 3
+#define nMeshGroups 4
 #define nMeshConfigGroups 3
 #define nBiomes 3
 
 enum class MeshGroup {
 	Enemy,
 	Platform,
+	Player,
 	Unique
 };
 
@@ -52,6 +53,7 @@ class Assets {
 	std::map<string, std::pair<IdTex, glm::uint>> animatedMeshGroup;
 
 	//Memory
+	float* scales;
 	RandomMeshConfig* randomMeshConfigs;
 	BasicMeshConfig* basicMeshConfigs;
 	ImportedMesh* meshes;
@@ -72,7 +74,8 @@ public:
 	IdTex getTextureId(const string& name) const;
 	const Texture* getTexture(const string& name) const;
 	const MeshConfigConstructor* getMeshConfigId(const string& name) const;
-
+	
+	float getScale(IdMesh id) const;
 	const CubeMesh* getCubeMesh() const;
 	const ImportedMesh* getMesh(IdMesh id) const;
 	const Texture* getTexture(IdTex id) const;

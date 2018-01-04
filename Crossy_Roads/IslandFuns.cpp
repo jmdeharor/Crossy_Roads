@@ -35,7 +35,7 @@ void FloorRow::initIslandRoad() {
 		Jumper& enemy = enemies[i];
 		IdMesh enemyId = res.meshGroups[sub2ind(biome, MeshGroup::Enemy)][rand() % res.meshGroups[sub2ind(biome, MeshGroup::Enemy)].size()];
 		enemy.setMesh(enemyId, res.assets->getMesh(enemyId));
-		enemy.setScale(vec3(0.05f));
+		enemy.setScale(vec3(res.assets->getScale(enemyId)));
 		enemy.setCenterToBaseCenter();
 		enemy.setPlane(vec4(0, 1, 0, -rowHeight), fp.lightDir);
 		float startPoint;

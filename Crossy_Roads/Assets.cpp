@@ -8,6 +8,10 @@ using namespace glm;
 using namespace rapidjson;
 typedef map<string, int>::const_iterator Iterator;
 
+float Assets::getScale(IdMesh id) const {
+	return scales[id];
+}
+
 const CubeMesh * Assets::getCubeMesh() const {
 	return &cubeMesh;
 }
@@ -101,6 +105,9 @@ inline MeshGroup meshString2enum(const string& meshString) {
 	else if (meshString == "platform") {
 		return MeshGroup::Platform;
 	}
+	else if (meshString == "player") {
+		return MeshGroup::Player;
+	}
 	else if (meshString == "unique")
 		return MeshGroup::Unique;
 	int a = 3;
@@ -156,6 +163,7 @@ void Assets::loadAssets(const string& modelPath, const string& texturePath) {
 	}
 
 	cubeMesh.init();
+	scales = new float[nImportedMeshes];
 	meshes = new ImportedMesh[nImportedMeshes];
 	behaviours = new MonoBehaviourType[nImportedMeshes];
 	randomMeshConfigs = new RandomMeshConfig[nRandomMeshConfigs];
@@ -166,10 +174,17 @@ void Assets::loadAssets(const string& modelPath, const string& texturePath) {
 	vector<string> idMeshNames(nImportedMeshes);
 	for (const Value& meshProperties : models.GetArray()) {
 		uint firstId = i;
+		float scale;
+		if (meshProperties.HasMember("scale")) {
+			scale = meshProperties["scale"].GetFloat();
+		}
+		else
+			scale = 0;
 		const Value& namesV = meshProperties["names"];
 		for (const Value& nameValue : namesV.GetArray()) {
 			name.assign(nameValue.GetString());
 			meshes[i].loadFromFile("models/" + name);
+			scales[i] = scale;
 			meshIds[name] = i;
 			idMeshNames[i] = name;
 			++i;
@@ -384,6 +399,7 @@ void Assets::loadAssets(const string& modelPath, const string& texturePath) {
 		output.write(idMeshNames[i].c_str(), length);
 	}
 	output.write((const char*)behaviours, sizeof(MonoBehaviourType)*size);
+	output.write((const char*)scales, sizeof(float)*nImportedMeshes);
 
 	size = idTexNames.size();
 	output.write((const char*)&size, sizeof(uint));
@@ -508,6 +524,8 @@ void Assets::loadAssets(const string & binaryPath) {
 	}
 	behaviours = new MonoBehaviourType[nImportedMeshes];
 	input.read((char*)behaviours, sizeof(MonoBehaviourType)*nImportedMeshes);
+	scales = new float[nImportedMeshes];
+	input.read((char*)scales, sizeof(float)*nImportedMeshes);
 
 	input.read((char*)&nTextures, sizeof(uint));
 	textures = new Texture[nTextures];

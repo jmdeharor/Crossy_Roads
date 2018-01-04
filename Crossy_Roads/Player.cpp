@@ -31,9 +31,9 @@ void Player::init(const Assets& assets, vec3 lightDir, vec3 offset, float jumpDi
 	currentColIndex = floor.getCols() / 2 - floor.getColOffset();
 	vec3 rowHeight = floor.getFloorRow(currentRowIndex)->getNextPos(currentColIndex).first;
 
-	IdMesh pirateId = assets.getMeshId("pirate_2");
+	IdMesh pirateId = assets.getMeshId("stormtrooper");
 	playerObject.setMesh(pirateId, assets.getMesh(pirateId));
-	playerObject.setScale(vec3(0.1f));
+	playerObject.setScale(vec3(assets.getScale(pirateId)));
 	playerObject.setCenterToBaseCenter();
 	playerObject.setPos(vec3(0,rowHeight.y,0));
 	playerObject.setPlane(vec4(0, 1, 0, -rowHeight.y), lightDir);

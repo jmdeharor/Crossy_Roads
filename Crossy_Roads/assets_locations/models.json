@@ -3,6 +3,7 @@
     {
       "names": ["pirate"],
       "type": "enemy",
+	  "scale": 0.1,
       "biomes": [
         "ship"
       ]
@@ -10,13 +11,15 @@
     {
       "names": ["pirate_2"],
       "type": "enemy",
+	  "scale": 0.1,
       "biomes": [
         "ship"
       ]
     },
 	{
       "names": ["stormtrooper"],
-      "type": "enemy",
+      "type": "player",
+	  "scale": 0.05,
       "biomes": [
         "ship"
       ]
@@ -24,6 +27,7 @@
 	{
       "names": ["native_01"],
       "type": "enemy",
+	  "scale": 0.05,
       "biomes": [
         "island"
       ]
@@ -31,6 +35,7 @@
 	{
       "names": ["native_02"],
       "type": "enemy",
+	  "sclale": 0.05,
       "biomes": [
         "island"
       ]
@@ -38,6 +43,7 @@
 	{
       "names": ["native_03"],
       "type": "enemy",
+	  "scale": 0.05,
       "biomes": [
         "island"
       ]
@@ -45,6 +51,7 @@
 	{
       "names": ["native_04"],
       "type": "enemy",
+	  "scale": 0.05,
       "biomes": [
         "island"
       ]
@@ -52,6 +59,7 @@
 	{
       "names": ["native_05"],
       "type": "enemy",
+	  "scale": 0.05,
       "biomes": [
         "island"
       ]
@@ -142,7 +150,7 @@
       "type": "decoration",
       "size": [1,1],
 	  "collision map": [false],
-      "height": 1,
+      "height": 1.7,
       "biomes": ["ship", "island"],
 	  "behaviour": "coin"
     },
