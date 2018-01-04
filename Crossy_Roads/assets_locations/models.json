@@ -15,6 +15,13 @@
       ]
     },
 	{
+      "names": ["stormtrooper"],
+      "type": "enemy",
+      "biomes": [
+        "ship"
+      ]
+    },
+	{
       "names": ["native_01"],
       "type": "enemy",
       "biomes": [
@@ -135,7 +142,7 @@
       "type": "decoration",
       "size": [1,1],
 	  "collision map": [false],
-      "height": 1.7,
+      "height": 1,
       "biomes": ["ship", "island"],
 	  "behaviour": "coin"
     },
