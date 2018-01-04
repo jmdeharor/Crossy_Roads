@@ -134,7 +134,7 @@ void FloorRow::initShipSafeZone(const FloorRow& prevRow) {
 			hasEmpty = true;
 		if (map[i].mesh == INVALID)
 			continue;
-		ShadowedObject object;
+		BehaviourObject* object = new BehaviourObject();
 		IdMesh meshId = map[i].mesh;
 		float height = map[i].height;
 
@@ -144,13 +144,12 @@ void FloorRow::initShipSafeZone(const FloorRow& prevRow) {
 		vec3 bbCenter = mesh->getbbCenter();
 		vec3 objectSize = vec3(realTileSize*map[i].cols, height, 0) / boundingBox;
 		objectSize.z = objectSize.x;
-		object.name = "Ship furniture " + to_string(i);
-		object.setMesh(meshId, mesh);
-		object.setScale(objectSize);
-		object.setCenterToBaseCenter();
+		object->setMesh(meshId, mesh);
+		object->setScale(objectSize);
+		object->setCenterToBaseCenter();
 		float posX = offsetX + i*realTileSize;
-		object.setPos(vec3(posX + (realTileSize*(map[i].cols / 2.f)) - realTileSize / 2, rowHeight, pos.y - fp.tileSize.y*(map[i].rows / 2.f) + fp.tileSize.y / 2));
-		object.setPlane(vec4(0, 1, 0, -rowHeight), fp.lightDir);
+		object->setPos(vec3(posX + (realTileSize*(map[i].cols / 2.f)) - realTileSize / 2, rowHeight, pos.y - fp.tileSize.y*(map[i].rows / 2.f) + fp.tileSize.y / 2));
+		//object->setPlane(vec4(0, 1, 0, -rowHeight), fp.lightDir);
 		furniture.push_back(object);
 
 		Stalker* stalker;
@@ -158,16 +157,16 @@ void FloorRow::initShipSafeZone(const FloorRow& prevRow) {
 		switch (res.assets->getBehavior(meshId)) {
 		case MonoBehaviourType::Stalker:
 			stalker = new Stalker();
-			stalker->origin = &furniture[furniture.size() - 1];
 			stalker->direction = vec2(-1, 0);
 			stalker->objective = res.player->getObject();
-			behaviours.push_back(stalker);
+			object->setBehaviour(stalker);
 			break;
 		case MonoBehaviourType::Coin:
 			coin = new Coin();
-			coin->origin = &furniture[furniture.size() - 1];
+			coin->origin = furniture[furniture.size() - 1];
+			coin->player = res.player->getObject();
 			coin->start();
-			behaviours.push_back(coin);
+			object->setBehaviour(coin);
 			break;
 		case MonoBehaviourType::None:
 			break;

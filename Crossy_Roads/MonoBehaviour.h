@@ -1,9 +1,9 @@
 #pragma once
-#include "Object.h"
+#include "BehaviourObject.h"
 
 class MonoBehaviour {
 public:
-	Object* origin;
+	BehaviourObject* origin;
 	virtual void start() {};
 	virtual void update(int deltaTime) = 0;
 	MonoBehaviour();

@@ -1,4 +1,5 @@
 #pragma once
+#include "GameObject.h"
 #include "QuadMesh.h"
 #include <vector>
 #include "ShadowedObject.h"

@@ -1,7 +1,5 @@
 #include "MonoBehaviour.h"
 
-
-
 MonoBehaviour::MonoBehaviour()
 {
 }

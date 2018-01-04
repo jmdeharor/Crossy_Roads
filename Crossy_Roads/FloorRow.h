@@ -1,5 +1,4 @@
 #pragma once
-#include "GameObject.h"
 #include "ShadowedObject.h"
 #include "ImportedMesh.h"
 #include "CubeMesh.h"
@@ -9,7 +8,7 @@
 #include "FloorResources.h"
 #include "AnimTexObject.h"
 #include "AnimMeshObject.h"
-#include "MonoBehaviour.h"
+#include "BehaviourObject.h"
 
 enum FloorType {
 	Road,
@@ -45,11 +44,10 @@ private:
 	bool safeZone;
 	float rowHeight;
 	glm::uint frameCounter, frameLimit;
-	std::vector<MonoBehaviour*> behaviours;
 	std::vector<Jumper> enemies;
 	std::vector<float> speeds;
 	std::vector<CellProperties> map;
-	std::vector<ShadowedObject> furniture;
+	std::vector<BehaviourObject*> furniture;
 	std::vector<TexturedObject> floorTiles;
 	std::vector<AnimTexObject> animatedFloorTiles;
 	std::vector<AnimMeshObject> platforms;

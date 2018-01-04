@@ -65,6 +65,8 @@ public:
 
 	const SoundManager* getSoundManager() const;
 
+public:
+	int coins;
 private:
 	SoundManager soundManager;
 	bool bPlay;                       // Continue to play game?
@@ -73,7 +75,6 @@ private:
 	Shop shop;
 	bool keys[256], specialKeys[256]; // Store key states so that 
 	                                  // we can have access at any time
-	int coins;
 	int x, y, xPressed, yPressed, xReleased, yReleased;
 	bool mouseLeftPressed;
 	GameState currentState;

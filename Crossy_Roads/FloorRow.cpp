@@ -29,11 +29,11 @@ void FloorRow::initRoad(BiomeType type, vector<uint>& adjacentRow, const vector<
 	safeZone = false;
 	if (prevRow.safeZone) rowHeight = prevRow.rowHeight - 0.2f;
 	else rowHeight = prevRow.rowHeight;
-	furniture.clear();
-	for (uint i = 0; i < behaviours.size(); ++i) {
-		delete behaviours[i];
+
+	for (uint i = 0; i < furniture.size(); ++i) {
+		delete furniture[i];
 	}
-	behaviours.clear();
+	furniture.clear();
 	switch (type) {
 	case Ship:
 		initShipRoad(adjacentRow);
@@ -51,11 +51,10 @@ void FloorRow::initSafeZone(BiomeType type, const vector<CellProperties>& map, c
 	this->map = map;
 	biome = type;
 	safeZone = true;
-	furniture.clear();
-	for (uint i = 0; i < behaviours.size(); ++i) {
-		delete behaviours[i];
+	for (uint i = 0; i < furniture.size(); ++i) {
+		delete furniture[i];
 	}
-	behaviours.clear();
+	furniture.clear();
 	switch (biome) {
 	case Ship:
 		initShipSafeZone(prevRow);
@@ -102,9 +101,18 @@ float FloorRow::getRowHeight() const {
 }
 
 void FloorRow::update(int deltaTime) {
-	for (MonoBehaviour* behaviour : behaviours) {
-		behaviour->update(deltaTime);
+	uint j = 0;
+	for (uint i = 0; i < furniture.size(); ++i) {
+		furniture[i]->update(deltaTime);
+		if (furniture[i]->isAlive()) {
+			furniture[j] = furniture[i];
+			++j;
+		}
+		else {
+			delete furniture[i];
+		}
 	}
+	furniture.resize(j);
 	for (AnimTexObject& animatedTexure : animatedFloorTiles) {
 		animatedTexure.update(deltaTime);
 	}
@@ -193,10 +201,10 @@ void FloorRow::groupDrawableObjects(const FrustumG& frustum, RenderVectors& rend
 		}
 	}
 	for (uint i = 0; i < furniture.size(); ++i) {
-		if (furniture[i].isInsideViewFrustrum(frustum)) {
-			renderVectors.objects[furniture[i].meshId].push_back(&furniture[i]);
+		if (furniture[i]->isInsideViewFrustrum(frustum)) {
+			renderVectors.objects[furniture[i]->meshId].push_back(furniture[i]);
 		}
-		renderVectors.shadowObjects[furniture[i].meshId].push_back(&furniture[i]);
+		renderVectors.shadowObjects[furniture[i]->meshId].push_back(furniture[i]);
 	}
 	for (uint i = 0; i < platforms.size(); ++i) {
 		if (platforms[i].isInsideViewFrustrum(frustum)) {

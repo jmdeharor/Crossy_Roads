@@ -1,4 +1,5 @@
 #include "Coin.h"
+#include "Game.h"
 
 void Coin::start() {
 	startPoint = origin->getY();
@@ -6,6 +7,12 @@ void Coin::start() {
 }
 
 void Coin::update(int deltaTime) {
+	if (abs(player->getX()-origin->getX()) < 0.01f &&
+		abs(player->getZ()-origin->getZ()) < 0.01f) {
+		Game::instance().coins += 1;
+		origin->destroy();
+		return;
+	}
 	origin->rotateY(0.1f);
 	if (up) {
 		origin->moveY(verticalSpeed);
@@ -23,7 +30,7 @@ void Coin::update(int deltaTime) {
 	}
 }
 
-Coin::Coin()
+Coin::Coin() : player(NULL)
 {
 }
 
