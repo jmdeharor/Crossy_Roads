@@ -37,7 +37,7 @@
       "type": "enemy",
 	  "scale": 0.05,
       "biomes": [
-        "island",
+        "island"
       ]
     },
 	{
