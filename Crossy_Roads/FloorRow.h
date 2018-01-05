@@ -9,6 +9,7 @@
 #include "AnimTexObject.h"
 #include "AnimMeshObject.h"
 #include "BehaviourObject.h"
+#include "ShipWall.h"
 
 enum FloorType {
 	Road,
@@ -34,6 +35,7 @@ struct FloorParams {
 	glm::vec2 tileSize;
 	glm::uint cols;
 	glm::uint colOffset;
+	float offsetX;
 	float realTileSize;
 	glm::vec3 lightDir;
 };
@@ -45,6 +47,7 @@ private:
 	bool theFloorIsLava;
 	float rowHeight;
 	glm::uint frameCounter, frameLimit;
+	ShipWall wall;
 	std::vector<Jumper> enemies;
 	std::vector<float> speeds;
 	std::vector<CellProperties> map;
@@ -69,6 +72,7 @@ public:
 	static void setParameters(const FloorParams& floorParams);
 	static glm::uint worldToCol(float x);
 	
+	void putWall();
 	void firstInit();
 	void initAttributes(BiomeType biome, bool safeZone, float rowHeight);
 	void initRoad(BiomeType biome, std::vector<glm::uint>& adjacentRow, const std::vector<CellProperties>& map, const FloorRow& prevRow);

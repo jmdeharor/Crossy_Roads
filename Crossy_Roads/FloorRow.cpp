@@ -13,6 +13,10 @@ void FloorRow::initResources(const Assets & assets, const Player* player) {
 	res.init(assets, player);
 }
 
+void FloorRow::putWall() {
+	wall.init(*res.assets, fp, vec3(pos.x, rowHeight, pos.y), 5, 1);
+}
+
 void FloorRow::firstInit() {
 	furniture.reserve(fp.cols);
 }
@@ -34,6 +38,7 @@ void FloorRow::initRoad(BiomeType type, vector<uint>& adjacentRow, const vector<
 		delete furniture[i];
 	}
 	furniture.clear();
+	wall.clear();
 	switch (type) {
 	case Ship:
 		initShipRoad(adjacentRow);
@@ -55,6 +60,7 @@ void FloorRow::initSafeZone(BiomeType type, const vector<CellProperties>& map, c
 		delete furniture[i];
 	}
 	furniture.clear();
+	wall.clear();
 	switch (biome) {
 	case Ship:
 		initShipSafeZone(prevRow);
@@ -185,6 +191,7 @@ void FloorRow::update(int deltaTime) {
 }
 
 void FloorRow::groupDrawableObjects(const FrustumG& frustum, RenderVectors& renderVectors) {
+	wall.groupDrawableObjects(frustum, renderVectors);
 	for (uint i = 0; i < enemies.size(); ++i) {
 		if (enemies[i].isInsideViewFrustrum(frustum))
 			renderVectors.objects[enemies[i].meshId].push_back(&enemies[i]);

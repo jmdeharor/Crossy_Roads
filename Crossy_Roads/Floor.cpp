@@ -305,6 +305,8 @@ void Floor::updateFloorRow(FloorRow& floorRow, const FloorRow& prevRow) {
 			floorRow.initRoad(biome, textureIndex, {}, prevRow);
 			break;
 		}
+		if (biomeCounter == 0)
+			floorRow.putWall();
 		++counter;
 		break;
 	}
@@ -327,6 +329,7 @@ void Floor::init(vec3 lightDir, const Assets& assets, const Player* player) {
 	params.realTileSize = tileSize.x / cols;
 	params.lowerLimit = -tileSize.x / 2 + colOffset*params.realTileSize;
 	params.upperLimit = tileSize.x / 2 + colOffset*params.realTileSize;
+	params.offsetX = - (params.realTileSize*(cols / 2) - (1 - cols % 2)*params.realTileSize / 2);
 	params.cols = cols;
 	FloorRow::setParameters(params);
 

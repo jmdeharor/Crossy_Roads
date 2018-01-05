@@ -166,6 +166,7 @@
     <ClCompile Include="ShaderProgram.cpp" />
     <ClCompile Include="ShadowedObject.cpp" />
     <ClCompile Include="ShipFuns.cpp" />
+    <ClCompile Include="ShipWall.cpp" />
     <ClCompile Include="Shop.cpp" />
     <ClCompile Include="SoundManager.cpp" />
     <ClCompile Include="Sphere.cpp" />
@@ -217,6 +218,7 @@
     <ClInclude Include="RandomMeshConfig.h" />
     <ClInclude Include="RandomPicker.h" />
     <ClInclude Include="SeaBiome.h" />
+    <ClInclude Include="ShipWall.h" />
     <ClInclude Include="Shop.h" />
     <ClInclude Include="SoundManager.h" />
     <ClInclude Include="Sprite.h" />
