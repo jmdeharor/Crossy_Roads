@@ -8,6 +8,14 @@
         "ship"
       ]
     },
+	{
+      "names": ["redbeard"],
+      "type": "enemy",
+	  "scale": 0.05,
+      "biomes": [
+        "ship"
+      ]
+    },
     {
       "names": ["pirate_2"],
       "type": "enemy",
