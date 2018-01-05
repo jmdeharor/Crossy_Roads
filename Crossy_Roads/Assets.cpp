@@ -47,6 +47,10 @@ const Texture* Assets::getTexture(const string& name) const {
 	return &textures[textureIds.find(name)->second];
 }
 
+const Mesh * Assets::getMesh(const string & name) const {
+	return &meshes[meshIds.find(name)->second];
+}
+
 const MeshConfigConstructor * Assets::getMeshConfigId(const string & name) const {
 	return meshConfigIds.find(name)->second;
 }

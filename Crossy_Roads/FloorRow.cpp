@@ -14,7 +14,7 @@ void FloorRow::initResources(const Assets & assets, const Player* player) {
 }
 
 void FloorRow::putWall() {
-	wall.init(*res.assets, fp, vec3(pos.x, rowHeight, pos.y), 5, 1);
+	wall.init(*res.assets, fp, vec3(pos.x, rowHeight, pos.y), 5, 3, 3);
 }
 
 void FloorRow::firstInit() {

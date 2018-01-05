@@ -73,6 +73,7 @@ public:
 	IdMesh getMeshId(const string& name) const;
 	IdTex getTextureId(const string& name) const;
 	const Texture* getTexture(const string& name) const;
+	const Mesh* getMesh(const string& name) const;
 	const MeshConfigConstructor* getMeshConfigId(const string& name) const;
 	
 	float getScale(IdMesh id) const;
