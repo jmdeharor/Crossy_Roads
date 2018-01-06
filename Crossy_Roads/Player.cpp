@@ -9,17 +9,25 @@ using namespace glm;
 
 void Player::firstInit() {
 	soundManager = Game::instance().getSoundManager();
+	jumpSound = soundManager->loadSound("sounds/Effect_jump.wav", FMOD_DEFAULT);
+	waterSplashSound = soundManager->loadSound("sounds/Effect_water_splash.wav", FMOD_CREATESTREAM);
 }
 
 void Player::groupDrawableObjects(const FrustumG& frustum, RenderVectors& renderVectors) {
 	if (playerObject.isInsideViewFrustrum(frustum)) {
 		outOfTheScene = false;
-		renderVectors.objects[playerObject.meshId].push_back(&playerObject);
+		if (state == PlayerState::DeadByEnemy) {
+			renderVectors.texturedObjects[textureObject.texture].push_back(&textureObject);
+		}
+		else {
+			renderVectors.objects[playerObject.meshId].push_back(&playerObject);
+			renderVectors.shadowObjects[playerObject.meshId].push_back(&playerObject);
+		}
 	}
 	else {
+		renderVectors.shadowObjects[playerObject.meshId].push_back(&playerObject);
 		outOfTheScene = true;
 	}
-	renderVectors.shadowObjects[playerObject.meshId].push_back(&playerObject);
 }
 
 void Player::init(const Assets& assets, vec3 lightDir, vec3 offset, float jumpDistance, Floor& floor, WaterParticleSystem* particleSystem) {
@@ -42,7 +50,7 @@ void Player::init(const Assets& assets, vec3 lightDir, vec3 offset, float jumpDi
 	playerObject.setPos(vec3(0,rowHeight.y,0));
 	playerObject.setPlane(vec4(0, 1, 0, -rowHeight.y), lightDir);
 
-	wPressed = aPressed = sPressed = dPressed = bPressed = false;
+	wPressed = aPressed = sPressed = dPressed = false;
 	currentOrientation = FRONT;
 	directionVector = vec3(0, 0, 1.f);
 	inMovement = false;
@@ -51,24 +59,31 @@ void Player::init(const Assets& assets, vec3 lightDir, vec3 offset, float jumpDi
 	speed = this->jumpDistance / float(JUMP_DURATION);
 	testJump = 0;
 	currentFrame = 0;
-	upsideDown = false;
-	jumpSound = soundManager->loadSound("sounds/Effect_jump.wav", FMOD_DEFAULT);
-	waterSplashSound = soundManager->loadSound("sounds/Effect_water_splash.wav", FMOD_CREATESTREAM);
-	currentFloorRow = playerObject.getPos().y;
 	outOfTheScene = false;
+	state = PlayerState::Alive;
+
+	const Mesh* cubeMesh = assets.getCubeMesh();
+	vec3 bbSize = cubeMesh->getbbSize();
+	textureObject.setMesh(cubeMesh);
+	textureObject.texture = assets.getTextureId("char_unlocked_6");
+	textureObject.setScale(vec3(3, 0.1f, 2)/bbSize);
+	textureObject.setRotationY(PI / 2);
+
+	nextPos.y = playerObject.getY();
 }
 
 PlayerReturn Player::update(int deltaTime) {
 	if (outOfTheScene) {
 		platformSpeed = 0;
+		state = PlayerState::DeadByOut;
 		return PlayerReturn::DEAD;
 	}
 	currentColIndex = FloorRow::worldToCol(playerObject.getPos().x);
 	PlayerReturn ret = PlayerReturn::NOTHING;
-	if (!upsideDown && collides()) {
-		playerObject.setRotationZ(PI);
-		upsideDown = true;
+	if (collides()) {
 		particleSystem->trigger(playerObject.getPos(), 30, vec4(1, 0, 0, 0));
+		textureObject.setPos(vec3(nextPos.x, nextPos.y+0.001f, nextPos.z));
+		state = PlayerState::DeadByEnemy;
 		return PlayerReturn::DEAD;
 	}
 	if (inMovement) {
@@ -80,6 +95,7 @@ PlayerReturn Player::update(int deltaTime) {
 			if (floorRow->getRowHeight() == playerObject.getY() && floorRow->isTheFloorLava()) {
 				particleSystem->trigger(playerObject.getPos(), 17, vec4(0,0.4f,0.86f,0));
 				soundManager->playSound(waterSplashSound);
+				state = PlayerState::DeadByLava;
 				return PlayerReturn::DEAD;
 			}
 		}
@@ -101,7 +117,6 @@ PlayerReturn Player::update(int deltaTime) {
 				pair<vec3, float> currentPos = floor->getFloorRow(currentRowIndex)->getNextPos(currentColIndex);
 				nextPos = currentPos.first;
 				platformSpeed = currentPos.second;
-				currentFloorRow = currentPos.first.y;
 				calculateSpeeds();
 				soundManager->playSound(jumpSound);
 				currentPosScore += 1;
@@ -121,7 +136,6 @@ PlayerReturn Player::update(int deltaTime) {
 				pair<vec3, float> currentPos = floor->getFloorRow(currentRowIndex)->getNextPos(currentColIndex);
 				nextPos = currentPos.first;
 				platformSpeed = currentPos.second;
-				currentFloorRow = currentPos.first.y;
 				calculateSpeeds();
 				soundManager->playSound(jumpSound);
 			}
@@ -139,7 +153,6 @@ PlayerReturn Player::update(int deltaTime) {
 				pair<vec3, float> currentPos = floor->getFloorRow(currentRowIndex)->getNextPos(currentColIndex);
 				nextPos = currentPos.first;
 				platformSpeed = currentPos.second;
-				currentFloorRow = currentPos.first.y;
 				calculateSpeeds();
 				soundManager->playSound(jumpSound);
 			}
@@ -159,7 +172,6 @@ PlayerReturn Player::update(int deltaTime) {
 				pair<vec3, float> currentPos = floor->getFloorRow(currentRowIndex)->getNextPos(currentColIndex);
 				nextPos = currentPos.first;
 				platformSpeed = currentPos.second;
-				currentFloorRow = currentPos.first.y;
 				calculateSpeeds();
 				soundManager->playSound(jumpSound);
 				currentPosScore -= 1;
@@ -168,17 +180,6 @@ PlayerReturn Player::update(int deltaTime) {
 		}
 		else
 			wPressed = aPressed = dPressed = sPressed = false;
-		//THIS IS THE DEBUG KEY AND WILL BE DELETED BEFORE DELIVERING
-		//USE IT TO TEST STUFF ON THE PLAYER
-		if (Game::instance().getKey('b')) {
-			if (!bPressed) {
-				bPressed = true;
-				playerObject.rotateZ(PI);
-				upsideDown = false;
-			}
-		}
-		else
-			bPressed = false;
 	}
 	return ret;
 }
@@ -188,7 +189,7 @@ vec3 Player::getPos() const {
 }
 
 float Player::getHeight() const {
-	return currentFloorRow;
+	return nextPos.y;
 }
 
 const Object * Player::getObject() const

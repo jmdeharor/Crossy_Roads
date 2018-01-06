@@ -108,6 +108,10 @@
       "names": ["water_plane"],
       "type": "nearest"
     },
+	{
+      "names": ["char_unlocked_6"],
+      "type": "linear"
+    },
     {
       "names": ["water_1", "water_2", "water_3"],
       "type": "nearest",

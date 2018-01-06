@@ -27,13 +27,13 @@ float sampleShadow() {
 }
 
 void main() {
-	if (gl_FragCoord.z < 0.991)
+	vec4 color = texture(tex, fragTexCoord);
+	if (gl_FragCoord.z < 0.991 || color.a < 0.5)
 		discard;
 	vec3 N = normalize(fragNormal);
 	vec2 st = shadowCoord.st;
 	float trueDepth = shadowCoord.z;
 	float diffuse = max(0, dot(N,lightDir));
-	vec4 color = texture(tex, fragTexCoord);
 	if (st.s < 0 || st.s > 1 || st.t < 0 || st.t > 1) {
 		outColor = mix(0.5, 1, diffuse)*color;
 	}

@@ -22,8 +22,17 @@ enum class PlayerReturn {
 	NOTHING
 };
 
+enum class PlayerState {
+	Alive,
+	DeadByLava,
+	DeadByOut,
+	DeadByEnemy
+};
+
 class Player : public GameObject, public ObjectContainer {
 	ShadowedObject playerObject;
+	TexturedObject textureObject;
+	PlayerState state;
 	void firstInit() override;
 private:
 	bool outOfTheScene;
@@ -31,11 +40,10 @@ private:
 	int currentPosScore;
 	int score;
 	float platformSpeed;
-	bool wPressed, aPressed, sPressed, dPressed, bPressed;
+	bool wPressed, aPressed, sPressed, dPressed;
 	bool inMovement;
 	float speed, verticalSpeed, gravity;
 	glm::vec3 speeds;
-	float currentFloorRow;
 	float currentVerticalSpeed;
 	float jumpDistance;
 	float testJump;
@@ -46,7 +54,6 @@ private:
 	glm::uint currentRowIndex;
 	glm::uint currentColIndex;
 	glm::vec3 lightDir;
-	bool upsideDown;
 	glm::vec3 nextPos;
 	FMOD::Sound* jumpSound, *waterSplashSound;
 	const SoundManager* soundManager;
