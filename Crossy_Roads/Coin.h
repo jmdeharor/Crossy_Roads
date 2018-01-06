@@ -4,6 +4,8 @@
 class Coin : public MonoBehaviour {
 	float startPoint;
 	bool up;
+	const SoundManager* soundManager;
+	FMOD::Sound* getCoinSound;
 public:
 	const Object* player;
 	static const float rotationSpeed;

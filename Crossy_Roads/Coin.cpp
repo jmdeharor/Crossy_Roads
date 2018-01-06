@@ -4,12 +4,16 @@
 void Coin::start() {
 	startPoint = origin->getY();
 	up = true;
+	soundManager = Game::instance().getSoundManager();
+	getCoinSound = soundManager->loadSound("sounds/Effect_coin_collect.wav", FMOD_DEFAULT);
 }
 
 void Coin::update(int deltaTime) {
 	if (player->getX() == origin->getX() &&
 		player->getZ() == origin->getZ()) {
 		Game::instance().coins += 1;
+		
+		soundManager->playSound(getCoinSound);
 		origin->destroy();
 		return;
 	}

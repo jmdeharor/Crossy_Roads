@@ -31,6 +31,8 @@ void Menu::firstInit() {
 	menuLogo = Sprite::createSprite(vec2(694, 294), vec2(1), &menuLogoTexture, &shaderProgram);
 	menuHighScore = Sprite::createSprite(vec2(94,94), vec2(1), &menuHighScoreTexture, &shaderProgram);
 	menuShop = Sprite::createSprite(vec2(94, 94), vec2(1), &menuShopTexture, &shaderProgram);
+	soundManager = Game::instance().getSoundManager();
+	clickSound = soundManager->loadSound("sounds/Effect_click.wav", FMOD_DEFAULT);
 }
 
 
@@ -56,10 +58,14 @@ bool shopButton(int x, int y) {
 MenuReturn Menu::performClickAction(int x, int y) {
 	if (highScoreButton(x, y)) {
 		//Open HighScore
+		FMOD::Channel* channel = soundManager->playSound(clickSound);
+		channel->setVolume(2);
 		return MenuReturn::Nothing;
 	}
 	else if (shopButton(x, y)) {
 		//Open Shop
+		FMOD::Channel* channel = soundManager->playSound(clickSound);
+		channel->setVolume(2);
 		return MenuReturn::Shop;
 	}
 	else {
