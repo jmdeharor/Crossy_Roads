@@ -60,6 +60,7 @@ void Player::init(const Assets& assets, vec3 lightDir, vec3 offset, float jumpDi
 
 PlayerReturn Player::update(int deltaTime) {
 	if (outOfTheScene) {
+		platformSpeed = 0;
 		return PlayerReturn::DEAD;
 	}
 	currentColIndex = FloorRow::worldToCol(playerObject.getPos().x);

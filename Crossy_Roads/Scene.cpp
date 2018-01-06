@@ -21,8 +21,8 @@ Scene::~Scene() {
 void Scene::firstInit() {
 	textScore.init("fonts/PiratesWriters.ttf");
 	textCoins.init("fonts/PiratesWriters.ttf");
-	assets.loadAssets("assets_locations/models.json", "assets_locations/textures.json");
-	//assets.loadAssets("binaryAssets.notxt");
+	//assets.loadAssets("assets_locations/models.json", "assets_locations/textures.json");
+	assets.loadAssets("binaryAssets.notxt");
 
 	Coin::staticStart();
 
@@ -150,6 +150,7 @@ void Scene::init() {
 	channel->setVolume(0.25f);
 
 	soundManager->playSound(music);
+	godModePressed = false;
 }
 
 SceneReturn Scene::update(int deltaTime) {
@@ -157,6 +158,15 @@ SceneReturn Scene::update(int deltaTime) {
 	floor.update(deltaTime);
 	camera.update(deltaTime);
 	partSystem.update();
+
+	if (Game::instance().getKey('g')) {
+		godModePressed = true;
+	}
+	else if (godModePressed) {
+		godMode = !godMode;
+		godModePressed = false;
+	}
+
 	PlayerReturn playerAction;
 	if(playerControl)
 		playerAction = player.update(deltaTime);
@@ -176,6 +186,8 @@ SceneReturn Scene::update(int deltaTime) {
 		playerRow = playerRow - 1;
 		break;
 	case PlayerReturn::DEAD:
+		if (godMode)
+			return SceneReturn::Nothing;
 		return SceneReturn::EndGame;
 		break;
 	default:

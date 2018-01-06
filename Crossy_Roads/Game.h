@@ -84,7 +84,7 @@ private:
 	Texture mouseCursorTexture;
 	ShaderProgram shaderProgram;
 	void initShaders();
-
+	bool resetPressed;
 
 };
 

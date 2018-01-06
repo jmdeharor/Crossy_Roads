@@ -27,6 +27,7 @@ void Game::init() {
 	mouseCursorTexture.minFilter = GL_NEAREST;
 	mouseCursorTexture.magFilter = GL_NEAREST;
 	mouseCursor = Sprite::createSprite(vec2(32, 32), vec2(1), &mouseCursorTexture, &shaderProgram);
+	resetPressed = false;
 }
 
 GameState Game::getCurrentState() {
@@ -43,6 +44,13 @@ bool Game::update(int deltaTime) {
 	ShopReturn shopRet;
 	switch (currentState) {
 	case GameState::PLAYING:
+		if (getKey('t')) {
+			resetPressed = true;
+		}
+		else if (resetPressed) {
+			scene.init();
+			resetPressed = false;
+		}
 		sceneRet = scene.update(deltaTime);
 		if (sceneRet == SceneReturn::EndGame) {
 			scene.playerControl = false;
@@ -76,6 +84,7 @@ bool Game::update(int deltaTime) {
 		scene.update(deltaTime);
 		endRet = endGameView.update(deltaTime);
 		if (endRet == EndGameViewReturn::BackToMenu) {
+			scene.init();
 			currentState = GameState::MENU;
 		}
 		break;

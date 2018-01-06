@@ -52,6 +52,7 @@ private:
 	void initShaders();
 
 private:
+	bool godMode, godModePressed;
 	LARGE_INTEGER start, end;
 	LARGE_INTEGER frequency;
 	glm::uint depthVPLoc, VPLoc;
