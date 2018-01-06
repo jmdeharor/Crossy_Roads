@@ -106,6 +106,8 @@ ShopReturn Shop::performClickAction(int x, int y) {
 				locked[i] = false;
 				Game::instance().setCoins(Game::instance().getCoins() - atoi(prices[i].c_str()));
 				prices[i] = "Hired";
+				FMOD::Channel* channel = soundManager->playSound(unlockSounds[i]);
+				channel->setVolume(6);
 				ofstream writer("data/shop_info.txt", ofstream::out);
 				for (int i = 0; i < 8; ++i) {
 					writer << (int)locked[i] << " ";
