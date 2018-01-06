@@ -15,7 +15,9 @@ void Coin::update(int deltaTime) {
 	if (player->getX() == origin->getX() &&
 		player->getZ() == origin->getZ()) {
 		Game::instance().coins += 1;
-		
+		ofstream writer("data/coin_info.txt", ofstream::out);
+		writer << Game::instance().coins;
+		writer.close();
 		soundManager->playSound(getCoinSound);
 		origin->destroy();
 		return;

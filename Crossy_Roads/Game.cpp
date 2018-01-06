@@ -6,7 +6,9 @@ using namespace glm;
 
 void Game::init() {
 	//TODO: Initialize coins from file
-	coins = 10000000;
+	ifstream reader("data/coin_info.txt", ifstream::in);
+	reader >> coins;
+	reader.close();
 	initShaders();
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	bPlay = true;
