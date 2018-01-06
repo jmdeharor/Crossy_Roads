@@ -199,7 +199,7 @@ void Shop::initTexts() {
 	for (int i = 0; i < 8; ++i) {
 		charTexts[i].init("fonts/treamd.ttf");
 		if (locked[i])
-			prices[i] = to_string((i + 1) * 100);
+			prices[i] = to_string((i + 1) * 10 + 20);
 		else
 			prices[i] = "Hired";
 	}

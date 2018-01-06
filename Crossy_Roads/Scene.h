@@ -64,7 +64,7 @@ private:
 	FMOD::Sound* music, *ambience;
 
 	Text textScore;
-
+	Text textCoins;
 	Player player;
 	Floor floor;
 	GLuint framebufferName, depthTexture;
