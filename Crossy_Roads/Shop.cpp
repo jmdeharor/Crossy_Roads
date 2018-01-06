@@ -92,13 +92,12 @@ bool Shop::isButton(Sprite* sprite, int x, int y) {
 	return x >= xmin && x <= xmax && y >= ymin && y <= ymax;
 }
 
-void Shop::performClickAction(int x, int y) {
+ShopReturn Shop::performClickAction(int x, int y) {
 	noCoinsBool = false;
 	if (isButton(backArrow, x, y)) {
 		FMOD::Channel* channel = soundManager->playSound(clickSound);
 		channel->setVolume(2);
-		Game::instance().setCurrentState(GameState::MENU);
-		
+		return ShopReturn::Menu;
 	}
 	for (int i = 0; i < 8; ++i) {
 		if (isButton(chars[i], x, y) && locked[i]) {
@@ -126,11 +125,13 @@ void Shop::performClickAction(int x, int y) {
 
 		}
 	}
+	return ShopReturn::Nothing;
 }
 
-void Shop::update(int deltaTime) {
+ShopReturn Shop::update(int deltaTime) {
+	ShopReturn ret = ShopReturn::Nothing;
 	if (click && !Game::instance().getLeftButtonPressed()) {
-		performClickAction(Game::instance().getXPressed(), Game::instance().getYPressed());
+		ret = performClickAction(Game::instance().getXPressed(), Game::instance().getYPressed());
 		click = false;
 	}
 	if (Game::instance().getLeftButtonPressed()) click = true;
@@ -148,6 +149,7 @@ void Shop::update(int deltaTime) {
 			if (locked[i]) chars[i]->setTexture(&charTexsLocked[i]);
 		}
 	}
+	return ret;
 }
 
 void Shop::render() {

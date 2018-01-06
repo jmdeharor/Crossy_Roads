@@ -9,6 +9,11 @@
 #include "SoundManager.h"
 #include "Text.h"
 
+enum class ShopReturn {
+	Menu,
+	Nothing
+};
+
 class Shop {
 
 public:
@@ -17,7 +22,7 @@ public:
 
 	void init();
 	void render();
-	void update(int deltatime);
+	ShopReturn update(int deltatime);
 
 
 private:
@@ -25,8 +30,8 @@ private:
 	void initTextures();
 	void initShaders();
 	void initTexts();
+	ShopReturn performClickAction(int x, int y);
 	void initSounds();
-	void performClickAction(int x, int y);
 	bool isButton(Sprite* sprite, int x, int y);
 
 private:

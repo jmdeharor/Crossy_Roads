@@ -132,8 +132,8 @@ void FloorRow::initShipSafeZone(const FloorRow& prevRow) {
 
 	bool hasEmpty = false;
 	for (uint i = 0; i < map.size(); ++i) {
-		if (map[i].empty)
-			hasEmpty = true;
+		//if (map[i].empty)
+		//	hasEmpty = true;
 		if (map[i].mesh == INVALID)
 			continue;
 		BehaviourObject* object = new BehaviourObject();
@@ -165,10 +165,9 @@ void FloorRow::initShipSafeZone(const FloorRow& prevRow) {
 			break;
 		case MonoBehaviourType::Coin:
 			coin = new Coin();
-			coin->origin = furniture[furniture.size() - 1];
 			coin->player = res.player->getObject();
-			coin->start();
 			object->setBehaviour(coin);
+			coin->start();
 			break;
 		case MonoBehaviourType::None:
 			break;

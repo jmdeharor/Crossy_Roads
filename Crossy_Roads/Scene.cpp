@@ -4,6 +4,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include "Scene.h"
 #include "Game.h"
+#include "Coin.h"
 #include <GL/glut.h>
 
 using namespace glm;
@@ -19,8 +20,10 @@ Scene::~Scene() {
 
 void Scene::firstInit() {
 	textScore.init("fonts/PiratesWriters.ttf");
-	assets.loadAssets("assets_locations/models.json", "assets_locations/textures.json");
-	//assets.loadAssets("binaryAssets.notxt");
+	//assets.loadAssets("assets_locations/models.json", "assets_locations/textures.json");
+	assets.loadAssets("binaryAssets.notxt");
+
+	Coin::staticStart();
 
 	partSystem.init(assets);
 	partSystem.g = -0.07f;
