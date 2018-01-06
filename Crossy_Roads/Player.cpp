@@ -65,15 +65,15 @@ PlayerReturn Player::update(int deltaTime) {
 			inMovement = false;
 			currentColIndex = FloorRow::worldToCol(playerObject.getPos().x);
 			FloorRow* floorRow = floor->getFloorRow(currentRowIndex);
-			/*if (floorRow->getRowHeight() == playerObject.getY() && floorRow->isTheFloorLava()) {
+			if (floorRow->getRowHeight() == playerObject.getY() && floorRow->isTheFloorLava()) {
 				particleSystem->trigger(playerObject.getPos());
 				soundManager->playSound(waterSplashSound);
 				return PlayerReturn::DEAD;
-			}*/
+			}
 		}
 	}
 	else {
-		playerObject.move(platformSpeed, 0, 0);
+		playerObject.moveX(platformSpeed);
 
 		if (Game::instance().getKey('w')) {
 			uint nextRow = (currentRowIndex + 1) % floor->getRows();
