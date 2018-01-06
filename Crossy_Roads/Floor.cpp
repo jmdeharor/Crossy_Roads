@@ -200,10 +200,10 @@ void Floor::updateFloorRow(FloorRow& floorRow, const FloorRow& prevRow) {
 			
 			randomF = rand() / (float)RAND_MAX;
 
-			//if (randomF < shipProb)
+			if (randomF < shipProb)
 				biome = Ship;
-			//else
-			//	biome = Island;
+			else
+				biome = Island;
 			break;
 		case Island:
 			biomeLength = between(10, 30);
