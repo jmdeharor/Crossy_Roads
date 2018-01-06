@@ -25,6 +25,7 @@ private:
 	void initTextures();
 	void initShaders();
 	void initTexts();
+	void initSounds();
 	void performClickAction(int x, int y);
 	bool isButton(Sprite* sprite, int x, int y);
 
@@ -35,6 +36,7 @@ private:
 	const SoundManager* soundManager;
 	FMOD::Sound* clickSound;
 
+	vector<FMOD::Sound*> unlockSounds;
 	Sprite* shopBackground;
 	Sprite* char1;
 	Sprite* char2;

@@ -34,6 +34,7 @@ void Shop::firstInit() {
 	noCoinsBool = false;
 	soundManager = Game::instance().getSoundManager();
 	clickSound = soundManager->loadSound("sounds/Effect_click.wav", FMOD_DEFAULT);
+	initSounds();
 	charTexs.resize(8);
 	charTexsLocked.resize(8);
 	charTexsLockedHL.resize(8);
@@ -200,7 +201,16 @@ void Shop::initTexts() {
 	}
 	noCoins.init("fonts/treamd.ttf");
 }
-
+void Shop::initSounds() {
+	unlockSounds.resize(8);
+	for (int i = 0; i < 4; ++i) {
+		unlockSounds[i] = soundManager->loadSound("sounds/Effect_unlock_native.wav", FMOD_DEFAULT);
+	}
+	unlockSounds[4] = soundManager->loadSound("sounds/Effect_redbeard.wav", FMOD_DEFAULT);
+ 	unlockSounds[5] = soundManager->loadSound("sounds/Effect_davy_jones.wav", FMOD_DEFAULT);
+	unlockSounds[6] = soundManager->loadSound("sounds/Effect_jack_sparrow.wav", FMOD_DEFAULT);
+	unlockSounds[7] = soundManager->loadSound("sounds/Effect_stormtrooper.wav", FMOD_DEFAULT);
+}
 void Shop::initShaders() {
 	Shader vShader, fShader;
 
