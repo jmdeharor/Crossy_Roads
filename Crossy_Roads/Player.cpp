@@ -29,7 +29,7 @@ void Player::init(const Assets& assets, vec3 lightDir, vec3 offset, float jumpDi
 	currentColIndex = floor.getCols() / 2 - floor.getColOffset();
 	vec3 rowHeight = floor.getFloorRow(currentRowIndex)->getNextPos(currentColIndex).first;
 
-	IdMesh pirateId = assets.getMeshId("stormtrooper");
+	IdMesh pirateId = assets.getMeshId("pirate_2");
 	playerObject.setMesh(pirateId, assets.getMesh(pirateId));
 	playerObject.setScale(vec3(assets.getScale(pirateId)));
 	playerObject.setCenterToBaseCenter();

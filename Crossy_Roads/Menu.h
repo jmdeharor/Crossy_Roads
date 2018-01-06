@@ -31,6 +31,8 @@ private:
 	void initTextures();
 	void initShaders();
 	MenuReturn performClickAction(int x, int y);
+	const SoundManager* soundManager;
+	FMOD::Sound* clickSound;
 
 private:
 	bool initiated;
