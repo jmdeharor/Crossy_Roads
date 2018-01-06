@@ -26,6 +26,7 @@ class Player : public GameObject, public ObjectContainer {
 	ShadowedObject playerObject;
 	void firstInit() override;
 private:
+	bool outOfTheScene;
 	WaterParticleSystem* particleSystem;
 	int currentPosScore;
 	int score;

@@ -31,10 +31,6 @@ GameState Game::getCurrentState() {
 	return currentState;
 }
 
-void Game::setCurrentState(GameState newState) {
-	currentState = newState;
-}
-
 bool Game::update(int deltaTime) {
 	mouseCursor->setPosition(vec2(x, y));
 	soundManager.update();
@@ -42,6 +38,7 @@ bool Game::update(int deltaTime) {
 	SceneReturn sceneRet;
 	MenuReturn menuRet;
 	EndGameViewReturn endRet;
+	ShopReturn shopRet;
 	switch (currentState) {
 	case GameState::PLAYING:
 		sceneRet = scene.update(deltaTime);
@@ -68,7 +65,10 @@ bool Game::update(int deltaTime) {
 		}
 		break;
 	case GameState::SHOP:
-		shop.update(deltaTime);
+		shopRet = shop.update(deltaTime);
+		if (shopRet == ShopReturn::Menu) {
+			currentState = GameState::MENU;
+		}
 		break;
 	case GameState::ENDGAME:
 		scene.update(deltaTime);

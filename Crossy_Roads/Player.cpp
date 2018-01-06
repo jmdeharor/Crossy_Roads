@@ -12,7 +12,13 @@ void Player::firstInit() {
 }
 
 void Player::groupDrawableObjects(const FrustumG& frustum, RenderVectors& renderVectors) {
-	renderVectors.objects[playerObject.meshId].push_back(&playerObject);
+	if (playerObject.isInsideViewFrustrum(frustum)) {
+		outOfTheScene = false;
+		renderVectors.objects[playerObject.meshId].push_back(&playerObject);
+	}
+	else {
+		outOfTheScene = true;
+	}
 	renderVectors.shadowObjects[playerObject.meshId].push_back(&playerObject);
 }
 
@@ -49,9 +55,13 @@ void Player::init(const Assets& assets, vec3 lightDir, vec3 offset, float jumpDi
 	jumpSound = soundManager->loadSound("sounds/Effect_jump.wav", FMOD_DEFAULT);
 	waterSplashSound = soundManager->loadSound("sounds/Effect_water_splash.wav", FMOD_CREATESTREAM);
 	currentFloorRow = playerObject.getPos().y;
+	outOfTheScene = false;
 }
 
 PlayerReturn Player::update(int deltaTime) {
+	if (outOfTheScene) {
+		return PlayerReturn::DEAD;
+	}
 	currentColIndex = FloorRow::worldToCol(playerObject.getPos().x);
 	PlayerReturn ret = PlayerReturn::NOTHING;
 	if (!upsideDown && collides()) {

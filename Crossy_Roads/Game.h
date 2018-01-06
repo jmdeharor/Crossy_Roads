@@ -63,7 +63,6 @@ public:
 	void setCoins(int newCoins);
 
 	GameState getCurrentState();
-	void setCurrentState(GameState newState);
 
 	const SoundManager* getSoundManager() const;
 
