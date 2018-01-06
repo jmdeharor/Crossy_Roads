@@ -190,7 +190,7 @@ SceneReturn Scene::update(int deltaTime) {
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	}
 	if (Game::instance().getKey('o')) {
-		partSystem.trigger(player.getPos());
+		partSystem.trigger(player.getPos(), 20, vec4(1,0,0,0));
 	}
 	return SceneReturn::Nothing;
 }
@@ -252,9 +252,6 @@ void Scene::render() {
 		}
 		objects.clear();
 	}
-
-	partSystem.render(drawShadowProgram);
-
 	const Mesh* mesh = assets.getCubeMesh();
 	mesh->setProgramParams(drawShadowProgram);
 	for (uint i = 0; i < renderVectors.texturedObjects.size(); ++i) {
@@ -270,6 +267,8 @@ void Scene::render() {
 		}
 		objects.clear();
 	}
+
+	partSystem.render(viewProjection, lightDir);
 
 	textScore.render(to_string(player.getScore()), vec2(SCREEN_WIDTH-50, 70), 32, vec4(1, 1, 1, 1));
 

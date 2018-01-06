@@ -3,8 +3,9 @@
 #include "ShaderProgram.h"
 #include <glm\glm.hpp>
 #include <vector>
+#include "GameObject.h"
 
-class WaterParticleSystem {
+class WaterParticleSystem : public GameObject {
 	enum State {
 		Falling,
 		Stopped
@@ -20,13 +21,19 @@ class WaterParticleSystem {
 	const Mesh* mesh;
 	const Texture* texture;
 	glm::vec3 pos;
+	ShaderProgram program;
+	glm::uint VPLoc;
+	glm::uint colorLoc;
+	glm::uint lightLoc;
+	glm::vec4 color;
 public:
 	float g;
 public:
+	void firstInit() override;
 	void init(const Assets& assets);
-	void trigger(glm::vec3 pos);
+	void trigger(glm::vec3 pos, glm::uint numParticles, glm::vec4 color);
 	void update();
-	void render(ShaderProgram& program) const;
+	void render(const glm::mat4& VP, glm::vec3 lightDir);
 	WaterParticleSystem();
 	~WaterParticleSystem();
 };

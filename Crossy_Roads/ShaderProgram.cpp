@@ -136,6 +136,18 @@ void ShaderProgram::setUniform4f(uint location, vec4 & vec) {
 		glUniform4f(uniforms[location], vec.x, vec.y, vec.z, vec.w);
 }
 
+void ShaderProgram::setUniform3f(const string & uniformName, glm::vec3 & vec) {
+	GLint location = glGetUniformLocation(programId, uniformName.c_str());
+
+	if (location != -1)
+		glUniform3f(location, vec.x, vec.y, vec.z);
+}
+
+void ShaderProgram::setUniform3f(glm::uint location, glm::vec3 & vec) {
+	if (uniforms[location] != -1)
+		glUniform3f(uniforms[location], vec.x, vec.y, vec.z);
+}
+
 uint ShaderProgram::addUniform(const string & uniformName) {
 	GLint location = glGetUniformLocation(programId, uniformName.c_str());
 	uniforms.push_back(location);

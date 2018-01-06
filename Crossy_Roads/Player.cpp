@@ -67,6 +67,7 @@ PlayerReturn Player::update(int deltaTime) {
 	if (!upsideDown && collides()) {
 		playerObject.setRotationZ(PI);
 		upsideDown = true;
+		particleSystem->trigger(playerObject.getPos(), 30, vec4(1, 0, 0, 0));
 		return PlayerReturn::DEAD;
 	}
 	if (inMovement) {
@@ -76,7 +77,7 @@ PlayerReturn Player::update(int deltaTime) {
 			currentColIndex = FloorRow::worldToCol(playerObject.getPos().x);
 			FloorRow* floorRow = floor->getFloorRow(currentRowIndex);
 			if (floorRow->getRowHeight() == playerObject.getY() && floorRow->isTheFloorLava()) {
-				particleSystem->trigger(playerObject.getPos());
+				particleSystem->trigger(playerObject.getPos(), 17, vec4(0,0.4f,0.86f,0));
 				soundManager->playSound(waterSplashSound);
 				return PlayerReturn::DEAD;
 			}

@@ -3,15 +3,55 @@
 #include "Object.h"
 using namespace glm;
 
+
+inline void compileShader(ShaderProgram& program, const string& fileName) {
+	Shader vShader, fShader;
+	string path = "shaders/" + fileName;
+	vShader.initFromFile(VERTEX_SHADER, path + ".vert");
+	if (!vShader.isCompiled()) {
+		cout << "Vertex Shader " + fileName + " Error" << endl;
+		cout << "" << vShader.log() << endl << endl;
+	}
+	fShader.initFromFile(FRAGMENT_SHADER, path + ".frag");
+	if (!fShader.isCompiled()) {
+		cout << "Fragment Shader " + fileName + " Error" << endl;
+		cout << "" << fShader.log() << endl << endl;
+	}
+	program.init();
+	program.addShader(vShader);
+	program.addShader(fShader);
+	program.link();
+	if (!program.isLinked()) {
+		cout << "Shader " + fileName + " Linking Error" << endl;
+		cout << "" << program.log() << endl << endl;
+	}
+	vShader.free();
+	fShader.free();
+	for (uint i = 0; i < sizeof(uniformOrder) / sizeof(string); ++i) {
+		program.addUniform(uniformOrder[i]);
+	}
+}
+
+
+void WaterParticleSystem::firstInit() {
+	compileShader(program, "simpleColor");
+	program.bindFragmentOutput("outColor");
+	VPLoc = program.addUniform("VP");
+	colorLoc = program.addUniform("color");
+	lightLoc = program.addUniform("lightDir");
+}
+
 void WaterParticleSystem::init(const Assets & assets) {
+	GameObject::init();
 	mesh = assets.getCubeMesh();
 	texture = assets.getTexture("water_plane");
 }
 
-void WaterParticleSystem::trigger(vec3 pos) {
+void WaterParticleSystem::trigger(vec3 pos, uint numParticles, vec4 color) {
+	this->color = color;
 	pos.y += mesh->getbbSize().y*0.3f/2;
 	this->pos = pos;
-	uint nParticles = between(10, 20);
+	uint nParticles = numParticles + between(-5, 5);
 	particles.resize(nParticles);
 
 	for (uint i = 0; i < nParticles; ++i) {
@@ -56,7 +96,13 @@ void WaterParticleSystem::update() {
 	particles.resize(j);
 }
 
-void WaterParticleSystem::render(ShaderProgram & program) const {
+void WaterParticleSystem::render(const mat4& VP, vec3 lightDir) {
+	if (particles.size() == 0)
+		return;
+	program.use();
+	program.setUniformMatrix4f(VPLoc, VP);
+	program.setUniform4f(colorLoc, color);
+	program.setUniform3f(lightLoc, lightDir);
 	Object object;
 	mesh->setProgramParams(program);
 	texture->use();
