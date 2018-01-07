@@ -1,7 +1,8 @@
 #include "Coin.h"
 #include "Game.h"
 
-void Coin::staticStart() {
+void Coin::staticStart(ParticleSystem* particleSystem) {
+	Coin::particleSystem = particleSystem;
 	soundManager = Game::instance().getSoundManager();
 	getCoinSound = soundManager->loadSound("sounds/Effect_coin_collect.wav", FMOD_DEFAULT);
 }
@@ -19,6 +20,7 @@ void Coin::update(int deltaTime) {
 		writer << Game::instance().coins;
 		writer.close();
 		soundManager->playSound(getCoinSound);
+		particleSystem->trigger(origin->getPos(), 1);
 		origin->destroy();
 		return;
 	}
@@ -53,3 +55,4 @@ const float Coin::verticalSpeed = 0.05f;
 const float Coin::maxHeight = 0.6f;
 const SoundManager* Coin::soundManager;
 FMOD::Sound* Coin::getCoinSound;
+ParticleSystem* Coin::particleSystem;

@@ -4,10 +4,9 @@
 
 #include <vector>
 #include "Billboard.h"
+#include "GameObject.h"
 
-
-class ParticleSystem
-{
+class ParticleSystem : public GameObject {
 public:
 	struct Particle
 	{
@@ -20,11 +19,12 @@ public:
 	ParticleSystem();
 	~ParticleSystem();
 
-	void init(const glm::vec2 &billboardQuadSize, ShaderProgram &program, const string &billboardTextureName, float gravity = 0.f);
-	void addParticle(Particle &newParticle);
+	void firstInit() override;
+	void init(const glm::vec2 &billboardQuadSize, const string &billboardTextureName, float gravity = 0.f);
 
+	void trigger(glm::vec3 pos, float radius);
 	void update(float deltaTimeInSeconds);
-	void render(const glm::vec3 &eye);
+	void render(const glm::vec3 &eye, const glm::mat4& VP);
 
 private:
 	ShaderProgram program;

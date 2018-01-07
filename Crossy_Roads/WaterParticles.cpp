@@ -3,7 +3,6 @@
 #include "Object.h"
 using namespace glm;
 
-
 inline void compileShader(ShaderProgram& program, const string& fileName) {
 	Shader vShader, fShader;
 	string path = "shaders/" + fileName;

@@ -24,7 +24,8 @@ void Scene::firstInit() {
 	//assets.loadAssets("assets_locations/models.json", "assets_locations/textures.json");
 	assets.loadAssets("binaryAssets.notxt");
 
-	Coin::staticStart();
+	coinPartSystem.init(vec2(1), "images/particle.png", -0.001f);
+	Coin::staticStart(&coinPartSystem);
 
 	partSystem.init(assets);
 	partSystem.g = -0.07f;
@@ -157,6 +158,7 @@ SceneReturn Scene::update(int deltaTime) {
 	floor.update(deltaTime);
 	camera.update(deltaTime);
 	partSystem.update();
+	coinPartSystem.update(deltaTime);
 
 	PlayerReturn playerAction;
 	playerAction = player.update(deltaTime);
@@ -187,7 +189,8 @@ SceneReturn Scene::update(int deltaTime) {
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	}
 	if (Game::instance().getKey('o')) {
-		partSystem.trigger(player.getPos(), 20, vec4(1,0,0,0));
+		//partSystem.trigger(player.getPos(), 20, vec4(1,0,0,0));
+		coinPartSystem.trigger(player.getPos(), 5);
 	}
 	if (Game::instance().getKey('l')) {
 		Game::instance().coins = 100000;
@@ -270,6 +273,9 @@ void Scene::render() {
 	}
 	
 	partSystem.render(viewProjection, lightDir);
+	mat4 viewInverse = inverse(*camera.getViewMatrix());
+	vec4 eye = viewInverse*vec4(0,0,0,1);
+	coinPartSystem.render(vec3(eye.x, eye.y, eye.z), viewProjection);
 
 	textScore.render("Score: " + to_string(player.getScore()), vec2(SCREEN_WIDTH - 150, 70), 32, vec4(1, 1, 1, 1));
 	textCoins.render("Dobloons: " + to_string(Game::instance().getCoins()), vec2(50, 70), 32, vec4(1, 1, 1, 1)),

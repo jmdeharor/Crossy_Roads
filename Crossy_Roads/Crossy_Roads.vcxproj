@@ -175,6 +175,7 @@
     <ClCompile Include="Sprite.cpp" />
     <ClCompile Include="Stalker.cpp" />
     <ClCompile Include="Text.cpp" />
+    <ClCompile Include="Texture2.cpp" />
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="TexturedObject.cpp" />
     <ClCompile Include="TexturedQuad.cpp" />
@@ -227,6 +228,7 @@
     <ClInclude Include="Sprite.h" />
     <ClInclude Include="Stalker.h" />
     <ClInclude Include="Text.h" />
+    <ClInclude Include="Texture2.h" />
     <ClInclude Include="TexturedQuad.h" />
     <ClInclude Include="Utils.h" />
     <ClInclude Include="Mesh.h" />

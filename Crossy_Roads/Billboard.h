@@ -4,7 +4,7 @@
 
 #include <string>
 #include <glm/glm.hpp>
-#include "Texture.h"
+#include "Texture2.h"
 #include "ShaderProgram.h"
 
 
@@ -45,7 +45,7 @@ private:
 	GLuint vbo;
 	GLint posLocation, normalLocation, texCoordLocation;
 	glm::vec2 size;
-	Texture texture;
+	Texture2 texture;
 
 };
 

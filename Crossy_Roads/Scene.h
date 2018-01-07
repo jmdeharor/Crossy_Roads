@@ -20,6 +20,7 @@
 #include "WaterParticles.h"
 #include "SoundManager.h"
 #include "Text.h"
+#include "ParticleSystem.h"
 
 #define CAMERA_WIDTH 640
 #define CAMERA_HEIGHT 480
@@ -61,6 +62,7 @@ private:
 	Assets assets;
 	RenderVectors renderVectors;
 	WaterParticleSystem partSystem;
+	ParticleSystem coinPartSystem;
 	const SoundManager* soundManager;
 	FMOD::Sound* music, *ambience;
 

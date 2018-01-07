@@ -13,10 +13,9 @@ Billboard *Billboard::createBillboard(const glm::vec2 &quadSize, ShaderProgram &
 Billboard::Billboard(const glm::vec2 &quadSize, ShaderProgram &program, const string &textureFile, BillboardType billboardType) {
 	type = billboardType;
 	size = quadSize;
-	if (!texture.loadFromFile(textureFile.c_str(), TEXTURE_PIXEL_FORMAT_RGBA, true))
+	if (!texture.loadFromFile(textureFile.c_str(), TEXTURE_PIXEL_FORMAT_RGBA))
 		cout << "Could not load billboard texture!!!" << endl;
-	texture.magFilter = GL_NEAREST;
-	texture.applyParams();
+	texture.setMagFilter(GL_NEAREST);
 	prepareArrays(program);
 }
 
@@ -33,12 +32,12 @@ void Billboard::render(const glm::vec3 &position, const glm::vec3 &eye)
 
 	texture.use();
 	glBindVertexArray(vao);
-	glEnableVertexAttribArray(posLocation);
-	glEnableVertexAttribArray(normalLocation);
-	glEnableVertexAttribArray(texCoordLocation);
+	glEnableVertexAttribArray(positionLoc);
+	glEnableVertexAttribArray(normalLoc);
+	glEnableVertexAttribArray(texCoordLoc);
 	glDrawArrays(GL_QUADS, 0, 4);
 
-	glDisable(GL_TEXTURE_2D);
+	//glDisable(GL_TEXTURE_2D);
 }
 
 void Billboard::free()

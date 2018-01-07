@@ -252,6 +252,9 @@
     <ClCompile Include="Billboard.cpp">
       <Filter>Archivos de código fuente</Filter>
     </ClCompile>
+    <ClCompile Include="Texture2.cpp">
+      <Filter>Archivos de código fuente</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game.h">
@@ -438,6 +441,9 @@
       <Filter>Archivos de encabezado\ParticleSystem</Filter>
     </ClInclude>
     <ClInclude Include="Billboard.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="Texture2.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
   </ItemGroup>
