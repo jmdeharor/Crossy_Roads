@@ -36,7 +36,7 @@ inline void compileShader(ShaderProgram& program, const string& fileName) {
 void WaterParticleSystem::firstInit() {
 	compileShader(program, "simpleColor");
 	program.bindFragmentOutput("outColor");
-	VPLoc = program.addUniform("VP");
+
 	colorLoc = program.addUniform("color");
 	lightLoc = program.addUniform("lightDir");
 }
@@ -100,7 +100,7 @@ void WaterParticleSystem::render(const mat4& VP, vec3 lightDir) {
 	if (particles.size() == 0)
 		return;
 	program.use();
-	program.setUniformMatrix4f(VPLoc, VP);
+	program.setUniformMatrix4f(viewProjectionLoc, VP);
 	program.setUniform4f(colorLoc, color);
 	program.setUniform3f(lightLoc, lightDir);
 	Object object;

@@ -190,7 +190,7 @@ void Floor::updateFloorRow(FloorRow& floorRow, const FloorRow& prevRow) {
 		
 		switch (biome) {
 		case Ship:
-			biomeLength = between(10, 30);
+			biomeLength = between(10, 25);
 			biome = Sea;
 			break;
 		case Sea:
@@ -206,7 +206,7 @@ void Floor::updateFloorRow(FloorRow& floorRow, const FloorRow& prevRow) {
 				biome = Island;
 			break;
 		case Island:
-			biomeLength = between(10, 30);
+			biomeLength = between(10, 25);
 			type = Road;
 			counter = length = 0;
 			biome = Sea;

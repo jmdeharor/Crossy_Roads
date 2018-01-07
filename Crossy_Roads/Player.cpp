@@ -19,13 +19,16 @@ void Player::groupDrawableObjects(const FrustumG& frustum, RenderVectors& render
 		if (state == PlayerState::DeadByEnemy) {
 			renderVectors.texturedObjects[textureObject.texture].push_back(&textureObject);
 		}
+		else if (state == PlayerState::DeadByLava) {
+			renderVectors.projectionShadowObjects[playerObject.meshId].push_back(&playerObject);
+		}
 		else {
 			renderVectors.objects[playerObject.meshId].push_back(&playerObject);
-			renderVectors.shadowObjects[playerObject.meshId].push_back(&playerObject);
+			renderVectors.shadowMapOpjects[playerObject.meshId].push_back(&playerObject);
 		}
 	}
 	else {
-		renderVectors.shadowObjects[playerObject.meshId].push_back(&playerObject);
+		renderVectors.shadowMapOpjects[playerObject.meshId].push_back(&playerObject);
 		outOfTheScene = true;
 	}
 }
@@ -45,7 +48,9 @@ void Player::init(const Assets& assets, vec3 lightDir, vec3 offset, float jumpDi
 	currentColIndex = floor.getCols() / 2 - floor.getColOffset();
 	vec3 rowHeight = floor.getFloorRow(currentRowIndex)->getNextPos(currentColIndex).first;
 
-	IdMesh playerModelId = (*playerModels)[Game::instance().charSelected];
+	charSelected = Game::instance().charSelected;
+
+	IdMesh playerModelId = (*playerModels)[charSelected];
 	playerObject.setMesh(playerModelId, assets.getMesh(playerModelId));
 	playerObject.setScale(vec3(assets.getScale(playerModelId)));
 	playerObject.setCenterToBaseCenter();
@@ -74,13 +79,17 @@ void Player::init(const Assets& assets, vec3 lightDir, vec3 offset, float jumpDi
 	nextPos.y = playerObject.getY();
 	godModePressed = false;
 	godMode = false;
+	playerControl = true;
 }
 
 PlayerReturn Player::update(int deltaTime) {
-	IdMesh playerModelId = (*playerModels)[Game::instance().charSelected];
-	playerObject.setMesh(playerModelId, assets->getMesh(playerModelId));
-	playerObject.setScale(vec3(assets->getScale(playerModelId)));
-	playerObject.setCenterToBaseCenter();
+	if (Game::instance().charSelected != charSelected) {
+		charSelected = Game::instance().charSelected;
+		IdMesh playerModelId = (*playerModels)[charSelected];
+		playerObject.setMesh(playerModelId, assets->getMesh(playerModelId));
+		playerObject.setScale(vec3(assets->getScale(playerModelId)));
+		playerObject.setCenterToBaseCenter();
+	}
 
 	if (Game::instance().getKey('g')) {
 		godModePressed = true;
@@ -90,6 +99,16 @@ PlayerReturn Player::update(int deltaTime) {
 		godModePressed = false;
 	}
 
+	if (state == PlayerState::DeadByLava) {
+		vec3 scale = playerObject.getScale();
+		if (scale.x > 0) {
+			scale -= 0.0001f;
+			if (scale.x < 0)
+				scale = vec3(0);
+			playerObject.setScale(scale);
+		}
+	}
+
 	if (outOfTheScene && !godMode) {
 		platformSpeed = 0;
 		state = PlayerState::DeadByOut;
@@ -97,7 +116,7 @@ PlayerReturn Player::update(int deltaTime) {
 	}
 	currentColIndex = FloorRow::worldToCol(playerObject.getPos().x);
 	PlayerReturn ret = PlayerReturn::NOTHING;
-	if (collides() && !godMode) {
+	if (collides() && !godMode && playerControl) {
 		particleSystem->trigger(playerObject.getPos(), 30, vec4(1, 0, 0, 0));
 		textureObject.setPos(vec3(nextPos.x, nextPos.y+0.001f, nextPos.z));
 		state = PlayerState::DeadByEnemy;
@@ -109,15 +128,17 @@ PlayerReturn Player::update(int deltaTime) {
 			inMovement = false;
 			currentColIndex = FloorRow::worldToCol(playerObject.getPos().x);
 			FloorRow* floorRow = floor->getFloorRow(currentRowIndex);
-			if (floorRow->getRowHeight() == playerObject.getY() && floorRow->isTheFloorLava() && !godMode) {
+			float rowHeight = floorRow->getRowHeight();
+			if (rowHeight == playerObject.getY() && floorRow->isTheFloorLava() && !godMode) {
 				particleSystem->trigger(playerObject.getPos(), 17, vec4(0,0.4f,0.86f,0));
 				soundManager->playSound(waterSplashSound);
+				playerObject.setPlane(vec4(0, 1, 0, -rowHeight - 0.001f), vec3(0,1,0));
 				state = PlayerState::DeadByLava;
 				return PlayerReturn::DEAD;
 			}
 		}
 	}
-	else  {
+	else if (playerControl) {
 		playerObject.moveX(platformSpeed);
 
 		if (Game::instance().getKey('w')) {
@@ -219,6 +240,14 @@ void Player::calculateSpeeds() {
 	verticalSpeed = getJumpingSpeed(playerPos.y, nextPos.y, JUMP_DURATION);
 	speeds.x = (nextPos.x - playerPos.x) / JUMP_DURATION;
 	speeds.z = (nextPos.z - playerPos.z) / JUMP_DURATION;
+}
+
+void Player::disablePlayerControl() {
+	playerControl = false;
+}
+
+void Player::enablePlayerControl() {
+	playerControl = true;
 }
 
 void Player::setDirectionVector() {

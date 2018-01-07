@@ -37,6 +37,13 @@ void Mesh::setProgramParams(ShaderProgram & program) const {
 	program.bindVertexAttribute(texCoordLoc, 2, 0, 0);
 }
 
+void Mesh::setVAO() const {
+	glBindVertexArray(VAO);
+	glEnableVertexAttribArray(positionLoc);
+	glEnableVertexAttribArray(normalLoc);
+	glEnableVertexAttribArray(texCoordLoc);
+}
+
 #include "Scene.h"
 
 void Mesh::render() const {

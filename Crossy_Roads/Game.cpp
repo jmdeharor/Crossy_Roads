@@ -19,7 +19,7 @@ void Game::init() {
 	menu.init();
 	shop.init();
 	endGameView.init();
-	scene.playerControl = false;
+	scene.disablePlayerControl();
 	currentState = GameState::MENU;
 	mouseCursorTexture.loadFromFile("images/cursor.png", TEXTURE_PIXEL_FORMAT_RGBA, true);
 	mouseCursorTexture.wrapS = GL_CLAMP_TO_EDGE;
@@ -57,11 +57,11 @@ bool Game::update(int deltaTime) {
 		}
 		sceneRet = scene.update(deltaTime);
 		if (sceneRet == SceneReturn::EndGame) {
-			scene.playerControl = false;
+			scene.disablePlayerControl();
 			currentState = GameState::ENDGAME;
 		}
 		else if (getSpecialKey(GLUT_KEY_F1)) {
-			scene.playerControl = false;
+			scene.disablePlayerControl();
 			currentState = GameState::MENU;
 		}
 		break;
@@ -70,7 +70,7 @@ bool Game::update(int deltaTime) {
 		menuRet = menu.update(deltaTime);
 		switch (menuRet) {
 		case MenuReturn::Exit:
-			scene.playerControl = true;
+			scene.enablePlayerControl();
 			currentState = GameState::PLAYING;
 			break;
 		case MenuReturn::Shop:

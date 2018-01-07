@@ -31,7 +31,8 @@ void Scene::firstInit() {
 
 	renderVectors.objects.resize(assets.getNumMeshes());
 	renderVectors.texturedObjects.resize(assets.getNumTextures());
-	renderVectors.shadowObjects.resize(assets.getNumMeshes());
+	renderVectors.shadowMapOpjects.resize(assets.getNumMeshes());
+	renderVectors.projectionShadowObjects.resize(assets.getNumMeshes());
 
 	soundManager = Game::instance().getSoundManager();
 	music = soundManager->loadSound("sounds/Music_Caribbean_Smugglers.mp3", FMOD_LOOP_NORMAL | FMOD_CREATESTREAM);
@@ -40,6 +41,16 @@ void Scene::firstInit() {
 	QueryPerformanceFrequency(&frequency);
 
 	initShaders();
+	for (uint i = 0; i < assets.getNumMeshes(); ++i) {
+		const Mesh* mesh = assets.getMesh(i);
+		mesh->setProgramParams(drawShadowProjection);
+		mesh->setProgramParams(shadowMapDepth);
+		mesh->setProgramParams(shadowMapDraw);
+	}
+	const Mesh* mesh = assets.getCubeMesh();
+	mesh->setProgramParams(shadowMapDepth);
+	mesh->setProgramParams(shadowMapDraw);
+
 	glEnable(GL_TEXTURE_2D);
 	glStencilFunc(GL_EQUAL, 0, 1);
 	glStencilOp(GL_KEEP, GL_KEEP, GL_INCR);
@@ -98,29 +109,21 @@ inline void compileShader(ShaderProgram& program, const string& fileName) {
 }
 
 void Scene::initShaders() {
-	compileShader(texProgram, "texture");
-	texProgram.bindFragmentOutput("outColor");
-	compileShader(lambertProgram, "directionalLight");
-	lambertProgram.bindFragmentOutput("outColor");
-	compileShader(shadowProgram, "shadow");
-	shadowProgram.bindFragmentOutput("outColor");
-	compileShader(shadowMapProgram, "shadowMap");
-	shadowMapProgram.bindFragmentOutput("fragmentdepth");
-	compileShader(drawShadowProgram, "drawShadow");
-	drawShadowProgram.bindFragmentOutput("outColor");
-	compileShader(drawImageProgram, "drawImage");
-	drawImageProgram.bindFragmentOutput("outColor");
-	compileShader(simple, "simple");
-	simple.bindFragmentOutput("outColor");
+	compileShader(shadowMapDepth, "shadowMapDepth");
+	shadowMapDepth.bindFragmentOutput("outColor");
 
-	depthVPLoc = shadowMapProgram.addUniform("depthVP");
+	compileShader(shadowMapDraw, "shadowMapDraw");
+	shadowMapDraw.bindFragmentOutput("fragmentdepth");
 
-	drawShadowProgram.addUniform("depthVP");
-	VPLoc = drawShadowProgram.addUniform("VP");
+	compileShader(drawShadowProjection, "drawShadowProjection");
+	drawShadowProjection.bindFragmentOutput("outColor");
 
-	drawShadowProgram.use();
-	drawShadowProgram.setUniformi("tex", 0);
-	drawShadowProgram.setUniformi("shadowMap", 1);
+	depthVPLoc = shadowMapDraw.addUniform("depthVP");
+	shadowMapDepth.addUniform("depthVP");
+
+	shadowMapDraw.use();
+	shadowMapDraw.setUniformi("tex", 0);
+	shadowMapDraw.setUniformi("shadowMap", 1);
 }
 
 const uint rows = 5;
@@ -131,12 +134,10 @@ void Scene::init() {
 
 	lightDir = normalize(vec3(1,1,0));
 
-	shadowMapProgram.use();
-	shadowMapProgram.setUniform3f("lightDir", lightDir.x, lightDir.y, lightDir.z);
-	drawShadowProgram.use();
-	drawShadowProgram.setUniform3f("lightDir", lightDir.x, lightDir.y, lightDir.z);
-	texProgram.use();
-	texProgram.setUniform3f("lightDir", lightDir.x, lightDir.y, lightDir.z);
+	shadowMapDraw.use();
+	shadowMapDraw.setUniform3f("lightDir", lightDir);
+	shadowMapDraw.use();
+	shadowMapDraw.setUniform3f("lightDir", lightDir);
 
 	floor.init(lightDir, assets, &player);
 	player.init(assets, lightDir, vec3(0), floor.getTileSize().y, floor, &partSystem);
@@ -159,9 +160,7 @@ SceneReturn Scene::update(int deltaTime) {
 	partSystem.update();
 
 	PlayerReturn playerAction;
-	if(playerControl)
-		playerAction = player.update(deltaTime);
-	else playerAction = PlayerReturn::NOTHING;
+	playerAction = player.update(deltaTime);
 
 	switch (playerAction) {
 	case PlayerReturn::NOTHING:
@@ -208,20 +207,20 @@ void Scene::render() {
 	sceneTriangles = 0;
 
 	glViewport(0, 0, SHADOW_MAP_W, SHADOW_MAP_H);
-	shadowMapProgram.use();
+	shadowMapDepth.use();
 	glBindFramebuffer(GL_FRAMEBUFFER, framebufferName);
 	glClear(GL_DEPTH_BUFFER_BIT);
-	shadowMapProgram.setUniformMatrix4f(depthVPLoc, lightViewProjection);
+	shadowMapDepth.setUniformMatrix4f(depthVPLoc, lightViewProjection);
 
-	for (uint i = 0; i < renderVectors.shadowObjects.size(); ++i) {
-		vector<Object*>& objects = renderVectors.shadowObjects[i];
+	for (uint i = 0; i < renderVectors.shadowMapOpjects.size(); ++i) {
+		vector<Object*>& objects = renderVectors.shadowMapOpjects[i];
 		if (objects.empty())
 			continue;
 		const Mesh* mesh = assets.getMesh(i);
-		mesh->setProgramParams(shadowMapProgram);
+		mesh->setVAO();
 		for (uint j = 0; j < objects.size(); ++j) {
 			Object* object = objects[j];
-			shadowMapProgram.setUniformMatrix4f(modelLoc, *object->getModel());
+			shadowMapDepth.setUniformMatrix4f(modelLoc, *object->getModel());
 			mesh->render();
 		}
 		objects.clear();
@@ -236,26 +235,27 @@ void Scene::render() {
 		0.5, 0.5, 0.5, 1.0
 	);
 	glViewport(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-	drawShadowProgram.use();
-	drawShadowProgram.setUniformMatrix4f(depthVPLoc, offsetMatrix*lightViewProjection);
-	drawShadowProgram.setUniformMatrix4f(VPLoc, viewProjection);
+	shadowMapDraw.use();
+	shadowMapDraw.setUniformMatrix4f(depthVPLoc, offsetMatrix*lightViewProjection);
+	shadowMapDraw.setUniformMatrix4f(viewProjectionLoc, viewProjection);
 
 	for (uint i = 0; i < renderVectors.objects.size(); ++i) {
 		vector<Object*>& objects = renderVectors.objects[i];
 		if (objects.empty())
 			continue;
 		const ImportedMesh* mesh = assets.getMesh(i);
-		mesh->setProgramParams(drawShadowProgram);
+		mesh->setVAO();
 		mesh->useTexture();
 		for (uint j = 0; j < objects.size(); ++j) {
 			Object* object = objects[j];
-			drawShadowProgram.setUniformMatrix4f(modelLoc, *object->getModel());
+			shadowMapDraw.setUniformMatrix4f(modelLoc, *object->getModel());
 			mesh->render();
 		}
 		objects.clear();
 	}
+
 	const Mesh* mesh = assets.getCubeMesh();
-	mesh->setProgramParams(drawShadowProgram);
+	mesh->setVAO();
 	for (uint i = 0; i < renderVectors.texturedObjects.size(); ++i) {
 		vector<Object*>& objects = renderVectors.texturedObjects[i];
 		if (objects.empty())
@@ -264,17 +264,18 @@ void Scene::render() {
 		tex->use();
 		for (uint j = 0; j < objects.size(); ++j) {
 			Object* object = objects[j];
-			drawShadowProgram.setUniformMatrix4f(modelLoc, *object->getModel());
+			shadowMapDraw.setUniformMatrix4f(modelLoc, *object->getModel());
 			mesh->render();
 		}
 		objects.clear();
 	}
-
 	
 	partSystem.render(viewProjection, lightDir);
 
 	textScore.render("Score: " + to_string(player.getScore()), vec2(SCREEN_WIDTH - 150, 70), 32, vec4(1, 1, 1, 1));
-	textCoins.render("Dobloons: " + to_string(Game::instance().getCoins()), vec2(50, 70), 32, vec4(1, 1, 1, 1)),	/*texProgram.use();
+	textCoins.render("Dobloons: " + to_string(Game::instance().getCoins()), vec2(50, 70), 32, vec4(1, 1, 1, 1)),
+	
+	/*texProgram.use();
 	texProgram.setUniformMatrix4f(projectionLoc, *camera.getProjectionMatrix());
 	texProgram.setUniformMatrix4f(viewLoc, *camera.getViewMatrix());
 
@@ -290,33 +291,32 @@ void Scene::render() {
 			mesh->render(texProgram);
 		}
 		objects.clear();
-	}
+	*/
 
-	shadowProgram.use();
-	shadowProgram.setUniformMatrix4f(projectionLoc, *camera.getProjectionMatrix());
-	shadowProgram.setUniformMatrix4f(viewLoc, *camera.getViewMatrix());
-	glEnable(GL_POLYGON_OFFSET_FILL);
+	drawShadowProjection.use();
+	shadowMapDraw.setUniformMatrix4f(viewProjectionLoc, viewProjection);
+	//glEnable(GL_POLYGON_OFFSET_FILL);
 	glEnable(GL_BLEND);
 	glEnable(GL_STENCIL_TEST);
-	glPolygonOffset(-1, -1);
+	//glPolygonOffset(-1, -1);
 
-	for (uint i = 0; i < objectsToRender.size(); ++i) {
-		vector<Object*>& objects = objectsToRender[i];
+	for (uint i = 0; i < renderVectors.projectionShadowObjects.size(); ++i) {
+		vector<ShadowedObject*>& objects = renderVectors.projectionShadowObjects[i];
+		if (objects.size() == 0)
+			continue;
 		const Mesh* mesh = assets.getMesh(i);
-		mesh->setProgramParams(shadowProgram);
+		mesh->setProgramParams(drawShadowProjection);
 		for (uint j = 0; j < objects.size(); ++j) {
-			ShadowedObject* object = dynamic_cast<ShadowedObject*>(objects[j]);
-			if (object != NULL) {
-				shadowProgram.setUniformMatrix4f(modelLoc, object->getShadowModel());
-				mesh->render(shadowProgram);
-			}
+			ShadowedObject* object = objects[j];
+			drawShadowProjection.setUniformMatrix4f(modelLoc, object->getShadowModel());
+			mesh->render();
 		}
 		objects.clear();
 	}
 
 	glDisable(GL_STENCIL_TEST);
 	glDisable(GL_BLEND);
-	glDisable(GL_POLYGON_OFFSET_FILL);*/
+	//glDisable(GL_POLYGON_OFFSET_FILL);
 
 	QueryPerformanceCounter(&end);
 	LARGE_INTEGER elapsed;
@@ -327,6 +327,14 @@ void Scene::render() {
 
 void Scene::resize(int w, int h) {
 	camera.resize(w, h);
+}
+
+void Scene::enablePlayerControl() {
+	player.enablePlayerControl();
+}
+
+void Scene::disablePlayerControl() {
+	player.disablePlayerControl();
 }
 
 uint Scene::sceneTriangles = 0;

@@ -186,9 +186,6 @@
     <ClCompile Include="FloorResources.cpp">
       <Filter>Archivos de código fuente\Floor</Filter>
     </ClCompile>
-    <ClCompile Include="WaterParticle.cpp">
-      <Filter>Archivos de código fuente\ParticleSystem</Filter>
-    </ClCompile>
     <ClCompile Include="WaterParticles.cpp">
       <Filter>Archivos de código fuente\ParticleSystem</Filter>
     </ClCompile>
@@ -247,6 +244,12 @@
       <Filter>Archivos de código fuente</Filter>
     </ClCompile>
     <ClCompile Include="ShipWall.cpp">
+      <Filter>Archivos de código fuente</Filter>
+    </ClCompile>
+    <ClCompile Include="ParticleSystem.cpp">
+      <Filter>Archivos de código fuente\ParticleSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="Billboard.cpp">
       <Filter>Archivos de código fuente</Filter>
     </ClCompile>
   </ItemGroup>
@@ -374,9 +377,6 @@
     <ClInclude Include="WaterParticles.h">
       <Filter>Archivos de encabezado\ParticleSystem</Filter>
     </ClInclude>
-    <ClInclude Include="WaterParticle.h">
-      <Filter>Archivos de encabezado\ParticleSystem</Filter>
-    </ClInclude>
     <ClInclude Include="SoundManager.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
@@ -432,6 +432,12 @@
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
     <ClInclude Include="ShipWall.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="ParticleSystem.h">
+      <Filter>Archivos de encabezado\ParticleSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="Billboard.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
   </ItemGroup>

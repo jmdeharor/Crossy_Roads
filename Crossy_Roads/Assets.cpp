@@ -698,7 +698,7 @@ void Assets::loadAssets(const string & binaryPath) {
 			constructor = &randomMeshConfigs[index];
 			break;
 		}
-		map<string, MeshConfigConstructor*>::iterator it = meshConfigIds.insert(make_pair(groupName, constructor)).first;
+		meshConfigIds.insert(make_pair(groupName, constructor)).first;
 	}
 
 	input.read((char*)&size, sizeof(uint));

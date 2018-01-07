@@ -218,3 +218,7 @@ vec2 Object::getHorizontalPlanePos() const {
 vec3 Object::getRotation() const {
 	return rot;
 }
+
+vec3 Object::getScale() const {
+	return scale;
+}

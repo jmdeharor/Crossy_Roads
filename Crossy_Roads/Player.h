@@ -58,6 +58,8 @@ class Player : public GameObject, public ObjectContainer {
 	const SoundManager* soundManager;
 	const Assets* assets;
 	bool godModePressed, godMode;
+	bool playerControl;
+	int charSelected;
 private:
 	void firstInit() override;
 	void setDirectionVector();
@@ -77,6 +79,8 @@ public:
 	float getHeight() const;
 	const Object* getObject() const;
 	void calculateSpeeds();
+	void disablePlayerControl();
+	void enablePlayerControl();
 	int getScore();
 	Player();
 	~Player();

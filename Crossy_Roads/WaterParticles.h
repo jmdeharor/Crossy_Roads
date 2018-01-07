@@ -22,7 +22,6 @@ class WaterParticleSystem : public GameObject {
 	const Texture* texture;
 	glm::vec3 pos;
 	ShaderProgram program;
-	glm::uint VPLoc;
 	glm::uint colorLoc;
 	glm::uint lightLoc;
 	glm::vec4 color;

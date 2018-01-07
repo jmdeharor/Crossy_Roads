@@ -46,7 +46,8 @@ public:
 	void render();
 	void resize(int w, int h);
 
-	bool playerControl;
+	void enablePlayerControl();
+	void disablePlayerControl();
 private:
 	void firstInit() override;
 	void initShaders();
@@ -54,7 +55,7 @@ private:
 private:
 	LARGE_INTEGER start, end;
 	LARGE_INTEGER frequency;
-	glm::uint depthVPLoc, VPLoc;
+	glm::uint depthVPLoc;
 	int playerReferenceRow, playerRow;
 
 	Assets assets;
@@ -70,9 +71,10 @@ private:
 	GLuint framebufferName, depthTexture;
 	glm::vec3 lightDir;
 	Camera camera;
-	ShaderProgram texProgram, lambertProgram, shadowProgram;
-	ShaderProgram shadowMapProgram, drawShadowProgram, drawImageProgram;
-	ShaderProgram simple;
+
+	ShaderProgram shadowMapDepth;
+	ShaderProgram shadowMapDraw;
+	ShaderProgram drawShadowProjection;
 };
 
 

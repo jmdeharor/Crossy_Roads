@@ -125,6 +125,7 @@
     <ClCompile Include="Assets.cpp" />
     <ClCompile Include="BasicMeshConfig.cpp" />
     <ClCompile Include="BehaviourObject.cpp" />
+    <ClCompile Include="Billboard.cpp" />
     <ClCompile Include="Coin.cpp" />
     <ClCompile Include="EndGameView.cpp" />
     <ClCompile Include="MeshConfigConstructor.cpp" />
@@ -155,6 +156,7 @@
     <ClCompile Include="MultiCubeMesh.cpp" />
     <ClCompile Include="Object.cpp" />
     <ClCompile Include="ObjectContainer.cpp" />
+    <ClCompile Include="ParticleSystem.cpp" />
     <ClCompile Include="Plane.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="QuadMesh.cpp" />
@@ -177,7 +179,6 @@
     <ClCompile Include="TexturedObject.cpp" />
     <ClCompile Include="TexturedQuad.cpp" />
     <ClCompile Include="Vec3.cpp" />
-    <ClCompile Include="WaterParticle.cpp" />
     <ClCompile Include="WaterParticles.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -188,6 +189,7 @@
     <ClInclude Include="Assets.h" />
     <ClInclude Include="BasicMeshConfig.h" />
     <ClInclude Include="BehaviourObject.h" />
+    <ClInclude Include="Billboard.h" />
     <ClInclude Include="Coin.h" />
     <ClInclude Include="EndGameView.h" />
     <ClInclude Include="Menu.h" />
@@ -215,6 +217,7 @@
     <ClInclude Include="Jumper.h" />
     <ClInclude Include="MultiCubeMesh.h" />
     <ClInclude Include="ObjectContainer.h" />
+    <ClInclude Include="ParticleSystem.h" />
     <ClInclude Include="RandomMeshConfig.h" />
     <ClInclude Include="RandomPicker.h" />
     <ClInclude Include="SeaBiome.h" />
@@ -240,7 +243,6 @@
     <ClInclude Include="Texture.h" />
     <ClInclude Include="TexturedObject.h" />
     <ClInclude Include="Vec3.h" />
-    <ClInclude Include="WaterParticle.h" />
     <ClInclude Include="WaterParticles.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

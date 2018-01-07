@@ -14,6 +14,11 @@ void CubeMesh::setProgramParams(ShaderProgram & program) const {
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, VBOind);
 }
 
+void CubeMesh::setVAO() const {
+	Mesh::setVAO();
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, VBOind);
+}
+
 void CubeMesh::init() {
 
 	static const float vertices[] = {

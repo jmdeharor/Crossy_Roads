@@ -2,6 +2,8 @@
 using namespace glm;
 
 mat4 ShadowedObject::getShadowModel() {
+	if (modified)
+		updateModel();
 	return shadowProjection*model;
 }
 

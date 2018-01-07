@@ -21,17 +21,6 @@
     },
     {
       "names": [
-        "native_02"
-      ],
-      "type": [
-        "enemy",
-        "player"
-      ],
-      "scale": 0.043,
-      "biomes": "island"
-    },
-    {
-      "names": [
         "native_03"
       ],
       "type": [
@@ -44,6 +33,17 @@
     {
       "names": [
         "native_04"
+      ],
+      "type": [
+        "enemy",
+        "player"
+      ],
+      "scale": 0.043,
+      "biomes": "island"
+    },
+    {
+      "names": [
+        "native_05"
       ],
       "type": [
         "enemy",

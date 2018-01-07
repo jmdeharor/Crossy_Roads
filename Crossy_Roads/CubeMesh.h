@@ -7,6 +7,7 @@ protected:
 public:
 	void render() const override;
 	void setProgramParams(ShaderProgram& program) const override;
+	void setVAO() const override;
 	void init();
 	CubeMesh();
 	~CubeMesh();

@@ -16,8 +16,7 @@
 
 enum UniformLocation {
 	modelLoc,
-	viewLoc,
-	projectionLoc
+	viewProjectionLoc
 };
 
 enum VertexAtribLocation {
@@ -26,7 +25,7 @@ enum VertexAtribLocation {
 	texCoordLoc
 };
 
-const std::string uniformOrder[] = { "model", "view", "projection" };
+const std::string uniformOrder[] = { "model", "VP" };
 
 class ShaderProgram
 {
