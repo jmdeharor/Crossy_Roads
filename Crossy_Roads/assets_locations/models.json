@@ -16,7 +16,7 @@
         "enemy",
         "player"
       ],
-      "scale": 0.05,
+      "scale": 0.043,
       "biomes": "island"
     },
     {
@@ -27,7 +27,7 @@
         "enemy",
         "player"
       ],
-      "scale": 0.05,
+      "scale": 0.043,
       "biomes": "island"
     },
     {
@@ -38,7 +38,7 @@
         "enemy",
         "player"
       ],
-      "scale": 0.05,
+      "scale": 0.043,
       "biomes": "island"
     },
     {
@@ -49,7 +49,7 @@
         "enemy",
         "player"
       ],
-      "scale": 0.05,
+      "scale": 0.043,
       "biomes": "island"
     },
     {
@@ -93,7 +93,7 @@
         "native_05"
       ],
       "type": "enemy",
-      "scale": 0.05,
+      "scale": 0.043,
       "biomes": "island"
     },
     {

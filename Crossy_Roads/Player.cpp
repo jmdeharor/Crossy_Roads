@@ -72,6 +72,8 @@ void Player::init(const Assets& assets, vec3 lightDir, vec3 offset, float jumpDi
 	textureObject.setRotationY(PI / 2);
 
 	nextPos.y = playerObject.getY();
+	godModePressed = false;
+	godMode = false;
 }
 
 PlayerReturn Player::update(int deltaTime) {
@@ -80,14 +82,22 @@ PlayerReturn Player::update(int deltaTime) {
 	playerObject.setScale(vec3(assets->getScale(playerModelId)));
 	playerObject.setCenterToBaseCenter();
 
-	if (outOfTheScene) {
+	if (Game::instance().getKey('g')) {
+		godModePressed = true;
+	}
+	else if (godModePressed) {
+		godMode = !godMode;
+		godModePressed = false;
+	}
+
+	if (outOfTheScene && !godMode) {
 		platformSpeed = 0;
 		state = PlayerState::DeadByOut;
 		return PlayerReturn::DEAD;
 	}
 	currentColIndex = FloorRow::worldToCol(playerObject.getPos().x);
 	PlayerReturn ret = PlayerReturn::NOTHING;
-	if (collides()) {
+	if (collides() && !godMode) {
 		particleSystem->trigger(playerObject.getPos(), 30, vec4(1, 0, 0, 0));
 		textureObject.setPos(vec3(nextPos.x, nextPos.y+0.001f, nextPos.z));
 		state = PlayerState::DeadByEnemy;
@@ -99,7 +109,7 @@ PlayerReturn Player::update(int deltaTime) {
 			inMovement = false;
 			currentColIndex = FloorRow::worldToCol(playerObject.getPos().x);
 			FloorRow* floorRow = floor->getFloorRow(currentRowIndex);
-			if (floorRow->getRowHeight() == playerObject.getY() && floorRow->isTheFloorLava()) {
+			if (floorRow->getRowHeight() == playerObject.getY() && floorRow->isTheFloorLava() && !godMode) {
 				particleSystem->trigger(playerObject.getPos(), 17, vec4(0,0.4f,0.86f,0));
 				soundManager->playSound(waterSplashSound);
 				state = PlayerState::DeadByLava;
@@ -107,7 +117,7 @@ PlayerReturn Player::update(int deltaTime) {
 			}
 		}
 	}
-	else {
+	else  {
 		playerObject.moveX(platformSpeed);
 
 		if (Game::instance().getKey('w')) {

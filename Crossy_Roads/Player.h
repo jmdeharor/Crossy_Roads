@@ -30,7 +30,6 @@ enum class PlayerState {
 };
 
 class Player : public GameObject, public ObjectContainer {
-	friend class Scene;
 	ShadowedObject playerObject;
 	TexturedObject textureObject;
 	PlayerState state;
@@ -58,7 +57,7 @@ class Player : public GameObject, public ObjectContainer {
 	FMOD::Sound* jumpSound, *waterSplashSound;
 	const SoundManager* soundManager;
 	const Assets* assets;
-
+	bool godModePressed, godMode;
 private:
 	void firstInit() override;
 	void setDirectionVector();
