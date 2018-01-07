@@ -54,9 +54,9 @@ void EndGameView::render() {
 	shaderProgram.setUniformMatrix4f("projection", projection);
 	shaderProgram.setUniform4f("color", 1.0f, 1.0f, 1.0f, 1.0f);
 	
-	message->render();
-	buttonSave->render();
-	buttonReturn->render();
+	//message->render();
+	//buttonSave->render();
+	//buttonReturn->render();
 }
 
 EndGameView::EndGameView()
