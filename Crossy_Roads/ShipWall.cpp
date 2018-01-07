@@ -67,16 +67,16 @@ void ShipWall::groupDrawableObjects(const FrustumG & frustum, RenderVectors & re
 	for (uint i = 0; i < wall.size(); ++i) {
 		//if (i == half)
 		//	continue;
-		if (wall[i].isInsideViewFrustrum(frustum)) {
+		if (wall[i].isInsideViewFrustum(frustum)) {
 			renderVectors.texturedObjects[wall[i].texture].push_back(&wall[i]);
 		}
 	}
 	for (uint i = 0; i < cannons.size(); ++i) {
-		if (cannons[i].isInsideViewFrustrum(frustum))
+		if (cannons[i].isInsideViewFrustum(frustum))
 			renderVectors.objects[cannons[i].meshId].push_back(&cannons[i]);
 	}
 	for (uint i = 0; i < cannonRow.size(); ++i) {
-		if (cannonRow[i].isInsideViewFrustrum(frustum)) {
+		if (cannonRow[i].isInsideViewFrustum(frustum)) {
 			renderVectors.texturedObjects[cannonRow[i].texture].push_back(&cannonRow[i]);
 		}
 	}

@@ -88,7 +88,7 @@ const mat4 * Object::getModel() {
 	return &model;
 }
 
-bool Object::isInsideViewFrustrum(const FrustumG& frustum) {
+bool Object::isInsideViewFrustum(const FrustumG& frustum) {
 	const vec3* bbox = mesh->getbb();
 	if (modified)
 		updateModel();

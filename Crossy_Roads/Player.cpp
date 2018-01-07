@@ -14,7 +14,7 @@ void Player::firstInit() {
 }
 
 void Player::groupDrawableObjects(const FrustumG& frustum, RenderVectors& renderVectors) {
-	if (playerObject.isInsideViewFrustrum(frustum)) {
+	if (playerObject.isInsideViewFrustum(frustum)) {
 		outOfTheScene = false;
 		if (state == PlayerState::DeadByEnemy) {
 			renderVectors.texturedObjects[textureObject.texture].push_back(&textureObject);
@@ -36,6 +36,8 @@ void Player::init(const Assets& assets, vec3 lightDir, vec3 offset, float jumpDi
 	this->floor = &floor;
 	this->particleSystem = particleSystem;
 	this->jumpDistance = jumpDistance;
+	this->assets = &assets;
+	playerModels = assets.getFreeGroup(FreeMeshGroup::Player);
 
 	currentPosScore = score = 0;
 
@@ -43,9 +45,9 @@ void Player::init(const Assets& assets, vec3 lightDir, vec3 offset, float jumpDi
 	currentColIndex = floor.getCols() / 2 - floor.getColOffset();
 	vec3 rowHeight = floor.getFloorRow(currentRowIndex)->getNextPos(currentColIndex).first;
 
-	IdMesh pirateId = assets.getMeshId("pirate_2");
-	playerObject.setMesh(pirateId, assets.getMesh(pirateId));
-	playerObject.setScale(vec3(assets.getScale(pirateId)));
+	IdMesh playerModelId = (*playerModels)[Game::instance().charSelected];
+	playerObject.setMesh(playerModelId, assets.getMesh(playerModelId));
+	playerObject.setScale(vec3(assets.getScale(playerModelId)));
 	playerObject.setCenterToBaseCenter();
 	playerObject.setPos(vec3(0,rowHeight.y,0));
 	playerObject.setPlane(vec4(0, 1, 0, -rowHeight.y), lightDir);
@@ -73,6 +75,11 @@ void Player::init(const Assets& assets, vec3 lightDir, vec3 offset, float jumpDi
 }
 
 PlayerReturn Player::update(int deltaTime) {
+	IdMesh playerModelId = (*playerModels)[Game::instance().charSelected];
+	playerObject.setMesh(playerModelId, assets->getMesh(playerModelId));
+	playerObject.setScale(vec3(assets->getScale(playerModelId)));
+	playerObject.setCenterToBaseCenter();
+
 	if (outOfTheScene) {
 		platformSpeed = 0;
 		state = PlayerState::DeadByOut;

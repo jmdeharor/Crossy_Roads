@@ -8,13 +8,17 @@
 #include "BasicMeshConfig.h"
 #include "RandomMeshConfig.h"
 
-#define nMeshGroups 4
+#define nBoundMeshGroups 2
+#define nFreeMeshGroups 2
 #define nMeshConfigGroups 3
-#define nBiomes 3
+#define nBiomes 4
 
-enum class MeshGroup {
+enum class BoundMeshGroup {
 	Enemy,
-	Platform,
+	Platform
+};
+
+enum class FreeMeshGroup {
 	Player,
 	Unique
 };
@@ -28,7 +32,8 @@ enum class MeshConfigGroup {
 enum BiomeType {
 	Ship,
 	Sea,
-	Island
+	Island,
+	None
 };
 
 enum class MonoBehaviourType {
@@ -37,8 +42,8 @@ enum class MonoBehaviourType {
 	None
 };
 
-inline glm::uint sub2ind(BiomeType biome, MeshGroup group) {
-	return nMeshGroups*biome + (int)group;
+inline glm::uint sub2ind(BiomeType biome, BoundMeshGroup group) {
+	return nBoundMeshGroups*biome + (int)group;
 }
 
 inline glm::uint sub2ind(BiomeType biome, MeshConfigGroup group) {
@@ -47,7 +52,8 @@ inline glm::uint sub2ind(BiomeType biome, MeshConfigGroup group) {
 
 class Assets {
 	//Groups
-	std::vector<IdMesh> meshGroups[nBiomes][nMeshGroups];
+	std::vector<IdMesh> boundMeshGroups[nBiomes][nBoundMeshGroups];
+	std::vector<IdMesh> freeMeshGroups[nFreeMeshGroups];
 	std::vector<MeshConfigConstructor*> meshConfigGroups[nBiomes][nMeshConfigGroups];
 	std::map<string, std::pair<IdTex, glm::uint>> animatedTextureGroup;
 	std::map<string, std::pair<IdTex, glm::uint>> animatedMeshGroup;
@@ -84,7 +90,8 @@ public:
 	std::pair<IdTex, glm::uint> getAnimatedTexture(const string& name) const;
 	std::pair<IdMesh, glm::uint> getAnimatedMesh(const string& name) const;
 
-	const std::vector<IdMesh>* getGroups() const;
+	const std::vector<IdMesh>* getBoundGroups() const;
+	const std::vector<IdMesh>* getFreeGroup(FreeMeshGroup group) const;
 	const std::vector<MeshConfigConstructor*>* getMeshConfigGroups() const;
 
 	MonoBehaviourType getBehavior(IdMesh mesh) const;
