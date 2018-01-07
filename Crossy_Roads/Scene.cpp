@@ -205,6 +205,9 @@ SceneReturn Scene::update(int deltaTime) {
 	if (Game::instance().getKey('o')) {
 		partSystem.trigger(player.getPos(), 20, vec4(1,0,0,0));
 	}
+	if (Game::instance().getKey('l')) {
+		Game::instance().coins = 100000;
+	}
 	return SceneReturn::Nothing;
 }
 
