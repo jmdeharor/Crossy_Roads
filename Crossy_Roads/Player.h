@@ -30,11 +30,11 @@ enum class PlayerState {
 };
 
 class Player : public GameObject, public ObjectContainer {
+	friend class Scene;
 	ShadowedObject playerObject;
 	TexturedObject textureObject;
 	PlayerState state;
-	void firstInit() override;
-private:
+	const std::vector<IdMesh>* playerModels;
 	bool outOfTheScene;
 	WaterParticleSystem* particleSystem;
 	int currentPosScore;
@@ -57,7 +57,10 @@ private:
 	glm::vec3 nextPos;
 	FMOD::Sound* jumpSound, *waterSplashSound;
 	const SoundManager* soundManager;
+	const Assets* assets;
 
+private:
+	void firstInit() override;
 	void setDirectionVector();
 	bool keepMoving();
 	float getJumpingSpeed(float y0, float y, glm::uint frames);

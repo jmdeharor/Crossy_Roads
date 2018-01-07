@@ -68,6 +68,7 @@ public:
 
 public:
 	int coins;
+	int charSelected;
 private:
 	SoundManager soundManager;
 	bool bPlay;                       // Continue to play game?

@@ -51,7 +51,7 @@ void FloorRow::initSeaRoad(const FloorRow& prevRow) {
 	frameLimit = between(minTime + 10, int(maxTime*0.3f));
 	frameCounter = 0;
 
-	IdMesh platId = res.meshGroups[sub2ind(biome, MeshGroup::Platform)][0];
+	IdMesh platId = res.meshGroups[sub2ind(biome, BoundMeshGroup::Platform)][0];
 	const Mesh* platMesh = res.assets->getMesh(platId);
 	vec3 platbb = platMesh->getbbSize();
 	vec3 platSize = vec3(3 * fp.realTileSize, 1, fp.tileSize.y + 1) / platbb;

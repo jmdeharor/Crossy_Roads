@@ -193,28 +193,28 @@ void FloorRow::update(int deltaTime) {
 void FloorRow::groupDrawableObjects(const FrustumG& frustum, RenderVectors& renderVectors) {
 	wall.groupDrawableObjects(frustum, renderVectors);
 	for (uint i = 0; i < enemies.size(); ++i) {
-		if (enemies[i].isInsideViewFrustrum(frustum))
+		if (enemies[i].isInsideViewFrustum(frustum))
 			renderVectors.objects[enemies[i].meshId].push_back(&enemies[i]);
 		renderVectors.shadowObjects[enemies[i].meshId].push_back(&enemies[i]);
 	}
 	for (uint i = 0; i < floorTiles.size(); ++i) {
-		if (floorTiles[i].isInsideViewFrustrum(frustum)) {
+		if (floorTiles[i].isInsideViewFrustum(frustum)) {
 			renderVectors.texturedObjects[floorTiles[i].texture].push_back(&floorTiles[i]);
 		}
 	}
 	for (uint i = 0; i < animatedFloorTiles.size(); ++i) {
-		if (animatedFloorTiles[i].isInsideViewFrustrum(frustum)) {
+		if (animatedFloorTiles[i].isInsideViewFrustum(frustum)) {
 			renderVectors.texturedObjects[animatedFloorTiles[i].getTexture()].push_back(&animatedFloorTiles[i]);
 		}
 	}
 	for (uint i = 0; i < furniture.size(); ++i) {
-		if (furniture[i]->isInsideViewFrustrum(frustum)) {
+		if (furniture[i]->isInsideViewFrustum(frustum)) {
 			renderVectors.objects[furniture[i]->meshId].push_back(furniture[i]);
 		}
 		renderVectors.shadowObjects[furniture[i]->meshId].push_back(furniture[i]);
 	}
 	for (uint i = 0; i < platforms.size(); ++i) {
-		if (platforms[i].isInsideViewFrustrum(frustum)) {
+		if (platforms[i].isInsideViewFrustum(frustum)) {
 			renderVectors.objects[platforms[i].getMesh()].push_back(&platforms[i]);
 		}
 		renderVectors.shadowObjects[platforms[i].getMesh()].push_back(&platforms[i]);

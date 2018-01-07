@@ -4,7 +4,7 @@ using namespace glm;
 void FloorResources::init(const Assets & assets, const Player* player) {
 	this->player = player;
 	this->assets = &assets;
-	meshGroups = assets.getGroups();
+	meshGroups = assets.getBoundGroups();
 
 	indices.resize(models.size());
 	for (uint i = 0; i < indices.size(); ++i) {

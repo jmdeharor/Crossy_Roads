@@ -17,7 +17,7 @@ public:
 	const Mesh* mesh;
 
 public:
-	bool isInsideViewFrustrum(const FrustumG& frustum);
+	bool isInsideViewFrustum(const FrustumG& frustum);
 	bool collidesWith(Object& otherObject);
 	glm::uint getTriangles() const;
 	string name;

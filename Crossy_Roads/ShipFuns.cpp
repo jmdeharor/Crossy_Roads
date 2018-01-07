@@ -62,7 +62,7 @@ void FloorRow::initShipRoad(vector<uint>& adjacentRow) {
 
 	for (uint i = 0; i < enemies.size(); ++i) {
 		Jumper& enemy = enemies[i];
-		IdMesh enemyId = res.meshGroups[sub2ind(biome, MeshGroup::Enemy)][rand()% res.meshGroups[sub2ind(biome, MeshGroup::Enemy)].size()];
+		IdMesh enemyId = res.meshGroups[sub2ind(biome, BoundMeshGroup::Enemy)][rand()% res.meshGroups[sub2ind(biome, BoundMeshGroup::Enemy)].size()];
 		enemy.setMesh(enemyId, res.assets->getMesh(enemyId));
 		enemy.setScale(vec3(res.assets->getScale(enemyId)));
 		enemy.setCenterToBaseCenter();

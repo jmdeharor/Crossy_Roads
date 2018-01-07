@@ -21,8 +21,8 @@ Scene::~Scene() {
 void Scene::firstInit() {
 	textScore.init("fonts/PiratesWriters.ttf");
 	textCoins.init("fonts/PiratesWriters.ttf");
-	//assets.loadAssets("assets_locations/models.json", "assets_locations/textures.json");
-	assets.loadAssets("binaryAssets.notxt");
+	assets.loadAssets("assets_locations/models.json", "assets_locations/textures.json");
+	//assets.loadAssets("binaryAssets.notxt");
 
 	Coin::staticStart();
 
@@ -186,8 +186,10 @@ SceneReturn Scene::update(int deltaTime) {
 		playerRow = playerRow - 1;
 		break;
 	case PlayerReturn::DEAD:
-		if (godMode)
+		if (godMode) {
+			player.state = PlayerState::Alive;
 			return SceneReturn::Nothing;
+		}
 		return SceneReturn::EndGame;
 		break;
 	default:

@@ -63,8 +63,12 @@ pair<IdMesh, uint> Assets::getAnimatedMesh(const string & name) const {
 	return animatedMeshGroup.find(name)->second;
 }
 
-const vector<IdMesh>* Assets::getGroups() const {
-	return &meshGroups[0][0];
+const vector<IdMesh>* Assets::getBoundGroups() const {
+	return &boundMeshGroups[0][0];
+}
+
+const std::vector<IdMesh>* Assets::getFreeGroup(FreeMeshGroup group) const{
+	return &freeMeshGroups[(int)group];
 }
 
 const vector<MeshConfigConstructor*>* Assets::getMeshConfigGroups() const {
@@ -105,20 +109,36 @@ inline MeshConfigGroup meshConfigString2enum(const string& meshConfigString) {
 	int a = 3;
 }
 
-inline MeshGroup meshString2enum(const string& meshString) {
+struct MeshGroupParseResult {
+	bool isBound;
+	BoundMeshGroup boundGroup;
+	FreeMeshGroup freeGroup;
+};
+
+inline MeshGroupParseResult meshString2enum(const string& meshString) {
+	MeshGroupParseResult result;
 	if (meshString == "enemy") {
-		return MeshGroup::Enemy;
+		result.isBound = true;
+		result.boundGroup = BoundMeshGroup::Enemy;
 	}
 	else if (meshString == "platform") {
-		return MeshGroup::Platform;
+		result.isBound = true;
+		result.boundGroup = BoundMeshGroup::Platform;
 	}
 	else if (meshString == "player") {
-		return MeshGroup::Player;
+		result.isBound = false;
+		result.freeGroup = FreeMeshGroup::Player;
 	}
-	else if (meshString == "unique")
-		return MeshGroup::Unique;
-	int a = 3;
+	else if (meshString == "unique") {
+		result.isBound = false;
+		result.freeGroup = FreeMeshGroup::Unique;
+	}
+	else {
+		int a = 3;
+	}
+	return result;
 }
+
 
 inline MonoBehaviourType behaviorString2enum(const string& behaviourString) {
 	if (behaviourString == "stalker")
@@ -161,12 +181,15 @@ void Assets::loadAssets(const string& modelPath, const string& texturePath) {
 	}
 
 	for (uint i = 0; i < nBiomes; ++i) {
-		for (uint j = 0; j < nMeshGroups; ++j) {
-			meshGroups[i][j].reserve(nImportedMeshes);
+		for (uint j = 0; j < nBoundMeshGroups; ++j) {
+			boundMeshGroups[i][j].reserve(nImportedMeshes);
 		}
 		for (uint j = 0; j < nMeshConfigGroups; ++j) {
 			meshConfigGroups[i][j].reserve(nRandomMeshConfigs + nbasicMeshConfigs);
 		}
+	}
+	for (uint i = 0; i < nFreeMeshGroups; ++i) {
+		freeMeshGroups[i].reserve(nImportedMeshes);
 	}
 
 	cubeMesh.init();
@@ -179,7 +202,14 @@ void Assets::loadAssets(const string& modelPath, const string& texturePath) {
 	string name, type;
 	uint i = 0, iBasicConfig = 0, iRandomConfig = 0;
 	vector<string> idMeshNames(nImportedMeshes);
+	vector<BiomeType> biomeTypes;
+	vector<BoundMeshGroup> boundGroupTypes;
+	biomeTypes.reserve(nBiomes);
+	boundGroupTypes.reserve(nFreeMeshGroups);
 	for (const Value& meshProperties : models.GetArray()) {
+		biomeTypes.clear();
+		boundGroupTypes.clear();
+
 		uint firstId = i;
 		float scale;
 		if (meshProperties.HasMember("scale")) {
@@ -203,8 +233,20 @@ void Assets::loadAssets(const string& modelPath, const string& texturePath) {
 		}
 		else
 			behaviours[firstId] = MonoBehaviourType::None;
-		const Value& biomesV = meshProperties["biomes"];
+
 		const Value& typesV = meshProperties["type"];
+
+		if (meshProperties.HasMember("biomes")) {
+			const Value& biomesV = meshProperties["biomes"];
+			if (biomesV.IsArray()) {
+				for (const Value& biomeV : biomesV.GetArray()) {
+					biomeTypes.push_back(biomeString2enum(biomeV.GetString()));
+				}
+			}
+			else {
+				biomeTypes.push_back(biomeString2enum(biomesV.GetString()));
+			}
+		}
 
 		if (meshProperties.HasMember("size")) {
 			const Value& size = meshProperties["size"];
@@ -297,8 +339,7 @@ void Assets::loadAssets(const string& modelPath, const string& texturePath) {
 			}
 			
 			if (typesV.IsArray()) {
-				for (const Value& biome : biomesV.GetArray()) {
-					BiomeType biomeType = biomeString2enum(biome.GetString());
+				for (BiomeType biomeType : biomeTypes) {
 					for (const Value& typeV : typesV.GetArray()) {
 						MeshConfigGroup group = meshConfigString2enum(typeV.GetString());
 						meshConfigGroups[(int)biomeType][(int)group].push_back(constructor);
@@ -307,8 +348,7 @@ void Assets::loadAssets(const string& modelPath, const string& texturePath) {
 			}
 			else {
 				MeshConfigGroup group = meshConfigString2enum(typesV.GetString());
-				for (const Value& biome : biomesV.GetArray()) {
-					BiomeType biomeType = biomeString2enum(biome.GetString());
+				for (BiomeType biomeType : biomeTypes) {
 					meshConfigGroups[(int)biomeType][(int)group].push_back(constructor);
 				}
 			}
@@ -321,31 +361,39 @@ void Assets::loadAssets(const string& modelPath, const string& texturePath) {
 				animMeshes.second = namesV.Size();
 			}
 			if (typesV.IsArray()) {
-				for (const Value& biome : biomesV.GetArray()) {
-					BiomeType biomeType = biomeString2enum(biome.GetString());
-					for (const Value& typeV : typesV.GetArray()) {
-						MeshGroup group = meshString2enum(typeV.GetString());
-						meshGroups[(int)biomeType][(int)group].push_back(firstId);
-					}
+				for (const Value& typeV : typesV.GetArray()) {
+					MeshGroupParseResult result = meshString2enum(typeV.GetString());
+					if (result.isBound)
+						boundGroupTypes.push_back(result.boundGroup);
+					else
+						freeMeshGroups[(int)result.freeGroup].push_back(firstId);
 				}
 			}
 			else {
-				MeshGroup group = meshString2enum(typesV.GetString());
-				for (const Value& biome : biomesV.GetArray()) {
-					BiomeType biomeType = biomeString2enum(biome.GetString());
-					meshGroups[(int)biomeType][(int)group].push_back(firstId);
+				MeshGroupParseResult result = meshString2enum(typesV.GetString());
+				if (result.isBound)
+					boundGroupTypes.push_back(result.boundGroup);
+				else
+					freeMeshGroups[(int)result.freeGroup].push_back(firstId);
+			}
+			for (BiomeType biome : biomeTypes) {
+				for (BoundMeshGroup group : boundGroupTypes) {
+					boundMeshGroups[(int)biome][(int)group].push_back(firstId);
 				}
 			}
 		}
 	}
 
 	for (uint i = 0; i < nBiomes; ++i) {
-		for (uint j = 0; j < nMeshGroups; ++j) {
-			meshGroups[i][j].shrink_to_fit();
+		for (uint j = 0; j < nBoundMeshGroups; ++j) {
+			boundMeshGroups[i][j].shrink_to_fit();
 		}
 		for (uint j = 0; j < nMeshConfigGroups; ++j) {
 			meshConfigGroups[i][j].shrink_to_fit();
 		}
+	}
+	for (uint i = 0; i < nFreeMeshGroups; ++i) {
+		freeMeshGroups[i].shrink_to_fit();
 	}
 
 	jsonFile.open(texturePath);
@@ -439,13 +487,20 @@ void Assets::loadAssets(const string& modelPath, const string& texturePath) {
 	}
 
 	for (uint i = 0; i < nBiomes; ++i) {
-		for (uint j = 0; j < nMeshGroups; ++j) {
-			uint size = meshGroups[i][j].size();
+		for (uint j = 0; j < nBoundMeshGroups; ++j) {
+			uint size = boundMeshGroups[i][j].size();
 			output.write((const char*)&size, sizeof(uint));
 			if (size == 0)
 				continue;
-			output.write((const char*)&meshGroups[i][j][0], sizeof(IdMesh)*size);
+			output.write((const char*)&boundMeshGroups[i][j][0], sizeof(IdMesh)*size);
 		}
+	}
+	for (uint i = 0; i < nFreeMeshGroups; ++i) {
+		uint size = freeMeshGroups[i].size();
+		output.write((const char*)&size, sizeof(uint));
+		if (size == 0)
+			continue;
+		output.write((const char*)&freeMeshGroups[i][0], sizeof(IdMesh)*size);
 	}
 
 	for (uint i = 0; i < nBiomes; ++i) {
@@ -579,14 +634,22 @@ void Assets::loadAssets(const string & binaryPath) {
 	}
 
 	for (uint i = 0; i < nBiomes; ++i) {
-		for (uint j = 0; j < nMeshGroups; ++j) {
+		for (uint j = 0; j < nBoundMeshGroups; ++j) {
 			uint size;
 			input.read((char*)&size, sizeof(uint));
 			if (size == 0)
 				continue;
-			meshGroups[i][j].resize(size);
-			input.read((char*)&meshGroups[i][j][0], sizeof(IdMesh)*size);
+			boundMeshGroups[i][j].resize(size);
+			input.read((char*)&boundMeshGroups[i][j][0], sizeof(IdMesh)*size);
 		}
+	}
+	for (uint i = 0; i < nFreeMeshGroups; ++i) {
+		uint size;
+		input.read((char*)&size, sizeof(uint));
+		if (size == 0)
+			continue;
+		freeMeshGroups[i].resize(size);
+		input.read((char*)&freeMeshGroups[i][0], sizeof(IdMesh)*size);
 	}
 
 	for (uint i = 0; i < nBiomes; ++i) {

@@ -28,6 +28,7 @@ void Game::init() {
 	mouseCursorTexture.magFilter = GL_NEAREST;
 	mouseCursor = Sprite::createSprite(vec2(32, 32), vec2(1), &mouseCursorTexture, &shaderProgram);
 	resetPressed = false;
+	charSelected = 0;
 }
 
 GameState Game::getCurrentState() {
@@ -50,6 +51,9 @@ bool Game::update(int deltaTime) {
 		else if (resetPressed) {
 			scene.init();
 			resetPressed = false;
+		}
+		if (getKey('z')) {
+			coins = 100000;
 		}
 		sceneRet = scene.update(deltaTime);
 		if (sceneRet == SceneReturn::EndGame) {

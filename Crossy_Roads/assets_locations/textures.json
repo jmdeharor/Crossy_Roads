@@ -109,8 +109,36 @@
       "type": "nearest"
     },
 	{
+      "names": ["char_unlocked_0"],
+      "type": "nearest"
+    },
+	{
+      "names": ["char_unlocked_1"],
+      "type": "nearest"
+    },
+	{
+      "names": ["char_unlocked_2"],
+      "type": "nearest"
+    },
+	{
+      "names": ["char_unlocked_3"],
+      "type": "nearest"
+    },
+	{
+      "names": ["char_unlocked_4"],
+      "type": "nearest"
+    },
+	{
+      "names": ["char_unlocked_5"],
+      "type": "nearest"
+    },
+	{
       "names": ["char_unlocked_6"],
-      "type": "linear"
+      "type": "nearest"
+    },
+	{
+      "names": ["char_unlocked_7"],
+      "type": "nearest"
     },
     {
       "names": ["water_1", "water_2", "water_3"],

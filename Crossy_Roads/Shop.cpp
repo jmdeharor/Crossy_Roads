@@ -100,31 +100,35 @@ ShopReturn Shop::performClickAction(int x, int y) {
 		return ShopReturn::Menu;
 	}
 	for (int i = 0; i < 8; ++i) {
-		if (isButton(chars[i], x, y) && locked[i]) {
-			if (atoi(prices[i].c_str()) <= Game::instance().getCoins()) {
-				chars[i]->setTexture(&charTexs[i]);
-				locked[i] = false;
-				Game::instance().setCoins(Game::instance().getCoins() - atoi(prices[i].c_str()));
-				prices[i] = "Hired";
-				FMOD::Channel* channel = soundManager->playSound(unlockSounds[i]);
-				channel->setVolume(6);
-				ofstream writer("data/shop_info.txt", ofstream::out);
-				for (int i = 0; i < 8; ++i) {
-					writer << (int)locked[i] << " ";
-				}
-				writer.close();
-				ofstream writer2("data/coin_info.txt", ofstream::out);
-				writer2 << Game::instance().getCoins();
-				writer2.close();
+		if (isButton(chars[i], x, y)) {
+			if (locked[i]) {
+				if (atoi(prices[i].c_str()) <= Game::instance().getCoins()) {
+					chars[i]->setTexture(&charTexs[i]);
+					locked[i] = false;
+					Game::instance().setCoins(Game::instance().getCoins() - atoi(prices[i].c_str()));
+					prices[i] = "Hired";
+					FMOD::Channel* channel = soundManager->playSound(unlockSounds[i]);
+					channel->setVolume(6);
+					ofstream writer("data/shop_info.txt", ofstream::out);
+					for (int i = 0; i < 8; ++i) {
+						writer << (int)locked[i] << " ";
+					}
+					writer.close();
+					ofstream writer2("data/coin_info.txt", ofstream::out);
+					writer2 << Game::instance().getCoins();
+					writer2.close();
 
-				//play unlock sound
+					//play unlock sound
+				}
+				else {
+					chars[i]->setTexture(&charTexs[i]);
+					noCoinsBool = true;
+					//play no money sound and display message
+				}
 			}
 			else {
-				chars[i]->setTexture(&charTexs[i]);
-				noCoinsBool = true;
-				//play no money sound and display message
+				Game::instance().charSelected = i;
 			}
-
 		}
 	}
 	return ShopReturn::Nothing;
@@ -179,11 +183,12 @@ void Shop::render() {
 }
 
 void initTexture(Texture& texture, string path) {
-	texture.loadFromFile(path, TEXTURE_PIXEL_FORMAT_RGBA, true);
+	texture.loadFromFile(path, TEXTURE_PIXEL_FORMAT_RGBA, false);
 	texture.wrapS = GL_CLAMP_TO_EDGE;
 	texture.wrapT = GL_CLAMP_TO_EDGE;
 	texture.minFilter = GL_NEAREST;
 	texture.magFilter = GL_NEAREST;
+	texture.applyParams();
 }
 
 void Shop::initTextures() {

@@ -1,111 +1,177 @@
 {
   "models": [
     {
-      "names": ["pirate"],
+      "names": [
+        "pirate"
+      ],
       "type": "enemy",
-	  "scale": 0.1,
-      "biomes": [
-        "ship"
-      ]
+      "scale": 0.1,
+      "biomes": "ship"
     },
 	{
-      "names": ["redbeard"],
-      "type": "enemy",
-	  "scale": 0.05,
-      "biomes": [
-        "ship"
-      ]
-    },
-    {
-      "names": ["pirate_2"],
-      "type": "enemy",
-	  "scale": 0.1,
-      "biomes": [
-        "ship"
-      ]
-    },
-	{
-      "names": ["stormtrooper"],
-      "type": "player",
-	  "scale": 0.05,
-      "biomes": [
-        "ship"
-      ]
-    },
-	{
-      "names": ["native_01"],
-      "type": "enemy",
-	  "scale": 0.05,
-      "biomes": [
-        "island"
-      ]
-    },
-	{
-      "names": ["native_02"],
-      "type": "enemy",
-	  "scale": 0.05,
-      "biomes": [
-        "island"
-      ]
-    },
-	{
-      "names": ["native_03"],
-      "type": "enemy",
-	  "scale": 0.05,
-      "biomes": [
-        "island"
-      ]
-    },
-	{
-      "names": ["native_04"],
-      "type": "enemy",
-	  "scale": 0.05,
-      "biomes": [
-        "island"
-      ]
-    },
-	{
-      "names": ["native_05"],
-      "type": "enemy",
-	  "scale": 0.05,
-      "biomes": [
-        "island"
-      ]
-    },
-    {
-      "names": ["barrel"],
-      "type": ["decoration", "border"],
-      "size": [1,1],
-      "height": 2,
-      "biomes": ["ship"]
-    },
-    {
-      "names": ["box"],
-      "type": ["decoration", "border"],
-      "size": [1,1],
-      "height": 2,
-      "biomes": ["ship"]
-    },
-	{
-      "names": ["skull"],
-      "type": ["decoration", "border"],
-      "size": [1,1],
-      "height": 2,
-      "biomes": ["island"],
-	  "behaviour": "stalker"
+      "names": [
+        "native_01"
+      ],
+      "type": [
+        "enemy",
+        "player"
+      ],
+      "scale": 0.05,
+      "biomes": "island"
     },
     {
       "names": [
-	    "cubierta_2",
-		"cubierta_2_doors_open",
-		"cubierta_2_open"
-	  ],
-      "type": ["decoration", "border"],
-      "size": [3,3],
-      "height": [0.5, 1.5, 0.5],
-	  "floor empty": [false, true, true],
-	  "probabilities": [0.8, 0.1, 0.1],
-      "biomes": ["ship"]
+        "native_02"
+      ],
+      "type": [
+        "enemy",
+        "player"
+      ],
+      "scale": 0.05,
+      "biomes": "island"
+    },
+    {
+      "names": [
+        "native_03"
+      ],
+      "type": [
+        "enemy",
+        "player"
+      ],
+      "scale": 0.05,
+      "biomes": "island"
+    },
+    {
+      "names": [
+        "native_04"
+      ],
+      "type": [
+        "enemy",
+        "player"
+      ],
+      "scale": 0.05,
+      "biomes": "island"
+    },
+    {
+      "names": [
+        "redbeard"
+      ],
+      "type": [
+        "enemy",
+        "player"
+      ],
+      "scale": 0.05,
+      "biomes": "ship"
+    },
+	{
+      "names": [
+        "davy_jones"
+      ],
+      "type": "player",
+      "scale": 1
+    },
+    {
+      "names": [
+        "pirate_2"
+      ],
+      "type": [
+        "enemy",
+        "player"
+      ],
+      "scale": 0.1,
+      "biomes": "ship"
+    },
+    {
+      "names": [
+        "stormtrooper"
+      ],
+      "type": "player",
+      "scale": 0.05
+    },
+    {
+      "names": [
+        "native_05"
+      ],
+      "type": "enemy",
+      "scale": 0.05,
+      "biomes": "island"
+    },
+    {
+      "names": [
+        "barrel"
+      ],
+      "type": [
+        "decoration",
+        "border"
+      ],
+      "size": [
+        1,
+        1
+      ],
+      "height": 2,
+      "biomes": "ship"
+    },
+    {
+      "names": [
+        "box"
+      ],
+      "type": [
+        "decoration",
+        "border"
+      ],
+      "size": [
+        1,
+        1
+      ],
+      "height": 2,
+      "biomes": "ship"
+    },
+    {
+      "names": [
+        "skull"
+      ],
+      "type": [
+        "decoration",
+        "border"
+      ],
+      "size": [
+        1,
+        1
+      ],
+      "height": 2,
+      "biomes": "island",
+      "behaviour": "stalker"
+    },
+    {
+      "names": [
+        "cubierta_2",
+        "cubierta_2_doors_open",
+        "cubierta_2_open"
+      ],
+      "type": [
+        "decoration",
+        "border"
+      ],
+      "size": [
+        3,
+        3
+      ],
+      "height": [
+        0.5,
+        1.5,
+        0.5
+      ],
+      "floor empty": [
+        false,
+        true,
+        true
+      ],
+      "probabilities": [
+        0.8,
+        0.1,
+        0.1
+      ],
+      "biomes": "ship"
     },
     {
       "names": [
@@ -113,8 +179,8 @@
         "crocodile-01"
       ],
       "type": "platform",
-      "biomes": ["island"],
-	  "group name": "crocodile"
+      "biomes": "island",
+      "group name": "crocodile"
     },
     {
       "names": [
@@ -122,13 +188,14 @@
         "shark-01"
       ],
       "type": "platform",
-      "biomes": ["sea"],
-	  "group name": "shark"
+      "biomes": "sea",
+      "group name": "shark"
     },
     {
-      "names": ["plank"],
-      "type": "unique",
-	  "biomes": []
+      "names": [
+        "plank"
+      ],
+      "type": "unique"
     },
     {
       "names": [
@@ -137,80 +204,136 @@
         "railing_rip"
       ],
       "type": "unique",
-	  "size": [1,1],
-      "height": [1.5, 2.1, 1.5],
+      "size": [
+        1,
+        1
+      ],
+      "height": [
+        1.5,
+        2.1,
+        1.5
+      ],
       "probabilities": [
         0.6,
         0.1,
         0.3
       ],
-      "group name": "railing",
-	  "biomes": []
-    },
-    {
-      "names": ["cannon"],
-      "type": ["decoration", "border"],
-      "size": [1,2],
-      "height": 2,
-      "biomes": ["ship"]
-    },
-    {
-      "names": ["mast"],
-      "type": "decoration",
-      "size": [1,1],
-      "height": 20,
-      "biomes": ["ship"]
-    },
-	{
-      "names": ["coin"],
-      "type": "decoration",
-      "size": [1,1],
-	  "collision map": [false],
-      "height": 1.7,
-      "biomes": ["ship", "island"],
-	  "behaviour": "coin"
-    },
-    {
-      "names": ["broken_mast"],
-      "type": ["decoration", "border"],
-      "size": [1,2],
-      "height": 1.5,
-      "biomes": ["ship"]
-    },
-    {
-      "names": ["monkey_sitting"],
-      "type": ["decoration", "border"],
-      "size": [1,1],
-      "height": 1,
-      "biomes": ["island"],
-	  "behaviour": "stalker"
-    },
-    {
-      "names": ["palm_tree_00"],
-      "type": "decoration",
-      "size": [3,3],
-	  "collision map": [
-	    false,false,false,
-		false,true ,false,
-		false,false,false
-	  ],
-      "height": 10,
-      "biomes": ["island"]
+      "group name": "railing"
     },
     {
       "names": [
-	    "rock_1",
-	    "rock-02",
-		"rock-03",
-		"rock-04",
-		"rock-05",
-		"rock-06"
-	  ],
-      "type": ["decoration", "border"],
-      "size": [1,1],
+        "cannon"
+      ],
+      "type": [
+        "decoration",
+        "border"
+      ],
+      "size": [
+        1,
+        2
+      ],
+      "height": 2,
+      "biomes": "ship"
+    },
+    {
+      "names": [
+        "mast"
+      ],
+      "type": "decoration",
+      "size": [
+        1,
+        1
+      ],
+      "height": 20,
+      "biomes": "ship"
+    },
+    {
+      "names": [
+        "coin"
+      ],
+      "type": "decoration",
+      "size": [
+        1,
+        1
+      ],
+      "collision map": [
+        false
+      ],
+      "height": 1.7,
+      "biomes": [
+        "ship",
+        "island"
+      ],
+      "behaviour": "coin"
+    },
+    {
+      "names": [
+        "broken_mast"
+      ],
+      "type": [
+        "decoration",
+        "border"
+      ],
+      "size": [
+        1,
+        2
+      ],
+      "height": 1.5,
+      "biomes": "ship"
+    },
+    {
+      "names": [
+        "monkey_sitting"
+      ],
+      "type": [
+        "decoration",
+        "border"
+      ],
+      "size": [
+        1,
+        1
+      ],
       "height": 1,
-	  "probabilities": "equal",
-      "biomes": ["island"]
+      "biomes": "island",
+      "behaviour": "stalker"
+    },
+    {
+      "names": [
+        "palm_tree_00"
+      ],
+      "type": "decoration",
+      "size": [
+        3,
+        3
+      ],
+      "collision map": [
+	    false,false,false,
+        false,true ,false,
+        false,false,false
+      ],
+      "height": 10,
+      "biomes": "island"
+    },
+    {
+      "names": [
+        "rock_1",
+        "rock-02",
+        "rock-03",
+        "rock-04",
+        "rock-05",
+        "rock-06"
+      ],
+      "type": [
+        "decoration",
+        "border"
+      ],
+      "size": [
+        1,
+        1
+      ],
+      "height": 1,
+      "probabilities": "equal",
+      "biomes": "island"
     }
   ]
 }
