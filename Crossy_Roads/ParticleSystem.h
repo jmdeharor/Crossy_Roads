@@ -27,6 +27,7 @@ public:
 	void render(const glm::vec3 &eye);
 
 private:
+	ShaderProgram program;
 	int numParticles;
 	vector<Particle> particles;
 	Billboard *billboard;

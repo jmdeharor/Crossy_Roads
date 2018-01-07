@@ -48,7 +48,6 @@ void Scene::firstInit() {
 		mesh->setProgramParams(shadowMapDraw);
 	}
 	const Mesh* mesh = assets.getCubeMesh();
-	mesh->setProgramParams(shadowMapDepth);
 	mesh->setProgramParams(shadowMapDraw);
 
 	glEnable(GL_TEXTURE_2D);

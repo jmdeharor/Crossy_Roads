@@ -2,21 +2,9 @@
 using namespace glm;
 #include "Scene.h"
 void CubeMesh::render() const {
-	//setProgramParams(program);
-	//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, VBOind);
 	Scene::sceneTriangles += totalTriangles;
 	Scene::sceneDrawCalls += 1;
 	glDrawElements(renderMode, nVertices, GL_UNSIGNED_INT, (void*)0);
-}
-
-void CubeMesh::setProgramParams(ShaderProgram & program) const {
-	Mesh::setProgramParams(program);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, VBOind);
-}
-
-void CubeMesh::setVAO() const {
-	Mesh::setVAO();
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, VBOind);
 }
 
 void CubeMesh::init() {

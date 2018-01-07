@@ -47,7 +47,6 @@ void Mesh::setVAO() const {
 #include "Scene.h"
 
 void Mesh::render() const {
-	//setProgramParams(program);
 	Scene::sceneTriangles += totalTriangles;
 	Scene::sceneDrawCalls += 1;
 	glDrawArrays(renderMode, 0, nVertices);
