@@ -38,6 +38,7 @@ GameState Game::getCurrentState() {
 }
 
 bool Game::update(int deltaTime) {
+	cout << x << " " << y << endl;
 	mouseCursor->setPosition(vec2(x+16, y+16));
 	soundManager.update();
 
