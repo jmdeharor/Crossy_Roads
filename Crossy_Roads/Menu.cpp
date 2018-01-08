@@ -42,7 +42,7 @@ void Menu::init() {
 		firstInit();
 	}
 	click = false;
-	menuLogo->setPosition(vec2(SCREEN_WIDTH / (float)2, SCREEN_HEIGHT / (float)2));
+	menuLogo->setPosition(vec2(SCREEN_WIDTH / (float)2, SCREEN_HEIGHT / (float)2 - 100));
 	mouseControl->setPosition(vec2(SCREEN_WIDTH - 100, SCREEN_HEIGHT - 100));
 	keyBoardControl->setPosition(mouseControl->getPosition() + vec2(-100, 0));
 	menuShop->setPosition(vec2(100, SCREEN_HEIGHT - 100));
@@ -116,11 +116,7 @@ void Menu::render() {
 }
 
 void Menu::initTextures() {
-	menuLogoTexture.loadFromFile("images/logo.png", TEXTURE_PIXEL_FORMAT_RGBA, false);
-	menuLogoTexture.wrapS = GL_CLAMP_TO_EDGE;
-	menuLogoTexture.wrapT = GL_CLAMP_TO_EDGE;
-	menuLogoTexture.minFilter = GL_NEAREST;
-	menuLogoTexture.magFilter = GL_NEAREST;
+	menuLogoTexture.loadFromFile("images/logo.png", TEXTURE_PIXEL_FORMAT_RGBA, true);
 	menuLogoTexture.applyParams();
 
 	mouseControlTexture.loadFromFile("images/button_mouse.png", TEXTURE_PIXEL_FORMAT_RGBA, false);
