@@ -78,6 +78,12 @@ bool Game::update(int deltaTime) {
 		case MenuReturn::Shop:
 			currentState = GameState::SHOP;
 			break;
+		case MenuReturn::MouseControl:
+			mouseControl = true;
+			break;
+		case MenuReturn::KeyboardControl:
+			mouseControl = false;
+			break;
 		}
 		break;
 	case GameState::SHOP:

@@ -10,7 +10,7 @@ using namespace glm;
 Menu::Menu() : initiated(false)
 {
 	menuLogo = NULL;
-	menuHighScore = NULL;
+	mouseControl = NULL;
 }
 
 
@@ -18,8 +18,8 @@ Menu::~Menu()
 {
 	if (menuLogo != NULL)
 		delete menuLogo;
-	if (menuHighScore != NULL)
-		delete menuHighScore;
+	if (mouseControl != NULL)
+		delete mouseControl;
 }
 
 const int keyFramesPerSec = 5;
@@ -29,12 +29,12 @@ void Menu::firstInit() {
 	initShaders();
 	initTextures();
 	menuLogo = Sprite::createSprite(vec2(694, 294), vec2(1), &menuLogoTexture, &shaderProgram);
-	menuHighScore = Sprite::createSprite(vec2(94,94), vec2(1), &menuHighScoreTexture, &shaderProgram);
+	mouseControl = Sprite::createSprite(vec2(94,94), vec2(1), &mouseControlTexture, &shaderProgram);
+	keyBoardControl = Sprite::createSprite(vec2(94, 94), vec2(1), &keyboardControlPressedTexture, &shaderProgram);
 	menuShop = Sprite::createSprite(vec2(94, 94), vec2(1), &menuShopTexture, &shaderProgram);
 	soundManager = Game::instance().getSoundManager();
 	clickSound = soundManager->loadSound("sounds/Effect_click.wav", FMOD_DEFAULT);
 }
-
 
 void Menu::init() {
 	if (!initiated) {
@@ -43,7 +43,8 @@ void Menu::init() {
 	}
 	click = false;
 	menuLogo->setPosition(vec2(SCREEN_WIDTH / (float)2, SCREEN_HEIGHT / (float)2));
-	menuHighScore->setPosition(vec2(SCREEN_WIDTH - 100, SCREEN_HEIGHT - 100));
+	mouseControl->setPosition(vec2(SCREEN_WIDTH - 100, SCREEN_HEIGHT - 100));
+	keyBoardControl->setPosition(mouseControl->getPosition() + vec2(-100, 0));
 	menuShop->setPosition(vec2(100, SCREEN_HEIGHT - 100));
 }
 
@@ -56,11 +57,19 @@ bool shopButton(int x, int y) {
 }
 
 MenuReturn Menu::performClickAction(int x, int y) {
-	if (highScoreButton(x, y)) {
-		//Open HighScore
+	if (mouseControl->inside(x,y)) {
 		FMOD::Channel* channel = soundManager->playSound(clickSound);
 		channel->setVolume(2);
-		return MenuReturn::Nothing;
+		mouseControl->setTexture(&mouseControlPressedTexture);
+		keyBoardControl->setTexture(&keyboardControlTexture);
+		return MenuReturn::MouseControl;
+	}
+	else if (keyBoardControl->inside(x, y)) {
+		FMOD::Channel* channel = soundManager->playSound(clickSound);
+		channel->setVolume(2);
+		mouseControl->setTexture(&mouseControlTexture);
+		keyBoardControl->setTexture(&keyboardControlPressedTexture);
+		return MenuReturn::KeyboardControl;
 	}
 	else if (shopButton(x, y)) {
 		//Open Shop
@@ -83,12 +92,9 @@ MenuReturn Menu::update(int deltaTime) {
 	if (Game::instance().getLeftButtonPressed()) click = true;
 	int x = Game::instance().getX();
 	int y = Game::instance().getY();
-	if (highScoreButton(x, y))
-		menuHighScore->setTexture(&menuHighScorePressedTexture);
-	else if (shopButton(x, y))
+	if (shopButton(x, y))
 		menuShop->setTexture(&menuShopPressedTexture);
 	else {
-		menuHighScore->setTexture(&menuHighScoreTexture);
 		menuShop->setTexture(&menuShopTexture);
 	}
 	return ret;
@@ -104,40 +110,60 @@ void Menu::render() {
 	shaderProgram.setUniformMatrix4f("modelview", modelview);
 	shaderProgram.setUniform2f("texCoordDispl", 0.f, 0.f);
 	menuLogo->render();
-	menuHighScore->render();
+	mouseControl->render();
+	keyBoardControl->render();
 	menuShop->render();
 }
 
 void Menu::initTextures() {
-	menuLogoTexture.loadFromFile("images/logo.png", TEXTURE_PIXEL_FORMAT_RGBA, true);
+	menuLogoTexture.loadFromFile("images/logo.png", TEXTURE_PIXEL_FORMAT_RGBA, false);
 	menuLogoTexture.wrapS = GL_CLAMP_TO_EDGE;
 	menuLogoTexture.wrapT = GL_CLAMP_TO_EDGE;
 	menuLogoTexture.minFilter = GL_NEAREST;
 	menuLogoTexture.magFilter = GL_NEAREST;
+	menuLogoTexture.applyParams();
 
-	menuHighScoreTexture.loadFromFile("images/button_highscores.png", TEXTURE_PIXEL_FORMAT_RGBA, true);
-	menuHighScoreTexture.wrapS = GL_CLAMP_TO_EDGE;
-	menuHighScoreTexture.wrapT = GL_CLAMP_TO_EDGE;
-	menuHighScoreTexture.minFilter = GL_NEAREST;
-	menuHighScoreTexture.magFilter = GL_NEAREST;
+	mouseControlTexture.loadFromFile("images/button_highscores.png", TEXTURE_PIXEL_FORMAT_RGBA, false);
+	mouseControlTexture.wrapS = GL_CLAMP_TO_EDGE;
+	mouseControlTexture.wrapT = GL_CLAMP_TO_EDGE;
+	mouseControlTexture.minFilter = GL_NEAREST;
+	mouseControlTexture.magFilter = GL_NEAREST;
+	mouseControlTexture.applyParams();
 
-	menuHighScorePressedTexture.loadFromFile("images/button_highscores_pressed.png", TEXTURE_PIXEL_FORMAT_RGBA, true);
-	menuHighScorePressedTexture.wrapS = GL_CLAMP_TO_EDGE;
-	menuHighScorePressedTexture.wrapT = GL_CLAMP_TO_EDGE;
-	menuHighScorePressedTexture.minFilter = GL_NEAREST;
-	menuHighScorePressedTexture.magFilter = GL_NEAREST;
+	mouseControlPressedTexture.loadFromFile("images/button_highscores_pressed.png", TEXTURE_PIXEL_FORMAT_RGBA, false);
+	mouseControlPressedTexture.wrapS = GL_CLAMP_TO_EDGE;
+	mouseControlPressedTexture.wrapT = GL_CLAMP_TO_EDGE;
+	mouseControlPressedTexture.minFilter = GL_NEAREST;
+	mouseControlPressedTexture.magFilter = GL_NEAREST;
+	mouseControlPressedTexture.applyParams();
 
-	menuShopTexture.loadFromFile("images/button_shop.png", TEXTURE_PIXEL_FORMAT_RGBA, true);
+	keyboardControlPressedTexture.loadFromFile("images/button_highscores_pressed.png", TEXTURE_PIXEL_FORMAT_RGBA, false);
+	keyboardControlPressedTexture.wrapS = GL_CLAMP_TO_EDGE;
+	keyboardControlPressedTexture.wrapT = GL_CLAMP_TO_EDGE;
+	keyboardControlPressedTexture.minFilter = GL_NEAREST;
+	keyboardControlPressedTexture.magFilter = GL_NEAREST;
+	keyboardControlPressedTexture.applyParams();
+
+	keyboardControlTexture.loadFromFile("images/button_highscores.png", TEXTURE_PIXEL_FORMAT_RGBA, false);
+	keyboardControlTexture.wrapS = GL_CLAMP_TO_EDGE;
+	keyboardControlTexture.wrapT = GL_CLAMP_TO_EDGE;
+	keyboardControlTexture.minFilter = GL_NEAREST;
+	keyboardControlTexture.magFilter = GL_NEAREST;
+	keyboardControlTexture.applyParams();
+
+	menuShopTexture.loadFromFile("images/button_shop.png", TEXTURE_PIXEL_FORMAT_RGBA, false);
 	menuShopTexture.wrapS = GL_CLAMP_TO_EDGE;
 	menuShopTexture.wrapT = GL_CLAMP_TO_EDGE;
 	menuShopTexture.minFilter = GL_NEAREST;
 	menuShopTexture.magFilter = GL_NEAREST;
+	menuShopTexture.applyParams();
 
-	menuShopPressedTexture.loadFromFile("images/button_shop_pressed.png", TEXTURE_PIXEL_FORMAT_RGBA, true);
+	menuShopPressedTexture.loadFromFile("images/button_shop_pressed.png", TEXTURE_PIXEL_FORMAT_RGBA, false);
 	menuShopPressedTexture.wrapS = GL_CLAMP_TO_EDGE;
 	menuShopPressedTexture.wrapT = GL_CLAMP_TO_EDGE;
 	menuShopPressedTexture.minFilter = GL_NEAREST;
 	menuShopPressedTexture.magFilter = GL_NEAREST;
+	menuShopPressedTexture.applyParams();
 }
 
 void Menu::initShaders() {

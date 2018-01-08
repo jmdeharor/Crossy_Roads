@@ -11,6 +11,8 @@
 enum class MenuReturn {
 	Exit,
 	Shop,
+	MouseControl,
+	KeyboardControl,
 	Nothing
 };
 
@@ -38,11 +40,11 @@ private:
 	bool initiated;
 	bool click;
 	Sprite* menuLogo;
-	Sprite* menuHighScore;
+	Sprite* mouseControl, *keyBoardControl;
 	Sprite* menuShop;
 	Texture menuLogoTexture;
-	Texture menuHighScoreTexture;
-	Texture menuHighScorePressedTexture;
+	Texture mouseControlPressedTexture, mouseControlTexture;
+	Texture keyboardControlPressedTexture, keyboardControlTexture;
 	Texture menuShopTexture;
 	Texture menuShopPressedTexture;
 	ShaderProgram shaderProgram;
