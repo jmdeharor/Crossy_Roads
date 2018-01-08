@@ -32,6 +32,7 @@ enum class PlayerState {
 };
 
 class Player : public GameObject, public ObjectContainer {
+	int leftRight;
 	Game* game;
 	ShadowedObject playerObject;
 	TexturedObject textureObject;

@@ -37,6 +37,7 @@ void Player::groupDrawableObjects(const FrustumG& frustum, RenderVectors& render
 }
 
 void Player::init(const Assets& assets, vec3 lightDir, vec3 offset, float jumpDistance, Floor& floor, WaterParticleSystem* particleSystem) {
+	leftRight = 0;
 	GameObject::init();
 	this->lightDir = lightDir;
 	this->floor = &floor;
@@ -156,7 +157,7 @@ PlayerReturn Player::update(int deltaTime) {
 				mousePressed = false;
 				int x = game->getX();
 				int y = game->getY();
-				if (y < SCREEN_HEIGHT / 2.f) {
+				/*if (y < SCREEN_HEIGHT / 2.f) {
 					move(FRONT);
 					ret = PlayerReturn::MOVE_FRONT;
 				}
@@ -171,6 +172,92 @@ PlayerReturn Player::update(int deltaTime) {
 				else {
 					move(RIGHT);
 					ret = PlayerReturn::MOVE_RIGHT;
+				}*/
+				static const uint segmentSize = 80;
+				if (y <= 535) {
+					float left = SCREEN_WIDTH / 2.f - segmentSize / 2.f;
+					float x1 = 0;
+					float y1 = 0;
+					float x2 = left;
+					float y2 = 535;
+					float aux;
+					if (leftRight > 3) {
+						aux = (leftRight - 3) * 30;
+						x2 += aux;
+						y2 += aux;
+					}
+					if (leftRight < -3) {
+						aux = (leftRight + 3) * 30;
+						x2 += aux;
+						y2 += aux;
+					}
+
+					float slope1 = (y2 - y1) / (x2 - x1);
+					float slope2 = -slope1;
+					float offset1 = -x1 * (y2 - y1) / (x2 - x1) + y1;
+					x1 = SCREEN_WIDTH;
+					y1 = 0;
+					x2 = SCREEN_WIDTH / 2.f + segmentSize / 2.f;
+					y2 = 535;
+					float offset2 = -x1 * (y2 - y1) / (x2 - x1) + y1;
+					float yfinal1 = slope1*x + offset1;
+					float yfinal2 = slope2 * x + offset2;
+					if (yfinal1 < y) {
+						move(LEFT);
+						leftRight -= 1;
+						ret = PlayerReturn::MOVE_LEFT;
+					}
+					else if (yfinal2 < y) {
+						move(RIGHT);
+						leftRight += 1;
+						ret = PlayerReturn::MOVE_RIGHT;
+					}
+					else {
+						move(FRONT);
+						ret = PlayerReturn::MOVE_FRONT;
+					}
+				}
+				else {
+					float left = SCREEN_WIDTH / 2.f - segmentSize / 2.f;
+					float x1 = 0;
+					float y1 = SCREEN_HEIGHT;
+					float x2 = left;
+					float y2 = 535;
+					float aux;
+					if (leftRight > 3) {
+						aux = (leftRight - 3) * 30;
+						x2 += aux;
+						y2 += aux;
+					}
+					if (leftRight < -3) {
+						aux = (leftRight + 3) * 30;
+						x2 += aux;
+						y2 += aux;
+					}
+					float slope1 = (y2 - y1) / (x2 - x1);
+					float slope2 = -slope1;
+					float offset1 = -x1 * (y2 - y1) / (x2 - x1) + y1;
+					x1 = SCREEN_WIDTH;
+					y1 = SCREEN_HEIGHT;
+					x2 = SCREEN_WIDTH / 2.f + segmentSize / 2.f;
+					y2 = 535;
+					float offset2 = -x1 * (y2 - y1) / (x2 - x1) + y1;
+					float yfinal1 = slope1 * x + offset1;
+					float yfinal2 = slope2 * x + offset2;
+					if (yfinal1 >= y) {
+						move(LEFT);
+						leftRight -= 1;
+						ret = PlayerReturn::MOVE_LEFT;
+					}
+					else if (yfinal2 >= y) {
+						move(RIGHT);
+						leftRight += 1;
+						ret = PlayerReturn::MOVE_RIGHT;
+					}
+					else {
+						move(BACK);
+						ret = PlayerReturn::MOVE_BACK;
+					}
 				}
 			}
 		}
