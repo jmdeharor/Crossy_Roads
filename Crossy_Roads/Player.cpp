@@ -11,6 +11,9 @@ void Player::firstInit() {
 	soundManager = Game::instance().getSoundManager();
 	jumpSound = soundManager->loadSound("sounds/Effect_jump.wav", FMOD_DEFAULT);
 	waterSplashSound = soundManager->loadSound("sounds/Effect_water_splash.wav", FMOD_CREATESTREAM);
+	deathCrush = soundManager->loadSound("sounds/Effect_death_crush.wav", FMOD_DEFAULT);
+	deathOut = soundManager->loadSound("sounds/Effect_death_out.wav", FMOD_DEFAULT);
+
 }
 
 void Player::groupDrawableObjects(const FrustumG& frustum, RenderVectors& renderVectors) {
@@ -72,7 +75,6 @@ void Player::init(const Assets& assets, vec3 lightDir, vec3 offset, float jumpDi
 	const Mesh* cubeMesh = assets.getCubeMesh();
 	vec3 bbSize = cubeMesh->getbbSize();
 	textureObject.setMesh(cubeMesh);
-	textureObject.texture = assets.getTextureId("char_unlocked_6");
 	textureObject.setScale(vec3(3, 0.1f, 2)/bbSize);
 	textureObject.setRotationY(PI / 2);
 
@@ -109,8 +111,9 @@ PlayerReturn Player::update(int deltaTime) {
 		}
 	}
 
-	if (outOfTheScene && !godMode) {
+	if (outOfTheScene && !godMode && state == PlayerState::Alive) {
 		platformSpeed = 0;
+		soundManager->playSound(deathOut);
 		state = PlayerState::DeadByOut;
 		return PlayerReturn::DEAD;
 	}
@@ -119,6 +122,8 @@ PlayerReturn Player::update(int deltaTime) {
 	if (collides() && !godMode && playerControl) {
 		particleSystem->trigger(playerObject.getPos(), 30, vec4(1, 0, 0, 0));
 		textureObject.setPos(vec3(nextPos.x, nextPos.y+0.001f, nextPos.z));
+		textureObject.texture = assets->getTextureId("char_unlocked_" + to_string(charSelected));
+		FMOD::Channel *channel = soundManager->playSound(deathCrush);
 		state = PlayerState::DeadByEnemy;
 		return PlayerReturn::DEAD;
 	}

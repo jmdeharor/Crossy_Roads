@@ -68,6 +68,8 @@ public:
 	void setUniform3f(const string& uniformName, glm::vec3 &vec);
 	void setUniform3f(glm::uint location, glm::vec3 &vec);
 
+	void setUniformb(glm::uint location, bool b);
+
 	glm::uint addUniform(const string& uniformName);
 
 	bool isLinked();

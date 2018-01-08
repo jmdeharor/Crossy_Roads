@@ -52,6 +52,8 @@ private:
 	Sprite* char7;
 	Sprite* char8;
 	Sprite* backArrow;
+	Sprite* selection;
+	Texture selectionTexture;
 	Texture backArrowTex;
 	Texture shopBackgroundTexture;
 	std::vector<Texture> charTexs;

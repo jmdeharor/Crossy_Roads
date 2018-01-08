@@ -124,6 +124,8 @@ void Scene::initShaders() {
 	shadowMapDraw.use();
 	shadowMapDraw.setUniformi("tex", 0);
 	shadowMapDraw.setUniformi("shadowMap", 1);
+
+	deadLoc = shadowMapDraw.addUniform("dead");
 }
 
 const uint rows = 5;
@@ -148,9 +150,12 @@ void Scene::init() {
 	playerReferenceRow = playerRow = 0;
 
 	FMOD::Channel* channel = soundManager->playSound(ambience);
-	channel->setVolume(0.25f);
+	channel->setVolume(0.15f);
 
-	soundManager->playSound(music);
+	channel = soundManager->playSound(music);
+	channel->setVolume(0.5f);
+
+	playerDead = false;
 }
 
 SceneReturn Scene::update(int deltaTime) {
@@ -177,6 +182,7 @@ SceneReturn Scene::update(int deltaTime) {
 		playerRow = playerRow - 1;
 		break;
 	case PlayerReturn::DEAD:
+		playerDead = true;
 		return SceneReturn::EndGame;
 		break;
 	default:
@@ -240,6 +246,7 @@ void Scene::render() {
 	shadowMapDraw.use();
 	shadowMapDraw.setUniformMatrix4f(depthVPLoc, offsetMatrix*lightViewProjection);
 	shadowMapDraw.setUniformMatrix4f(viewProjectionLoc, viewProjection);
+	shadowMapDraw.setUniformb(deadLoc, playerDead);
 
 	for (uint i = 0; i < renderVectors.objects.size(); ++i) {
 		vector<Object*>& objects = renderVectors.objects[i];

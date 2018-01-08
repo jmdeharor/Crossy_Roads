@@ -148,6 +148,11 @@ void ShaderProgram::setUniform3f(glm::uint location, glm::vec3 & vec) {
 		glUniform3f(uniforms[location], vec.x, vec.y, vec.z);
 }
 
+void ShaderProgram::setUniformb(glm::uint location, bool b) {
+	if (uniforms[location] != -1)
+		glUniform1i(uniforms[location], b);
+}
+
 uint ShaderProgram::addUniform(const string & uniformName) {
 	GLint location = glGetUniformLocation(programId, uniformName.c_str());
 	uniforms.push_back(location);

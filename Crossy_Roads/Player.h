@@ -54,7 +54,7 @@ class Player : public GameObject, public ObjectContainer {
 	glm::uint currentColIndex;
 	glm::vec3 lightDir;
 	glm::vec3 nextPos;
-	FMOD::Sound* jumpSound, *waterSplashSound;
+	FMOD::Sound* jumpSound, *waterSplashSound, *deathCrush, *deathOut;
 	const SoundManager* soundManager;
 	const Assets* assets;
 	bool godModePressed, godMode;

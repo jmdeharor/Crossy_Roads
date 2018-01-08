@@ -2,6 +2,7 @@
 
 uniform sampler2D tex;
 uniform sampler2DShadow shadowMap;
+uniform bool dead;
 
 uniform vec3 lightDir;
 
@@ -41,5 +42,9 @@ void main() {
 		float storedDepth = texture(shadowMap, vec3(st, trueDepth-0.0009));
 		float finalFactor = min(diffuse, storedDepth);
 		outColor = mix(0.5, 1, finalFactor)*color;
+	}
+	if (dead) {
+		float gray = (outColor.r+outColor.g+outColor.b)/3;
+		outColor = vec4(gray, gray, gray, outColor.a);
 	}
 }

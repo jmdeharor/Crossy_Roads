@@ -56,8 +56,9 @@ private:
 private:
 	LARGE_INTEGER start, end;
 	LARGE_INTEGER frequency;
-	glm::uint depthVPLoc;
+	glm::uint depthVPLoc, deadLoc;
 	int playerReferenceRow, playerRow;
+	bool playerDead;
 
 	Assets assets;
 	RenderVectors renderVectors;

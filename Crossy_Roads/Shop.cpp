@@ -55,11 +55,13 @@ void Shop::firstInit() {
 	shopBackground = Sprite::createSprite(vec2(1024, 768), vec2(1), &shopBackgroundTexture, &shaderProgram);
 	for (int i = 0; i < 8; ++i) {
 		if(locked[i])
-			chars[i] = Sprite::createSprite(vec2(125, 125), vec2(1), &charTexsLocked[i], &shaderProgram);
+			chars[i] = Sprite::createSprite(vec2(125), vec2(1), &charTexsLocked[i], &shaderProgram);
 		else
-			chars[i] = Sprite::createSprite(vec2(125, 125), vec2(1), &charTexs[i], &shaderProgram);
+			chars[i] = Sprite::createSprite(vec2(125), vec2(1), &charTexs[i], &shaderProgram);
 	}
 	backArrow = Sprite::createSprite(vec2(80, 60), vec2(1), &backArrowTex, &shaderProgram);
+
+	selection = Sprite::createSprite(vec2(210,290), vec2(1), &selectionTexture, &shaderProgram);
 }
 
 
@@ -79,7 +81,7 @@ void Shop::init() {
 	chars[6]->setPosition(vec2(SCREEN_WIDTH / (float)5 * 3, SCREEN_HEIGHT / (float)3 * 2));
 	chars[7]->setPosition(vec2(SCREEN_WIDTH / (float)5 * 4, SCREEN_HEIGHT / (float)3 * 2));
 	backArrow->setPosition(vec2(SCREEN_WIDTH - 100, 100));
-
+	selection->setPosition(chars[Game::instance().charSelected]->getPosition() + vec2(10,15));
 }
 
 bool Shop::isButton(Sprite* sprite, int x, int y) {
@@ -127,6 +129,7 @@ ShopReturn Shop::performClickAction(int x, int y) {
 				}
 			}
 			else {
+				selection->setPosition(chars[i]->getPosition() + vec2(10, 15));
 				Game::instance().charSelected = i;
 			}
 		}
@@ -167,6 +170,7 @@ void Shop::render() {
 	for (int i = 0; i < 8; ++i) {
 		chars[i]->render();
 	}
+	selection->render();
 	backArrow->render();
 	charTexts[0].render(prices[0], vec2(chars[0]->getPosition().x - 48, chars[0]->getPosition().y + chars[0]->getSize().y), 64, vec4(0, 0, 0, 1));
 	charTexts[1].render(prices[1], vec2(chars[1]->getPosition().x - 48, chars[1]->getPosition().y + chars[1]->getSize().y), 64, vec4(0, 0, 0, 1));
@@ -199,6 +203,7 @@ void Shop::initTextures() {
 		initTexture(charTexsLockedHL[i], "images/char_locked_highlighted_" + to_string(i) +".png");
 	}
 	initTexture(backArrowTex, "images/back_arrow.png");
+	initTexture(selectionTexture, "images/selector.png");
 }
 void Shop::initTexts() {
 	for (int i = 0; i < 8; ++i) {
