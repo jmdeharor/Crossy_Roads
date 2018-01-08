@@ -1,23 +1,23 @@
 {
   "models": [
-    {
-      "names": [
-        "pirate"
-      ],
-      "type": "enemy",
-      "scale": 0.1,
-      "biomes": "ship"
-    },
 	{
       "names": [
         "native_01"
       ],
-      "type": [
-        "enemy",
-        "player"
-      ],
+      "type": "enemy",
       "scale": 0.043,
       "biomes": "island"
+    },
+	{
+      "names": [
+        "pirate"
+      ],
+      "type": [
+	    "enemy",
+	    "player"
+	  ],
+      "scale": 0.1,
+      "biomes": "ship"
     },
     {
       "names": [

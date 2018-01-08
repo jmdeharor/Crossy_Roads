@@ -123,28 +123,28 @@ void Menu::initTextures() {
 	menuLogoTexture.magFilter = GL_NEAREST;
 	menuLogoTexture.applyParams();
 
-	mouseControlTexture.loadFromFile("images/button_highscores.png", TEXTURE_PIXEL_FORMAT_RGBA, false);
+	mouseControlTexture.loadFromFile("images/button_mouse.png", TEXTURE_PIXEL_FORMAT_RGBA, false);
 	mouseControlTexture.wrapS = GL_CLAMP_TO_EDGE;
 	mouseControlTexture.wrapT = GL_CLAMP_TO_EDGE;
 	mouseControlTexture.minFilter = GL_NEAREST;
 	mouseControlTexture.magFilter = GL_NEAREST;
 	mouseControlTexture.applyParams();
 
-	mouseControlPressedTexture.loadFromFile("images/button_highscores_pressed.png", TEXTURE_PIXEL_FORMAT_RGBA, false);
+	mouseControlPressedTexture.loadFromFile("images/button_mouse_pressed.png", TEXTURE_PIXEL_FORMAT_RGBA, false);
 	mouseControlPressedTexture.wrapS = GL_CLAMP_TO_EDGE;
 	mouseControlPressedTexture.wrapT = GL_CLAMP_TO_EDGE;
 	mouseControlPressedTexture.minFilter = GL_NEAREST;
 	mouseControlPressedTexture.magFilter = GL_NEAREST;
 	mouseControlPressedTexture.applyParams();
 
-	keyboardControlPressedTexture.loadFromFile("images/button_highscores_pressed.png", TEXTURE_PIXEL_FORMAT_RGBA, false);
+	keyboardControlPressedTexture.loadFromFile("images/button_keyboard_pressed.png", TEXTURE_PIXEL_FORMAT_RGBA, false);
 	keyboardControlPressedTexture.wrapS = GL_CLAMP_TO_EDGE;
 	keyboardControlPressedTexture.wrapT = GL_CLAMP_TO_EDGE;
 	keyboardControlPressedTexture.minFilter = GL_NEAREST;
 	keyboardControlPressedTexture.magFilter = GL_NEAREST;
 	keyboardControlPressedTexture.applyParams();
 
-	keyboardControlTexture.loadFromFile("images/button_highscores.png", TEXTURE_PIXEL_FORMAT_RGBA, false);
+	keyboardControlTexture.loadFromFile("images/button_keyboard.png", TEXTURE_PIXEL_FORMAT_RGBA, false);
 	keyboardControlTexture.wrapS = GL_CLAMP_TO_EDGE;
 	keyboardControlTexture.wrapT = GL_CLAMP_TO_EDGE;
 	keyboardControlTexture.minFilter = GL_NEAREST;

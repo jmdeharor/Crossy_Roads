@@ -30,7 +30,7 @@ void Game::init() {
 	mouseCursor = Sprite::createSprite(vec2(32, 32), vec2(1), &mouseCursorTexture, &shaderProgram);
 	resetPressed = false;
 	charSelected = 0;
-	mouseControl = true;
+	mouseControl = false;
 }
 
 GameState Game::getCurrentState() {
