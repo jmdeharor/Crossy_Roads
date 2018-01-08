@@ -173,7 +173,7 @@ PlayerReturn Player::update(int deltaTime) {
 					move(RIGHT);
 					ret = PlayerReturn::MOVE_RIGHT;
 				}*/
-				static const uint segmentSize = 80;
+				static const uint segmentSize = 50;
 				if (y <= 535) {
 					float left = SCREEN_WIDTH / 2.f - segmentSize / 2.f;
 					float x1 = 0;
@@ -182,14 +182,12 @@ PlayerReturn Player::update(int deltaTime) {
 					float y2 = 535;
 					float aux;
 					if (leftRight > 3) {
-						aux = (leftRight - 3) * 30;
+						aux = (leftRight - 3) * 50;
 						x2 += aux;
-						y2 += aux;
 					}
 					if (leftRight < -3) {
-						aux = (leftRight + 3) * 30;
+						aux = (leftRight + 3) * 50;
 						x2 += aux;
-						y2 += aux;
 					}
 
 					float slope1 = (y2 - y1) / (x2 - x1);
@@ -225,14 +223,12 @@ PlayerReturn Player::update(int deltaTime) {
 					float y2 = 535;
 					float aux;
 					if (leftRight > 3) {
-						aux = (leftRight - 3) * 30;
+						aux = (leftRight - 3) * 50;
 						x2 += aux;
-						y2 += aux;
 					}
 					if (leftRight < -3) {
-						aux = (leftRight + 3) * 30;
+						aux = (leftRight + 3) * 50;
 						x2 += aux;
-						y2 += aux;
 					}
 					float slope1 = (y2 - y1) / (x2 - x1);
 					float slope2 = -slope1;
