@@ -113,7 +113,8 @@ PlayerReturn Player::update(int deltaTime) {
 
 	if (outOfTheScene && !godMode && state == PlayerState::Alive) {
 		platformSpeed = 0;
-		soundManager->playSound(deathOut);
+		FMOD::Channel* channel = soundManager->playSound(deathOut);
+		channel->setVolume(0.3f);
 		state = PlayerState::DeadByOut;
 		return PlayerReturn::DEAD;
 	}

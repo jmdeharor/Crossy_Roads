@@ -1,6 +1,7 @@
 #pragma once
 #include "Text.h"
 #include "Sprite.h"
+#include "SoundManager.h"
 #include "GameObject.h"
 
 class Game;
@@ -12,15 +13,15 @@ enum class EndGameViewReturn {
 
 class EndGameView : GameObject {
 	Game* game;
-	Text scoreText;
-	Texture messageTexture;
-	Texture buttonSaveTexture;
+	const SoundManager* soundManager;
+	FMOD::Sound* clickSound;
 	Texture buttonReturnTexture;
-	Sprite* message;
-	Sprite* buttonSave;
+	Text message;
+	Text buttonText;
 	Sprite* buttonReturn;
 	ShaderProgram shaderProgram;
 	bool buttonPressed;
+	float buttonOpacity;
 
 	void initShaders();
 public:

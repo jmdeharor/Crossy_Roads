@@ -21,11 +21,12 @@ void Game::init() {
 	endGameView.init();
 	scene.disablePlayerControl();
 	currentState = GameState::MENU;
-	mouseCursorTexture.loadFromFile("images/cursor.png", TEXTURE_PIXEL_FORMAT_RGBA, true);
+	mouseCursorTexture.loadFromFile("images/cursor.png", TEXTURE_PIXEL_FORMAT_RGBA, false);
 	mouseCursorTexture.wrapS = GL_CLAMP_TO_EDGE;
 	mouseCursorTexture.wrapT = GL_CLAMP_TO_EDGE;
 	mouseCursorTexture.minFilter = GL_NEAREST;
 	mouseCursorTexture.magFilter = GL_NEAREST;
+	mouseCursorTexture.applyParams();
 	mouseCursor = Sprite::createSprite(vec2(32, 32), vec2(1), &mouseCursorTexture, &shaderProgram);
 	resetPressed = false;
 	charSelected = 0;
@@ -36,7 +37,7 @@ GameState Game::getCurrentState() {
 }
 
 bool Game::update(int deltaTime) {
-	mouseCursor->setPosition(vec2(x, y));
+	mouseCursor->setPosition(vec2(x+16, y+16));
 	soundManager.update();
 
 	SceneReturn sceneRet;
@@ -89,6 +90,7 @@ bool Game::update(int deltaTime) {
 		endRet = endGameView.update(deltaTime);
 		if (endRet == EndGameViewReturn::BackToMenu) {
 			scene.init();
+			scene.disablePlayerControl();
 			currentState = GameState::MENU;
 		}
 		break;

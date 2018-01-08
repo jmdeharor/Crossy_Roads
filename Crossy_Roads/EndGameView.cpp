@@ -8,40 +8,41 @@ using namespace glm;
 void EndGameView::firstInit() {
 	game = &Game::instance();
 	initShaders();
-	messageTexture.loadFromFile("images/grass_plane.png", TEXTURE_PIXEL_FORMAT_RGBA, false);
-	messageTexture.minFilter = GL_NEAREST;
-	messageTexture.magFilter = GL_NEAREST;
-	messageTexture.applyParams();
-	buttonReturnTexture.loadFromFile("images/grass_plane.png", TEXTURE_PIXEL_FORMAT_RGBA, false);
+	buttonReturnTexture.loadFromFile("images/white.png", TEXTURE_PIXEL_FORMAT_RGBA, false);
 	buttonReturnTexture.minFilter = GL_NEAREST;
 	buttonReturnTexture.magFilter = GL_NEAREST;
 	buttonReturnTexture.applyParams();
-	buttonSaveTexture.loadFromFile("images/grass_plane.png", TEXTURE_PIXEL_FORMAT_RGBA, false);
-	buttonSaveTexture.minFilter = GL_NEAREST;
-	buttonSaveTexture.magFilter = GL_NEAREST;
-	buttonSaveTexture.applyParams();
 
-	message = Sprite::createSprite(vec2(200, 100), vec2(1), &messageTexture, &shaderProgram);
-	buttonReturn = Sprite::createSprite(vec2(60, 50), vec2(1), &buttonReturnTexture, &shaderProgram);
-	buttonSave = Sprite::createSprite(vec2(60, 50), vec2(1), &buttonReturnTexture, &shaderProgram);
+	soundManager = game->getSoundManager();
+	clickSound = soundManager->loadSound("sounds/Effect_click.wav", FMOD_DEFAULT);
+
+	message.init("fonts/treamd.ttf");
+	buttonText.init("fonts/treamd.ttf");
+	buttonReturn = Sprite::createSprite(vec2(200, 50), vec2(1), &buttonReturnTexture, &shaderProgram);
 }
 
 void EndGameView::init() {
 	GameObject::init();
 
-	message->setPosition(vec2(SCREEN_WIDTH / 2.f, SCREEN_HEIGHT / 2.f));
-	buttonReturn->setPosition(vec2(SCREEN_WIDTH / 2.f - 100, SCREEN_HEIGHT / 2.f + 200));
-	buttonSave->setPosition(vec2(SCREEN_WIDTH / 2.f + 100, SCREEN_HEIGHT / 2.f + 200));
+	buttonReturn->setPosition(vec2(SCREEN_WIDTH / 2.f, SCREEN_HEIGHT / 2.f + 90));
 	buttonPressed = true;
+	buttonOpacity = 0.6f;
 }
 
 EndGameViewReturn EndGameView::update(int deltaTime) {
+	if (buttonReturn->inside(game->getX(), game->getY())) {
+		buttonOpacity = 0.9f;
+	}
+	else {
+		buttonOpacity = 0.6f;
+	}
 	if (game->getLeftButtonPressed()) {
 		buttonPressed = true;
 	}
 	else if (buttonPressed) {
 		buttonPressed = false;
 		if (buttonReturn->inside(game->getXPressed(), game->getYPressed())) {
+			soundManager->playSound(clickSound);
 			return EndGameViewReturn::BackToMenu;
 		}
 	}
@@ -52,11 +53,13 @@ void EndGameView::render() {
 	shaderProgram.use();
 	mat4 projection = ortho(0.f, float(SCREEN_WIDTH - 1), float(SCREEN_HEIGHT - 1), 0.f);
 	shaderProgram.setUniformMatrix4f("projection", projection);
-	shaderProgram.setUniform4f("color", 1.0f, 1.0f, 1.0f, 1.0f);
-	
-	message->render();
-	buttonSave->render();
+	shaderProgram.setUniform4f("color", 0, 0, 0, buttonOpacity);
+
 	buttonReturn->render();
+	vec2 messageSize = message.getQuadSize("You are dead!", 64);
+	message.render("You are dead!", vec2(SCREEN_WIDTH/2.f - messageSize.x/2, SCREEN_HEIGHT/2.f - messageSize.y/2 - 10), 64, vec4(1,0,0,1));
+	messageSize = buttonText.getQuadSize("Return to menu", 32);
+	buttonText.render("Return to menu", vec2(SCREEN_WIDTH / 2.f - messageSize.x / 2, SCREEN_HEIGHT / 2.f - messageSize.y / 2 + 100), 32, vec4(1, 0, 0, 1));
 }
 
 EndGameView::EndGameView()

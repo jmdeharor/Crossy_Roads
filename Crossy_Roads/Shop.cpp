@@ -129,6 +129,7 @@ ShopReturn Shop::performClickAction(int x, int y) {
 				}
 			}
 			else {
+				soundManager->playSound(clickSound);
 				selection->setPosition(chars[i]->getPosition() + vec2(10, 15));
 				Game::instance().charSelected = i;
 			}

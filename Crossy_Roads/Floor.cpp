@@ -74,27 +74,29 @@ void Floor::updateMap(bool lastRow, uint size, const vector<ivec2>& restrictions
 			map[plankLength][j] = aux;
 		}
 
-		uint plankPos = between((int)playableLowerLimit+2, playableUpperLimit-2);
-		map[plankLength][plankPos].mesh = INVALID;
-		map[plankLength][plankPos].height = 0;
-		map[plankLength][plankPos].occupied = true;
-		map[plankLength][plankPos].collision = false;
+		for (uint i = 0; i < 2; ++i) {
+			uint plankPos = between((int)playableLowerLimit + 2, playableUpperLimit - 2);
+			map[plankLength][plankPos].mesh = INVALID;
+			map[plankLength][plankPos].height = 0;
+			map[plankLength][plankPos].occupied = true;
+			map[plankLength][plankPos].collision = false;
 
-		aux.height = 0.1f;
-		aux.verticalOffset = 5;
-		aux.collision = false;
-		aux.occupied = true;
-		aux.canJump = true;
-		aux.mesh = INVALID;
-		for (uint i = 0; i < plankLength; ++i) {
-			map[i][plankPos] = aux;
-		}
-		map[0][plankPos].rows = plankLength;
-		map[0][plankPos].cols = 1;
-		map[0][plankPos].mesh = plankMesh;
-		start = plankLength+1;
-		if (start < map.size()) {
-			map[start][plankPos].occupied = true;
+			aux.height = 0.1f;
+			aux.verticalOffset = 5;
+			aux.collision = false;
+			aux.occupied = true;
+			aux.canJump = true;
+			aux.mesh = INVALID;
+			for (uint i = 0; i < plankLength; ++i) {
+				map[i][plankPos] = aux;
+			}
+			map[0][plankPos].rows = plankLength;
+			map[0][plankPos].cols = 1;
+			map[0][plankPos].mesh = plankMesh;
+			start = plankLength + 1;
+			if (start < map.size()) {
+				map[start][plankPos].occupied = true;
+			}
 		}
 	}
 	else
@@ -156,6 +158,8 @@ void Floor::updateMap(bool lastRow, uint size, const vector<ivec2>& restrictions
 	indices.reserve(size*cols);
 
 	uint objects = between((int)size, size*2);
+	if (lastRow)
+		objects = size;
 
 	furnitureIndex = sub2ind(biome, MeshConfigGroup::Decoration);
 	for (uint i = 0; i < objects; ++i) {
@@ -190,7 +194,7 @@ void Floor::updateFloorRow(FloorRow& floorRow, const FloorRow& prevRow) {
 		
 		switch (biome) {
 		case Ship:
-			biomeLength = between(10, 25);
+			biomeLength = between(10, 20);
 			biome = Sea;
 			break;
 		case Sea:
