@@ -5,8 +5,6 @@ using namespace glm;
 void FloorRow::initSeaRoad(const FloorRow& prevRow) {
 	animatedFloorTiles.resize(fp.cols);
 	enemies.clear();
-	platforms.resize(between(2, 4));
-	speeds.resize(platforms.size());
 	floorTiles.clear();
 	switch (prevRow.biome) {
 	case Ship:
@@ -40,8 +38,15 @@ void FloorRow::initSeaRoad(const FloorRow& prevRow) {
 		tile.setPos(vec3(offsetX + i*fp.realTileSize, rowHeight, pos.y));
 	}
 
-	speeds[0] = generateSpeed(minSpeed, 0.2f, int(pos.y / fp.tileSize.y) % 2);
-	
+	float speed = generateSpeed(minSpeed, 0.17f, int(pos.y / fp.tileSize.y) % 2);
+	if (speed > 0.1f) {
+		platforms.resize(between(3, 5));
+	}
+	else {
+		platforms.resize(between(2, 4));
+	}
+	speeds.resize(platforms.size());
+	speeds[0] = speed;
 	for (uint i = 1; i < speeds.size(); ++i) {
 		speeds[i] = 0;
 	}

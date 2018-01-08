@@ -30,6 +30,7 @@ void Game::init() {
 	mouseCursor = Sprite::createSprite(vec2(32, 32), vec2(1), &mouseCursorTexture, &shaderProgram);
 	resetPressed = false;
 	charSelected = 0;
+	mouseControl = true;
 }
 
 GameState Game::getCurrentState() {
@@ -184,6 +185,10 @@ void Game::mouseRelease(int button, int x, int y)
 
 bool Game::getLeftButtonPressed() {
 	return mouseLeftPressed;
+}
+
+bool Game::getMouseControl() const {
+	return mouseControl;
 }
 
 void Game::windowResize(int w, int h) {

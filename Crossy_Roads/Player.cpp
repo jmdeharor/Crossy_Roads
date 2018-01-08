@@ -13,7 +13,7 @@ void Player::firstInit() {
 	waterSplashSound = soundManager->loadSound("sounds/Effect_water_splash.wav", FMOD_CREATESTREAM);
 	deathCrush = soundManager->loadSound("sounds/Effect_death_crush.wav", FMOD_DEFAULT);
 	deathOut = soundManager->loadSound("sounds/Effect_death_out.wav", FMOD_DEFAULT);
-
+	game = &Game::instance();
 }
 
 void Player::groupDrawableObjects(const FrustumG& frustum, RenderVectors& renderVectors) {
@@ -82,10 +82,11 @@ void Player::init(const Assets& assets, vec3 lightDir, vec3 offset, float jumpDi
 	godModePressed = false;
 	godMode = false;
 	playerControl = true;
+	mousePressed = false;
 }
 
 PlayerReturn Player::update(int deltaTime) {
-	if (Game::instance().charSelected != charSelected) {
+	if (game->charSelected != charSelected) {
 		charSelected = Game::instance().charSelected;
 		IdMesh playerModelId = (*playerModels)[charSelected];
 		playerObject.setMesh(playerModelId, assets->getMesh(playerModelId));
@@ -147,83 +148,68 @@ PlayerReturn Player::update(int deltaTime) {
 	else if (playerControl) {
 		playerObject.moveX(platformSpeed);
 
-		if (Game::instance().getKey('w')) {
-			uint nextRow = (currentRowIndex + 1) % floor->getRows();
-			if (!wPressed && !collidesWithEnv(nextRow,currentColIndex)) {
-				ret = PlayerReturn::MOVE_FRONT;
-				wPressed = true;
-				performRotation('w');
-				currentOrientation = FRONT;
-				setDirectionVector();
-				inMovement = true;
-				uint previousRowIndex = currentRowIndex;
-				currentRowIndex = nextRow;
-				pair<vec3, float> currentPos = floor->getFloorRow(currentRowIndex)->getNextPos(currentColIndex);
-				nextPos = currentPos.first;
-				platformSpeed = currentPos.second;
-				calculateSpeeds();
-				soundManager->playSound(jumpSound);
-				currentPosScore += 1;
-				score = max(currentPosScore, score);
+		if (game->getMouseControl()) {
+			if (game->getLeftButtonPressed()) {
+				mousePressed = true;
 			}
-			aPressed = dPressed = sPressed = false;
-		}
-		else if (Game::instance().getKey('a')) {
-			if (!aPressed && !collidesWithEnv(currentRowIndex, currentColIndex+1)) {
-				ret = PlayerReturn::MOVE_LEFT;
-				aPressed = true;
-				performRotation('a');
-				currentOrientation = LEFT;
-				setDirectionVector();
-				inMovement = true;
-				currentColIndex += 1;
-				pair<vec3, float> currentPos = floor->getFloorRow(currentRowIndex)->getNextPos(currentColIndex);
-				nextPos = currentPos.first;
-				platformSpeed = currentPos.second;
-				calculateSpeeds();
-				soundManager->playSound(jumpSound);
+			else if (mousePressed) {
+				mousePressed = false;
+				int x = game->getX();
+				int y = game->getY();
+				if (y < SCREEN_HEIGHT / 2.f) {
+					move(FRONT);
+					ret = PlayerReturn::MOVE_FRONT;
+				}
+				else if (x < SCREEN_WIDTH*(1.f/3.f)) {
+					move(LEFT);
+					ret = PlayerReturn::MOVE_LEFT;
+				}
+				else if (x >= SCREEN_WIDTH*(1.f / 3.f) && x < SCREEN_WIDTH*(2.f / 3.f)) {
+					move(BACK);
+					ret = PlayerReturn::MOVE_BACK;
+				}
+				else {
+					move(RIGHT);
+					ret = PlayerReturn::MOVE_RIGHT;
+				}
 			}
-			wPressed = dPressed = sPressed = false;
 		}
-		else if (Game::instance().getKey('d')) {
-			if (!dPressed && !collidesWithEnv(currentRowIndex, currentColIndex - 1)) {
-				ret = PlayerReturn::MOVE_RIGHT;
-				dPressed = true;
-				performRotation('d');
-				currentOrientation = RIGHT;
-				setDirectionVector();
-				inMovement = true;
-				currentColIndex -= 1;
-				pair<vec3, float> currentPos = floor->getFloorRow(currentRowIndex)->getNextPos(currentColIndex);
-				nextPos = currentPos.first;
-				platformSpeed = currentPos.second;
-				calculateSpeeds();
-				soundManager->playSound(jumpSound);
+		else {
+			if (game->getKey('w')) {
+				if (!wPressed) {
+					ret = PlayerReturn::MOVE_FRONT;
+					wPressed = true;
+					move(FRONT);
+				}
+				aPressed = dPressed = sPressed = false;
 			}
-			wPressed = aPressed = sPressed = false;
-		}
-		else if (Game::instance().getKey('s')) {
-			uint nextRow = currentRowIndex == 0 ? floor->getRows() - 1 : currentRowIndex - 1;
-			if (!sPressed && !collidesWithEnv(nextRow, currentColIndex)) {
-				ret = PlayerReturn::MOVE_BACK;
-				sPressed = true;
-				performRotation('s');
-				currentOrientation = BACK;
-				setDirectionVector();
-				inMovement = true;
-				uint previousRowIndex = currentRowIndex;
-				currentRowIndex = nextRow;
-				pair<vec3, float> currentPos = floor->getFloorRow(currentRowIndex)->getNextPos(currentColIndex);
-				nextPos = currentPos.first;
-				platformSpeed = currentPos.second;
-				calculateSpeeds();
-				soundManager->playSound(jumpSound);
-				currentPosScore -= 1;
+			else if (game->getKey('a')) {
+				if (!aPressed) {
+					ret = PlayerReturn::MOVE_LEFT;
+					aPressed = true;
+					move(LEFT);
+				}
+				wPressed = dPressed = sPressed = false;
 			}
-			wPressed = dPressed = aPressed = false;
+			else if (game->getKey('d')) {
+				if (!dPressed) {
+					ret = PlayerReturn::MOVE_RIGHT;
+					dPressed = true;
+					move(RIGHT);
+				}
+				wPressed = aPressed = sPressed = false;
+			}
+			else if (game->getKey('s')) {
+				if (!sPressed) {
+					ret = PlayerReturn::MOVE_BACK;
+					sPressed = true;
+					move(BACK);
+				}
+				wPressed = dPressed = aPressed = false;
+			}
+			else
+				wPressed = aPressed = dPressed = sPressed = false;
 		}
-		else
-			wPressed = aPressed = dPressed = sPressed = false;
 	}
 	return ret;
 }
@@ -326,6 +312,75 @@ bool Player::collidesWithEnv(uint row, uint col) {
 		return false;
 	vector<CellProperties>* rowObjects = rowToCheck->getRowObjects();
 	return (*rowObjects)[col].collision;
+}
+
+void Player::move(Orientation orientation) {
+	uint nextRow;
+	switch (orientation) {
+	case FRONT:
+		nextRow = (currentRowIndex + 1) % floor->getRows();
+		if (!collidesWithEnv(nextRow, currentColIndex)) {
+			performRotation('w');
+			currentOrientation = FRONT;
+			setDirectionVector();
+			inMovement = true;
+			uint previousRowIndex = currentRowIndex;
+			currentRowIndex = nextRow;
+			pair<vec3, float> currentPos = floor->getFloorRow(currentRowIndex)->getNextPos(currentColIndex);
+			nextPos = currentPos.first;
+			platformSpeed = currentPos.second;
+			calculateSpeeds();
+			soundManager->playSound(jumpSound);
+			currentPosScore += 1;
+			score = max(currentPosScore, score);
+		}
+		break;
+	case LEFT:
+		if (!collidesWithEnv(currentRowIndex, currentColIndex + 1)) {
+			performRotation('a');
+			currentOrientation = LEFT;
+			setDirectionVector();
+			inMovement = true;
+			currentColIndex += 1;
+			pair<vec3, float> currentPos = floor->getFloorRow(currentRowIndex)->getNextPos(currentColIndex);
+			nextPos = currentPos.first;
+			platformSpeed = currentPos.second;
+			calculateSpeeds();
+			soundManager->playSound(jumpSound);
+		}
+		break;
+	case RIGHT:
+		if (!collidesWithEnv(currentRowIndex, currentColIndex - 1)) {
+			performRotation('d');
+			currentOrientation = RIGHT;
+			setDirectionVector();
+			inMovement = true;
+			currentColIndex -= 1;
+			pair<vec3, float> currentPos = floor->getFloorRow(currentRowIndex)->getNextPos(currentColIndex);
+			nextPos = currentPos.first;
+			platformSpeed = currentPos.second;
+			calculateSpeeds();
+			soundManager->playSound(jumpSound);
+		}
+		break;
+	case BACK:
+		nextRow = currentRowIndex == 0 ? floor->getRows() - 1 : currentRowIndex - 1;
+		if (!collidesWithEnv(nextRow, currentColIndex)) {
+			performRotation('s');
+			currentOrientation = BACK;
+			setDirectionVector();
+			inMovement = true;
+			uint previousRowIndex = currentRowIndex;
+			currentRowIndex = nextRow;
+			pair<vec3, float> currentPos = floor->getFloorRow(currentRowIndex)->getNextPos(currentColIndex);
+			nextPos = currentPos.first;
+			platformSpeed = currentPos.second;
+			calculateSpeeds();
+			soundManager->playSound(jumpSound);
+			currentPosScore -= 1;
+		}
+		break;
+	}
 }
 
 int Player::getScore() {

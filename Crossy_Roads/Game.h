@@ -59,6 +59,7 @@ public:
 	bool getKey(int key) const;
 	bool getSpecialKey(int key) const;
 	bool getLeftButtonPressed();
+	bool getMouseControl() const;
 	int getCoins();
 	void setCoins(int newCoins);
 
@@ -70,6 +71,7 @@ public:
 	int coins;
 	int charSelected;
 private:
+	bool mouseControl;
 	SoundManager soundManager;
 	bool bPlay;                       // Continue to play game?
 	Scene scene;                      // Scene to render

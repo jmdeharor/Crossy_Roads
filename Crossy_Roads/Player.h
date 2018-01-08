@@ -6,6 +6,8 @@
 #include "WaterParticles.h"
 #include "SoundManager.h"
 
+class Game;
+
 enum Orientation {
 	FRONT,
 	LEFT,
@@ -30,6 +32,7 @@ enum class PlayerState {
 };
 
 class Player : public GameObject, public ObjectContainer {
+	Game* game;
 	ShadowedObject playerObject;
 	TexturedObject textureObject;
 	PlayerState state;
@@ -40,6 +43,7 @@ class Player : public GameObject, public ObjectContainer {
 	int score;
 	float platformSpeed;
 	bool wPressed, aPressed, sPressed, dPressed;
+	bool mousePressed;
 	bool inMovement;
 	float speed, verticalSpeed, gravity;
 	glm::vec3 speeds;
@@ -68,7 +72,7 @@ private:
 	void performRotation(char key);
 	bool collides();
 	bool collidesWithEnv(glm::uint row, glm::uint col);
-
+	void move(Orientation orientation);
 public:
 	void groupDrawableObjects(
 		const FrustumG& frustum, RenderVectors& renderVectors
